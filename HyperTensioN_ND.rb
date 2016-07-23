@@ -194,9 +194,9 @@ module Hypertension_ND
     puts "Time: #{Time.now.to_f - t}s", 'Plan'.center(50,'-')
     puts "Plans found: #{plans.size}"
     plans.each_with_index {|plan,i|
-      puts "Valuation: #{plan[VALUATION]}",
-           "Probability: #{plan[PROBABILITY]}",
-           "Plan #{i}:"
+      puts "Plan #{i}".center(50,'-'),
+           "Valuation: #{plan[VALUATION]}",
+           "Probability: #{plan[PROBABILITY]}"
       if plan.size == 2
         puts 'Empty plan'
       else print_data(plan.drop(2))
