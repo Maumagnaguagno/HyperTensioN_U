@@ -1,0 +1,58 @@
+(defdomain cookie (
+
+  (:reward
+    ((have bob good-cookie) 10)
+    ((have bob bad-cookie) -10)
+  )
+
+  (:operator (!goto ?agent ?from ?to)
+    ; Preconditions
+    (
+      (at ?agent ?from)
+      (not (at ?agent ?to))
+    )
+    ; Del effects
+    (
+      (at ?agent ?from)
+    )
+    ; Add effects
+    (
+      (at ?agent ?to)
+    )
+    1
+  )
+
+  (:operator (!buy_cookie ?agent)
+    ; Preconditions
+    (
+      (at ?agent cookie-store)
+    )
+    buy_good_cookie
+    ; Del effects
+    ()
+    ; Add effects
+    (
+      (have ?agent good-cookie)
+    )
+    0.8
+    buy_bad_cookie
+    ; Del effects
+    ()
+    ; Add effects
+    (
+      (have ?agent bad-cookie)
+    )
+    0.2
+  )
+
+  (:method (get_cookie ?agent ?from ?to)
+    goto_and_buy_cookie
+    ; Preconditions
+    ()
+    ; Subtasks
+    (
+      (goto ?agent ?from ?to)
+      (buy_cookie ?agent)
+    )
+  )
+))

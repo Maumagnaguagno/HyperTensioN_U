@@ -1,0 +1,15 @@
+(defproblem pb1 cookie
+  ; Start
+  (
+    (at bob home)
+  )
+  ; Tasks
+  (
+    (get_cookie bob home cookie-store)
+  )
+  ; Rewards
+  (:rewards
+    ; problem rewards overwrite domain specified ones
+    ; TODO support ((have bob cookie) 5)
+  )
+)
