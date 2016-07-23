@@ -53,7 +53,7 @@ module Hype
         @parser.tasks,
         @parser.goal_pos,
         @parser.goal_not,
-        @parser.reward
+        @parser.rewards
       ]
       data = compiler.compile_domain(*args)
       IO.write("#{domain}.#{type}", data) if data
