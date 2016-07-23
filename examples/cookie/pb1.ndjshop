@@ -9,7 +9,7 @@
   )
   ; Rewards
   (:rewards
-    ; problem rewards overwrite domain specified ones
+    ; problem rewards overwrite domain rewards
     ; TODO support ((have bob cookie) 5)
   )
 )

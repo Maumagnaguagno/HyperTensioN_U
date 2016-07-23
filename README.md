@@ -15,13 +15,17 @@ Usage:
     debug - same as run with execution log
 ```
 
-To execute the cookie example is simple:
+To execute the [cookie example](examples/cookie) is simple:
 
 ```Shell
 ruby Hype.rb examples/cookie/cookie.ndjshop examples/cookie/pb1.ndjshop run
 ```
 
 ## NDJSHOP
+The expected input for HyperTensioN ND is based on a modified version of the JSHOP formalism.
+Two files define domain and problem as a planning instance.
+The domain defines the rules that never change, while the problem defines a situation that requires planning.
+Several problems may refer to the same domain, as many situations may happen within the same constraints.
 
 ### Domain
 
@@ -29,7 +33,7 @@ ruby Hype.rb examples/cookie/cookie.ndjshop examples/cookie/pb1.ndjshop run
 ; This is a comment line
 (defdomain domain-name (
 
-  (:reward
+  (:rewards
     ((pre1 a)  10) ; Obtaining (pre1 a) from one state to another adds 10 to valuation
     ((pre2 b) -10) ; Any integer can be a reward, even negative values
   )
@@ -97,18 +101,18 @@ ruby Hype.rb examples/cookie/cookie.ndjshop examples/cookie/pb1.ndjshop run
   (
     (method-name object another-object)
   )
-  ; Rewards
-  (:reward
+  ; Rewards, TODO to be supported in a future version
+  (:rewards
     ((pre1 book) 5) ; Problem rewards add/overwrite domain rewards
   )
 )
 ```
 
 ## ToDo's
-- Add domain reward support to converter
-- Add problem reward support to converter
+- Add support for problem rewards
 - Increment NDJSHOP documentation
 - Add examples
 - Add tests
-- Rename to HyperTensioN_P, use probability instead of non-deterministic?
+- Don't add internal operators (prefix ``!!``) to plan
+- Rename to HyperTensioN_P, probability instead of non-deterministic?
 - Merge with HyperTensioN?
