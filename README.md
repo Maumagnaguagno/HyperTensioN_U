@@ -1,4 +1,4 @@
-# HyperTensioN ND
+# HyperTensioN ND [![Build Status](https://travis-ci.org/Maumagnaguagno/HyperTensioN_ND.svg)](https://travis-ci.org/Maumagnaguagno/HyperTensioN_ND)
 **ND Hierarchical Task Network planning in Ruby**
 
 This is a modified version of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with probabilities and rewards.
