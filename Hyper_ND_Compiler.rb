@@ -69,7 +69,7 @@ module Hyper_ND_Compiler
   # Compile domain
   #-----------------------------------------------
 
-  def compile_domain(domain_name, problem_name, operators, methods, predicates, state, tasks, goal_pos, goal_not, rewards, hypertension_filename = File.expand_path('../HyperTensioN_ND', __FILE__))
+  def compile_domain(domain_name, problem_name, operators, methods, predicates, state, tasks, goal_pos, goal_not, rewards, hypertension_filename = File.expand_path('../Hypertension_ND', __FILE__))
     domain_str = "module #{domain_name.capitalize}\n  include Hypertension_ND\n  extend self\n\n  ##{SPACER}\n  # Domain\n  ##{SPACER}\n\n  @domain = {\n    # Operators"
     # Operators
     define_operators = ''
