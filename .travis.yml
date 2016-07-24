@@ -10,6 +10,9 @@ rvm:
   - jruby-9000
   # Rubinius
   - rbx-2
+before_script:
+  - ls
+  - ruby -e "path = File.expand_path('../HyperTensioN_ND', __FILE__); puts path; require path"
 script:
   # Tests
   - ruby tests/biscuit.rb
