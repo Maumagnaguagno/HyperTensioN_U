@@ -8,7 +8,7 @@
 #-----------------------------------------------
 
 require_relative 'UJSHOP_Parser'
-require_relative 'Hyper_U_Compiler'
+require_relative 'UHyper_Compiler'
 
 module Hype
   extend self
@@ -42,7 +42,7 @@ module Hype
   def compile(domain, problem, type)
     raise 'No data to compile' unless @parser
     if type == 'rb'
-      compiler = Hyper_U_Compiler
+      compiler = UHyper_Compiler
       args = [
         @parser.domain_name,
         @parser.problem_name,

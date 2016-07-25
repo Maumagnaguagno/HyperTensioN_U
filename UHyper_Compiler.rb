@@ -1,4 +1,4 @@
-module Hyper_U_Compiler
+module UHyper_Compiler
   extend self
 
   SPACER = '-' * 47
