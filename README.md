@@ -15,10 +15,20 @@ Usage:
     debug - same as run with execution log
 ```
 
-To execute the [cookie example](examples/cookie) is simple:
+An example in both Ruby and UJSHOP formalism is given.
+To convert and execute the [cookie example](examples/cookie) is simple:
 
 ```Shell
 ruby Hype.rb examples/cookie/cookie.ujshop examples/cookie/pb1.ujshop run
+```
+
+Or call the Ruby problem:
+
+```Shell
+# Use debug with -d option
+ruby examples/cookie/pb1.rb -d
+# No need to call Hype twice, the problem will load the domain
+ruby examples/cookie/pb1.ujshop.rb -d
 ```
 
 ## UJSHOP
