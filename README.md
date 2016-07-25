@@ -1,16 +1,16 @@
-# HyperTensioN ND [![Build Status](https://travis-ci.org/Maumagnaguagno/HyperTensioN_ND.svg)](https://travis-ci.org/Maumagnaguagno/HyperTensioN_ND)
-**ND Hierarchical Task Network planning in Ruby**
+# HyperTensioN U [![Build Status](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U.svg)](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U)
+**Hierarchical Task Network planning with uncertainty in Ruby**
 
 This is a modified version of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with probabilities and rewards.
 A simpler version of this can be found [here](https://github.com/Maumagnaguagno/HyperTensioN/blob/2226edbd967f42cea63c986a4a0ed71415bdc5e6/old_versions/simple/Hypertension_simple.rb).
-As always Hype can help you in the conversion process, from NDJSHOP to Ruby, but you can ignore the Hype and use Hypertension ND as a standalone library.
+As always Hype can help you in the conversion process, from UJSHOP to Ruby, but you can ignore the Hype and use Hypertension U as a standalone library.
 
 ```Shell
 Usage:
     Hype domain problem output
 
   Output:
-    rb    - generate Ruby files to Hypertension ND(default)
+    rb    - generate Ruby files to Hypertension U(default)
     run   - same as rb with execution
     debug - same as run with execution log
 ```
@@ -18,14 +18,15 @@ Usage:
 To execute the [cookie example](examples/cookie) is simple:
 
 ```Shell
-ruby Hype.rb examples/cookie/cookie.ndjshop examples/cookie/pb1.ndjshop run
+ruby Hype.rb examples/cookie/cookie.ujshop examples/cookie/pb1.ujshop run
 ```
 
-## NDJSHOP
-The expected input for HyperTensioN ND is based on a modified version of the JSHOP formalism.
+## UJSHOP
+The expected input for HyperTensioN U is based on a modified version of the JSHOP formalism.
 Two files define domain and problem as a planning instance.
 The domain defines the rules that never change, while the problem defines a situation that requires planning.
 Several problems may refer to the same domain, as many situations may happen within the same constraints.
+Differently from JSHOP descriptions the operators may have uncertain effects with known probabilities.
 
 ### Domain
 
@@ -33,7 +34,8 @@ Several problems may refer to the same domain, as many situations may happen wit
 ; This is a comment line
 (defdomain domain-name (
 
-  (:rewards
+  ; Reward function
+  (:reward
     ((pre1 a)  10) ; Obtaining (pre1 a) from one state to another adds 10 to valuation
     ((pre2 b) -10) ; Any integer can be a reward, even negative values
   )
@@ -101,18 +103,15 @@ Several problems may refer to the same domain, as many situations may happen wit
   (
     (method-name object another-object)
   )
-  ; Rewards, TODO to be supported in a future version
-  (:rewards
-    ((pre1 book) 5) ; Problem rewards add/overwrite domain rewards
-  )
+  ; Reward function, TODO to be supported in a future version
+  ;(:reward
+  ;  ((pre1 book) 5) ; Problem rewards add/overwrite domain rewards
+  ;)
 )
 ```
 
 ## ToDo's
+- Add support for axioms
 - Add support for problem rewards
-- Increment NDJSHOP documentation
 - Add examples
-- Add tests
 - Don't add internal operators (prefix ``!!``) to plan
-- Rename to HyperTensioN_P, probability instead of non-deterministic?
-- Merge with HyperTensioN?

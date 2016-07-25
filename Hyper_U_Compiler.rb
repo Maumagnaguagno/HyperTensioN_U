@@ -1,4 +1,4 @@
-module Hyper_ND_Compiler
+module Hyper_U_Compiler
   extend self
 
   SPACER = '-' * 47
@@ -69,8 +69,8 @@ module Hyper_ND_Compiler
   # Compile domain
   #-----------------------------------------------
 
-  def compile_domain(domain_name, problem_name, operators, methods, predicates, state, tasks, goal_pos, goal_not, rewards, hypertension_filename = File.expand_path('../Hypertension_ND', __FILE__))
-    domain_str = "module #{domain_name.capitalize}\n  include Hypertension_ND\n  extend self\n\n  ##{SPACER}\n  # Domain\n  ##{SPACER}\n\n  @domain = {\n    # Operators"
+  def compile_domain(domain_name, problem_name, operators, methods, predicates, state, tasks, goal_pos, goal_not, reward, hypertension_filename = File.expand_path('../Hypertension_U', __FILE__))
+    domain_str = "module #{domain_name.capitalize}\n  include Hypertension_U\n  extend self\n\n  ##{SPACER}\n  # Domain\n  ##{SPACER}\n\n  @domain = {\n    # Operators"
     # Operators
     define_operators = ''
     operators.each_with_index {|op,i|
@@ -119,10 +119,10 @@ module Hyper_ND_Compiler
       domain_str << (methods.size.pred == mi ? '    ]' : '    ],')
     }
     domain_str << "\n  }\n\n"
-    # Rewards
-    unless rewards.empty?
+    # Reward
+    unless reward.empty?
       domain_str << "  ##{SPACER}\n  # State valuation\n  ##{SPACER}\n\n  def state_valuation\n    value = 0\n"
-      rewards.each {|pre,reward| domain_str << "    value += #{reward} if not @previous_state['#{pre.first}'].include?(#{pre.drop(1)}) and @state['#{pre.first}'].include?(#{pre.drop(1)})\n"}
+      reward.each {|pre,value| domain_str << "    value += #{value} if not @previous_state['#{pre.first}'].include?(#{pre.drop(1)}) and @state['#{pre.first}'].include?(#{pre.drop(1)})\n"}
       domain_str << "    value\n  end\n\n"
     end
     # Definitions
@@ -135,7 +135,7 @@ module Hyper_ND_Compiler
   # Compile problem
   #-----------------------------------------------
 
-  def compile_problem(domain_name, problem_name, operators, methods, predicates, state, tasks, goal_pos, goal_not, rewards, domain_filename = nil)
+  def compile_problem(domain_name, problem_name, operators, methods, predicates, state, tasks, goal_pos, goal_not, reward, domain_filename = nil)
     problem_str = ''
     # Extract information
     objects = []

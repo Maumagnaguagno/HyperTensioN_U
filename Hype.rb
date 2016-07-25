@@ -7,8 +7,8 @@
 # Planning description converter
 #-----------------------------------------------
 
-require_relative 'NDJSHOP_Parser'
-require_relative 'Hyper_ND_Compiler'
+require_relative 'UJSHOP_Parser'
+require_relative 'Hyper_U_Compiler'
 
 module Hype
   extend self
@@ -18,7 +18,7 @@ module Hype
   HELP = "  Usage:
     Hype domain problem output\n
   Output:
-    rb    - generate Ruby files to Hypertension ND(default)
+    rb    - generate Ruby files to Hypertension U(default)
     run   - same as rb with execution
     debug - same as run with execution log"
 
@@ -27,8 +27,8 @@ module Hype
   #-----------------------------------------------
 
   def parse(domain, problem)
-    if File.extname(domain) == '.ndjshop' and File.extname(problem) == '.ndjshop'
-      @parser = NDJSHOP_Parser
+    if File.extname(domain) == '.ujshop' and File.extname(problem) == '.ujshop'
+      @parser = UJSHOP_Parser
       @parser.parse_domain(domain)
       @parser.parse_problem(problem)
     else raise "Unknown file extension #{File.extname(domain)}"
@@ -42,7 +42,7 @@ module Hype
   def compile(domain, problem, type)
     raise 'No data to compile' unless @parser
     if type == 'rb'
-      compiler = Hyper_ND_Compiler
+      compiler = Hyper_U_Compiler
       args = [
         @parser.domain_name,
         @parser.problem_name,
@@ -53,7 +53,7 @@ module Hype
         @parser.tasks,
         @parser.goal_pos,
         @parser.goal_not,
-        @parser.rewards
+        @parser.reward
       ]
       data = compiler.compile_domain(*args)
       IO.write("#{domain}.#{type}", data) if data

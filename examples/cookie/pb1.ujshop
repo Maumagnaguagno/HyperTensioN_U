@@ -7,9 +7,8 @@
   (
     (get_cookie bob home cookie-store)
   )
-  ; Rewards
-  (:rewards
-    ; problem rewards overwrite domain rewards
-    ; TODO support ((have bob cookie) 5)
-  )
+  ; Problem reward function overwrites domain reward function
+  ;(:reward
+  ;  ((have bob cookie) 5)
+  ;)
 )

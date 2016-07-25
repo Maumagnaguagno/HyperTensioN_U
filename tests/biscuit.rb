@@ -3,13 +3,13 @@ require './tests/hypest'
 class Biscuit < Test::Unit::TestCase
   include Hypest
 
-  def test_cookie_ndjshop_parsing
+  def test_cookie_ujshop_parsing
     parser_tests(
       # Files
-      'examples/cookie/cookie.ndjshop',
-      'examples/cookie/pb1.ndjshop',
+      'examples/cookie/cookie.ujshop',
+      'examples/cookie/pb1.ujshop',
       # Parser and extensions
-      NDJSHOP_Parser, [],
+      UJSHOP_Parser, [],
       # Attributes
       :domain_name => 'cookie',
       :problem_name => 'pb1',

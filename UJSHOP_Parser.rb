@@ -1,7 +1,7 @@
-module NDJSHOP_Parser
+module UJSHOP_Parser
   extend self
 
-  attr_reader :domain_name, :problem_name, :operators, :methods, :predicates, :state, :tasks, :goal_pos, :goal_not, :rewards
+  attr_reader :domain_name, :problem_name, :operators, :methods, :predicates, :state, :tasks, :goal_pos, :goal_not, :reward
 
   NOT = 'not'
   NIL = 'nil'
@@ -123,7 +123,7 @@ module NDJSHOP_Parser
     if (tokens = scan_tokens(domain_filename)).instance_of?(Array) and tokens.shift == 'defdomain'
       @operators = []
       @methods = []
-      @rewards = []
+      @reward = []
       raise 'Found group instead of domain name' if tokens.first.instance_of?(Array)
       @domain_name = tokens.shift
       @predicates = {}
@@ -133,9 +133,9 @@ module NDJSHOP_Parser
         case group.first
         when ':operator' then parse_operator(group)
         when ':method' then parse_method(group)
-        when ':rewards'
+        when ':reward'
           group.shift
-          @rewards = group
+          @reward = group
         else puts "#{group.first} is not recognized in domain"
         end
       end
@@ -159,9 +159,9 @@ module NDJSHOP_Parser
       @tasks.unshift(order)
       @goal_pos = []
       @goal_not = []
-      # TODO overwrite domain rewards
-      # TODO how to declare rewards in Ruby code in a way to pass from problem to domain?
-      #@rewards.concat(tokens.shift) if tokens.last.shift == ':rewards'
+      # TODO overwrite domain reward function
+      # TODO how to declare reward in Ruby code in a way to pass from problem to domain?
+      #@reward.concat(tokens.shift) if tokens.last.shift == ':reward'
     else raise "File #{problem_filename} does not match problem pattern"
     end
   end

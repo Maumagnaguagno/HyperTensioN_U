@@ -1,4 +1,4 @@
-module Hypertension_ND
+module Hypertension_U
   extend self
 
   attr_accessor :domain, :state, :min_prob, :max_found, :debug
