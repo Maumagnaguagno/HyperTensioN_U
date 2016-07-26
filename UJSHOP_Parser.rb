@@ -65,15 +65,14 @@ module UJSHOP_Parser
     if op.size < 2
       raise "Error with #{name} effects"
     elsif op.size <= 3
-      operator << (add = []) << del = []
+      operator.push(add = [], del = [])
       define_effects(name, group, del) if (group = op.shift) != NIL
       define_effects(name, group, add) if (group = op.shift) != NIL
       operator << (op.empty? ? 1 : op.shift.to_f)
     else
       i = 0
       until op.empty?
-        operator << (op.first.instance_of?(String) ? op.shift : "#{name}_#{i}")
-        operator << (add = []) << del = []
+        operator.push(op.first.instance_of?(String) ? op.shift : "#{name}_#{i}", add = [], del = [])
         define_effects(name, group, del) if (group = op.shift) != NIL
         define_effects(name, group, add) if (group = op.shift) != NIL
         operator << op.shift.to_f
