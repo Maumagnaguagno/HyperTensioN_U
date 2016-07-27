@@ -1,0 +1,108 @@
+(defproblem pbhealthcare healthcare-test
+	;; Test Problem 1
+	(
+		(patient alice)
+		(physician bob)
+		(radiologist clyde)
+		(pathologist doug)
+		(registrar evelyn)
+		(hospital simhospital)
+		(patientHasCancer alice)
+
+		(commitment C1 C1 bob alice)
+
+	) ; Initial State
+	
+	(
+		(!create C1 C1 bob alice (nil))
+		(!requestAssessment alice bob)
+		(!requestImaging bob alice clyde)
+		(!requestBiopsy bob alice clyde)
+		(!performImaging clyde alice bob)
+		(!performBiopsy clyde alice bob)
+		(!requestRadiologyReport bob clyde alice)
+		(!requestPathologyReport bob doug alice)
+
+		(!sendRadiologyReport clyde bob alice)
+		(!sendPathologyReport clyde bob alice)
+
+		(!sendIntegratedReport clyde doug alice bob)
+		(!generateTreatmentPlan bob alice)
+		(!reportPatient alice doug evelyn)
+		(!addPatientToRegistry alice evelyn)
+		(!requestPhysicianReportAssessment alice bob simhospital)
+		
+		(testCommitment C1 C1 (nil) satisfied)
+
+	) ;tn
+	
+	;; Test Problem 2
+	
+	(
+		(patient alice)
+		(physician bob)
+		(radiologist clyde)
+		(pathologist doug)
+		(registrar evelyn)
+		(hospital simhospital)
+		(patientHasCancer alice)
+
+		(commitment C1 C1 bob alice)
+		(commitment C2 C2 alice bob)
+		(commitment C3 C3 alice bob)
+		(commitment C4 C4 clyde bob)
+		(commitment C5 C5 clyde bob)
+		(commitment C6 C6 doug clyde)
+		(commitment C7 C7 doug simhospital)
+		(commitment C8 C8 evelyn simhospital)
+
+	) ; Initial State
+	
+	(
+		(!create C1 C1 bob alice (nil))
+		(!requestAssessment alice bob)
+		
+		(!create C2 C2 alice bob (clyde))
+		(!create C3 C3 alice bob (clyde))
+		
+		(!create C4 C4 clyde bob (doug))
+		(!create C5 C5 clyde bob (doug))
+		(!create C6 C6 doug clyde ((bob alice)) )
+		
+		(!create C7 C7 doug simhospital ((alice evelyn)) )
+		(!create C8 C8 evelyn simhospital (alice))
+		
+		(!requestImaging bob alice clyde)
+		(!requestBiopsy bob alice clyde)
+		(!performImaging clyde alice bob)
+		(!performBiopsy clyde alice bob)
+		
+		(testCommitment C2 C2 (clyde) satisfied)
+		(testCommitment C3 C3 (clyde) satisfied)
+		
+		(!requestRadiologyReport bob clyde alice)
+		(!requestPathologyReport bob doug alice)
+
+		(!sendRadiologyReport clyde bob alice)
+		(!sendPathologyReport clyde bob alice)
+		
+		(testCommitment C4 C4 (doug) satisfied)
+		(testCommitment C5 C5 (doug) satisfied)
+		(testCommitment C6 C6 ((bob alice)) satisfied)
+
+		(!sendIntegratedReport clyde doug alice bob)
+		(!generateTreatmentPlan bob alice)
+		(!reportPatient alice doug evelyn)
+		
+		(testCommitment C7 C7 ((alice evelyn)) satisfied)
+		
+		(!addPatientToRegistry alice evelyn)
+		
+		(testCommitment C8 C8 (alice) satisfied)
+		
+		(!requestPhysicianReportAssessment alice bob simhospital)
+		
+		(testCommitment C1 C1 (nil) satisfied)
+
+	) ;tn
+)

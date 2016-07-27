@@ -1,0 +1,27 @@
+(defproblem pbhealthcare healthcare
+	;; Problem Hospital Scenario
+	(
+		(patient alice)
+		(physician bob)
+		(radiologist clyde)
+		(pathologist doug)
+		(registrar evelyn)
+		(hospital simhospital)
+		(patientHasCancer alice)
+
+		(commitment C1 C1 bob alice)
+		(commitment C2 C2 alice bob)
+		(commitment C3 C3 alice bob)
+		(commitment C4 C4 clyde bob)
+		(commitment C5 C5 clyde bob)
+		(commitment C6 C6 doug clyde)
+		(commitment C7 C7 doug simhospital)
+		(commitment C8 C8 evelyn simhospital)
+
+	) ; Initial State
+	
+	(
+		(hospitalScenario) ; Hospital scenario 
+		(testCommitments)
+	) ;tn
+)
