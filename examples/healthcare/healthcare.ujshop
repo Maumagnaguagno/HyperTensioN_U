@@ -123,7 +123,7 @@
  ;======================
 
   (:operator (!!testSuccess ?c ?ci ?cv ?state)
-	(commitment ?c ?ci ?de ?cr) 	
+	((commitment ?c ?ci ?de ?cr))
 	()
 	()
 	0
@@ -260,7 +260,7 @@
 ;=============================================
 
   (:operator (!!testSuccessG ?g ?gi ?gv ?state)
-	(goal ?g ?gi ?a)
+	((goal ?g ?gi ?a))
 	()
 	()
 	0
