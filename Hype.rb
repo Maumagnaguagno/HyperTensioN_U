@@ -27,12 +27,10 @@ module Hype
   #-----------------------------------------------
 
   def parse(domain, problem)
-    if File.extname(domain) == '.ujshop' and File.extname(problem) == '.ujshop'
-      @parser = UJSHOP_Parser
-      @parser.parse_domain(domain)
-      @parser.parse_problem(problem)
-    else raise "Unknown file extension #{File.extname(domain)}"
-    end
+    raise 'Incompatible extensions between domain and problem' if File.extname(domain) != File.extname(problem)
+    @parser = UJSHOP_Parser
+    @parser.parse_domain(domain)
+    @parser.parse_problem(problem)
   end
 
   #-----------------------------------------------
