@@ -113,15 +113,10 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
   (
     (method-name object another-object)
   )
-  ; Reward function, TODO to be supported in a future version
-  ;(:reward
-  ;  ((pre1 book) 5) ; Problem rewards add/overwrite domain rewards
-  ;)
 )
 ```
 
 ## ToDo's
-- Add support for axioms
-- Add support for problem rewards
 - Add examples
+- Test axioms
 - Don't add internal operators (prefix ``!!``) to plan
