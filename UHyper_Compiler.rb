@@ -77,7 +77,7 @@ module UHyper_Compiler
   # Compile domain
   #-----------------------------------------------
 
-  def compile_domain(domain_name, problem_name, operators, methods, predicates, state, tasks, goal_pos, goal_not, reward, hypertension_filename = File.expand_path('../Hypertension_U', __FILE__))
+  def compile_domain(domain_name, problem_name, operators, methods, predicates, state, tasks, goal_pos, goal_not, axioms, reward, hypertension_filename = File.expand_path('../Hypertension_U', __FILE__))
     domain_str = "module #{domain_name.capitalize}\n  include Hypertension_U\n  extend self\n\n  ##{SPACER}\n  # Domain\n  ##{SPACER}\n\n  @domain = {\n    # Operators"
     # Operators
     define_operators = ''
@@ -133,6 +133,15 @@ module UHyper_Compiler
       reward.each {|pre,value| domain_str << "    value += #{value} if not @previous_state['#{pre.first}'].include?(#{pre.drop(1)}) and @state['#{pre.first}'].include?(#{pre.drop(1)})\n"}
       domain_str << "    value\n  end\n\n"
     end
+    # Axioms
+    unless axioms.empty?
+      domain_str << "  ##{SPACER}\n  # Axioms\n  ##{SPACER}\n\n"
+      axioms.each {|name,params,*expressions|
+        domain_str << "  def #{name}(#{params.map {|i| i.sub(/^\?/,'')}.join(', ')})\n"
+        expressions.each {|exp| domain_str << "    return true if #{expression_to_hyper(exp)}\n"}
+        domain_str << "  end\n\n"
+      }
+    end
     # Definitions
     domain_str << "  ##{SPACER}\n  # Operators\n  ##{SPACER}\n#{define_operators}\n  ##{SPACER}\n  # Methods\n  ##{SPACER}\n#{define_methods}end"
     domain_str.gsub!(/\b-\b/,'_')
@@ -143,7 +152,7 @@ module UHyper_Compiler
   # Compile problem
   #-----------------------------------------------
 
-  def compile_problem(domain_name, problem_name, operators, methods, predicates, state, tasks, goal_pos, goal_not, reward, domain_filename = nil)
+  def compile_problem(domain_name, problem_name, operators, methods, predicates, state, tasks, goal_pos, goal_not, axioms, reward, domain_filename = nil)
     problem_str = "# Objects\n"
     # Extract information
     objects = []

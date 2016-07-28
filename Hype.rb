@@ -51,6 +51,7 @@ module Hype
         @parser.tasks,
         @parser.goal_pos,
         @parser.goal_not,
+        @parser.axioms,
         @parser.reward
       ]
       data = compiler.compile_domain(*args)
