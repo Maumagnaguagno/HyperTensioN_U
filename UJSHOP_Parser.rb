@@ -47,7 +47,7 @@ module UJSHOP_Parser
   #-----------------------------------------------
 
   def define_expression(name, group)
-    raise "Error with #{name} preconditions" unless group.instance_of?(Array)
+    raise "Error with #{name}" unless group.instance_of?(Array)
     if ['and','or','not','call'].include?(group.first)
       group.drop(1).each {|g| define_expression(name, g)}
     else @predicates[group.first.freeze] ||= false
@@ -67,8 +67,7 @@ module UJSHOP_Parser
     @operators << operator = [name, op.shift, []]
     # Preconditions
     if (group = op.shift) != NIL
-      define_expression(name, group)
-      operator[2] = group
+      define_expression("#{name} preconditions", operator[2] = group)
     end
     # Effects
     if op.size < 2
@@ -145,6 +144,7 @@ module UJSHOP_Parser
           group.shift
           name = (params = group.shift).shift
           @axioms << axiom = [name, params] unless axiom = @axioms.assoc(name)
+          group.each {|exp| define_expression("axiom #{name}", exp)}
           axiom.concat(group)
         when ':reward'
           group.shift

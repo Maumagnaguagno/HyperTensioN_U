@@ -35,14 +35,19 @@ module UHyper_Compiler
   # Subtasks to Hyper
   #-----------------------------------------------
 
-  def expression_to_hyper(precond_expression)
+  def expression_to_hyper(precond_expression, axioms)
     case precond_expression.first
     when 'and', 'or'
-      '(' << precond_expression.drop(1).map {|exp| expression_to_hyper(exp)}.join(" #{precond_expression.first} ") << ')'
+      '(' << precond_expression.drop(1).map {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
     when 'not'
-      'not (' << expression_to_hyper(precond_expression[1]) << ')'
+      'not (' << expression_to_hyper(precond_expression[1], axioms) << ')'
     else
-      "state['#{precond_expression.first}'].include?([#{precond_expression.drop(1).map! {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')}])"
+      terms = precond_expression.drop(1).map! {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')
+      if axioms.assoc(precond_expression.first)
+        "#{precond_expression.first}(#{terms})"
+      else
+        "@state['#{precond_expression.first}'].include?([#{terms}])"
+      end
     end
   end
 
@@ -50,7 +55,7 @@ module UHyper_Compiler
   # Operators to Hyper
   #-----------------------------------------------
 
-  def operator_to_hyper(name, param, precond_expression, effect_pos, effect_not, define_operators)
+  def operator_to_hyper(name, param, precond_expression, effect_pos, effect_not, axioms, define_operators)
     define_operators << "\n  def #{name}#{"(#{param.map {|j| j.sub(/^\?/,'')}.join(', ')})" unless param.empty?}\n"
     if effect_pos.empty? and effect_not.empty?
       if precond_expression.empty?
@@ -58,12 +63,12 @@ module UHyper_Compiler
         define_operators << "    true\n  end\n"
       else
         # Sensing
-        define_operators << "    #{expression_to_hyper(precond_expression)}\n  end\n"
+        define_operators << "    #{expression_to_hyper(precond_expression, axioms)}\n  end\n"
       end
     else
       unless precond_expression.empty?
         # Effective if preconditions hold
-        define_operators << "    return unless #{expression_to_hyper(precond_expression)}\n"
+        define_operators << "    return unless #{expression_to_hyper(precond_expression, axioms)}\n"
       end
       # Effective
       define_operators << '    apply('
@@ -84,12 +89,12 @@ module UHyper_Compiler
     operators.each_with_index {|op,i|
       if op.size == 6
         domain_str << "\n    '#{op.first}' => #{op[5]}#{',' if operators.size.pred != i or not methods.empty?}"
-        operator_to_hyper(op.first, op[1], op[2], op[3], op[4], define_operators)
+        operator_to_hyper(op.first, op[1], op[2], op[3], op[4], axioms, define_operators)
       else
         domain_str << "\n    '#{op.first}' => {"
         opname, param, precond_expression, *effects = op
         until effects.empty?
-          operator_to_hyper(opname = effects.shift, param, precond_expression, effects.shift, effects.shift, define_operators)
+          operator_to_hyper(opname = effects.shift, param, precond_expression, effects.shift, effects.shift, axioms, define_operators)
           domain_str << "\n      '#{opname}' => #{effects.shift}#{',' unless effects.empty?}"
         end
         domain_str << "\n    }#{',' if operators.size.pred != i or not methods.empty?}"
@@ -138,7 +143,7 @@ module UHyper_Compiler
       domain_str << "  ##{SPACER}\n  # Axioms\n  ##{SPACER}\n\n"
       axioms.each {|name,params,*expressions|
         domain_str << "  def #{name}(#{params.map {|i| i.sub(/^\?/,'')}.join(', ')})\n"
-        expressions.each {|exp| domain_str << "    return true if #{expression_to_hyper(exp)}\n"}
+        expressions.each {|exp| domain_str << "    return true if #{expression_to_hyper(exp, axioms)}\n"}
         domain_str << "  end\n\n"
       }
     end
