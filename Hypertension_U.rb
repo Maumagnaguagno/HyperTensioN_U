@@ -170,6 +170,42 @@ module Hypertension_U
   end
 
   #-----------------------------------------------
+  # Compute
+  #-----------------------------------------------
+
+  def compute(expression)
+    case command = expression.shift
+    when :and
+      expression.all? {|e| compute(e)}
+    when :or
+      expression.any? {|e| compute(e)}
+    when :not
+      expression.none? {|e| compute(e)}
+    when :call
+      call(expression)
+    else @state[command].include?(expression)
+    end
+  end
+
+  #-----------------------------------------------
+  # Call
+  #-----------------------------------------------
+
+  def call(expression)
+    f = expression.shift
+    if (value = expression.shift).instance_of?(Array) and value.first == :call
+      value.shift
+      value = call(value)
+    end
+    if expression.empty?
+      send(f, value)
+    else
+      expression.each {|i| value = value.send(f, i.is_a?(Array) && i.first == :call ? (i.shift; call(i)) : i)}
+      value
+    end
+  end
+
+  #-----------------------------------------------
   # Print data
   #-----------------------------------------------
 

@@ -16,8 +16,10 @@ class Biscuit < Test::Unit::TestCase
       :operators => [
         ['goto', ['?agent', '?from', '?to'],
           # Preconditions
-          [['at', '?agent', '?from']],
-          [['at', '?agent', '?to']],
+          [:and,
+            ['at', '?agent', '?from'],
+            [:not, ['at', '?agent', '?to']]
+          ],
           # Effects
           [['at', '?agent', '?to']],
           [['at', '?agent', '?from']],
@@ -26,8 +28,9 @@ class Biscuit < Test::Unit::TestCase
         ],
         ['buy_cookie', ['?agent'],
           # Preconditions
-          [['at', '?agent', 'cookie-store']],
-          [],
+          [:and,
+            ['at', '?agent', 'cookie-store']
+          ],
           #  Effects label
           'buy_good_cookie',
           # Effects

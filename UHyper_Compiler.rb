@@ -32,33 +32,36 @@ module UHyper_Compiler
   end
 
   #-----------------------------------------------
+  # Subtasks to Hyper
+  #-----------------------------------------------
+
+  def expression_to_hyper(precond_expression)
+    str = precond_expression.to_s
+    str.gsub!(/"\?([\w-]+)"/,'\1')
+    str
+  end
+
+  #-----------------------------------------------
   # Operators to Hyper
   #-----------------------------------------------
 
-  def operator_to_hyper(name, param, precond_pos, precond_not, effect_pos, effect_not, define_operators)
+  def operator_to_hyper(name, param, precond_expression, effect_pos, effect_not, define_operators)
     define_operators << "\n  def #{name}#{"(#{param.map {|j| j.sub(/^\?/,'')}.join(', ')})" unless param.empty?}\n"
     if effect_pos.empty? and effect_not.empty?
-      if precond_pos.empty? and precond_not.empty?
+      if precond_expression.empty?
         # Empty
         define_operators << "    true\n  end\n"
       else
         # Sensing
-        define_operators << '    applicable?('
-        predicates_to_hyper(define_operators << "\n      # Positive preconditions", precond_pos)
-        predicates_to_hyper(define_operators << ",\n      # Negative preconditions", precond_not)
-        define_operators << "    )\n  end\n"
+        define_operators << "    compute(#{expression_to_hyper(precond_expression)}    )\n  end\n"
       end
     else
-      if precond_pos.empty? and precond_not.empty?
-        # Effective
-        define_operators << '    apply('
-      else
+      unless precond_expression.empty?
         # Effective if preconditions hold
-        define_operators << '    apply_operator('
-        predicates_to_hyper(define_operators << "\n      # Positive preconditions", precond_pos)
-        predicates_to_hyper(define_operators << ",\n      # Negative preconditions", precond_not)
-        define_operators << ','
+        define_operators << "    return unless compute(#{expression_to_hyper(precond_expression)})\n"
       end
+      # Effective
+      define_operators << '    apply('
       predicates_to_hyper(define_operators << "\n      # Add effects", effect_pos)
       predicates_to_hyper(define_operators << ",\n      # Del effects", effect_not)
       define_operators << "\n    )\n  end\n"
@@ -74,14 +77,14 @@ module UHyper_Compiler
     # Operators
     define_operators = ''
     operators.each_with_index {|op,i|
-      if op.size == 7
-        domain_str << "\n    '#{op[0]}' => #{op[6]}#{',' if operators.size.pred != i or not methods.empty?}"
-        operator_to_hyper(op[0], op[1], op[2], op[3], op[4], op[5], define_operators)
+      if op.size == 6
+        domain_str << "\n    '#{op.first}' => #{op[5]}#{',' if operators.size.pred != i or not methods.empty?}"
+        operator_to_hyper(op.first, op[1], op[2], op[3], op[4], define_operators)
       else
-        domain_str << "\n    '#{op[0]}' => {"
-        opname, param, precond_pos, precond_not, *effects = op
+        domain_str << "\n    '#{op.first}' => {"
+        opname, param, precond_expression, *effects = op
         until effects.empty?
-          operator_to_hyper(opname = effects.shift, param, precond_pos, precond_not, effects.shift, effects.shift, define_operators)
+          operator_to_hyper(opname = effects.shift, param, precond_expression, effects.shift, effects.shift, define_operators)
           domain_str << "\n      '#{opname}' => #{effects.shift}#{',' unless effects.empty?}"
         end
         domain_str << "\n    }#{',' if operators.size.pred != i or not methods.empty?}"

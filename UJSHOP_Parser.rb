@@ -34,12 +34,25 @@ module UJSHOP_Parser
   # Define effects
   #-----------------------------------------------
 
-  def define_effects(name, group, effects)
+  def define_effects(name, group)
     raise "Error with #{name} effects" unless group.instance_of?(Array)
     group.each {|pre|
-      pre.first != NOT ? effects << pre : raise('Unexpected not in effects')
+      raise 'Unexpected not in effects' if pre.first == NOT
       @predicates[pre.first.freeze] = true
     }
+  end
+
+  #-----------------------------------------------
+  # Define expression
+  #-----------------------------------------------
+
+  def define_expression(name, group)
+    raise "Error with #{name} preconditions" unless group.instance_of?(Array)
+    if ['and','or','not','call'].include?(group.first)
+      group[0] = group.first.to_sym
+      group.drop(1).each {|g| define_expression(name, g)}
+    else @predicates[group.first.freeze] ||= false
+    end
   end
 
   #-----------------------------------------------
@@ -52,30 +65,26 @@ module UJSHOP_Parser
     name.sub!(/^!!/,'invisible_') or name.sub!(/^!/,'')
     raise "Action #{name} redefined" if @operators.assoc(name)
     raise "Operator #{name} have #{op.size} groups instead of 4 or more" if op.size < 4
-    @operators << operator = [name, op.shift, pos = [], neg = []]
+    @operators << operator = [name, op.shift, []]
     # Preconditions
     if (group = op.shift) != NIL
-      raise "Error with #{name} preconditions" unless group.instance_of?(Array)
-      group.each {|pre|
-        pre.first != NOT ? pos << pre : pre.size == 2 ? neg << (pre = pre.last) : raise("Error with #{name} negative precondition group")
-        @predicates[pre.first.freeze] ||= false
-      }
+      define_expression(name, group)
+      operator[2] = group
     end
     # Effects
     if op.size < 2
       raise "Error with #{name} effects"
     elsif op.size <= 3
-      operator.push(add = [], del = [])
-      define_effects(name, group, del) if (group = op.shift) != NIL
-      define_effects(name, group, add) if (group = op.shift) != NIL
+      operator[4] = (group = op.shift) != NIL ? define_effects(name, group) : []
+      operator[3] = (group = op.shift) != NIL ? define_effects(name, group) : []
       operator << (op.empty? ? 1 : op.shift.to_f)
     else
       i = 0
       until op.empty?
-        operator.push(op.first.instance_of?(String) ? op.shift : "#{name}_#{i}", add = [], del = [])
-        define_effects(name, group, del) if (group = op.shift) != NIL
-        define_effects(name, group, add) if (group = op.shift) != NIL
-        operator << op.shift.to_f
+        operator << (op.first.instance_of?(String) ? op.shift : "#{name}_#{i}")
+        del = (group = op.shift) != NIL ? define_effects(name, group) : []
+        add = (group = op.shift) != NIL ? define_effects(name, group) : []
+        operator.push(add, del, op.shift.to_f)
         i += 1
       end
     end
@@ -158,9 +167,6 @@ module UJSHOP_Parser
       @tasks.unshift(order)
       @goal_pos = []
       @goal_not = []
-      # TODO overwrite domain reward function
-      # TODO how to declare reward in Ruby code in a way to pass from problem to domain?
-      #@reward.concat(tokens.shift) if tokens.last.shift == ':reward'
     else raise "File #{problem_filename} does not match problem pattern"
     end
   end
