@@ -1,7 +1,7 @@
 module UJSHOP_Parser
   extend self
 
-  attr_reader :domain_name, :problem_name, :operators, :methods, :predicates, :state, :tasks, :goal_pos, :goal_not, :reward
+  attr_reader :domain_name, :problem_name, :operators, :methods, :predicates, :state, :tasks, :goal_pos, :goal_not, :axioms, :reward
 
   NOT = 'not'
   NIL = 'nil'
@@ -130,6 +130,7 @@ module UJSHOP_Parser
     if (tokens = scan_tokens(domain_filename)).instance_of?(Array) and tokens.shift == 'defdomain'
       @operators = []
       @methods = []
+      @axioms = []
       @reward = []
       raise 'Found group instead of domain name' if tokens.first.instance_of?(Array)
       @domain_name = tokens.shift
@@ -140,6 +141,11 @@ module UJSHOP_Parser
         case group.first
         when ':operator' then parse_operator(group)
         when ':method' then parse_method(group)
+        when ':-'
+          group.shift
+          name = (params = group.shift).shift
+          @axioms << axiom = [name, params] unless axiom = @axioms.assoc(name)
+          axiom.concat(group)
         when ':reward'
           group.shift
           @reward = group
