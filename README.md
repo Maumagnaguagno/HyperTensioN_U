@@ -1,9 +1,8 @@
 # HyperTensioN U [![Build Status](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U.svg)](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U)
 **Hierarchical Task Network planning with uncertainty in Ruby**
 
-This is a modified version of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with probabilities and rewards.
-A simpler version of this can be found [here](https://github.com/Maumagnaguagno/HyperTensioN/blob/2226edbd967f42cea63c986a4a0ed71415bdc5e6/old_versions/simple/Hypertension_simple.rb).
-As always Hype can help you in the conversion process, from UJSHOP to Ruby, but you can ignore the Hype and use Hypertension U as a standalone library.
+This is a modified version of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with probabilities and rewards, currently **incompatible** with the original.
+Hype can help you in the conversion process from [UJSHOP](#ujshop "Jump to UJSHOP section") to Ruby, but you can ignore the Hype and use Hypertension U as a standalone library.
 
 ```Shell
 Usage:
