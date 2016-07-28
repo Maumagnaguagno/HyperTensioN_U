@@ -36,9 +36,14 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def expression_to_hyper(precond_expression)
-    str = precond_expression.to_s
-    str.gsub!(/"\?([\w-]+)"/,'\1')
-    str
+    case precond_expression.first
+    when 'and', 'or'
+      '(' << precond_expression.drop(1).map {|exp| expression_to_hyper(exp)}.join(" #{precond_expression.first} ") << ')'
+    when 'not'
+      'not (' << expression_to_hyper(precond_expression[1]) << ')'
+    else
+      "state['#{precond_expression.first}'].include?([#{precond_expression.drop(1).map! {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')}])"
+    end
   end
 
   #-----------------------------------------------
@@ -53,12 +58,12 @@ module UHyper_Compiler
         define_operators << "    true\n  end\n"
       else
         # Sensing
-        define_operators << "    compute(#{expression_to_hyper(precond_expression)}    )\n  end\n"
+        define_operators << "    #{expression_to_hyper(precond_expression)}\n  end\n"
       end
     else
       unless precond_expression.empty?
         # Effective if preconditions hold
-        define_operators << "    return unless compute(#{expression_to_hyper(precond_expression)})\n"
+        define_operators << "    return unless #{expression_to_hyper(precond_expression)}\n"
       end
       # Effective
       define_operators << '    apply('

@@ -49,7 +49,6 @@ module UJSHOP_Parser
   def define_expression(name, group)
     raise "Error with #{name} preconditions" unless group.instance_of?(Array)
     if ['and','or','not','call'].include?(group.first)
-      group[0] = group.first.to_sym
       group.drop(1).each {|g| define_expression(name, g)}
     else @predicates[group.first.freeze] ||= false
     end
