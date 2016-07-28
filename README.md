@@ -65,8 +65,11 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
 
   (:operator (!op-name2 ?t1)
     ; Preconditions
-    ()
-    op-name2-label1 ; label can be omitted, otherwise must be unique
+    (and ; Expressions are supported by operator preconditions
+      (pre1 ?t1)
+      (pre2 ?t1)
+    )
+    op-name2-label1 ; Label can be omitted, otherwise must be unique
     ; Del effects
     (
       (pre3 ?t1)
@@ -85,7 +88,7 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
   )
 
   (:method (method-name ?t1 ?t2)
-    label ; label can be omitted, otherwise must be unique
+    label ; Label can be omitted, otherwise must be unique
     ; Preconditions
     (
       (pre1 ?t1)
