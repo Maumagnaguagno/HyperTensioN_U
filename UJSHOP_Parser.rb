@@ -48,9 +48,14 @@ module UJSHOP_Parser
 
   def define_expression(name, group)
     raise "Error with #{name}" unless group.instance_of?(Array)
-    if ['and','or','not','call'].include?(group.first)
+    first = group.first
+    if first == 'and' or first == 'or'
+      raise "Unexpected zero arguments for #{first} in #{name}" if group.size == 1
       group.drop(1).each {|g| define_expression(name, g)}
-    else @predicates[group.first.freeze] ||= false
+    elsif first == 'not'
+      raise "Unexpected multiple arguments for not in #{name}" if group.size != 2
+      define_expression(name, group[1])
+    else @predicates[first.freeze] ||= false
     end
   end
 
