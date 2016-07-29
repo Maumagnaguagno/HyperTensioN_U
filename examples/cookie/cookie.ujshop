@@ -7,7 +7,7 @@
 
   (:operator (!goto ?agent ?from ?to)
     ; Preconditions
-    (and
+    (
       (at ?agent ?from)
       (not (at ?agent ?to))
     )
@@ -24,7 +24,7 @@
 
   (:operator (!buy_cookie ?agent)
     ; Preconditions
-    (and
+    (
       (at ?agent cookie-store)
     )
     buy_good_cookie
