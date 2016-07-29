@@ -48,7 +48,7 @@ module UJSHOP_Parser
 
   def define_expression(name, group)
     raise "Error with #{name}" unless group.instance_of?(Array)
-    first = group.first
+    group.unshift(first = 'and') if (first = group.first).instance_of?(Array)
     if first == 'and' or first == 'or'
       raise "Unexpected zero arguments for #{first} in #{name}" if group.size == 1
       group.drop(1).each {|g| define_expression(name, g)}

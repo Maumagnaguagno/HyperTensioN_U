@@ -64,7 +64,7 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
 
   (:operator (!op-name2 ?t1)
     ; Preconditions
-    (and ; Expressions are supported by operator preconditions
+    (and ; Expressions with AND OR NOT are supported by operator preconditions, AND can be omitted
       (pre1 ?t1)
       (pre2 ?t1)
     )
