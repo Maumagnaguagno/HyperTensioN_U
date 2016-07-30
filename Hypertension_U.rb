@@ -35,7 +35,7 @@ module Hypertension_U
           decomposition.each {|method|
             puts "#{'  ' * level.pred}#{method}(#{current_task.join(',')})" if @debug
             # Every unification is tested
-            send(method, *current_task) {|subtasks| planning(subtasks.concat(tasks), level, plan)}
+            send(method, *current_task) {|subtasks| return true if planning(subtasks.concat(tasks), level, plan)}
           }
           current_task.unshift(task_name)
         # Error
