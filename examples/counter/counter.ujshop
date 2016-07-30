@@ -1,0 +1,48 @@
+(defdomain counter (
+
+  (:- (empty_axiom ?var)
+    (and (or ((((((()))))))))
+  )
+
+  (:- (at-axiom ?current)
+    (not (not (at ?current)))
+  )
+
+  (:operator (!add-one ?current ?successor ?goal)
+    ; Preconditions
+    (and
+      (empty_axiom ?current)
+      (at-axiom ?current)
+    )
+    ; Del effects
+    (
+      (at ?current)
+    )
+    ; Add effects
+    (
+      (at ?successor)
+    )
+    1
+  )
+
+  (:method (count ?goal)
+    increment
+    ; Preconditions
+    (
+      (at ?current)
+      (next ?current ?successor)
+    )
+    ; Subtasks
+    (
+      (!add-one ?current ?successor ?goal)
+      (count ?goal)
+    )
+    goal-reached
+    ; Preconditions
+    (
+      (at ?goal)
+    )
+    ; Subtasks
+    nil
+  )
+))

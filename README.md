@@ -119,6 +119,5 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
 ```
 
 ## ToDo's
-- Add examples
 - Test axioms
 - Don't add internal operators (prefix ``!!``) to plan
