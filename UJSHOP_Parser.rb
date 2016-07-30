@@ -50,11 +50,15 @@ module UJSHOP_Parser
     raise "Error with #{name}" unless group.instance_of?(Array)
     group.unshift(first = 'and') if (first = group.first).instance_of?(Array)
     if first == 'and' or first == 'or'
-      raise "Unexpected zero arguments for #{first} in #{name}" if group.size == 1
-      group.drop(1).each {|g| define_expression(name, g)}
+      if group.size == 1
+        raise "Unexpected zero arguments for #{first} in #{name}"
+      elsif group.size == 2
+        define_expression(name, group.replace(group.last))
+      else group.drop(1).each {|g| define_expression(name, g)}
+      end
     elsif first == 'not'
       raise "Unexpected multiple arguments for not in #{name}" if group.size != 2
-      define_expression(name, group[1])
+      define_expression(name, group.last)
     else @predicates[first.freeze] ||= false
     end
   end

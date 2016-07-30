@@ -28,9 +28,7 @@ class Biscuit < Test::Unit::TestCase
         ],
         ['buy_cookie', ['?agent'],
           # Preconditions
-          ['and',
-            ['at', '?agent', 'cookie-store']
-          ],
+          ['at', '?agent', 'cookie-store'],
           #  Effects label
           'buy_good_cookie',
           # Effects
