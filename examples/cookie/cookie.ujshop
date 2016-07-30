@@ -51,8 +51,8 @@
     ()
     ; Subtasks
     (
-      (goto ?agent ?from ?to)
-      (buy_cookie ?agent)
+      (!goto ?agent ?from ?to)
+      (!buy_cookie ?agent)
     )
   )
 ))
