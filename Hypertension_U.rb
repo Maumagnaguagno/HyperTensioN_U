@@ -1,9 +1,9 @@
 module Hypertension_U
   extend self
 
-  attr_accessor :domain, :state, :min_prob, :max_found, :debug
+  attr_accessor :domain, :state, :min_prob, :max_found, :plans, :debug
 
-  # Probabilistic plan = [PROBABILITY, VALUATION, op0, ..., opN]
+  # Probabilistic plan = [PROBABILITY = 1, VALUATION = 0, op0, ..., opN]
   PROBABILITY = 0
   VALUATION   = 1
 
@@ -11,38 +11,37 @@ module Hypertension_U
   # Planning
   #-----------------------------------------------
 
-  def planning(tasks, level = 0, plan = [1,0], plans_found = [])
+  def planning(tasks, level = 0, plan = [1,0])
     # Limit test
-    if plans_found.size == @max_found
-      plans_found
-    elsif tasks.empty?
-      plans_found << plan if plan[PROBABILITY] >= @min_prob
-    else
-      case decomposition = @domain[(current_task = tasks.shift).first]
-      # Operator with single outcome
-      when Numeric
-        execute(current_task, decomposition, tasks, level, plan, plans_found)
-      # Operator with multiple outcomes
-      when Hash
-        decomposition.each {|task_prob,probability|
-          current_task.first.replace(task_prob)
-          execute(current_task, probability, tasks, level, plan, plans_found)
-        }
-      # Method
-      when Array
-        # Keep decomposing the hierarchy
-        task_name = current_task.shift
-        level += 1
-        decomposition.each {|method|
-          puts "#{'  ' * level.pred}#{method}(#{current_task.join(',')})" if @debug
-          # Every unification is tested
-          send(method, *current_task) {|subtasks| planning(subtasks.concat(tasks), level, plan, plans_found)}
-        }
-        current_task.unshift(task_name)
-      # Error
-      else raise "Domain defines no decomposition for #{current_task.first}"
+    if @plans.size != @max_found
+      if tasks.empty?
+        @plans << plan if plan[PROBABILITY] >= @min_prob
+      else
+        case decomposition = @domain[(current_task = tasks.shift).first]
+        # Operator with single outcome
+        when Numeric
+          execute(current_task, decomposition, tasks, level, plan)
+        # Operator with multiple outcomes
+        when Hash
+          decomposition.each {|task_prob,probability|
+            current_task.first.replace(task_prob)
+            execute(current_task, probability, tasks, level, plan)
+          }
+        # Method
+        when Array
+          # Keep decomposing the hierarchy
+          task_name = current_task.shift
+          level += 1
+          decomposition.each {|method|
+            puts "#{'  ' * level.pred}#{method}(#{current_task.join(',')})" if @debug
+            # Every unification is tested
+            send(method, *current_task) {|subtasks| planning(subtasks.concat(tasks), level, plan)}
+          }
+          current_task.unshift(task_name)
+        # Error
+        else raise "Domain defines no decomposition for #{current_task.first}"
+        end
       end
-      plans_found
     end
   end
 
@@ -58,7 +57,7 @@ module Hypertension_U
   # Execute
   #-----------------------------------------------
 
-  def execute(current_task, probability, tasks, level, plan, plans_found)
+  def execute(current_task, probability, tasks, level, plan)
     puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(',')})" if @debug
     if (new_prob = plan[PROBABILITY] * probability) >= @min_prob
       # If operator applied
@@ -68,7 +67,7 @@ module Hypertension_U
         new_plan[PROBABILITY] = new_prob
         new_plan[VALUATION] += state_valuation * probability
         # Keep decomposing the hierarchy
-        planning(tasks, level, new_plan, plans_found)
+        planning(tasks, level, new_plan)
       end
     end
   end
@@ -186,14 +185,15 @@ module Hypertension_U
     @state = start
     @min_prob = min_prob
     @max_found = max_found
+    @plans = []
     puts 'Tasks'.center(50,'-')
     print_data(tasks)
     puts 'Planning'.center(50,'-')
     t = Time.now.to_f
-    plans = planning(tasks)
+    planning(tasks)
     puts "Time: #{Time.now.to_f - t}s", 'Plan'.center(50,'-')
-    puts "Plans found: #{plans.size}"
-    plans.each_with_index {|plan,i|
+    puts "Plans found: #{@plans.size}"
+    @plans.each_with_index {|plan,i|
       puts "Plan #{i}".center(50,'-'),
            "Valuation: #{plan[VALUATION]}",
            "Probability: #{plan[PROBABILITY]}"
@@ -202,8 +202,8 @@ module Hypertension_U
       else print_data(plan.drop(2))
       end
     }
-    puts 'Planning failed' if plans.empty?
-    plans
+    puts 'Planning failed' if @plans.empty?
+    @plans
   rescue Interrupt
     puts 'Interrupted'
   rescue
