@@ -42,11 +42,15 @@ module UHyper_Compiler
     when 'not'
       'not (' << expression_to_hyper(precond_expression[1], axioms) << ')'
     else
-      terms = precond_expression.drop(1).map! {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')
-      if axioms.assoc(precond_expression.first)
-        "#{precond_expression.first}(#{terms})"
+      if precond_expression.empty?
+        'true'
       else
-        "@state['#{precond_expression.first}'].include?([#{terms}])"
+        terms = precond_expression.drop(1).map! {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')
+        if axioms.assoc(precond_expression.first)
+          "#{precond_expression.first}(#{terms})"
+        else
+          "@state['#{precond_expression.first}'].include?([#{terms}])"
+        end
       end
     end
   end
