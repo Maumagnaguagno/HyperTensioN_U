@@ -41,6 +41,11 @@ module UHyper_Compiler
       '(' << precond_expression.drop(1).map {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
     when 'not'
       'not (' << expression_to_hyper(precond_expression[1], axioms) << ')'
+    when 'call'
+      # TODO recursive calls
+      function = '==' if (function = precond_expression[1]) == '='
+      terms = precond_expression.drop(2).map! {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}
+      "(#{terms.first} #{function} #{terms.last})"
     else
       if precond_expression.empty?
         'true'

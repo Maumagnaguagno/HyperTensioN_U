@@ -13,6 +13,7 @@
     (and
       (empty_axiom ?current)
       (at-axiom ?current)
+      (call != ?current ?goal)
     )
     ; Del effects
     (
@@ -22,7 +23,6 @@
     (
       (at ?successor)
     )
-    1
   )
 
   (:method (count ?goal)
