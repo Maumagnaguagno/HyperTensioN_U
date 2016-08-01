@@ -157,9 +157,7 @@ module UJSHOP_Parser
           end
           group.each {|exp| define_expression("axiom #{name}", exp)}
           axiom.concat(group)
-        when ':reward'
-          group.shift
-          @reward = group
+        when ':reward' then (@reward = group).shift
         else puts "#{group.first} is not recognized in domain"
         end
       end
