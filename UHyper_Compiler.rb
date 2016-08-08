@@ -150,8 +150,8 @@ module UHyper_Compiler
     # Axioms
     unless axioms.empty?
       domain_str << "  ##{SPACER}\n  # Axioms\n  ##{SPACER}\n\n"
-      axioms.each {|name,params,*expressions|
-        domain_str << "  def #{name}(#{params.map {|i| i.sub(/^\?/,'')}.join(', ')})\n"
+      axioms.each {|name,param,*expressions|
+        domain_str << "  def #{name}(#{param.map {|i| i.sub(/^\?/,'')}.join(', ')})\n"
         expressions.each {|exp| domain_str << "    return true if #{expression_to_hyper(exp, axioms)}\n"}
         domain_str << "  end\n\n"
       }

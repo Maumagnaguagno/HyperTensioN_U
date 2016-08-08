@@ -151,9 +151,9 @@ module UJSHOP_Parser
         when ':method' then parse_method(group)
         when ':-'
           group.shift
-          if axiom = @axioms.assoc(name = (params = group.shift).shift)
+          if axiom = @axioms.assoc(name = (param = group.shift).shift)
             raise "Axiom #{name} parameters redefined, from #{axiom[1]} to #{param}" if axiom[1] != param
-          else @axioms << axiom = [name, params]
+          else @axioms << axiom = [name, param]
           end
           group.each {|exp| define_expression("axiom #{name}", exp)}
           axiom.concat(group)
