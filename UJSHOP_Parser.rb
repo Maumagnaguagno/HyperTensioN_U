@@ -158,7 +158,7 @@ module UJSHOP_Parser
           group.each {|exp| define_expression("axiom #{name}", exp)}
           axiom.concat(group)
         when ':reward' then (@reward = group).shift
-        else puts "#{group.first} is not recognized in domain"
+        else raise "#{group.first} is not recognized in domain"
         end
       end
     else raise "File #{domain_filename} does not match domain pattern"
