@@ -72,7 +72,7 @@ module UJSHOP_Parser
     raise 'Action without name definition' unless (name = op.first.shift).instance_of?(String)
     name.sub!(/^!!/,'invisible_') or name.sub!(/^!/,'')
     raise "Action #{name} redefined" if @operators.assoc(name)
-    raise "Operator #{name} have #{op.size} groups instead of 4 or more" if op.size < 4
+    raise "Operator #{name} have size #{op.size} instead of 4 or more" if op.size < 4
     @operators << operator = [name, op.shift, []]
     # Preconditions
     if (group = op.shift) != NIL
@@ -114,7 +114,7 @@ module UJSHOP_Parser
       if (group = met.shift) != NIL
         raise "Error with #{name} preconditions" unless group.instance_of?(Array)
         group.each {|pre|
-          pre.first != NOT ? pos << pre : pre.size == 2 ? neg << (pre = pre.last) : raise("Error with #{name} negative precondition group")
+          pre.first != NOT ? pos << pre : pre.size == 2 ? neg << (pre = pre.last) : raise("Error with #{name} negative preconditions")
           @predicates[pre.first.freeze] ||= false
           free_variables.concat(pre.select {|i| i.start_with?('?') and not method[1].include?(i)})
         }
