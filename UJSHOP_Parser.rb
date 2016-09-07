@@ -173,12 +173,15 @@ module UJSHOP_Parser
     if (tokens = scan_tokens(problem_filename)).instance_of?(Array) and tokens.size.between?(5,6) and tokens.shift == 'defproblem'
       @problem_name = tokens.shift
       raise 'Different domain specified in problem file' if @domain_name != tokens.shift
-      @state = tokens.shift
-      @tasks = tokens.shift
-      # Tasks may be ordered or unordered
-      @tasks.shift unless order = (@tasks.first != ':unordered')
-      @tasks.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}
-      @tasks.unshift(order)
+      @state = tokens.first != NIL ? tokens.shift : []
+      if tokens.first != NIL
+        @tasks = tokens.shift
+        # Tasks may be ordered or unordered
+        @tasks.shift unless order = (@tasks.first != ':unordered')
+        @tasks.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}
+        @tasks.unshift(order)
+      else @tasks = []
+      end
       @goal_pos = []
       @goal_not = []
     else raise "File #{problem_filename} does not match problem pattern"
