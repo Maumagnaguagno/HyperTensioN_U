@@ -120,4 +120,4 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
 
 ## ToDo's
 - Test axioms
-- Don't add internal operators (prefix ``!!``) to plan
+- Remove internal operators (prefix ``!!``) from returned plan
