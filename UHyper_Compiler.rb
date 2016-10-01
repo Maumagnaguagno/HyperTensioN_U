@@ -170,20 +170,14 @@ module UHyper_Compiler
     problem_str = "# Objects\n"
     # Extract information
     objects = []
-    start_hash = Hash.new {|h,k| h[k] = []}
+    start_hash = {}
     predicates.each_key {|i| start_hash[i] = []}
     state.each {|pred,*terms|
-      start_hash[pred] << terms
+      start_hash[pred] << terms if predicates.include?(pred)
       objects.concat(terms)
     }
-    goal_pos.each {|pred,*terms|
-      start_hash[pred]
-      objects.concat(terms)
-    }
-    goal_not.each {|pred,*terms|
-      start_hash[pred]
-      objects.concat(terms)
-    }
+    goal_pos.each {|pred,*terms| objects.concat(terms)}
+    goal_not.each {|pred,*terms| objects.concat(terms)}
     ordered = tasks.shift
     tasks.each {|pred,*terms| objects.concat(terms)}
     # Objects
