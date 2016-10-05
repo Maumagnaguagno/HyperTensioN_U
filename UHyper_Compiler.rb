@@ -32,7 +32,7 @@ module UHyper_Compiler
   end
 
   #-----------------------------------------------
-  # Subtasks to Hyper
+  # Expression to Hyper
   #-----------------------------------------------
 
   def expression_to_hyper(precond_expression, axioms)
@@ -41,11 +41,7 @@ module UHyper_Compiler
       '(' << precond_expression.drop(1).map {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
     when 'not'
       'not (' << expression_to_hyper(precond_expression[1], axioms) << ')'
-    when 'call'
-      # TODO recursive calls
-      function = '==' if (function = precond_expression[1]) == '='
-      terms = precond_expression.drop(2).map! {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}
-      "(#{terms.first} #{function} #{terms.last})"
+    when 'call' then call(precond_expression)
     else
       if precond_expression.empty?
         'true'
@@ -58,6 +54,25 @@ module UHyper_Compiler
         end
       end
     end
+  end
+
+  #-----------------------------------------------
+  # Call
+  #-----------------------------------------------
+
+  def call(precond_expression)
+    function = '==' if (function = precond_expression[1]) == '='
+    terms = precond_expression.drop(2).map! {|i|
+      case i
+      when Array then i.first == 'call' ? call(i) : i
+      when String
+        if i.start_with?('?') then i.sub(/^\?/,'')
+        elsif i =~ /^\d+$/ then i.to_i
+        else "'#{i}'"
+        end
+      end
+    }
+    "(#{terms.first} #{function} #{terms.last})"
   end
 
   #-----------------------------------------------
