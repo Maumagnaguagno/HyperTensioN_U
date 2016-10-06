@@ -12,7 +12,7 @@ module UHyper_Compiler
       output << "\n      []"
     else
       group = []
-      predicates.each {|g| group << g.map {|i| i.instance_of?(Array) && i.first == 'call' ? call(i) : i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')}
+      predicates.each {|g| group << g.map {|i| evaluate(i)}.join(', ')}
       output << "\n      [\n        [" << group.join("],\n        [") << "]\n      ]"
     end
   end
@@ -26,7 +26,7 @@ module UHyper_Compiler
       output << "#{indentation}yield []\n"
     else
       group = []
-      subtasks.each {|t| group << t.map {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')}
+      subtasks.each {|t| group << t.map {|i| evaluate(i)}.join(', ')}
       output << "#{indentation}yield [\n#{indentation}  [" << group.join("],\n#{indentation}  [") << "]\n#{indentation}]\n"
     end
   end
@@ -46,7 +46,7 @@ module UHyper_Compiler
       if precond_expression.empty?
         'true'
       else
-        terms = precond_expression.drop(1).map! {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')
+        terms = precond_expression.drop(1).map! {|i| evaluate(i)}.join(', ')
         if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
         else "@state['#{precond_expression.first}'].include?([#{terms}])"
         end
@@ -60,19 +60,25 @@ module UHyper_Compiler
 
   def call(precond_expression)
     function = '==' if (function = precond_expression[1]) == '='
-    terms = precond_expression.drop(2).map! {|i|
-      case i
-      when Array then i.first == 'call' ? call(i) : i
-      when String
-        if i.start_with?('?') then i.sub(/^\?/,'')
-        elsif i =~ /^-?\d+$/ then i.to_i
-        else "'#{i}'"
-        end
-      end
-    }
-    raise "Too many arguments for #{function} call" if terms.size > 2
+    terms = precond_expression.drop(2).map! {|term| evaluate(term)}
+    raise "Too many arguments for #{function} call, expected 2" if terms.size > 2
     integer = ['+', '-', '*', '/', '%', '**'].include?(function)
     "(#{terms.first}#{'.to_i' if integer} #{function} #{terms.last}#{'.to_i' if integer})#{'.to_s' if integer}"
+  end
+
+  #-----------------------------------------------
+  # Evaluate
+  #-----------------------------------------------
+
+  def evaluate(term)
+    case term
+    when Array then term.first == 'call' ? call(term) : raise('List operations are not supported')
+    when String
+      if term.start_with?('?') then term.sub(/^\?/,'')
+      elsif term =~ /^-?\d+$/ then term.to_i
+      else "'#{term}'"
+      end
+    end
   end
 
   #-----------------------------------------------
