@@ -8,7 +8,7 @@
     (not (not (at ?current)))
   )
 
-  (:operator (!add-one ?current ?successor ?goal)
+  (:operator (!add-one ?current ?goal)
     ; Preconditions
     (and
       (empty_axiom ?current)
@@ -21,22 +21,11 @@
     )
     ; Add effects
     (
-      (at ?successor)
+      (at (call + ?current 1))
     )
   )
 
   (:method (count ?goal)
-    increment
-    ; Preconditions
-    (
-      (at ?current)
-      (next ?current ?successor)
-    )
-    ; Subtasks
-    (
-      (!add-one ?current ?successor ?goal)
-      (count ?goal)
-    )
     goal-reached
     ; Preconditions
     (
@@ -44,5 +33,15 @@
     )
     ; Subtasks
     nil
+    increment
+    ; Preconditions
+    (
+      (at ?current)
+    )
+    ; Subtasks
+    (
+      (!add-one ?current ?goal)
+      (count ?goal)
+    )
   )
 ))

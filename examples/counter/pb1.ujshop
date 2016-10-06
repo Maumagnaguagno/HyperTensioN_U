@@ -1,19 +1,10 @@
 (defproblem pb1 counter
   ; Start
   (
-    (at n1)
-    (next n1 n2)
-    (next n2 n3)
-    (next n3 n4)
-    (next n4 n5)
-    (next n5 n6)
-    (next n6 n7)
-    (next n7 n8)
-    (next n8 n9)
-    (next n9 n10)
+    (at 1)
   )
   ; Tasks
   (
-    (count n10)
+    (count 10)
   )
 )
