@@ -65,7 +65,7 @@ module UHyper_Compiler
       when Array then i.first == 'call' ? call(i) : i
       when String
         if i.start_with?('?') then i.sub(/^\?/,'')
-        elsif i =~ /^\d+$/ then i.to_i
+        elsif i =~ /^-?\d+$/ then i.to_i
         else "'#{i}'"
         end
       end
@@ -200,17 +200,17 @@ module UHyper_Compiler
     tasks.each {|pred,*terms| objects.concat(terms)}
     # Objects
     objects.uniq!
-    objects.each {|i| problem_str << "#{i} = '#{i}'\n" unless i =~ /^\d+$/}
+    objects.each {|i| problem_str << "#{i} = '#{i}'\n" unless i =~ /^-?\d+$/}
     problem_str << "\n#{domain_name.capitalize}.problem(\n  # Start\n  {\n"
     # Start
     start_hash.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
-      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o =~ /^\d+$/ ? "'#{o}'" : o}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
+      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o =~ /^-?\d+$/ ? "'#{o}'" : o}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
       problem_str << (start_hash.size.pred == i ? ']' : "],\n")
     }
     # Tasks
     group = []
-    tasks.each {|t| group << "    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map {|o| o =~ /^\d+$/ ? "'#{o}'" : o}.join(', ')}]"}
+    tasks.each {|t| group << "    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map {|o| o =~ /^-?\d+$/ ? "'#{o}'" : o}.join(', ')}]"}
     problem_str << "\n  },\n  # Tasks\n  [\n" << group .join(",\n") << "\n  ],\n  # Debug\n  ARGV.first == '-d',\n  # Minimal probability for plans\n  ARGV[1] ? ARGV[1].to_f : 0,\n  # Maximum plans found\n  ARGV[2] ? ARGV[2].to_i : -1"
     tasks.unshift(ordered) unless tasks.empty?
     unless ordered
