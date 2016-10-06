@@ -12,7 +12,7 @@ module UHyper_Compiler
       output << "\n      []"
     else
       group = []
-      predicates.each {|g| group << g.map {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')}
+      predicates.each {|g| group << g.map {|i| i.instance_of?(Array) && i.first == 'call' ? call(i) : i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')}
       output << "\n      [\n        [" << group.join("],\n        [") << "]\n      ]"
     end
   end
@@ -47,10 +47,8 @@ module UHyper_Compiler
         'true'
       else
         terms = precond_expression.drop(1).map! {|i| i.start_with?('?') ? i.sub(/^\?/,'') : "'#{i}'"}.join(', ')
-        if axioms.assoc(precond_expression.first)
-          "#{precond_expression.first}(#{terms})"
-        else
-          "@state['#{precond_expression.first}'].include?([#{terms}])"
+        if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
+        else "@state['#{precond_expression.first}'].include?([#{terms}])"
         end
       end
     end
@@ -72,7 +70,9 @@ module UHyper_Compiler
         end
       end
     }
-    "(#{terms.first} #{function} #{terms.last})"
+    raise "Too many arguments for #{function} call" if terms.size > 2
+    integer = ['+', '-', '*', '/', '%', '**'].include?(function)
+    "(#{terms.first}#{'.to_i' if integer} #{function} #{terms.last}#{'.to_i' if integer})#{'.to_s' if integer}"
   end
 
   #-----------------------------------------------
@@ -197,17 +197,17 @@ module UHyper_Compiler
     tasks.each {|pred,*terms| objects.concat(terms)}
     # Objects
     objects.uniq!
-    objects.each {|i| problem_str << "#{i} = '#{i}'\n"}
+    objects.each {|i| problem_str << "#{i} = '#{i}'\n" unless i =~ /^\d+$/}
     problem_str << "\n#{domain_name.capitalize}.problem(\n  # Start\n  {\n"
     # Start
     start_hash.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
-      problem_str << "\n      [" << v.map! {|obj| obj.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
+      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o =~ /^\d+$/ ? "'#{o}'" : o}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
       problem_str << (start_hash.size.pred == i ? ']' : "],\n")
     }
     # Tasks
     group = []
-    tasks.each {|t| group << "    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).join(', ')}]"}
+    tasks.each {|t| group << "    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map {|o| o =~ /^\d+$/ ? "'#{o}'" : o}.join(', ')}]"}
     problem_str << "\n  },\n  # Tasks\n  [\n" << group .join(",\n") << "\n  ],\n  # Debug\n  ARGV.first == '-d',\n  # Minimal probability for plans\n  ARGV[1] ? ARGV[1].to_f : 0,\n  # Maximum plans found\n  ARGV[2] ? ARGV[2].to_i : -1"
     tasks.unshift(ordered) unless tasks.empty?
     unless ordered
