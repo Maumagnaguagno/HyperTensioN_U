@@ -36,10 +36,7 @@ module UJSHOP_Parser
 
   def define_effects(name, group)
     raise "Error with #{name} effects" unless group.instance_of?(Array)
-    group.each {|pre|
-      raise 'Unexpected not in effects' if pre.first == NOT
-      @predicates[pre.first.freeze] = true
-    }
+    group.each {|pre| pre.first != NOT ? @predicates[pre.first.freeze] = true : raise('Unexpected not in effects')}
   end
 
   #-----------------------------------------------
