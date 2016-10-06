@@ -8,12 +8,11 @@
     (not (not (at ?current)))
   )
 
-  (:operator (!add-one ?current ?goal)
+  (:operator (!add-one ?current)
     ; Preconditions
     (and
       (empty_axiom ?current)
       (at-axiom ?current)
-      (call != ?current ?goal)
     )
     ; Del effects
     (
@@ -40,7 +39,7 @@
     )
     ; Subtasks
     (
-      (!add-one ?current ?goal)
+      (!add-one ?current)
       (count ?goal)
     )
   )
