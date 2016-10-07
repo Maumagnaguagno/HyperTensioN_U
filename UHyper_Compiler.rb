@@ -75,7 +75,7 @@ module UHyper_Compiler
     when Array then term.first == 'call' ? call(term) : raise('List operations are not supported')
     when String
       if term.start_with?('?') then term.sub(/^\?/,'')
-      elsif term =~ /^-?\d+$/ then term.to_i
+      elsif term =~ /^-?\d+$/ then term
       else "'#{term}'"
       end
     end
