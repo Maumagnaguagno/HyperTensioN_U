@@ -61,7 +61,7 @@ module UHyper_Compiler
   def call(precond_expression)
     function = '==' if (function = precond_expression[1]) == '='
     terms = precond_expression.drop(2).map! {|term| evaluate(term)}
-    raise "Too many arguments for #{function} call, expected 2" if terms.size > 2
+    raise "Too many arguments for #{function} call, expected 2" if terms.size != 2
     integer = ['+', '-', '*', '/', '%', '**'].include?(function)
     "(#{terms.first}#{'.to_i' if integer} #{function} #{terms.last}#{'.to_i' if integer})#{'.to_s' if integer}"
   end
