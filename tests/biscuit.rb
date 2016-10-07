@@ -64,9 +64,7 @@ class Biscuit < Test::Unit::TestCase
         'have' => true
       },
       :state => [['at', 'bob', 'home']],
-      :tasks => [true, ['get_cookie', 'bob', 'home', 'cookie-store']],
-      :goal_pos => [],
-      :goal_not => []
+      :tasks => [true, ['get_cookie', 'bob', 'home', 'cookie-store']]
     )
   end
 end

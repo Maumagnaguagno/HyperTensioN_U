@@ -1,7 +1,7 @@
 module UJSHOP_Parser
   extend self
 
-  attr_reader :domain_name, :problem_name, :operators, :methods, :predicates, :state, :tasks, :goal_pos, :goal_not, :axioms, :reward
+  attr_reader :domain_name, :problem_name, :operators, :methods, :predicates, :state, :tasks, :axioms, :reward
 
   NOT = 'not'
   NIL = 'nil'
@@ -184,8 +184,6 @@ module UJSHOP_Parser
         @tasks.unshift(order)
       else @tasks = []
       end
-      @goal_pos = []
-      @goal_not = []
     else raise "File #{problem_filename} does not match problem pattern"
     end
   end

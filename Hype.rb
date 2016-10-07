@@ -49,8 +49,6 @@ module Hype
         @parser.predicates,
         @parser.state,
         @parser.tasks,
-        @parser.goal_pos,
-        @parser.goal_not,
         @parser.axioms,
         @parser.reward
       ]
