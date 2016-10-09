@@ -199,7 +199,7 @@ module Hypertension_U
            "Probability: #{plan[PROBABILITY]}"
       if plan.size == 2
         puts 'Empty plan'
-      else print_data(plan.drop(2))
+      else print_data(plan.drop(2).delete_if {|i| i.first.start_with?('invisible_')})
       end
     }
     puts 'Planning failed' if @plans.empty?
