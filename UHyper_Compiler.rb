@@ -7,27 +7,13 @@ module UHyper_Compiler
   # Predicates to Hyper
   #-----------------------------------------------
 
-  def predicates_to_hyper(output, predicates)
+  def predicates_to_hyper(output, predicates, indentation = '      ', yielder = '')
     if predicates.empty?
-      output << "\n      []"
+      output << "\n#{indentation}#{yielder}[]"
     else
       group = []
       predicates.each {|g| group << g.map {|i| evaluate(i)}.join(', ')}
-      output << "\n      [\n        [" << group.join("],\n        [") << "]\n      ]"
-    end
-  end
-
-  #-----------------------------------------------
-  # Subtasks to Hyper
-  #-----------------------------------------------
-
-  def subtasks_to_hyper(output, subtasks, indentation)
-    if subtasks.empty?
-      output << "#{indentation}yield []\n"
-    else
-      group = []
-      subtasks.each {|t| group << t.map {|i| evaluate(i)}.join(', ')}
-      output << "#{indentation}yield [\n#{indentation}  [" << group.join("],\n#{indentation}  [") << "]\n#{indentation}]\n"
+      output << "\n#{indentation}#{yielder}[\n#{indentation}  [" << group.join("],\n#{indentation}  [") << "]\n#{indentation}]"
     end
   end
 
@@ -98,7 +84,7 @@ module UHyper_Compiler
     else
       unless precond_expression.empty?
         # Effective if preconditions hold
-        define_operators << "return unless #{expression_to_hyper(precond_expression, axioms)}\n"
+        define_operators << "return unless #{expression_to_hyper(precond_expression, axioms)}\n    "
       end
       # Effective
       predicates_to_hyper(define_operators << "apply(\n      # Add effects", effect_add)
@@ -137,26 +123,26 @@ module UHyper_Compiler
       variables = met[1].empty? ? '' : "(#{met[1].map {|i| i.sub(/^\?/,'')}.join(', ')})"
       met.drop(2).each_with_index {|dec,i|
         domain_str << "      '#{met.first}_#{dec.first}'#{',' if met.size - 3 != i}\n"
-        define_methods << "\n  def #{met.first}_#{dec.first}#{variables}\n"
+        define_methods << "\n  def #{met.first}_#{dec.first}#{variables}"
         # No preconditions
         if dec[2].empty? and dec[3].empty?
-          subtasks_to_hyper(define_methods, dec[4], '    ')
+          predicates_to_hyper(define_methods, dec[4], '    ', 'yield ')
         # Ground
         elsif dec[1].empty?
-          predicates_to_hyper(define_methods << "    if applicable?(\n      # Positive preconditions", dec[2])
+          predicates_to_hyper(define_methods << "\n    if applicable?(\n      # Positive preconditions", dec[2])
           predicates_to_hyper(define_methods << ",\n      # Negative preconditions", dec[3])
-          subtasks_to_hyper(define_methods << "\n    )\n", dec[4], '      ')
-          define_methods << "    end\n"
+          predicates_to_hyper(define_methods << "\n    )", dec[4], '      ', 'yield ')
+          define_methods << "\n    end"
         # Lifted
         else
-          dec[1].each {|free| define_methods << "    #{free.sub(/^\?/,'')} = ''\n"}
-          predicates_to_hyper(define_methods << "    generate(\n      # Positive preconditions", dec[2])
+          dec[1].each {|free| define_methods << "\n    #{free.sub(/^\?/,'')} = ''"}
+          predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", dec[2])
           predicates_to_hyper(define_methods << ",\n      # Negative preconditions", dec[3])
           dec[1].each {|free| define_methods << ", #{free.sub(/^\?/,'')}"}
-          subtasks_to_hyper(define_methods << "\n    ) {\n", dec[4], '      ')
-          define_methods << "    }\n"
+          predicates_to_hyper(define_methods << "\n    ) {", dec[4], '      ', 'yield ')
+          define_methods << "\n    }"
         end
-        define_methods << "  end\n"
+        define_methods << "\n  end\n"
       }
       domain_str << (methods.size.pred == mi ? '    ]' : '    ],')
     }
