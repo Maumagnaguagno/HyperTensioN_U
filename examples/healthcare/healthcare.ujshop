@@ -6,10 +6,10 @@
 ; predicates on goals - null(g,gi,gv) suspendedG(g,gi,gv) aborted(g,gi,gv) dropped(g,gi,gv) satisfiedG(g,gi,gv)
 ;=============================================
 
-(:- (null ?g ?gi ?gv) (not (var ?g ?gi ?gv) ) )
+(:- (nullG ?g ?gi ?gv) (not (varG ?g ?gi ?gv) ) )
 
 (:- (inactiveG ?g ?gi ?gv) 
-	        (and (not (null ?g ?gi ?gv)) (not (f ?g ?gi ?gv)) 
+	        (and (not (nullG ?g ?gi ?gv)) (not (f ?g ?gi ?gv)) 
 				 (not (s ?g ?gi ?gv)) (not (terminalG ?g ?gi ?gv)) 
 			     (not (suspendedG ?g ?gi ?gv)) (not (activeG ?g ?gi ?gv))) )
 ; Fix this
@@ -17,14 +17,14 @@
  	        (and (activatedG ?g ?gi ?gv) (not (f ?g ?gi ?gv)) (not (satisfiedG ?g ?gi ?gv)) 
 				 (not (terminalG ?g ?gi ?gv)) (not (suspendedG ?g ?gi ?gv))) )
 
-(:- (satisfiedG ?g ?gi ?gv) (and (not (null ?g ?gi ?gv)) (not (terminalG ?g ?gi ?gv)) 
+(:- (satisfiedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (not (terminalG ?g ?gi ?gv)) 
                                (pg ?g ?gi ?gv) (s ?g ?gi ?gv) (not (f ?g ?gi ?gv))) )
 
-;  (:- (suspended ?g ?gi ?gv) (and (not (null ?g ?gi ?gv)) (not (terminal ?g ?gi ?gv)) (suspended ?g ?gi ?gv) ) )
+;  (:- (suspended ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (not (terminal ?g ?gi ?gv)) (suspended ?g ?gi ?gv) ) )
 
-(:- (failedG ?g ?gi ?gv) (and (not (null ?g ?gi ?gv)) (f ?g ?gi ?gv) ) )
+(:- (failedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (f ?g ?gi ?gv) ) )
 
-(:- (terminatedG ?g ?gi ?gv) (and (not (null ?g ?gi ?gv)) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv)) ) )
+(:- (terminatedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv)) ) )
 
 ; A rule to ensure that once a goal enters a terminal state (e.g. dropped or aborted), it cannot return
 (:- (terminalG ?g ?gi ?gv) (and (goal ?g ?gi ?a) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv) )) )
@@ -117,8 +117,8 @@
 
 
  	
- 	; Generic operators
- 	 ;======================
+ ; Generic operators
+ ;======================
  ; Commitment operators
  ;======================
 
@@ -231,10 +231,10 @@
 ; predicates on goals - null(g,gi,gv) suspendedG(g,gi,gv) aborted(g,gi,gv) dropped(g,gi,gv) satisfiedG(g,gi,gv)
 ;=============================================
 
-  (:- (null ?g ?gi ?gv) (not (var ?g ?gi ?gv) ) )
+  (:- (nullG ?g ?gi ?gv) (not (varG ?g ?gi ?gv) ) )
 
   (:- (inactiveG ?g ?gi ?gv) 
-    	        (and (not (null ?g ?gi ?gv)) (not (f ?g ?gi ?gv)) 
+    	        (and (not (nullG ?g ?gi ?gv)) (not (f ?g ?gi ?gv)) 
 					 (not (s ?g ?gi ?gv)) (not (terminalG ?g ?gi ?gv)) 
 				     (not (suspendedG ?g ?gi ?gv)) (not (activeG ?g ?gi ?gv))) )
   ; Fix this
@@ -242,14 +242,14 @@
      	        (and (activatedG ?g ?gi ?gv) (not (f ?g ?gi ?gv)) (not (satisfiedG ?g ?gi ?gv)) 
 					 (not (terminalG ?g ?gi ?gv)) (not (suspendedG ?g ?gi ?gv))) )
 
-  (:- (satisfiedG ?g ?gi ?gv) (and (not (null ?g ?gi ?gv)) (not (terminalG ?g ?gi ?gv)) 
+  (:- (satisfiedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (not (terminalG ?g ?gi ?gv)) 
 	                               (pg ?g ?gi ?gv) (s ?g ?gi ?gv) (not (f ?g ?gi ?gv))) )
 
-;  (:- (suspended ?g ?gi ?gv) (and (not (null ?g ?gi ?gv)) (not (terminal ?g ?gi ?gv)) (suspended ?g ?gi ?gv) ) )
+;  (:- (suspended ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (not (terminal ?g ?gi ?gv)) (suspended ?g ?gi ?gv) ) )
 
-  (:- (failedG ?g ?gi ?gv) (and (not (null ?g ?gi ?gv)) (f ?g ?gi ?gv) ) )
+  (:- (failedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (f ?g ?gi ?gv) ) )
 
-  (:- (terminatedG ?g ?gi ?gv) (and (not (null ?g ?gi ?gv)) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv)) ) )
+  (:- (terminatedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv)) ) )
 
   ; A rule to ensure that once a goal enters a terminal state (e.g. dropped or aborted), it cannot return
   (:- (terminalG ?g ?gi ?gv) (and (goal ?g ?gi ?a) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv) )) )
@@ -270,12 +270,12 @@
   ; Regular transitions 
   (:operator (!consider ?g ?gi ?a ?gv)
     ((goal ?g ?gi ?a)
-     (null ?g ?gi ?gv)
+     (nullG ?g ?gi ?gv)
      (pg ?g ?gi ?gv)
     )
 
     ()
-    ((var ?g ?gi ?gv))
+    ((varG ?g ?gi ?gv))
     1 
   )
 
@@ -287,10 +287,10 @@
 	1
  )
 
-  (:operator (!suspend ?g ?gi ?a ?gv)
+  (:operator (!suspendG ?gi ?a ?gv)
     ((goal ?g ?gi ?a)
      (not (terminalG ?g ?gi ?gv))
-     (not (null ?g ?gi ?gv))
+     (not (nullG ?g ?gi ?gv))
     )
 
     ((activatedG ?g ?gi ?gv))
@@ -303,7 +303,7 @@
      (suspendedG ?g ?gi ?gv)
      (not (terminalG ?g ?gi ?gv))
      ;(not (pg ?g ?gi ?gv))
-     (not (null ?g ?gi ?gv))
+     (not (nullG ?g ?gi ?gv))
     )
 
     ((suspendedG ?g ?gi ?gv))
@@ -312,12 +312,12 @@
   )
 
 
-  (:operator (!reactivate ?g ?gi ?a ?gv)
+  (:operator (!reactivateG ?gi ?a ?gv)
     ((goal ?g ?gi ?a)
      (suspendedG ?g ?gi ?gv)
      (not (terminalG ?g ?gi ?gv))
      ;(pg ?g ?gi ?gv)
-     (not (null ?g ?gi ?gv))
+     (not (nullG ?g ?gi ?gv))
     )
 
     ((suspendedG ?g ?gi ?gv))
@@ -328,7 +328,7 @@
   (:operator (!drop ?g ?gi ?a ?gv)
     ((goal ?g ?gi ?a)
      (not (terminalG ?g ?gi ?gv))
-     (not (null ?g ?gi ?gv))
+     (not (nullG ?g ?gi ?gv))
     )
 
     ( )
@@ -339,7 +339,7 @@
   (:operator (!abort ?g ?gi ?a ?gv)
      ((goal ?g ?gi ?a)
       (not (terminalG ?g ?gi ?gv))
-      (not (null ?g ?gi ?gv))
+      (not (nullG ?g ?gi ?gv))
      )
 
      ( )
@@ -350,7 +350,7 @@
   ;Fail does not depend on the agent to happen
   ; (:operator (!fail ?g ?gi ?a ?gv)
   ;     ((goal ?g ?gi ?a)
-  ;      (not (null ?g ?gi ?gv))
+  ;      (not (nullG ?g ?gi ?gv))
   ;      (f ?g ?gi ?gv)
   ;     )
   ; 
@@ -482,7 +482,7 @@
   ;Deliver and Deliver' are encoded in a single method
   (:method (deliver ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
     ; Deliver
-    ((goal ?g ?gi ?d) (null ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv))
+    ((goal ?g ?gi ?d) (nullG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv))
     ( (!consider ?g ?gi ?d ?gv) (!activate ?g ?gi ?d ?gv) )
 
     ; Deliver'
@@ -493,13 +493,13 @@
 
   (:method (backBurner ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
     ((goal ?g ?gi ?d) (activeG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (pending ?c ?ci ?cv))
-    ((!suspend ?g ?gi ?d ?gv))
+    ((!suspendG ?gi ?d ?gv))
   )
 	
 
   (:method (frontBurner ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
     ((goal ?g ?gi ?d) (suspendedG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv))
-    ((!reactivate ?g ?gi ?d ?gv))
+    ((!reactivateG ?gi ?d ?gv))
   )
 	
   (:method (abandonMeansGoal ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
@@ -510,7 +510,7 @@
 	
   (:method (persist ?g ?gi ?gv ?c ?ci ?cv ?g2 ?gi2 ?gv2 ?d ?a)
     ((goal ?g ?gi ?d) (or (terminatedG ?g ?gi ?gv) (failedG ?g ?gi ?gv)) 
-     (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv) (goal ?g2 ?gi2 ?d) (null ?g2 ?gi2 ?gv2))
+     (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv) (goal ?g2 ?gi2 ?d) (nullG ?g2 ?gi2 ?gv2))
     ((!consider ?g2 ?gi2 ?d ?gv2) (!activate ?g2 ?gi2 ?d ?gv2))
   )
 	
@@ -571,7 +571,7 @@
   )
 
 	(:method (testGoal ?g ?gi ?gv ?s)
-	    ((goal ?g ?gi ?a) (call = ?s null) (null ?g ?gi ?gv))
+	    ((goal ?g ?gi ?a) (call = ?s null) (nullG ?g ?gi ?gv))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
 	
 	   	((goal ?g ?gi ?a) (call = ?s inactive) (inactiveG ?g ?gi ?gv))
