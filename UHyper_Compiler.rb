@@ -58,7 +58,7 @@ module UHyper_Compiler
 
   def evaluate(term)
     case term
-    when Array then term.first == 'call' ? call(term) : raise('List operations are not supported')
+    when Array then term.first == 'call' ? call(term) : raise("List operations are not supported, list #{term} is unexpected.")
     when String
       if term.start_with?('?') then term.sub(/^\?/,'')
       elsif term =~ /^-?\d+$/ then term
