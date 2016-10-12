@@ -118,7 +118,7 @@ module UJSHOP_Parser
         group.each {|pre|
           pre.first != NOT ? pos << pre : pre.size == 2 ? neg << pre = pre.last : raise("Error with #{name} negative preconditions")
           @predicates[pre.first.freeze] ||= false
-          free_variables.concat(pre.select {|i| i.start_with?('?') and not method[1].include?(i)})
+          free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not method[1].include?(i)})
         }
         free_variables.uniq!
       end
@@ -153,9 +153,8 @@ module UJSHOP_Parser
         when ':method' then parse_method(group)
         when ':-'
           group.shift
-          if axiom = @axioms.assoc(name = (param = group.shift).shift)
-            raise "Axiom #{name} parameters redefined, from #{axiom[1]} to #{param}" if axiom[1] != param
-          else @axioms << axiom = [name, param]
+          unless axiom = @axioms.assoc(name = (param = group.shift).shift)
+            @axioms << axiom = [name, param]
           end
           group.each {|exp| define_expression("axiom #{name}", exp)}
           axiom.concat(group)
