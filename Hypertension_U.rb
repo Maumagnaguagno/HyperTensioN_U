@@ -194,7 +194,7 @@ module Hypertension_U
     puts "Time: #{Time.now.to_f - t}s", 'Plan'.center(50,'-')
     puts "Plans found: #{@plans.size}"
     @plans.each_with_index {|plan,i|
-      puts "Plan #{i}".center(50,'-'),
+      puts "Plan #{i.succ}".center(50,'-'),
            "Valuation: #{plan[VALUATION]}",
            "Probability: #{plan[PROBABILITY]}"
       if plan.size == 2
