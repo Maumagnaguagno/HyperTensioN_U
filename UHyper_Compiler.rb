@@ -159,7 +159,8 @@ module UHyper_Compiler
       domain_str << "  ##{SPACER}\n  # Axioms\n  ##{SPACER}\n\n"
       axioms.each {|name,param,*expressions|
         domain_str << "  def #{name}(#{param.map {|i| i.sub(/^\?/,'')}.join(', ')})\n"
-        expressions.each {|exp|
+        expressions.each_slice(2) {|name,exp|
+          domain_str << "    # #{name}\n"
           exp = expression_to_hyper(exp, axioms)
           domain_str << (exp == 'false' ? "    return true if false\n" : "    return true if #{exp}\n")
         }

@@ -3,6 +3,8 @@ module UJSHOP_Parser
 
   attr_reader :domain_name, :problem_name, :operators, :methods, :predicates, :state, :tasks, :axioms, :reward
 
+  AND = 'and'
+  OR  = 'or'
   NOT = 'not'
   NIL = 'nil'
 
@@ -44,16 +46,17 @@ module UJSHOP_Parser
   #-----------------------------------------------
 
   def define_expression(name, group)
+    # TODO support nil
     raise "Error with #{name}" unless group.instance_of?(Array)
-    group.unshift(first = 'and') if (first = group.first).instance_of?(Array)
-    if first == 'and' or first == 'or'
+    group.unshift(first = AND) if (first = group.first).instance_of?(Array)
+    if first == AND or first == OR
       if group.size == 1
         raise "Unexpected zero arguments for #{first} in #{name}"
       elsif group.size == 2
         define_expression(name, group.replace(group.last))
       else group.drop(1).each {|g| define_expression(name, g)}
       end
-    elsif first == 'not'
+    elsif first == NOT
       raise "Unexpected multiple arguments for not in #{name}" if group.size != 2
       define_expression(name, group.last)
     else @predicates[first.freeze] ||= false
@@ -156,8 +159,15 @@ module UJSHOP_Parser
           unless axiom = @axioms.assoc(name = (param = group.shift).shift)
             @axioms << axiom = [name, param]
           end
-          group.each {|exp| define_expression("axiom #{name}", exp)}
-          axiom.concat(group)
+          while exp = group.shift
+            if exp.instance_of?(String) and exp != NIL
+              label = exp
+              raise "Expected axiom definition after label #{label} on #{name}" unless exp = group.shift
+            else label = "case #{(axiom.size - 2) / 2}"
+            end
+            define_expression("axiom #{name}", exp)
+            axiom.push(label, exp)
+          end
         when ':reward' then (@reward = group).shift
         else raise "#{group.first} is not recognized in domain"
         end
