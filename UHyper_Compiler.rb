@@ -29,8 +29,9 @@ module UHyper_Compiler
       'not (' << expression_to_hyper(precond_expression[1], axioms) << ')'
     when 'call' then call(precond_expression)
     else
+      # Empty list or nil is false
       if precond_expression.empty?
-        'true'
+        'false'
       else
         terms = precond_expression.drop(1).map! {|i| evaluate(i)}.join(', ')
         if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
@@ -160,7 +161,7 @@ module UHyper_Compiler
         domain_str << "  def #{name}(#{param.map {|i| i.sub(/^\?/,'')}.join(', ')})\n"
         expressions.each {|exp|
           exp = expression_to_hyper(exp, axioms)
-          domain_str << (exp == 'true' ? "    return true\n" : "    return true if #{exp}\n")
+          domain_str << (exp == 'false' ? "    return true if false\n" : "    return true if #{exp}\n")
         }
         domain_str << "  end\n\n"
       }
