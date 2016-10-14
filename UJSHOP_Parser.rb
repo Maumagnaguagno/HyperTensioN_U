@@ -157,15 +157,19 @@ module UJSHOP_Parser
         when ':-'
           group.shift
           unless axiom = @axioms.assoc(name = (param = group.shift).shift)
-            @axioms << axiom = [name, param]
+            @axioms << axiom = [name, param.map {|p| p.start_with?('?') ? p : "?#{p}"}]
           end
+          # Expand constant parameters to equality call
+          const_param = []
+          param.each_with_index {|p,i| const_param << ['call', '=', p, axiom[1][i]] unless p.start_with?('?')}
           while exp = group.shift
             if exp.instance_of?(String) and exp != NIL
               label = exp
               raise "Expected axiom definition after label #{label} on #{name}" unless exp = group.shift
             else label = "case #{(axiom.size - 2) / 2}"
             end
-            define_expression("axiom #{name}", exp)
+            # Add constant parameters match to expression if required
+            define_expression("axiom #{name}", const_param.empty? ? exp : ['and', *const_param, exp])
             axiom.push(label, exp)
           end
         when ':reward' then (@reward = group).shift
