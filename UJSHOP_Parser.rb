@@ -139,22 +139,25 @@ module UJSHOP_Parser
   # Parse axiom
   #-----------------------------------------------
 
-  def parse_axiom(group)
-    group.shift
-    unless axiom = @axioms.assoc(name = (param = group.shift).shift)
-      @axioms << axiom = [name, param.map.with_index {|p,i| p.start_with?('?') ? p : "?parameter#{i}"}]
+  def parse_axiom(ax)
+    ax.shift
+    if axiom = @axioms.assoc(name = (param = ax.shift).shift)
+      raise "Axiom #{name} defined with arity #{axiom[1].size}, unexpected arity #{param.size}" if param.size != axiom[1].size
+      # Parameter names cannot change between axiom definitions
+      axiom[1].zip(param) {|p1,p2| raise "Axiom #{name} is creating a new parameter #{p2} for #{p1}" if p1 != p2 and p1.start_with?('?') and p2.start_with?('?')}
+    else @axioms << axiom = [name, param.map!.with_index {|p,i| p.instance_of?(String) && p.start_with?('?') ? p : "?parameter#{i}"}]
     end
     # Expand constant parameters to equality call
     const_param = []
     param.each_with_index {|p,i| const_param << ['call', '=', p, axiom[1][i]] unless p.start_with?('?')}
-    while exp = group.shift
+    while exp = ax.shift
       if exp.instance_of?(String) and exp != NIL
         label = exp
-        raise "Expected axiom definition after label #{label} on #{name}" unless exp = group.shift
+        raise "Expected axiom definition after label #{label} on #{name}" unless exp = ax.shift
       else label = "case #{(axiom.size - 2) / 2}"
       end
       # Add constant parameters match to expression if required
-      define_expression("axiom #{name}", const_param.empty? ? exp : ['and', *const_param, exp])
+      define_expression("axiom #{name}", const_param.empty? ? exp : [AND, *const_param, exp])
       axiom.push(label, exp)
     end
   end
