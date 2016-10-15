@@ -142,7 +142,7 @@ module UJSHOP_Parser
   def parse_axiom(group)
     group.shift
     unless axiom = @axioms.assoc(name = (param = group.shift).shift)
-      @axioms << axiom = [name, param.map {|p| p.start_with?('?') ? p : "?#{p}"}]
+      @axioms << axiom = [name, param.map.with_index {|p,i| p.start_with?('?') ? p : "?parameter#{i}"}]
     end
     # Expand constant parameters to equality call
     const_param = []
