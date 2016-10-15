@@ -191,8 +191,7 @@ module Hypertension_U
     puts 'Planning'.center(50,'-')
     t = Time.now.to_f
     planning(tasks)
-    puts "Time: #{Time.now.to_f - t}s", 'Plan'.center(50,'-')
-    puts "Plans found: #{@plans.size}"
+    puts "Time: #{Time.now.to_f - t}s", "Plans found: #{@plans.size}"
     @plans.each_with_index {|plan,i|
       puts "Plan #{i.succ}".center(50,'-'),
            "Valuation: #{plan[VALUATION]}",
