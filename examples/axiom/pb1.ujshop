@@ -1,0 +1,12 @@
+(defproblem pb1 axiom
+  ; Start
+  (
+    (at 0)
+  )
+  ; Tasks
+  (
+    (!add-one 0)
+    (!add-one 1)
+    (!add-one 2)
+  )
+)

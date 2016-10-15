@@ -1,0 +1,36 @@
+(defdomain axiom (
+
+  (:- (empty_axiom ?var)
+    ; Anything but an empty list or nil is true
+    negate-empty-list
+    (not (and (or ((((((())))))))))
+  )
+
+  (:- (at-axiom 0)
+    numeric-constant
+    (at 0)
+  )
+
+  ; Parameter ?parameter0 is a default name generated because the first definition of this axiom uses a constant instead
+  ; Other parameter names currently not work
+  (:- (at-axiom ?parameter0)
+    double-negation
+    (not (not (at ?parameter0)))
+  )
+
+  (:operator (!add-one ?current)
+    ; Preconditions
+    (and
+      (empty_axiom ?current)
+      (at-axiom ?current)
+    )
+    ; Del effects
+    (
+      (at ?current)
+    )
+    ; Add effects
+    (
+      (at (call + ?current 1))
+    )
+  )
+))
