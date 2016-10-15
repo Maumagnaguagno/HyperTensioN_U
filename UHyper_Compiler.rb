@@ -48,9 +48,9 @@ module UHyper_Compiler
   def call(precond_expression)
     function = '==' if (function = precond_expression[1]) == '='
     terms = precond_expression.drop(2).map! {|term| evaluate(term)}
-    raise "Too many arguments for #{function} call, expected 2" if terms.size != 2
-    integer = ['+', '-', '*', '/', '%', '**'].include?(function)
-    "(#{terms.first}#{'.to_i' if integer} #{function} #{terms.last}#{'.to_i' if integer})#{'.to_s' if integer}"
+    raise "Wrong number of arguments for #{function} call, expected 2" if terms.size != 2
+    type = ['+', '-', '*', '/', '%', '**'].include?(function) ? 'i' : 's'
+    "(#{terms.first}.to_#{type} #{function} #{terms.last}.to_#{type}).to_s"
   end
 
   #-----------------------------------------------
@@ -59,12 +59,8 @@ module UHyper_Compiler
 
   def evaluate(term)
     case term
-    when Array then term.first == 'call' ? call(term) : raise("List operations are not supported, list #{term} is unexpected.")
-    when String
-      if term.start_with?('?') then term.sub(/^\?/,'')
-      elsif term =~ /^-?\d+$/ then term
-      else "'#{term}'"
-      end
+    when Array then term.first == 'call' ? call(term) : raise("List operations are not supported, #{term} is unexpected.")
+    when String then term.start_with?('?') ? term.sub(/^\?/,'') : "'#{term}'"
     end
   end
 
