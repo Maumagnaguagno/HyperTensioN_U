@@ -1,20 +1,9 @@
 (defdomain counter (
 
-  (:- (empty_axiom ?var)
-    ; Anything but an empty list or nil is true
-    negate-empty-list
-    (not (and (or ((((((())))))))))
-  )
-
-  (:- (at-axiom ?current)
-    (not (not (at ?current)))
-  )
-
   (:operator (!add-one ?current)
     ; Preconditions
-    (and
-      (empty_axiom ?current)
-      (at-axiom ?current)
+    (
+      (at ?current)
     )
     ; Del effects
     (
