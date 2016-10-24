@@ -63,7 +63,7 @@ module Hypertension_U
     if (new_prob = plan[PROBABILITY] * probability) >= @min_prob
       # If operator applied
       @previous_state = @state
-      if new_state = send(*current_task)
+      if send(*current_task)
         new_plan = plan.dup << current_task
         new_plan[PROBABILITY] = new_prob
         new_plan[VALUATION] += state_valuation * probability
