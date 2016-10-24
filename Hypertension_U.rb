@@ -41,6 +41,7 @@ module Hypertension_U
         # Error
         else raise "Domain defines no decomposition for #{current_task.first}"
         end
+        nil
       end
     end
   end
