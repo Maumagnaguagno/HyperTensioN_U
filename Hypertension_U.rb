@@ -20,7 +20,7 @@ module Hypertension_U
         case decomposition = @domain[(current_task = tasks.shift).first]
         # Operator with single outcome
         when Numeric
-          execute(current_task, decomposition, tasks, level, plan)
+          return execute(current_task, decomposition, tasks, level, plan)
         # Operator with multiple outcomes
         when Hash
           decomposition.each {|task_prob,probability|
@@ -72,6 +72,7 @@ module Hypertension_U
       end
       @state = old_state
     end
+    nil
   end
 
   #-----------------------------------------------
