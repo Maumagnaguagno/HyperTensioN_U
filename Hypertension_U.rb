@@ -68,8 +68,9 @@ module Hypertension_U
         new_plan[PROBABILITY] = new_prob
         new_plan[VALUATION] += state_valuation * probability
         # Keep decomposing the hierarchy
-        planning(tasks, level, new_plan)
+        return true if planning(tasks, level, new_plan)
       end
+      @state = @previous_state
     end
   end
 
