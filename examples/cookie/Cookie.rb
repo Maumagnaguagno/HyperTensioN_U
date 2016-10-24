@@ -25,8 +25,8 @@ module Cookie
   # State valuation
   #-----------------------------------------------
 
-  def state_valuation
-    previous_have = @previous_state['have']
+  def state_valuation(old_state)
+    previous_have = old_state['have']
     current_have = @state['have']
     bob__cookie = ['bob','cookie']
     bob__good_cookie = ['bob','good_cookie']

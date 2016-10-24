@@ -146,8 +146,8 @@ module UHyper_Compiler
     domain_str << "\n  }\n\n"
     # Reward
     unless reward.empty?
-      domain_str << "  ##{SPACER}\n  # State valuation\n  ##{SPACER}\n\n  def state_valuation\n    value = 0\n"
-      reward.each {|pre,value| domain_str << "    value += #{value} if not @previous_state['#{pre.first}'].include?(#{pre.drop(1)}) and @state['#{pre.first}'].include?(#{pre.drop(1)})\n"}
+      domain_str << "  ##{SPACER}\n  # State valuation\n  ##{SPACER}\n\n  def state_valuation(old_state)\n    value = 0\n"
+      reward.each {|pre,value| domain_str << "    value += #{value} if not old_state['#{pre.first}'].include?(#{pre.drop(1)}) and @state['#{pre.first}'].include?(#{pre.drop(1)})\n"}
       domain_str << "    value\n  end\n\n"
     end
     # Axioms

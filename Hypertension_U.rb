@@ -50,7 +50,7 @@ module Hypertension_U
   # State valuation
   #-----------------------------------------------
 
-  def state_valuation
+  def state_valuation(old_state)
     0
   end
 
@@ -62,11 +62,11 @@ module Hypertension_U
     puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(',')})" if @debug
     if (new_prob = plan[PROBABILITY] * probability) >= @min_prob
       # If operator applied
-      old_state = @previous_state = @state
+      old_state = @state
       if send(*current_task)
         new_plan = plan.dup << current_task
         new_plan[PROBABILITY] = new_prob
-        new_plan[VALUATION] += state_valuation * probability
+        new_plan[VALUATION] += state_valuation(old_state) * probability
         # Keep decomposing the hierarchy
         return true if planning(tasks, level, new_plan)
       end
