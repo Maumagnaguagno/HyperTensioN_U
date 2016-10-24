@@ -15,3 +15,4 @@ script:
   - ruby Hype.rb examples/axiom/axiom.ujshop examples/axiom/pb1.ujshop run
   - ruby Hype.rb examples/cookie/cookie.ujshop examples/cookie/pb1.ujshop run
   - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb1.ujshop run
+  - ruby Hype.rb examples/jumpmaze/jumpmaze.ujshop examples/jumpmaze/pb1.ujshop run

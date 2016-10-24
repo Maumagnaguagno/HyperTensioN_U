@@ -1,0 +1,71 @@
+(defdomain jumpmaze (
+
+  (:operator (!jump ?pos ?value ?newpos)
+    ; Preconditions
+    (
+      (at ?pos)
+      (tile ?pos ?value)
+    )
+    ; Del effects
+    (
+      (at ?pos)
+    )
+    ; Add effects
+    (
+      (at ?newpos)
+    )
+  )
+
+  (:operator (!!visit ?pos)
+    nil
+    nil
+    ((visited ?pos))
+  )
+
+  (:operator (!!unvisit ?pos)
+    nil
+    ((visited ?pos))
+    nil
+  )
+
+  (:method (goto)
+    zero
+    ; Preconditions
+    (
+      (at ?pos)
+      (tile ?pos 0)
+    )
+    ; Subtasks
+    ()
+
+    right
+    ; Preconditions
+    (
+      (at ?pos)
+      (tile ?pos ?value)
+      (not (visited ?pos))
+    )
+    ; Subtasks
+    (
+      (!jump ?pos ?value (call + ?pos ?value))
+      (!!visit ?pos)
+      (goto)
+      (!!unvisit ?pos)
+    )
+
+    left
+    ; Preconditions
+    (
+      (at ?pos)
+      (tile ?pos ?value)
+      (not (visited ?pos))
+    )
+    ; Subtasks
+    (
+      (!jump ?pos ?value (call - ?pos ?value))
+      (!!visit ?pos)
+      (goto)
+      (!!unvisit ?pos)
+    )
+  )
+))
