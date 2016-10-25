@@ -39,25 +39,22 @@ module Hype
 
   def compile(domain, problem, type)
     raise 'No data to compile' unless @parser
-    if type == 'rb'
-      compiler = UHyper_Compiler
-      args = [
-        @parser.domain_name,
-        @parser.problem_name,
-        @parser.operators,
-        @parser.methods,
-        @parser.predicates,
-        @parser.state,
-        @parser.tasks,
-        @parser.axioms,
-        @parser.reward
-      ]
-      data = compiler.compile_domain(*args)
-      IO.write("#{domain}.#{type}", data) if data
-      data = compiler.compile_problem(*args << File.basename(domain))
-      IO.write("#{problem}.#{type}", data) if data
-    else raise "Unknown type #{type}"
-    end
+    compiler = UHyper_Compiler
+    args = [
+      @parser.domain_name,
+      @parser.problem_name,
+      @parser.operators,
+      @parser.methods,
+      @parser.predicates,
+      @parser.state,
+      @parser.tasks,
+      @parser.axioms,
+      @parser.reward
+    ]
+    data = compiler.compile_domain(*args)
+    IO.write("#{domain}.#{type}", data) if data
+    data = compiler.compile_problem(*args << File.basename(domain))
+    IO.write("#{problem}.#{type}", data) if data
   end
 end
 
@@ -79,7 +76,7 @@ if $0 == __FILE__
       else
         t = Time.now.to_f
         Hype.parse(domain, problem)
-        Hype.compile(domain, problem, 'rb')
+        Hype.compile(domain, problem)
         if type == 'run' or (type == 'debug' and ARGV[0] = '-d')
           require File.expand_path(problem)
         end
