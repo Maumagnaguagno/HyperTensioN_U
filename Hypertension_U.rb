@@ -61,8 +61,8 @@ module Hypertension_U
   def execute(current_task, probability, tasks, level, plan)
     puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(',')})" if @debug
     if (new_prob = plan[PROBABILITY] * probability) >= @min_prob
-      # If operator applied
       old_state = @state
+      # If operator applied
       if send(*current_task)
         new_plan = plan.dup << current_task
         new_plan[PROBABILITY] = new_prob
