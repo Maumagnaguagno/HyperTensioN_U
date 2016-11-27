@@ -141,15 +141,14 @@ module UJSHOP_Parser
 
   def parse_axiom(ax)
     ax.shift
+    # Variable names are replaced, only arity must match
     if axiom = @axioms.assoc(name = (param = ax.shift).shift)
       raise "Axiom #{name} defined with arity #{axiom[1].size}, unexpected arity #{param.size}" if param.size != axiom[1].size
-      # Parameter names cannot change between axiom definitions
-      axiom[1].zip(param) {|p1,p2| raise "Axiom #{name} is creating a new parameter #{p2} for #{p1}" if p1 != p2 and p1.start_with?('?') and p2.start_with?('?')}
-    else @axioms << axiom = [name, param.map!.with_index {|p,i| p.instance_of?(String) && p.start_with?('?') ? p : "?parameter#{i}"}]
+    else @axioms << axiom = [name, Array.new(param.size) {|i| "?parameter#{i}"}]
     end
     # Expand constant parameters to equality call
     const_param = []
-    param.each_with_index {|p,i| const_param << ['call', '=', p, axiom[1][i]] unless p.start_with?('?')}
+    param.each_with_index {|p,i| const_param << ['call', '=', "?parameter#{i}", p] unless p.start_with?('?')}
     while exp = ax.shift
       if exp.instance_of?(String) and exp != NIL
         label = exp
@@ -158,6 +157,11 @@ module UJSHOP_Parser
       end
       # Add constant parameters to expression if any
       exp = const_param.empty? ? exp : [AND, *const_param, exp]
+      exp.flatten.each {|value|
+        if value.start_with?('?') and i = param.index(value)
+          value.replace("?parameter#{i}")
+        end
+      }
       define_expression("axiom #{name}", exp)
       axiom.push(label, exp)
     end
