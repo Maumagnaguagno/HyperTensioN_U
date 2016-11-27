@@ -156,12 +156,12 @@ module UJSHOP_Parser
       else label = "case #{axiom.size - 2 >> 1}"
       end
       # Add constant parameters to expression if any
-      exp = const_param.empty? ? exp : [AND, *const_param, exp]
       exp.flatten.each {|value|
         if value.start_with?('?') and i = param.index(value)
           value.replace("?parameter#{i}")
         end
       }
+      exp = const_param.empty? ? exp : [AND, *const_param, exp]
       define_expression("axiom #{name}", exp)
       axiom.push(label, exp)
     end
