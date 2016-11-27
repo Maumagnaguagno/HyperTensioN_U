@@ -37,7 +37,7 @@ module Hype
   # Compile
   #-----------------------------------------------
 
-  def compile(domain, problem, type)
+  def compile(domain, problem)
     raise 'No data to compile' unless @parser
     compiler = UHyper_Compiler
     args = [
@@ -52,9 +52,9 @@ module Hype
       @parser.reward
     ]
     data = compiler.compile_domain(*args)
-    IO.write("#{domain}.#{type}", data) if data
+    IO.write("#{domain}.rb", data) if data
     data = compiler.compile_problem(*args << File.basename(domain))
-    IO.write("#{problem}.#{type}", data) if data
+    IO.write("#{problem}.rb", data) if data
   end
 end
 
