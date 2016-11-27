@@ -154,7 +154,7 @@ module UJSHOP_Parser
       if exp.instance_of?(String) and exp != NIL
         label = exp
         raise "Expected axiom definition after label #{label} on #{name}" unless exp = ax.shift
-      else label = "case #{(axiom.size - 2) / 2}"
+      else label = "case #{axiom.size - 2 >> 1}"
       end
       # Add constant parameters match to expression if required
       define_expression("axiom #{name}", const_param.empty? ? exp : [AND, *const_param, exp])
