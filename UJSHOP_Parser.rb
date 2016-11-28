@@ -59,7 +59,8 @@ module UJSHOP_Parser
     elsif first == NOT
       raise "Unexpected multiple arguments for not in #{name}" if group.size != 2
       define_expression(name, group.last)
-    else @predicates[first.freeze] ||= false
+    elsif first != 'call' and not @axioms.assoc(first)
+      @predicates[first.freeze] ||= false
     end
   end
 
