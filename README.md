@@ -119,5 +119,5 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
 ```
 
 ## ToDo's
-- Test axioms
+- Test compiled output
 - Support expressions in method preconditions
