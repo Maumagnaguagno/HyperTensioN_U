@@ -161,7 +161,7 @@ module UJSHOP_Parser
           value.replace("?parameter#{i}")
         end
       }
-      exp = const_param.empty? ? exp : [AND, *const_param, exp]
+      exp = [AND, *const_param, exp] unless const_param.empty?
       define_expression("axiom #{name}", exp)
       axiom.push(label, exp)
     end
