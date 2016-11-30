@@ -46,13 +46,22 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def call(precond_expression)
+    raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 4
     function = '==' if (function = precond_expression[1]) == '='
-    terms = precond_expression.drop(2).map! {|term| evaluate(term)}
-    raise "Wrong number of arguments for #{function} call, expected 2" if terms.size != 2
+    ltoken = evaluate(precond_expression[2])
+    rtoken = evaluate(precond_expression[3])
     if ['+', '-', '*', '/', '%', '**'].include?(function)
-      "(#{terms.first}.to_i #{function} #{terms.last}.to_i).to_s"
+      if ltoken =~ /^'(\d+)'$/ then ltoken = $1
+      elsif ltoken !~ /^\d+$/ then ltoken << '.to_i'
+      end
+      if rtoken =~ /^'(\d+)'$/ then rtoken = $1
+      elsif rtoken !~ /^\d+$/ then rtoken << '.to_i'
+      end
+      "(#{ltoken} #{function} #{rtoken}).to_s"
     else
-      "(#{terms.first}.to_s #{function} #{terms.last}.to_s)"
+      ltoken << '.to_s' if ltoken !~ /^'.*'$/
+      rtoken << '.to_s' if rtoken !~ /^'.*'$/
+      "(#{ltoken} #{function} #{rtoken})"
     end
   end
 
