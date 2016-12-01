@@ -59,8 +59,8 @@ module UHyper_Compiler
       end
       "(#{ltoken} #{function} #{rtoken}).to_s"
     else
-      ltoken << '.to_s' if ltoken !~ /^'.*'$/
-      rtoken << '.to_s' if rtoken !~ /^'.*'$/
+      ltoken << '.to_s' if ltoken !~ /^[\w']/
+      rtoken << '.to_s' if rtoken !~ /^[\w']/
       "(#{ltoken} #{function} #{rtoken})"
     end
   end
