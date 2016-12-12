@@ -24,7 +24,7 @@ module UHyper_Compiler
   def expression_to_hyper(precond_expression, axioms)
     case precond_expression.first
     when 'and', 'or'
-      '(' << precond_expression.drop(1).map {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
+      '(' << precond_expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
     when 'not'
       'not (' << expression_to_hyper(precond_expression[1], axioms) << ')'
     when 'call' then call(precond_expression)
@@ -209,7 +209,7 @@ module UHyper_Compiler
     }
     # Tasks
     group = []
-    tasks.each {|t| group << "    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map {|o| o =~ /^-?\d+$/ ? "'#{o}'" : o}.join(', ')}]"}
+    tasks.each {|t| group << "    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o =~ /^-?\d+$/ ? "'#{o}'" : o}.join(', ')}]"}
     problem_str << "\n  },\n  # Tasks\n  [\n" << group .join(",\n") << "\n  ],\n  # Debug\n  ARGV.first == '-d',\n  # Minimal probability for plans\n  ARGV[1] ? ARGV[1].to_f : 0,\n  # Maximum plans found\n  ARGV[2] ? ARGV[2].to_i : -1"
     tasks.unshift(ordered) unless tasks.empty?
     problem_str.gsub!(/\b-\b/,'_')
