@@ -1,0 +1,34 @@
+(defdomain disjunction (
+
+  (:- (axiom1 ?a ?b ?c)
+    (
+      (p ?a ?b)
+      (or
+        (q ?a)
+        (r ?b)
+        (s ?c)
+      )
+    )
+  )
+
+  (:operator (!op ?z ?x ?y)
+    ; Preconditions
+    ()
+    ; Del effects
+    ()
+    ; Add effects
+    ()
+  )
+
+  (:method (unify ?z)
+    ; Preconditions
+    (
+      (pred ?z)
+      (formula ?z ?x ?y)
+    )
+    ; Subtasks
+    (
+      (op ?z ?x ?y)
+    )
+  )
+))
