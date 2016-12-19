@@ -24,7 +24,7 @@
     ; Preconditions
     (
       (pred ?z)
-      (formula ?z ?x ?y)
+      (axiom1 ?z ?x ?y)
     )
     ; Subtasks
     (
