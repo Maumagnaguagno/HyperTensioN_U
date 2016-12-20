@@ -1,40 +1,40 @@
-(defproblem pbhealthcare healthcare-test
-	;; Test Problem 1
-	(
-		(patient alice)
-		(physician bob)
-		(radiologist clyde)
-		(pathologist doug)
-		(registrar evelyn)
-		(hospital simhospital)
-		(patientHasCancer alice)
-
-		(commitment C1 C1 bob alice)
-
-	) ; Initial State
-	
-	(
-		(!create C1 C1 bob alice (nil))
-		(!requestAssessment alice bob)
-		(!requestImaging bob alice clyde)
-		(!requestBiopsy bob alice clyde)
-		(!performImaging clyde alice bob)
-		(!performBiopsy clyde alice bob)
-		(!requestRadiologyReport bob clyde alice)
-		(!requestPathologyReport bob doug alice)
-
-		(!sendRadiologyReport clyde bob alice)
-		(!sendPathologyReport clyde bob alice)
-
-		(!sendIntegratedReport clyde doug alice bob)
-		(!generateTreatmentPlan bob alice)
-		(!reportPatient alice doug evelyn)
-		(!addPatientToRegistry alice evelyn)
-		(!requestPhysicianReportAssessment alice bob simhospital)
-		
-		(testCommitment C1 C1 (nil) satisfied)
-
-	) ;tn
+(defproblem pbhealthcare-test healthcare
+	; ;; Test Problem 1
+; 	(
+; 		(patient alice)
+; 		(physician bob)
+; 		(radiologist clyde)
+; 		(pathologist doug)
+; 		(registrar evelyn)
+; 		(hospital simhospital)
+; 		(patientHasCancer alice)
+;
+; 		(commitment C1 C1 bob alice)
+;
+; 	) ; Initial State
+;
+; 	(
+; 		(!create C1 C1 bob alice (nil))
+; 		(!requestAssessment alice bob)
+; 		(!requestImaging bob alice clyde)
+; 		(!requestBiopsy bob alice clyde)
+; 		(!performImaging clyde alice bob)
+; 		(!performBiopsy clyde alice bob)
+; 		(!requestRadiologyReport bob clyde alice)
+; 		(!requestPathologyReport bob doug alice)
+;
+; 		(!sendRadiologyReport clyde bob alice)
+; 		(!sendPathologyReport clyde bob alice)
+;
+; 		(!sendIntegratedReport clyde doug alice bob)
+; 		(!generateTreatmentPlan bob alice)
+; 		(!reportPatient alice doug evelyn)
+; 		(!addPatientToRegistry alice evelyn)
+; 		(!requestPhysicianReportAssessment alice bob simhospital)
+;
+; 		(testCommitment C1 C1 (nil) satisfied)
+;
+; 	) ;tn
 	
 	;; Test Problem 2
 	
