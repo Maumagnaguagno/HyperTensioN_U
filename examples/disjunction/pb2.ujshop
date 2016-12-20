@@ -4,7 +4,7 @@
     (pred t1)
     (p t1 t2)
     (q t1000)
-    (r t3)
+    (r t2)
   )
   ; Tasks
   (
