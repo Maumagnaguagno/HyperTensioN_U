@@ -1,9 +1,9 @@
 # Healthcare
 
-## Predicates
+### Predicates
 - TODO
 
-## Axioms
+### Axioms
 - ``(null ?c ?ci ?cv)``
 - ``(conditional ?c ?ci ?cv)``
 - ``(detached ?c ?ci ?cv)``
@@ -16,8 +16,34 @@
 - ``(p ?c CN)``
 - ``(q ?c CN)``
 
-## Operators
-- TODO
+- ``(nullG ?g ?gi ?gv)``
+- ``(inactiveG ?g ?gi ?gv)``
+- ``(activeG ?g ?gi ?gv)``
+- ``(satisfiedG ?g ?gi ?gv)``
+- ``(failedG ?g ?gi ?gv)``
+- ``(terminatedG ?g ?gi ?gv)``
+- ``(terminalG ?g ?gi ?gv)``
 
-## Methods
+### Operators
+- ``(!!testSuccess ?c ?ci ?cv ?state)``
+- ``(!!testFailure ?cg ?state)``
+- ``(!create ?c ?ci ?de ?cr ?cv)``
+- ``(!suspend ?c ?ci ?de ?cr ?cv)``
+- ``(!reactivate ?c ?ci ?de ?cr ?cv)``
+- ``(!satisfy ?c ?ci ?de ?cr ?cv)``
+- ``(!expire ?c ?ci ?de ?cr ?cv)``
+- ``(!timeoutviolate ?c ?ci ?de ?cr ?cv)``
+- ``(!cancel ?c ?ci ?de ?cr ?cv)``
+- ``(!release ?c ?ci ?de ?cr ?cv)``
+
+- ``(!!testSuccessG ?g ?gi ?gv ?state)``
+- ``(!consider ?g ?gi ?a ?gv)``
+- ``(!activate ?g ?gi ?a ?gv)``
+- ``(!suspendG ?gi ?a ?gv)``
+- ``(!reconsider ?g ?gi ?a ?gv)``
+- ``(!reactivateG ?gi ?a ?gv)``
+- ``(!drop ?g ?gi ?a ?gv)``
+- ``(!abort ?g ?gi ?a ?gv)``
+
+### Methods
 - TODO
