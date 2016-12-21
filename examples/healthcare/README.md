@@ -46,4 +46,6 @@
 - ``(!abort ?g ?gi ?a ?gv)``
 
 ### Methods
-- TODO
+- ``(achieveGoals)``
+- ``(achieveGoal C1 ?gi C2)``
+- ``(detach ?c ?ci)``

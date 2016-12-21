@@ -5,6 +5,7 @@ require_relative 'healthcare-axioms'
 require_relative 'commitment-operators'
 require_relative 'goal-axioms'
 require_relative 'goal-operators'
+require_relative 'goal-methods'
 
 module Healthcare
   include Hypertension_U
@@ -34,9 +35,23 @@ module Healthcare
     'reconsider' => 1,
     'reactivateG' => 1,
     'drop' => 1,
-    'abort' => 1
+    'abort' => 1,
     # Methods
-    
+    'achieveGoals' => [
+      'achieveGoals_workTowardsGoal',
+      'achieveGoals_activateGoal',
+      'achieveGoals_noGoalsPossible',
+      'achieveGoals_multipleCommitments'
+    ],
+    'achieveGoal' => [
+      'genericEnticeToAchieve',
+      'achieveGoal_case1',
+      'achieveGoal_case2',
+      'achieveGoal_case3',
+    ],
+    'detach' => [
+      'detach_case0'
+    ]
   }
 
   def state(pre, *terms)
