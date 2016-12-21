@@ -1,3 +1,4 @@
+require_relative '../../Hypertension_U'
 require_relative 'commitment-axioms'
 require_relative 'healthcare-axioms'
 require_relative 'commitment-operators'
@@ -5,7 +6,7 @@ require_relative 'goal-axioms'
 #require_relative 'goal-operators'
 
 module Healthcare
-  include Hypertension
+  include Hypertension_U
   extend self
 
   #-----------------------------------------------
