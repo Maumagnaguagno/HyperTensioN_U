@@ -35,8 +35,7 @@ module Disjunction
       [
         ['p', parameter0, parameter1]
       ],
-      [],
-      *free_vars
+      [], *free_vars
     ) {
       if @state['q'].include?([parameter0]) then yield
       elsif @state['r'].include?([parameter1]) then yield
