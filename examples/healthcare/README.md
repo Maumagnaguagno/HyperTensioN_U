@@ -50,7 +50,6 @@
 ### Methods
 - ``(achieveGoals)``
 - ``(achieveGoal C1 ?gi C2)``
-- ``(detach ?c ?ci)``
 
 - ``(entice ?g ?gi ?gv ?c ?ci ?cv ?d ?a)``
 - ``(suspendOffer ?g ?gi ?gv ?c ?ci ?cv ?d ?a)``

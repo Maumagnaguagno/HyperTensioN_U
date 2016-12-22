@@ -48,14 +48,8 @@ module Healthcare
     ],
     'achieveGoal' => [
       'genericEnticeToAchieve',
-      'achieveGoal_case1',
-      'achieveGoal_case2',
-      'achieveGoal_case3',
     ],
 
-    'detach' => [
-      'detach_case0'
-    ],
     'entice' => [
       'entice_case0'
     ],
