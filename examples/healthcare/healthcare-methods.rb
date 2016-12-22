@@ -1,0 +1,204 @@
+# Domain dependent methods
+
+# (:method (hospitalScenario)
+#   ((patient ?patient))
+#   ((seekHelp ?patient) (processPatient ?patient))
+# )
+
+def hospitalScenario_case0
+  @state['patient'].each {|terms|
+    patient = terms[0]
+    yield [
+      ['seekHelp', patient],
+      ['processPatient', patient]
+    ]
+  }
+end
+
+# (:method (testCommitments)
+#   (
+#     (commitment C1 ?c1 ?d1 ?a1)
+#     (commitment C2 ?c2 ?d2 ?a2)
+#     (commitment C3 ?c3 ?d3 ?a3)
+#     (commitment C4 ?c4 ?d4 ?a4)
+#     (commitment C5 ?c5 ?d5 ?a5)
+#     (commitment C6 ?c6 ?d6 ?a6)
+#     (commitment C7 ?c7 ?d7 ?a7)
+#     (commitment C8 ?c8 ?d8 ?a8)
+#   )
+#   (
+#     (testCommitment C1 ?c1 ?cv1 satisfied)
+#     (testCommitment C2 ?c2 ?cv2 satisfied)
+#     (testCommitment C3 ?c3 ?cv3 satisfied)
+#     (testCommitment C4 ?c4 ?cv4 satisfied)
+#     (testCommitment C5 ?c5 ?cv5 satisfied)
+#     (testCommitment C6 ?c6 ?cv6 satisfied)
+#     (testCommitment C7 ?c7 ?cv7 satisfied)
+#     (testCommitment C8 ?c8 ?cv8 satisfied)
+#   )
+# )
+
+def testCommitments_case0
+  c1 = ''
+  d1 = ''
+  a1 = ''
+  c2 = ''
+  d2 = ''
+  a2 = ''
+  c3 = ''
+  d3 = ''
+  a3 = ''
+  c4 = ''
+  d4 = ''
+  a4 = ''
+  c5 = ''
+  d5 = ''
+  a5 = ''
+  c6 = ''
+  d6 = ''
+  a6 = ''
+  c7 = ''
+  d7 = ''
+  a7 = ''
+  c8 = ''
+  d8 = ''
+  a8 = ''
+  generate(
+    [
+      ['commitment', 'C1', c1, d1, a1],
+      ['commitment', 'C2', c2, d2, a2],
+      ['commitment', 'C3', c3, d3, a3],
+      ['commitment', 'C4', c4, d4, a4],
+      ['commitment', 'C5', c5, d5, a5],
+      ['commitment', 'C6', c6, d6, a6],
+      ['commitment', 'C7', c7, d7, a7],
+      ['commitment', 'C8', c8, d8, a8]
+    ],
+    [], c1, d1, a1, c2, d2, a2, c3, d3, a3, c4, d4, a4, c5, d5, a5, c6, d6, a6, c7, d7, a7, c8, d8, a8
+  ) {
+    # TODO Variables cv1..cv8 are not bounded
+    yield [
+      ['testCommitment', 'C1', c1, cv1, 'satisfied'],
+      ['testCommitment', 'C2', c2, cv2, 'satisfied'],
+      ['testCommitment', 'C3', c3, cv3, 'satisfied'],
+      ['testCommitment', 'C4', c4, cv4, 'satisfied'],
+      ['testCommitment', 'C5', c5, cv5, 'satisfied'],
+      ['testCommitment', 'C6', c6, cv6, 'satisfied'],
+      ['testCommitment', 'C7', c7, cv7, 'satisfied'],
+      ['testCommitment', 'C8', c8, cv8, 'satisfied'],
+    ]
+  }
+end
+
+# (:method (seekHelp ?patient)
+#   ((patient ?patient) (physician ?physician) (radiologist ?radiologist) (commitment C1 ?Ci1 ?physician ?patient))
+#   ((!create C1 ?Ci1 ?physician ?patient (nil)) (!requestAssessment ?patient ?physician))
+# )
+
+def seekHelp_case0(patient)
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['radiologist', radiologist],
+      ['commitment', 'C1', ci1, physician, patient]
+    ],
+    [], physician, radiologist, ci1
+  ) {
+    # TODO review list containing NIL
+    yield [
+      ['create', 'C1', ci1, physician, patient [[]]],
+      ['requestAssessment', patient, physician]
+    ]
+  }
+end
+
+=begin
+
+	(:method (processPatient ?patient)
+		process-patient-healthy
+		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient) 
+			(radiologist ?radiologist)
+			;(conditional C1 ?Ci ?Cv)
+		 ) ; Precondition
+		((performImagingTests ?patient)
+		 (performPathologyTests ?patient) 
+		 (deliverDiagnostics ?patient)) ; Task Network
+	)
+
+	(:method (performImagingTests ?patient)
+		imaging
+		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient) 
+			(radiologist ?radiologist)
+			(pathologist ?pathologist)
+			;(conditional C1 ?Ci ?Cv)
+			(commitment C2 ?Ci2 ?patient ?physician)
+			(commitment C5 ?Ci5 ?radiologist ?physician)
+		 ) ; Precondition
+		((!create C2 ?Ci2 ?patient ?physician (?radiologist)) 
+		 (!create C5 ?Ci5 ?radiologist ?physician (?pathologist)) 
+		 (!requestImaging ?physician ?patient ?radiologist)
+		 (attendTest ?patient)
+		) ; Just request imaging
+	)
+
+	(:method (performPathologyTests ?patient)
+		biopsy-unnecessary
+		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient)
+			(radiologist ?radiologist))
+		() ; Does nothing
+	)
+
+	(:method (performPathologyTests ?patient)
+		imaging-plus-biopsy
+		((patient ?patient) (physician ?physician) 
+			(radiologist ?radiologist)
+			(pathologist ?pathologist)
+			;(conditional C1 ?Ci ?Cv)
+			(commitment C3 ?Ci3 ?patient ?physician)
+			(commitment C4 ?Ci4 ?radiologist ?physician)
+		 ) ; Precondition
+		((!create C3 ?Ci3 ?patient ?physician (?radiologist))
+		 (!create C4 ?Ci4 ?radiologist ?physician (?pathologist)) 
+ 		 (!requestBiopsy ?physician ?patient ?radiologist)
+		 (attendTest ?patient)
+		) ; Request
+	)
+	
+	(:method (attendTest ?patient)
+		attend-imaging
+		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentRequested ?patient ?radiologist) (not (iAppointmentKept ?patient ?radiologist)) )
+		((!performImaging ?radiologist ?patient ?physician))
+		
+		attend-biopsy
+		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (bAppointmentRequested ?patient ?radiologist) (not (bAppointmentKept ?patient ?radiologist)))
+		((!performBiopsy ?radiologist ?patient ?physician))
+	)
+	
+	(:method (attendTest ?patient)
+		no-show-imaging
+		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentRequested ?patient ?radiologist) (not (iAppointmentKept ?patient ?radiologist)) )
+		() ; No show
+		
+		no-show-biopsy
+		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (bAppointmentRequested ?patient ?radiologist) (not (bAppointmentKept ?patient ?radiologist)))
+		()
+	)
+	
+	(:method (deliverDiagnostics ?patient)
+		only-imaging
+		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentKept ?patient ?radiologist) (not (biopsyRequested ?physician ?patient)) )
+		((!requestRadiologyReport ?physician ?radiologist ?patient) 
+		 (!sendRadiologyReport ?radiologist ?physician ?patient) 
+		 (!generateTreatmentPlan ?physician ?patient) )
+		
+		imaging-biopsy-integrated
+		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (pathologist ?pathologist) (iAppointmentKept ?patient ?radiologist) (bAppointmentKept ?patient ?radiologist) )
+		((!requestRadiologyReport ?physician ?radiologist ?patient)
+		 (!requestPathologyReport ?physician ?radiologist ?patient)
+		 (!sendRadiologyReport ?radiologist ?physician ?patient) 
+		 (!sendPathologyReport ?radiologist ?physician ?patient) 
+		 (!sendIntegratedReport ?radiologist ?pathologist ?patient ?physician)
+	     (!generateTreatmentPlan ?physician ?patient) )
+	)
+=end

@@ -8,6 +8,7 @@ require_relative 'goal-operators'
 require_relative 'goal-methods'
 require_relative 'goal-commitment-methods'
 require_relative 'test-methods'
+require_relative 'healthcare-methods'
 
 module Healthcare
   include Hypertension_U

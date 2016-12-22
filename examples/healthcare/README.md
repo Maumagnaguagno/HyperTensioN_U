@@ -69,3 +69,7 @@
 - ``(testCommitment ?c ?ci ?cv ?s)``
 - ``(testGoal ?g ?gi ?gv ?s)``
 - ``(testGoalCommitmentRule ?rule ?g ?gi ?a ?c ?ci ?de ?cr)``
+
+- ``(hospitalScenario)``
+- ``(testCommitments)``
+- ``(seekHelp ?patient)``
