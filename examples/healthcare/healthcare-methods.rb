@@ -96,6 +96,9 @@ end
 # )
 
 def seekHelp_case0(patient)
+  physician = ''
+  radiologist = ''
+  ci1 = ''
   generate(
     [
       ['patient', patient],
@@ -107,51 +110,119 @@ def seekHelp_case0(patient)
   ) {
     # TODO review list containing NIL
     yield [
-      ['create', 'C1', ci1, physician, patient [[]]],
+      ['create', 'C1', ci1, physician, patient, [[]]],
       ['requestAssessment', patient, physician]
     ]
   }
 end
 
+# (:method (processPatient ?patient)
+#   process-patient-healthy
+#   (
+#     (patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient) (radiologist ?radiologist)
+#     ;(conditional C1 ?Ci ?Cv)
+#   )
+#   ((performImagingTests ?patient) (performPathologyTests ?patient) (deliverDiagnostics ?patient))
+# )
+
+def processPatient_process_patient_healthy(patient)
+  physician = ''
+  radiologist = ''
+  ci1 = ''
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['commitment', 'C1', ci1, physician, patient],
+      ['radiologist', radiologist]
+    ],
+    [], physician, radiologist, ci1
+  ) {
+    # TODO do we need any of the free variables [physician, radiologist, ci1] in this method?
+    yield [
+      ['performImagingTests', patient],
+      ['performPathologyTests', patient],
+      ['deliverDiagnostics', patient]
+    ]
+  }
+end
+
+# (:method (performImagingTests ?patient)
+#   imaging
+#   (
+#     (patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient)
+#     (radiologist ?radiologist)
+#     (pathologist ?pathologist)
+#     ;(conditional C1 ?Ci ?Cv)
+#     (commitment C2 ?Ci2 ?patient ?physician)
+#     (commitment C5 ?Ci5 ?radiologist ?physician)
+#   )
+#   (
+#     (!create C2 ?Ci2 ?patient ?physician (?radiologist))
+#     (!create C5 ?Ci5 ?radiologist ?physician (?pathologist))
+#     (!requestImaging ?physician ?patient ?radiologist)
+#     (attendTest ?patient)
+#   )
+# )
+
+def performImagingTests_imaging(patient)
+  physician = ''
+  ci = ''
+  radiologist = ''
+  pathologist = ''
+  ci2 = ''
+  ci5 = ''
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['commitment', 'C1', ci, physician, patient],
+      ['radiologist', radiologist],
+      ['pathologist', pathologist],
+      ['commitment', 'C2', ci2, patient, physician],
+      ['commitment', 'C5', ci5, radiologist, physician]
+    ],
+    [], physician, ci, radiologist, pathologist, ci2, ci5
+  ) {
+    # TODO review lists in the subtasks
+    yield [
+      ['create', 'C2', ci2, patient, physician, [radiologist]],
+      ['create', 'C5', ci5, radiologist, physician, [pathologist]],
+      ['requestImaging', physician, patient, radiologist],
+      ['attendTest', patient]
+    ]
+  }
+end
+
+# (:method (performPathologyTests ?patient)
+#   biopsy-unnecessary
+#   ((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient) (radiologist ?radiologist))
+#   () ; Does nothing
+# )
+
+def performPathologyTests_biopsy_unnecessary(patient)
+  # TODO review radiologist variable in the preconditions
+  physician = ''
+  ci = ''
+  radiologist = ''
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['commitment', 'C1', ci, physician, patient],
+      ['radiologist', radiologist]
+    ],
+    [], physician, ci, radiologist
+  ) {
+    yield []
+  }
+end
+
 =begin
-
-	(:method (processPatient ?patient)
-		process-patient-healthy
-		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient) 
-			(radiologist ?radiologist)
-			;(conditional C1 ?Ci ?Cv)
-		 ) ; Precondition
-		((performImagingTests ?patient)
-		 (performPathologyTests ?patient) 
-		 (deliverDiagnostics ?patient)) ; Task Network
-	)
-
-	(:method (performImagingTests ?patient)
-		imaging
-		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient) 
-			(radiologist ?radiologist)
-			(pathologist ?pathologist)
-			;(conditional C1 ?Ci ?Cv)
-			(commitment C2 ?Ci2 ?patient ?physician)
-			(commitment C5 ?Ci5 ?radiologist ?physician)
-		 ) ; Precondition
-		((!create C2 ?Ci2 ?patient ?physician (?radiologist)) 
-		 (!create C5 ?Ci5 ?radiologist ?physician (?pathologist)) 
-		 (!requestImaging ?physician ?patient ?radiologist)
-		 (attendTest ?patient)
-		) ; Just request imaging
-	)
-
-	(:method (performPathologyTests ?patient)
-		biopsy-unnecessary
-		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient)
-			(radiologist ?radiologist))
-		() ; Does nothing
-	)
 
 	(:method (performPathologyTests ?patient)
 		imaging-plus-biopsy
-		((patient ?patient) (physician ?physician) 
+		((patient ?patient) (physician ?physician)
 			(radiologist ?radiologist)
 			(pathologist ?pathologist)
 			;(conditional C1 ?Ci ?Cv)
@@ -188,16 +259,16 @@ end
 	(:method (deliverDiagnostics ?patient)
 		only-imaging
 		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentKept ?patient ?radiologist) (not (biopsyRequested ?physician ?patient)) )
-		((!requestRadiologyReport ?physician ?radiologist ?patient) 
-		 (!sendRadiologyReport ?radiologist ?physician ?patient) 
+		((!requestRadiologyReport ?physician ?radiologist ?patient)
+		 (!sendRadiologyReport ?radiologist ?physician ?patient)
 		 (!generateTreatmentPlan ?physician ?patient) )
 		
 		imaging-biopsy-integrated
 		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (pathologist ?pathologist) (iAppointmentKept ?patient ?radiologist) (bAppointmentKept ?patient ?radiologist) )
 		((!requestRadiologyReport ?physician ?radiologist ?patient)
 		 (!requestPathologyReport ?physician ?radiologist ?patient)
-		 (!sendRadiologyReport ?radiologist ?physician ?patient) 
-		 (!sendPathologyReport ?radiologist ?physician ?patient) 
+		 (!sendRadiologyReport ?radiologist ?physician ?patient)
+		 (!sendPathologyReport ?radiologist ?physician ?patient)
 		 (!sendIntegratedReport ?radiologist ?pathologist ?patient ?physician)
 	     (!generateTreatmentPlan ?physician ?patient) )
 	)

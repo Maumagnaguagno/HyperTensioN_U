@@ -73,3 +73,6 @@
 - ``(hospitalScenario)``
 - ``(testCommitments)``
 - ``(seekHelp ?patient)``
+- ``(processPatient ?patient)``
+- ``(performImagingTests ?patient)``
+- ``(performPathologyTests ?patient)``
