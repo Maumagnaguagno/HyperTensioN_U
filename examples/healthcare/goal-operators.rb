@@ -76,7 +76,7 @@ end
 # )
 
 def reconsider(g, gi, a, gv)
-  if state('goal', g, gi, a) and state('suspendedG', g, gi, gv) not terminalG(g, gi, gv) and not nullG(g, gi, gv)
+  if state('goal', g, gi, a) and state('suspendedG', g, gi, gv) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
     apply(['dropped', g, gi, gv], [])
   end
 end
