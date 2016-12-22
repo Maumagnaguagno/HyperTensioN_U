@@ -47,6 +47,11 @@
 - ``(!drop ?g ?gi ?a ?gv)``
 - ``(!abort ?g ?gi ?a ?gv)``
 
+- ``(!requestAssessment ?patient ?physician)``
+- ``(!requestImaging ?physician ?patient ?radiologist)``
+- ``(!requestBiopsy ?physician ?patient ?pathologist)``
+- ``(!performImaging ?radiologist ?patient ?physician)``
+
 ### Methods
 - ``(achieveGoals)``
 - ``(achieveGoal C1 ?gi C2)``
