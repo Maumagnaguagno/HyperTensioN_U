@@ -6,6 +6,7 @@ require_relative 'commitment-operators'
 require_relative 'goal-axioms'
 require_relative 'goal-operators'
 require_relative 'goal-methods'
+require_relative 'goal-commitment-methods'
 
 module Healthcare
   include Hypertension_U
@@ -49,8 +50,49 @@ module Healthcare
       'achieveGoal_case2',
       'achieveGoal_case3',
     ],
+
     'detach' => [
       'detach_case0'
+    ],
+    'entice' => [
+      'entice_case0'
+    ],
+    'suspendOffer' => [
+      'suspendOffer_case0'
+    ],
+    'revive' => [
+      'revive_case0'
+    ],
+    'withdrawOffer' => [
+      'withdrawOffer_case0'
+    ],
+    'reviveToWithdraw' => [
+      'reviveToWithdraw_case0'
+    ],
+    'negotiate' => [
+      'negotiate_case0'
+    ],
+    'abandonEndGoal' => [
+      'abandonEndGoal_case0'
+    ],
+    'deliver' => [
+      'deliver_case0',
+      'deliver_case1'
+    ],
+    'backBurner' => [
+      'backBurner_case0'
+    ],
+    'frontBurner' => [
+      'frontBurner_case0'
+    ],
+    'abandonMeansGoal' => [
+      'abandonMeansGoal_case0'
+    ],
+    'persist' => [
+      'persist_case0'
+    ],
+    'giveUp' => [
+      'giveUp_case0'
     ]
   }
 
