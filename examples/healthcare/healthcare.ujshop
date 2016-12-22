@@ -366,31 +366,6 @@
 	((entice ?g ?gi ?gv ?c ?ci ?cv ?a ?d) (detach ?c ?ci ?cv) (deliver ?g2 ?gi2 ?gv2 ?c ?ci ?cv ?a ?d) (achieveGoal ?g2 ?gi2 ?gv2 ?a))
   )
 
-  ;; Redo from here on before testing.
-  (:method (achieveGoal g2 ?gi  c)
-      ((activeG g2 ?gi ) (goal g2 ?gi c) )
-      ((!manufactureGoods c ?t))
-  )
-
-  (:method (achieveGoal g3 ?gi  m)
-	((activeG g3 ?gi ) (goal g3 ?gi m))
-	((!sendGoods m c ?t))
-  )
-
-  (:method (achieveGoal g4 ?gi  c)
-	((activeG g4 ?gi ) (goal g4 ?gi c))
-	((!sendPayment c m ?t))
-  )
-
-  (:method (detach ?c ?ci )
-    ((call = ?c c1) (active ?c ?ci ) (commitment ?c ?ci ?a ?d)) ;FM (2013/01/17) Changed the precondition to be more generic
-	((!sendPayment ?d ?a ?t)) ;FM Was ((!sendPayment c m ?t))
-	
-	((call = ?c c5) (active ?c ?ci ) (commitment ?c ?ci ?a ?d)) ;FM (2013/01/17) Changed the precondition to be more generic
-	((!sendGoods ?d ?a ?t)) ; FM Was ((!sendGoods m c ?t))
-  )
-
-
 
   ;==================================
   ; Methods on goals and commitments
