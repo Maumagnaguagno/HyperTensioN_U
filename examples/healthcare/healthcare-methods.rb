@@ -275,11 +275,39 @@ end
 # )
 
 def attendTest_attend_imaging(patient)
-  # TODO
+  physician = ''
+  radiologist = ''
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['radiologist', radiologist],
+      ['iAppointmentRequested', patient, radiologist]
+    ],
+    [
+      ['iAppointmentKept', patient, radiologist]
+    ], physician, radiologist
+  ) {
+    yield [['performImaging', radiologist, patient, physician]]
+  }
 end
 
 def attendTest_attend_biopsy(patient)
-  # TODO
+  physician = ''
+  radiologist = ''
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['radiologist', radiologist],
+      ['bAppointmentRequested', patient, radiologist]
+    ],
+    [
+      ['bAppointmentKept', patient, radiologist]
+    ], physician, radiologist
+  ) {
+    yield [['performBiopsy', radiologist, patient, physician]]
+  }
 end
 
 # (:method (attendTest ?patient)
@@ -292,11 +320,39 @@ end
 # )
 
 def attendTest_no_show_imaging(patient)
-  # TODO
+  physician = ''
+  radiologist = ''
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['radiologist', radiologist],
+      ['iAppointmentRequested', patient, radiologist]
+    ],
+    [
+      ['bAppointmentKept', patient, radiologist]
+    ], physician, radiologist
+  ) {
+    yield []
+  }
 end
 
 def attendTest_no_show_biopsy(patient)
-  # TODO
+  physician = ''
+  radiologist = ''
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['radiologist', radiologist],
+      ['bAppointmentRequested', patient, radiologist]
+    ],
+    [
+      ['bAppointmentKept', patient, radiologist]
+    ], physician, radiologist
+  ) {
+    yield []
+  }
 end
 
 # (:method (deliverDiagnostics ?patient)
@@ -320,9 +376,49 @@ end
 # )
 
 def deliverDiagnostics_only_imaging(patient)
-  # TODO
+  physician = ''
+  radiologist = ''
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['radiologist', radiologist],
+      ['iAppointmentKept', patient, radiologist]
+    ],
+    [
+      ['biopsyRequested', physician, patient]
+    ], physician, radiologist
+  ) {
+    yield [
+      ['requestRadiologyReport', physician, radiologist, patient],
+      ['sendRadiologyReport', radiologist, physician, patient],
+      ['generateTreatmentPlan', physician, patient]
+    ]
+  }
 end
 
 def deliverDiagnostics_imaging_biopsy_integrated(patient)
-  # TODO
+  physician = ''
+  radiologist = ''
+  pathologist = ''
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['radiologist', radiologist],
+      ['pathologist', pathologist],
+      ['iAppointmentKept', patient, radiologist],
+      ['bAppointmentKept', patient, radiologist]
+    ],
+    [], physician, radiologist, pathologist
+  ) {
+    yield [
+      ['requestRadiologyReport', physician, radiologist, patient],
+      ['requestPathologyReport', physician, radiologist, patient],
+      ['sendRadiologyReport', radiologist, physician, patient],
+      ['sendPathologyReport', radiologist, physician, patient],
+      ['sendIntegratedReport', radiologist, pathologist, patient, physician],
+      ['generateTreatmentPlan', physician, patient]
+    ]
+  }
 end

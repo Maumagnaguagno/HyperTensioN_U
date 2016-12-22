@@ -99,6 +99,36 @@ module Healthcare
     ],
     'testGoalCommitmentRule' => [
       'testGoalCommitmentRule_case0'
+    ],
+
+    'hospitalScenario' => [
+      'hospitalScenario_case0'
+    ],
+    'testCommitments' => [
+      'testCommitments_case0'
+    ],
+    'seekHelp' => [
+      'seekHelp_case0'
+    ],
+    'processPatient' => [
+      'processPatient_process_patient_healthy'
+    ],
+    'performImagingTests' => [
+      'performImagingTests_imaging',
+    ],
+    'performPathologyTests' => [
+      'performPathologyTests_biopsy_unnecessary',
+      'performPathologyTests_imaging_plus_biopsy'
+    ],
+    'attendTest' => [
+      'attendTest_attend_imaging',
+      'attendTest_attend_biopsy',
+      'attendTest_no_show_imaging',
+      'attendTest_no_show_biopsy'
+    ],
+    'deliverDiagnostics' => [
+      'deliverDiagnostics_only_imaging',
+      'deliverDiagnostics_imaging_biopsy_integrated'
     ]
   }
 
