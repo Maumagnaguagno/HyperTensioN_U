@@ -133,23 +133,23 @@ end
 
 # (:method (backBurner ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
 #   ((goal ?g ?gi ?d) (activeG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (pending ?c ?ci ?cv))
-#   ((!suspendG ?gi ?d ?gv))
+#   ((!suspendG ?g ?gi ?d ?gv))
 # )
 
 def backBurner_case0(g, gi, gv, c, ci, cv, d, a)
   if state('goal', g, gi, d) and activeG(g, gi, gv) and state('commitment', c, ci, d, a) and state('pending', c, ci, cv)
-    yield [['suspendG', gi, d, gv]]
+    yield [['suspendG', g, gi, d, gv]]
   end
 end
 
 # (:method (frontBurner ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
 #   ((goal ?g ?gi ?d) (suspendedG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv))
-#   ((!reactivateG ?gi ?d ?gv))
+#   ((!reactivateG ?g ?gi ?d ?gv))
 # )
 
 def frontBurner_case0(g, gi, gv, c, ci, cv, d, a)
   if state('goal', g, gi, d) and state('suspendedG', g, gi, gv) and state('commitment', c, ci, d, a) and detached(c, ci, cv)
-    yield [['reactivateG', gi, d, gv]]
+    yield [['reactivateG', g, gi, d, gv]]
   end
 end
 

@@ -47,7 +47,7 @@ def activate(g, gi, a, gv)
   end
 end
 
-# (:operator (!suspendG ?gi ?a ?gv)
+# (:operator (!suspendG ?g ?gi ?a ?gv)
 #   (
 #     (goal ?g ?gi ?a)
 #     (not (terminalG ?g ?gi ?gv))
@@ -58,8 +58,10 @@ end
 #   1
 # )
 
-def suspendG(gi, a, gv)
-  # TODO g is a free variable
+def suspendG(g, gi, a, gv)
+  if state('goal', g, gi, a) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
+    apply([['suspendedG', g, gi, gv]], [['activatedG', g, gi, gv]])
+  end
 end
 
 # (:operator (!reconsider ?g ?gi ?a ?gv)
@@ -81,7 +83,7 @@ def reconsider(g, gi, a, gv)
   end
 end
 
-# (:operator (!reactivateG ?gi ?a ?gv)
+# (:operator (!reactivateG ?g ?gi ?a ?gv)
 #   (
 #     (goal ?g ?gi ?a)
 #     (suspendedG ?g ?gi ?gv)
@@ -94,8 +96,10 @@ end
 #   1
 # )
 
-def reactivateG(gi, a, gv)
-  # TODO g is a free variable
+def reactivateG(g, gi, a, gv)
+  if state('goal', g, gi, a) and state('suspendedG', g, gi, gv) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
+    apply([['activatedG', g, gi, gv]], [['suspendedG', g, gi, gv]])
+  end
 end
 
 # (:operator (!drop ?g ?gi ?a ?gv)
