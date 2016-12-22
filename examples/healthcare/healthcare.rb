@@ -7,6 +7,7 @@ require_relative 'goal-axioms'
 require_relative 'goal-operators'
 require_relative 'goal-methods'
 require_relative 'goal-commitment-methods'
+require_relative 'test-methods'
 
 module Healthcare
   include Hypertension_U
@@ -93,6 +94,16 @@ module Healthcare
     ],
     'giveUp' => [
       'giveUp_case0'
+    ],
+
+    'testCommitment' => [
+      'testCommitment_case0'
+    ],
+    'testGoal' => [
+      'testGoal_case0'
+    ],
+    'testGoalCommitmentRule' => [
+      'testGoalCommitmentRule_case0'
     ]
   }
 
