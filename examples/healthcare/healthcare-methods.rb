@@ -197,7 +197,7 @@ end
 # (:method (performPathologyTests ?patient)
 #   biopsy-unnecessary
 #   ((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient) (radiologist ?radiologist))
-#   () ; Does nothing
+#   ()
 # )
 
 def performPathologyTests_biopsy_unnecessary(patient)
@@ -218,58 +218,111 @@ def performPathologyTests_biopsy_unnecessary(patient)
   }
 end
 
-=begin
+# (:method (performPathologyTests ?patient)
+#   imaging-plus-biopsy
+#   (
+#     (patient ?patient) (physician ?physician)
+#     (radiologist ?radiologist)
+#     (pathologist ?pathologist)
+#     ;(conditional C1 ?Ci ?Cv)
+#     (commitment C3 ?Ci3 ?patient ?physician)
+#     (commitment C4 ?Ci4 ?radiologist ?physician)
+#   )
+#   (
+#     (!create C3 ?Ci3 ?patient ?physician (?radiologist))
+#     (!create C4 ?Ci4 ?radiologist ?physician (?pathologist))
+#     (!requestBiopsy ?physician ?patient ?radiologist)
+#     (attendTest ?patient)
+#   )
+# )
 
-	(:method (performPathologyTests ?patient)
-		imaging-plus-biopsy
-		((patient ?patient) (physician ?physician)
-			(radiologist ?radiologist)
-			(pathologist ?pathologist)
-			;(conditional C1 ?Ci ?Cv)
-			(commitment C3 ?Ci3 ?patient ?physician)
-			(commitment C4 ?Ci4 ?radiologist ?physician)
-		 ) ; Precondition
-		((!create C3 ?Ci3 ?patient ?physician (?radiologist))
-		 (!create C4 ?Ci4 ?radiologist ?physician (?pathologist)) 
- 		 (!requestBiopsy ?physician ?patient ?radiologist)
-		 (attendTest ?patient)
-		) ; Request
-	)
-	
-	(:method (attendTest ?patient)
-		attend-imaging
-		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentRequested ?patient ?radiologist) (not (iAppointmentKept ?patient ?radiologist)) )
-		((!performImaging ?radiologist ?patient ?physician))
-		
-		attend-biopsy
-		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (bAppointmentRequested ?patient ?radiologist) (not (bAppointmentKept ?patient ?radiologist)))
-		((!performBiopsy ?radiologist ?patient ?physician))
-	)
-	
-	(:method (attendTest ?patient)
-		no-show-imaging
-		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentRequested ?patient ?radiologist) (not (iAppointmentKept ?patient ?radiologist)) )
-		() ; No show
-		
-		no-show-biopsy
-		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (bAppointmentRequested ?patient ?radiologist) (not (bAppointmentKept ?patient ?radiologist)))
-		()
-	)
-	
-	(:method (deliverDiagnostics ?patient)
-		only-imaging
-		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentKept ?patient ?radiologist) (not (biopsyRequested ?physician ?patient)) )
-		((!requestRadiologyReport ?physician ?radiologist ?patient)
-		 (!sendRadiologyReport ?radiologist ?physician ?patient)
-		 (!generateTreatmentPlan ?physician ?patient) )
-		
-		imaging-biopsy-integrated
-		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (pathologist ?pathologist) (iAppointmentKept ?patient ?radiologist) (bAppointmentKept ?patient ?radiologist) )
-		((!requestRadiologyReport ?physician ?radiologist ?patient)
-		 (!requestPathologyReport ?physician ?radiologist ?patient)
-		 (!sendRadiologyReport ?radiologist ?physician ?patient)
-		 (!sendPathologyReport ?radiologist ?physician ?patient)
-		 (!sendIntegratedReport ?radiologist ?pathologist ?patient ?physician)
-	     (!generateTreatmentPlan ?physician ?patient) )
-	)
-=end
+def performPathologyTests_imaging_plus_biopsy(patient)
+  physician = ''
+  radiologist = ''
+  pathologist = ''
+  ci = ''
+  cv = ''
+  ci3 = ''
+  ci4 = ''
+  generate(
+    [
+      ['patient', patient],
+      ['physician', physician],
+      ['radiologist', radiologist],
+      ['pathologist', pathologist],
+      ['commitment', 'C3', ci3, patient, physician],
+      ['commitment', 'C4', ci4, radiologist, physician]
+    ],
+    [], physician, radiologist, pathologist, ci, cv, ci3, ci4
+  ) {
+    # TODO review lists in the subtasks
+    yield [
+      ['create', 'C3', ci3, patient, physician, [radiologist]],
+      ['create', 'C4', ci4, radiologist, physician, [pathologist]],
+      ['requestBiopsy', physician, patient, radiologist],
+      ['attendTest', patient]
+    ]
+  }
+end
+
+# (:method (attendTest ?patient)
+#   attend-imaging
+#   ((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentRequested ?patient ?radiologist) (not (iAppointmentKept ?patient ?radiologist)))
+#   ((!performImaging ?radiologist ?patient ?physician))
+#   attend-biopsy
+#   ((patient ?patient) (physician ?physician) (radiologist ?radiologist) (bAppointmentRequested ?patient ?radiologist) (not (bAppointmentKept ?patient ?radiologist)))
+#   ((!performBiopsy ?radiologist ?patient ?physician))
+# )
+
+def attendTest_attend_imaging(patient)
+  # TODO
+end
+
+def attendTest_attend_biopsy(patient)
+  # TODO
+end
+
+# (:method (attendTest ?patient)
+#   no-show-imaging
+#   ((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentRequested ?patient ?radiologist) (not (iAppointmentKept ?patient ?radiologist)))
+#   () ; No show
+#   no-show-biopsy
+#   ((patient ?patient) (physician ?physician) (radiologist ?radiologist) (bAppointmentRequested ?patient ?radiologist) (not (bAppointmentKept ?patient ?radiologist)))
+#   ()
+# )
+
+def attendTest_no_show_imaging(patient)
+  # TODO
+end
+
+def attendTest_no_show_biopsy(patient)
+  # TODO
+end
+
+# (:method (deliverDiagnostics ?patient)
+#   only-imaging
+#   ((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentKept ?patient ?radiologist) (not (biopsyRequested ?physician ?patient)))
+#   (
+#     (!requestRadiologyReport ?physician ?radiologist ?patient)
+#     (!sendRadiologyReport ?radiologist ?physician ?patient)
+#     (!generateTreatmentPlan ?physician ?patient)
+#   )
+#   imaging-biopsy-integrated
+#   ((patient ?patient) (physician ?physician) (radiologist ?radiologist) (pathologist ?pathologist) (iAppointmentKept ?patient ?radiologist) (bAppointmentKept ?patient ?radiologist))
+#   (
+#     (!requestRadiologyReport ?physician ?radiologist ?patient)
+#     (!requestPathologyReport ?physician ?radiologist ?patient)
+#     (!sendRadiologyReport ?radiologist ?physician ?patient)
+#     (!sendPathologyReport ?radiologist ?physician ?patient)
+#     (!sendIntegratedReport ?radiologist ?pathologist ?patient ?physician)
+#     (!generateTreatmentPlan ?physician ?patient)
+#   )
+# )
+
+def deliverDiagnostics_only_imaging(patient)
+  # TODO
+end
+
+def deliverDiagnostics_imaging_biopsy_integrated(patient)
+  # TODO
+end

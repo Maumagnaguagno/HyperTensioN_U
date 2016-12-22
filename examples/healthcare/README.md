@@ -76,3 +76,5 @@
 - ``(processPatient ?patient)``
 - ``(performImagingTests ?patient)``
 - ``(performPathologyTests ?patient)``
+- ``(attendTest ?patient)``
+- ``(deliverDiagnostics ?patient)``
