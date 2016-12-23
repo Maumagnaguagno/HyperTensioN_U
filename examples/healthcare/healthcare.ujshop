@@ -708,7 +708,7 @@
 		1	; Cost
 	)
 	
-	(:operator (!requestBiopsy ?physician ?patient ?pathologist)
+	(:operator (!requestBiopsy ?physician ?patient ?radiologist)
 		(and (physician ?physician) (patient ?patient) (radiologist ?radiologist)) ;Pre
 		() ;Del
 		((bAppointmentRequested ?patient ?radiologist) (biopsyRequested ?physician ?patient)) ;Add
