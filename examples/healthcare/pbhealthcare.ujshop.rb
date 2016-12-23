@@ -43,10 +43,14 @@ Healthcare.problem(
     'imagingScan' => [],
     'imagingRequested' => [],
     'imagingResultsReported' => [],
+    'bAppointmentRequested' => [],
+    'bAppointmentKept' => [],
+    'biopsyReport' => [],
     'biopsyRequested' => [],
     'radiologyRequested' => [],
     'treatmentPlan' => [],
-    'diagnosisProvided' => []
+    'diagnosisProvided' => [],
+    'tissueProvided' => []
   },
   # Tasks
   [

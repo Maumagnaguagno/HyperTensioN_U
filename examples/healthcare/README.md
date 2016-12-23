@@ -16,10 +16,14 @@
 - ``imagingScan``
 - ``imagingRequested``
 - ``imagingResultsReported``
+- ``bAppointmentRequested``
+- ``bAppointmentKept``
+- ``biopsyReport``
 - ``biopsyRequested``
 - ``radiologyRequested``
 - ``treatmentPlan``
 - ``diagnosisProvided``
+- ``tissueProvided``
 
 ### Axioms
 - ``(null ?c ?ci ?cv)``
