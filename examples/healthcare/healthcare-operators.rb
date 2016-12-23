@@ -24,14 +24,14 @@ def requestImaging(physician, patient, radiologist)
   end
 end
 
-# (:operator (!requestBiopsy ?physician ?patient ?pathologist)
+# (:operator (!requestBiopsy ?physician ?patient ?radiologist)
 #   (and (physician ?physician) (patient ?patient) (radiologist ?radiologist)) ;Pre
 #   () ;Del
 #   ((bAppointmentRequested ?patient ?radiologist) (biopsyRequested ?physician ?patient)) ;Add
 #   1 ; Cost
 # )
 
-def requestBiopsy(physician, patient, pathologist)
+def requestBiopsy(physician, patient, radiologist)
   if state('physician', physician) and state('patient', patient) and state('radiologist', radiologist)
     apply([['bAppointmentRequested', patient, radiologist], ['biopsyRequested', physician, patient]], [])
   end
