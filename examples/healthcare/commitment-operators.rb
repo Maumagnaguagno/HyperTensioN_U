@@ -36,7 +36,7 @@ end
 
 def create(c, ci, de, cr, cv)
   if state('commitment', c, ci, de, cr) and null(c, ci, cv)
-    apply(['var', c, ci, cv], [])
+    apply([['var', c, ci, cv]], [])
   end
 end
 
