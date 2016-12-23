@@ -685,9 +685,9 @@
 		imaging-biopsy-integrated
 		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (pathologist ?pathologist) (iAppointmentKept ?patient ?radiologist) (bAppointmentKept ?patient ?radiologist) )
 		((!requestRadiologyReport ?physician ?radiologist ?patient)
-		 (!requestPathologyReport ?physician ?radiologist ?patient)
+		 (!requestPathologyReport ?physician ?radiologist ?pathologist ?patient)
 		 (!sendRadiologyReport ?radiologist ?physician ?patient) 
-		 (!sendPathologyReport ?radiologist ?physician ?patient) 
+		 (!sendPathologyReport ?radiologist ?physician ?pathologist ?patient) 
 		 (!sendIntegratedReport ?radiologist ?pathologist ?patient ?physician)
 	     (!generateTreatmentPlan ?physician ?patient) )
 	)
@@ -737,7 +737,7 @@
 	;; (A) requestPathologyReport operator; radiologist requests a pathologist for pathology report
 	;; (B) requestRadiologyReport operator; pathologist requests a radiologist for radiology report
 		
-	(:operator (!requestPathologyReport ?physician ?radiologist ?patient)
+	(:operator (!requestPathologyReport ?physician ?radiologist ?pathologist ?patient)
 		(and (physician ?physician) (pathologist ?pathologist) (radiologist ?radiologist) (patient ?patient) (biopsyReport ?patient ?physician) ) ; Pre
 		() ; Del
 		((pathologyRequested ?physician ?pathologist ?patient)) ; Add
@@ -751,7 +751,7 @@
 		1 ; Cost
 	)
 
-  (:operator (!sendPathologyReport ?radiologist ?physician ?patient)
+  (:operator (!sendPathologyReport ?radiologist ?physician ?pathologist ?patient)
     (and (physician ?physician) (radiologist ?radiologist) (patient ?patient) (biopsyReport ?patient ?physician)
 	     (pathologyRequested ?physician ?pathologist ?patient))
     () ;Del

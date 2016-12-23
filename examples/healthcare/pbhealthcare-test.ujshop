@@ -81,10 +81,10 @@
 		(testCommitment C3 C3 (clyde) satisfied)
 		
 		(!requestRadiologyReport bob clyde alice)
-		(!requestPathologyReport bob doug alice)
+		(!requestPathologyReport clyde bob doug alice)
 
 		(!sendRadiologyReport clyde bob alice)
-		(!sendPathologyReport clyde bob alice)
+		(!sendPathologyReport clyde bob doug alice)
 		
 		(testCommitment C4 C4 (doug) satisfied)
 		(testCommitment C5 C5 (doug) satisfied)
