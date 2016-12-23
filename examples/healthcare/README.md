@@ -51,6 +51,19 @@
 - ``(!requestImaging ?physician ?patient ?radiologist)``
 - ``(!requestBiopsy ?physician ?patient ?pathologist)``
 - ``(!performImaging ?radiologist ?patient ?physician)``
+- ``(!performBiopsy ?radiologist ?patient ?physician)``
+- ``(!requestPathologyReport ?physician ?radiologist ?patient)``
+- ``(!requestRadiologyReport ?physician ?radiologist ?patient)``
+- ``(!sendPathologyReport ?radiologist ?physician ?patient)``
+- ``(!sendRadiologyReport ?radiologist ?physician ?patient)``
+- ``(!sendIntegratedReport ?radiologist ?pathologist ?patient ?physician)``
+- ``(!generateTreatmentPlan ?physician ?patient)``
+- ``(!reportPatient ?patient ?pathologist ?registrar)``
+- ``(!addPatientToRegistry ?patient ?registrar)``
+- ``(!escalateFailure ?patient ?physician ?radiologist ?hospital)``
+- ``(!requestPhysicianReportAssessment ?patient ?physician ?hospital)``
+- ``(!requestRadiologyReportAssessment ?pathologist ?radiologist ?patient ?hospital)``
+- ``(!requestPathologyReportAssessment ?radiologist ?pathologist ?patient ?hospital)``
 
 ### Methods
 - ``(achieveGoals)``
