@@ -14,19 +14,14 @@
 # C12(TUMORBOARD, PATIENT, patRequestsAssessment, TBAgreesPCP _ TBDisagreesPCP)
 
 def p(c, parameter1)
+  # TODO complete this axiom
   case parameter1
   when 'C1' # (:- (p ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (diagnosisRequested ?a ?d) (not (violated ?c C2 ?cv)) (not (violated ?c C3 ?cv))) ) )
     # TODO ci d a cv are free variables
-    state('commitment', c, ci, d, a) and
-    state('var', c, ci) and
-    state('diagnosisRequested', a, d) and
-    (not violated(c, 'C2', cv)) and
-    (not violated(c, 'C3', cv))
+    state('commitment', c, ci, d, a) and state('var', c, ci) and state('diagnosisRequested', a, d) and not violated(c, 'C2', cv) and not violated(c, 'C3', cv)
   when 'C2' # (:- (p ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (iAppointmentRequested ?d ?radiologist))))
     # TODO ci d a radiologist are free variables
-    state('commitment', c, ci, d, a) and
-    state('var', c, ci) and
-    state('iAppointmentRequested', d, radiologist)
+    state('commitment', c, ci, d, a) and state('var', c, ci) and state('iAppointmentRequested', d, radiologist)
   when 'C3' # (:- (p ?c C3 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (bAppointmentRequested ?d ?pathologist)) ) )
   when 'C4' # (:- (p ?c C4 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (biopsyRequested ?a ?patient) (bAppointmentKept ?patient ?a)) ) )
   when 'C5' # (:- (p ?c C5 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (imagingRequested ?a ?patient) (iAppointmentKept ?patient ?a)) ) )
@@ -41,6 +36,7 @@ def p(c, parameter1)
 end
 
 def q(c, parameter1)
+  # TODO complete this axiom
   case parameter1
   when 'C1' # (:- (q ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (diagnosisProvided ?d ?a)) ) )
   when 'C2' # (:- (q ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (iAppointmentKept ?d ?radiologist))))
