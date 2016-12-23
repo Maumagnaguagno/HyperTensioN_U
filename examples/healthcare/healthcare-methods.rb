@@ -77,6 +77,7 @@ def testCommitments_case0
     [], c1, d1, a1, c2, d2, a2, c3, d3, a3, c4, d4, a4, c5, d5, a5, c6, d6, a6, c7, d7, a7, c8, d8, a8
   ) {
     # TODO Variables cv1..cv8 are not bounded
+    cv1 = cv2 = cv3 = cv4 = cv5 = cv6 = cv7 = cv8 = nil
     yield [
       ['testCommitment', 'C1', c1, cv1, 'satisfied'],
       ['testCommitment', 'C2', c2, cv2, 'satisfied'],
