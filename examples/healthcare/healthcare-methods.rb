@@ -368,9 +368,9 @@ end
 #   ((patient ?patient) (physician ?physician) (radiologist ?radiologist) (pathologist ?pathologist) (iAppointmentKept ?patient ?radiologist) (bAppointmentKept ?patient ?radiologist))
 #   (
 #     (!requestRadiologyReport ?physician ?radiologist ?patient)
-#     (!requestPathologyReport ?physician ?radiologist ?patient)
+#     (!requestPathologyReport ?physician ?radiologist ?pathologist ?patient)
 #     (!sendRadiologyReport ?radiologist ?physician ?patient)
-#     (!sendPathologyReport ?radiologist ?physician ?patient)
+#     (!sendPathologyReport ?radiologist ?physician ?pathologist ?patient)
 #     (!sendIntegratedReport ?radiologist ?pathologist ?patient ?physician)
 #     (!generateTreatmentPlan ?physician ?patient)
 #   )
@@ -415,9 +415,9 @@ def deliverDiagnostics_imaging_biopsy_integrated(patient)
   ) {
     yield [
       ['requestRadiologyReport', physician, radiologist, patient],
-      ['requestPathologyReport', physician, radiologist, patient],
+      ['requestPathologyReport', physician, radiologist, pathologist, patient],
       ['sendRadiologyReport', radiologist, physician, patient],
-      ['sendPathologyReport', radiologist, physician, patient],
+      ['sendPathologyReport', radiologist, physician, pathologist, patient],
       ['sendIntegratedReport', radiologist, pathologist, patient, physician],
       ['generateTreatmentPlan', physician, patient]
     ]

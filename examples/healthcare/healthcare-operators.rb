@@ -93,8 +93,7 @@ end
 #   1 ; Cost
 # )
 
-def requestPathologyReport(physician, radiologist, patient)
-  # TODO pathologist is a free variable
+def requestPathologyReport(physician, radiologist, pathologist, patient)
   if state('physician', physician) and state('pathologist', pathologist) and state('radiologist', radiologist) and state('patient', patient) and state('biopsyReport', patient, physician)
     apply([['pathologyRequested', physician, pathologist, patient]], [])
   end
@@ -119,8 +118,7 @@ end
 #   ( (radPathResultsReported ?radiologist ?physician ?patient) (pathResultsReported ?radiologist ?physician ?patient) ) ;Add
 # )
 
-def sendPathologyReport(radiologist, physician, patient)
-  # TODO pathologist is a free variable
+def sendPathologyReport(radiologist, physician, pathologist, patient)
   if state('physician', physician) and state('radiologist', radiologist) and state('patient', patient) and state('biopsyReports', patient, physician) and state('pathologyRequested', physician, pathologist, patient)
     apply(
       [
