@@ -35,7 +35,18 @@ Healthcare.problem(
       [c6, c6, doug, clyde],
       [c7, c7, doug, simhospital],
       [c8, c8, evelyn, simhospital]
-    ]
+    ],
+    'var' => [],
+    'diagnosisRequested' => [],
+    'iAppointmentRequested' => [],
+    'iAppointmentKept' => [],
+    'imagingScan' => [],
+    'imagingRequested' => [],
+    'imagingResultsReported' => [],
+    'biopsyRequested' => [],
+    'radiologyRequested' => [],
+    'treatmentPlan' => [],
+    'diagnosisProvided' => []
   },
   # Tasks
   [
