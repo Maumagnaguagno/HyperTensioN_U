@@ -1,7 +1,25 @@
 # Healthcare
 
 ### Predicates
-- TODO
+- ``patient``
+- ``physician``
+- ``radiologist``
+- ``pathologist``
+- ``registrar``
+- ``hospital``
+- ``patientHasCancer``
+- ``commitment``
+- ``var``
+- ``diagnosisRequested``
+- ``iAppointmentRequested``
+- ``iAppointmentKept``
+- ``imagingScan``
+- ``imagingRequested``
+- ``imagingResultsReported``
+- ``biopsyRequested``
+- ``radiologyRequested``
+- ``treatmentPlan``
+- ``diagnosisProvided``
 
 ### Axioms
 - ``(null ?c ?ci ?cv)``
