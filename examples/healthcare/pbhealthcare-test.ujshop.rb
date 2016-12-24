@@ -48,7 +48,7 @@ Healthcare.problem(
     'pathResultsReported' => [],
     'patientReportedToRegistrar' => [],
     'inRegistry' => [],
-    'TBAgreesPath' => []
+    'TBAgreesPath' => [],
     'TBDisagreesPath' => [],
     'TBAgreesRad' => [],
     'TBDisagreesRad' => [],
@@ -125,7 +125,7 @@ Healthcare.problem(
     'pathResultsReported' => [],
     'patientReportedToRegistrar' => [],
     'inRegistry' => [],
-    'TBAgreesPath' => []
+    'TBAgreesPath' => [],
     'TBDisagreesPath' => [],
     'TBAgreesRad' => [],
     'TBDisagreesRad' => [],
