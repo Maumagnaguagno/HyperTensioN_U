@@ -14,25 +14,43 @@
 # C12(TUMORBOARD, PATIENT, patRequestsAssessment, TBAgreesPCP _ TBDisagreesPCP)
 
 def p(c, parameter1)
-  # TODO complete this axiom
-  case parameter1
-  when 'C1' # (:- (p ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (diagnosisRequested ?a ?d) (not (violated ?c C2 ?cv)) (not (violated ?c C3 ?cv))) ) )
-    # TODO ci d a cv are free variables
-    state('commitment', c, ci, d, a) and state('var', c, ci) and state('diagnosisRequested', a, d) and not violated(c, 'C2', cv) and not violated(c, 'C3', cv)
-  when 'C2' # (:- (p ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (iAppointmentRequested ?d ?radiologist))))
-    # TODO ci d a radiologist are free variables
-    state('commitment', c, ci, d, a) and state('var', c, ci) and state('iAppointmentRequested', d, radiologist)
-  when 'C3' # (:- (p ?c C3 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (bAppointmentRequested ?d ?pathologist)) ) )
-  when 'C4' # (:- (p ?c C4 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (biopsyRequested ?a ?patient) (bAppointmentKept ?patient ?a)) ) )
-  when 'C5' # (:- (p ?c C5 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (imagingRequested ?a ?patient) (iAppointmentKept ?patient ?a)) ) )
-  when 'C6' # (:- (p ?c C6 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient)) ))
-  when 'C7' # (:- (p ?c C7 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (patientHasCancer ?patient)) ))
-  when 'C8' # (:- (p ?c C8 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (patientReportedToRegistrar ?patient ?d)) ) )
-  when 'C9' # (:- (p ?c C9 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (violated ?c C5 ?cv) (escalate)) ) )
-  when 'C10' # (:- (p ?c C10 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (radRequestsAssessment)) ) )
-  when 'C11' # (:- (p ?c C11 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (phyRequestsAssessment)) ) )
-  when 'C12' # (:- (p ?c C12 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (patRequestsAssessment) ) ) )
-  end
+  @state['commitment'].any? {|cterms|
+    if cterms.size == 4 and cterm[0] == c
+      ci = cterms[1]
+      d = cterms[2]
+      a = cterms[3]
+      case parameter1
+      when 'C1' # (:- (p ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (diagnosisRequested ?a ?d) (not (violated ?c C2 ?cv)) (not (violated ?c C3 ?cv)))))
+        # TODO fix cv variable
+        raise 'cv variable is free'
+        state('var', c, ci) and state('diagnosisRequested', a, d) and not violated(c, 'C2', cv) and not violated(c, 'C3', cv)
+      when 'C2' # (:- (p ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (iAppointmentRequested ?d ?radiologist))))
+        state('var', c, ci) and @state['iAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
+      when 'C3' # (:- (p ?c C3 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (bAppointmentRequested ?d ?pathologist))))
+        state('var', c, ci) and @state['bAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
+      when 'C4' # (:- (p ?c C4 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (biopsyRequested ?a ?patient) (bAppointmentKept ?patient ?a))))
+        state('var', c, ci) and @state['biopsyRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('bAppointmentKept', terms[1], a)}
+      when 'C5' # (:- (p ?c C5 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (imagingRequested ?a ?patient) (iAppointmentKept ?patient ?a))))
+        state('var', c, ci) and @state['imagingRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('iAppointmentKept', terms[1], a)}
+      when 'C6' # (:- (p ?c C6 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient))))
+        state('var', c, ci) and @state['pathologyRequested'].any? {|terms| terms.size == 3 and terms[1] == d and state('tissueProvided', terms[2])}
+      when 'C7' # (:- (p ?c C7 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (patientHasCancer ?patient))))
+        state('var', c, ci) and @state['patientHasCancer'].any? {|terms| terms.size == 1}
+      when 'C8' # (:- (p ?c C8 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (patientReportedToRegistrar ?patient ?d))))
+        state('var', c, ci) and @state['patientReportedToRegistrar'].any? {|terms| terms[1] == d}
+      when 'C9' # (:- (p ?c C9 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (violated ?c C5 ?cv) (escalate))))
+        # TODO fix cv variable
+        raise 'cv variable is free'
+        state('var', c, ci) and violated(c, 'C5', cv) and state('escalate')
+      when 'C10' # (:- (p ?c C10 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (radRequestsAssessment))))
+        state('var', c, ci) and state('radRequestsAssessment')
+      when 'C11' # (:- (p ?c C11 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (phyRequestsAssessment))))
+        state('var', c, ci) and state('phyRequestsAssessment')
+      when 'C12' # (:- (p ?c C12 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (patRequestsAssessment))))
+        state('var', c, ci) and state('patRequestsAssessment')
+      end
+    end
+  }
 end
 
 def q(c, parameter1)
