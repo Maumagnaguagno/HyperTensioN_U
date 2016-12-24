@@ -60,11 +60,10 @@ def testCommitment_case0(c, ci, cv, s)
        (s == 'expired' and state(s, c, ci, cv)) or
        (s == 'pending' and state(s, c, ci, cv)) or
        (s == 'terminated' and terminated(c, ci, cv)) or
-       (s == 'violated' and terminated(c, ci, cv)) or
+       (s == 'violated' and violated(c, ci, cv)) or
        (s == 'satisfied' and satisfied(c, ci, cv)) or
        (s == 'cancelled' and state(s, c, ci, cv)) or
        (s == 'terminal' and terminal(c, ci, cv)) or
-       # TODO review arity of axiom p
        (s == 'p' and p(c, ci)) or
        (s == 'q' and q(c, ci))
       yield [['invisible_testSuccess', c, ci, cv, s]]
