@@ -51,7 +51,7 @@
 # )
 
 def testCommitment_case0(c, ci, cv, s)
-  if @state['commitment'].any? {|terms| terms[0] == c and terms[1] == ci}
+  if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == c and terms[1] == ci}
     if (s == 'null' and null(c, ci, cv)) or
        (s == 'conditional' and conditional(c, ci, cv)) or
        (s == 'active' and active(c, ci, cv)) or
