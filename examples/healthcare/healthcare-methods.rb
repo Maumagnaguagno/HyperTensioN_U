@@ -111,7 +111,7 @@ def seekHelp_case0(patient)
   ) {
     # TODO review list containing NIL
     yield [
-      ['create', 'C1', ci1, physician, patient, '(nil)'],
+      ['create', 'C1', ci1, physician, patient, list('nil')],
       ['requestAssessment', patient, physician]
     ]
   }
@@ -187,8 +187,8 @@ def performImagingTests_imaging(patient)
   ) {
     # TODO review lists in the subtasks
     yield [
-      ['create', 'C2', ci2, patient, physician, [radiologist]],
-      ['create', 'C5', ci5, radiologist, physician, [pathologist]],
+      ['create', 'C2', ci2, patient, physician, list(radiologist)],
+      ['create', 'C5', ci5, radiologist, physician, list(pathologist)],
       ['requestImaging', physician, patient, radiologist],
       ['attendTest', patient]
     ]
@@ -258,8 +258,8 @@ def performPathologyTests_imaging_plus_biopsy(patient)
   ) {
     # TODO review lists in the subtasks
     yield [
-      ['create', 'C3', ci3, patient, physician, [radiologist]],
-      ['create', 'C4', ci4, radiologist, physician, [pathologist]],
+      ['create', 'C3', ci3, patient, physician, list(radiologist)],
+      ['create', 'C4', ci4, radiologist, physician, list(pathologist)],
       ['requestBiopsy', physician, patient, radiologist],
       ['attendTest', patient]
     ]

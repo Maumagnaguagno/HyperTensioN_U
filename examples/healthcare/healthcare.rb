@@ -1,5 +1,9 @@
 require_relative '../../Hypertension_U'
 
+def list(*terms)
+  "(#{terms.join(' ')})"
+end
+
 require_relative 'commitment-axioms'
 require_relative 'healthcare-axioms'
 require_relative 'commitment-operators'

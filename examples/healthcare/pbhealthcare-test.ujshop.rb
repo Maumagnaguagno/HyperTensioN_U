@@ -48,7 +48,7 @@ Healthcare.problem(
   # Tasks
   [
     # TODO review list term
-    ['create', c1, c1, bob, alice, '(nil)'],
+    ['create', c1, c1, bob, alice, list('nil')],
     ['requestAssessment', alice, bob],
     ['requestImaging', bob, alice, clyde],
     ['requestBiopsy', bob, alice, clyde],
@@ -67,7 +67,7 @@ Healthcare.problem(
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
 
     # TODO review list term
-    ['testCommitment', c1, c1, '(nil)', satisfied],
+    ['testCommitment', c1, c1, list('nil'), satisfied],
   ],
   # Debug
   ARGV.first == '-d',
@@ -116,26 +116,26 @@ Healthcare.problem(
   },
   # Tasks
   [
-    ['create', c1, c1, bob, alice, '(nil)'],
+    ['create', c1, c1, bob, alice, list('nil')],
     ['requestAssessment', alice, bob],
 
-    ['create', c2, c2, alice, bob, [clyde]],
-    ['create', c3, c3, alice, bob, [clyde]],
+    ['create', c2, c2, alice, bob, list(clyde)],
+    ['create', c3, c3, alice, bob, list(clyde)],
 
-    ['create', c4, c4, clyde, bob, [doug]],
-    ['create', c5, c5, clyde, bob, [doug]],
-    ['create', c6, c6, doug, clyde, [[bob, alice]]],
+    ['create', c4, c4, clyde, bob, list(doug)],
+    ['create', c5, c5, clyde, bob, list(doug)],
+    ['create', c6, c6, doug, clyde, list(list(bob, alice))],
 
-    ['create', c7, c7, doug, simhospital, [[alice, evelyn]]],
-    ['create', c8, c8, evelyn, simhospital, [alice]],
+    ['create', c7, c7, doug, simhospital, list(list(alice, evelyn))],
+    ['create', c8, c8, evelyn, simhospital, list(alice)],
 
     ['requestImaging', bob, alice, clyde],
     ['requestBiopsy', bob, alice, clyde],
     ['performImaging', clyde, alice, bob],
     ['performBiopsy', clyde, alice, bob],
     
-    ['testCommitment', c2, c2, [clyde], satisfied],
-    ['testCommitment', c3, c3, [clyde], satisfied],
+    ['testCommitment', c2, c2, list(clyde), satisfied],
+    ['testCommitment', c3, c3, list(clyde), satisfied],
 
     ['requestRadiologyReport', bob, clyde, alice],
     ['requestPathologyReport', bob, doug, alice],
@@ -143,23 +143,23 @@ Healthcare.problem(
     ['sendRadiologyReport', clyde, bob, alice],
     ['sendPathologyReport', clyde, bob, alice],
 
-    ['testCommitment', c4, c4, [doug], satisfied],
-    ['testCommitment', c5, c5, [doug], satisfied],
-    ['testCommitment', c6, c6, [[bob, alice]], satisfied],
+    ['testCommitment', c4, c4, list(doug), satisfied],
+    ['testCommitment', c5, c5, list(doug), satisfied],
+    ['testCommitment', c6, c6, list(list(bob, alice)), satisfied],
 
     ['sendIntegratedReport', clyde, doug, alice, bob],
     ['generateTreatmentPlan', bob, alice],
     ['reportPatient', alice, doug, evelyn],
 
-    ['testCommitment', c7, c7, [[alice, evelyn]], satisfied],
+    ['testCommitment', c7, c7, list(list(alice, evelyn)), satisfied],
 
     ['addPatientToRegistry', alice, evelyn],
 
-    ['testCommitment', c8, c8, [alice], satisfied],
+    ['testCommitment', c8, c8, list(alice), satisfied],
 
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
 
-    ['testCommitment', c1, c1, '(nil)', satisfied]
+    ['testCommitment', c1, c1, list('nil'), satisfied]
   ],
   # Debug
   ARGV.first == '-d',
