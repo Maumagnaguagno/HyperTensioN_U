@@ -39,7 +39,7 @@
 #   ((commitment ?c ?ci ?d ?a) (call = ?s terminal) (terminal ?c ?ci ?cv))
 #   ((!!testSuccess ?c ?ci ?cv ?s))
 
-#   ((commitment ?c ?ci ?d ?a) (call = ?s p) (p ?c ?ci ?cv))
+#   ((commitment ?c ?ci ?d ?a) (call = ?s p) (p ?c ?ci))
 #   ((!!testSuccess ?c ?ci ?cv ?s))
 
 #   ((commitment ?c ?ci ?d ?a) (call = ?s q) (q ?c ?ci))
@@ -65,7 +65,7 @@ def testCommitment_case0(c, ci, cv, s)
        (s == 'cancelled' and state(s, c, ci, cv)) or
        (s == 'terminal' and terminal(c, ci, cv)) or
        # TODO review arity of axiom p
-       (s == 'p' and p(c, ci, cv)) or
+       (s == 'p' and p(c, ci)) or
        (s == 'q' and q(c, ci))
       yield [['invisible_testSuccess', c, ci, cv, s]]
     else
