@@ -70,7 +70,7 @@ Healthcare.problem(
     ['performImaging', clyde, alice, bob],
     ['performBiopsy', clyde, alice, bob],
     ['requestRadiologyReport', bob, clyde, alice],
-    ['requestPathologyReport', clyde, bob, doug, alice],
+    ['requestPathologyReport', bob, clyde, doug, alice],
 
     ['sendRadiologyReport', clyde, bob, alice],
     ['sendPathologyReport', clyde, bob, doug, alice],
@@ -168,10 +168,10 @@ Healthcare.problem(
     ['testCommitment', c3, c3, list(clyde), satisfied],
 
     ['requestRadiologyReport', bob, clyde, alice],
-    ['requestPathologyReport', bob, doug, alice],
+    ['requestPathologyReport', bob, clyde, doug, alice],
 
     ['sendRadiologyReport', clyde, bob, alice],
-    ['sendPathologyReport', clyde, bob, alice],
+    ['sendPathologyReport', clyde, bob, doug, alice],
 
     ['testCommitment', c4, c4, list(doug), satisfied],
     ['testCommitment', c5, c5, list(doug), satisfied],
