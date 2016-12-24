@@ -48,7 +48,7 @@ Healthcare.problem(
   # Tasks
   [
     # TODO review list term
-    ['create', c1, c1, bob, alice, [[]]],
+    ['create', c1, c1, bob, alice, '(nil)'],
     ['requestAssessment', alice, bob],
     ['requestImaging', bob, alice, clyde],
     ['requestBiopsy', bob, alice, clyde],
@@ -67,7 +67,7 @@ Healthcare.problem(
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
 
     # TODO review list term
-    ['testCommitment', c1, c1, [[]], satisfied],
+    ['testCommitment', c1, c1, '(nil)', satisfied],
   ],
   # Debug
   ARGV.first == '-d',
@@ -116,7 +116,7 @@ Healthcare.problem(
   },
   # Tasks
   [
-    ['create', c1, c1, bob, alice, [[]]],
+    ['create', c1, c1, bob, alice, '(nil)'],
     ['requestAssessment', alice, bob],
 
     ['create', c2, c2, alice, bob, [clyde]],
@@ -159,7 +159,7 @@ Healthcare.problem(
 
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
 
-    ['testCommitment', c1, c1, [[]], satisfied]
+    ['testCommitment', c1, c1, '(nil)', satisfied]
   ],
   # Debug
   ARGV.first == '-d',
