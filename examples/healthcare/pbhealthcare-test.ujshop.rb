@@ -43,7 +43,17 @@ Healthcare.problem(
     'radiologyRequested' => [],
     'treatmentPlan' => [],
     'diagnosisProvided' => [],
-    'tissueProvided' => []
+    'tissueProvided' => [],
+    'radPathResultsReported' => [],
+    'pathResultsReported' => [],
+    'patientReportedToRegistrar' => [],
+    'inRegistry' => [],
+    'TBAgreesPath' => []
+    'TBDisagreesPath' => [],
+    'TBAgreesRad' => [],
+    'TBDisagreesRad' => [],
+    'TBAgreesPCP' => [],
+    'TBDisagreesPCP' => []
   },
   # Tasks
   [
@@ -112,7 +122,17 @@ Healthcare.problem(
     'radiologyRequested' => [],
     'treatmentPlan' => [],
     'diagnosisProvided' => [],
-    'tissueProvided' => []
+    'tissueProvided' => [],
+    'radPathResultsReported' => [],
+    'pathResultsReported' => [],
+    'patientReportedToRegistrar' => [],
+    'inRegistry' => [],
+    'TBAgreesPath' => []
+    'TBDisagreesPath' => [],
+    'TBAgreesRad' => [],
+    'TBDisagreesRad' => [],
+    'TBAgreesPCP' => [],
+    'TBDisagreesPCP' => []
   },
   # Tasks
   [

@@ -24,6 +24,16 @@
 - ``treatmentPlan``
 - ``diagnosisProvided``
 - ``tissueProvided``
+- ``radPathResultsReported``
+- ``pathResultsReported``
+- ``patientReportedToRegistrar``
+- ``inRegistry``
+- ``TBAgreesPath``
+- ``TBDisagreesPath``
+- ``TBAgreesRad``
+- ``TBDisagreesRad``
+- ``TBAgreesPCP``
+- ``TBDisagreesPCP``
 
 ### Axioms
 - ``(null ?c ?ci ?cv)``
