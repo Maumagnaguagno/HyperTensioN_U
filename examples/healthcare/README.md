@@ -34,6 +34,11 @@
 - ``TBDisagreesRad``
 - ``TBAgreesPCP``
 - ``TBDisagreesPCP``
+- ``pathologyRequested``
+- ``escalate``
+- ``radRequestsAssessment``
+- ``phyRequestsAssessment``
+- ``patRequestsAssessment``
 
 ### Axioms
 - ``(null ?c ?ci ?cv)``

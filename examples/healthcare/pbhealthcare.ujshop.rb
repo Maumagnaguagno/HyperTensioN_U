@@ -60,7 +60,12 @@ Healthcare.problem(
     'TBAgreesRad' => [],
     'TBDisagreesRad' => [],
     'TBAgreesPCP' => [],
-    'TBDisagreesPCP' => []
+    'TBDisagreesPCP' => [],
+    'pathologyRequested' => [],
+    'escalate' => [],
+    'radRequestsAssessment' => [],
+    'phyRequestsAssessment' => [],
+    'patRequestsAssessment' => []
   },
   # Tasks
   [
