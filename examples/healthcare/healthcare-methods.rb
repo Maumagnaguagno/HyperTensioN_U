@@ -7,11 +7,13 @@
 
 def hospitalScenario_case0
   @state['patient'].each {|terms|
-    patient = terms[0]
-    yield [
-      ['seekHelp', patient],
-      ['processPatient', patient]
-    ]
+    if terms.size == 1
+      patient = terms[0]
+      yield [
+        ['seekHelp', patient],
+        ['processPatient', patient]
+      ]
+    end
   }
 end
 

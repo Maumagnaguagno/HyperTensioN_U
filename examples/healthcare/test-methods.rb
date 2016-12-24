@@ -117,7 +117,7 @@ end
 # )
 
 def testGoal_case0(g, gi, gv, s)
-  if @state['goal'].any? {|terms| terms[0] == g and terms[1] == gi}
+  if @state['goal'].any? {|terms| terms.size == 4 and terms[0] == g and terms[1] == gi}
     if (s == 'null' and nullG(g, gi, gv)) or
        (s == 'inactive' and inactiveG(g, gi, gv)) or
        (s == 'ninactive' and not inactiveG(g, gi, gv)) or
@@ -145,7 +145,7 @@ end
 def testGoalCommitmentRule_case0(rule, g, gi, a, c, ci, de, cr)
   if state('goal', g, gi, a) and state('commitment', c, ci, de, cr) and rule == 'eqGSCP'
     @state['eqGSCP'].each {|terms|
-      if terms[0] == g and terms[2] == c
+      if terms.size == 4 and terms[0] == g and terms[2] == c
         gv = terms[1]
         cv = terms[3]
         # TODO support parameter1 list

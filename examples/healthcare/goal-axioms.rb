@@ -77,5 +77,5 @@ end
 # (:- (terminalG ?g ?gi ?gv) (and (goal ?g ?gi ?a) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv) ) ))
 
 def terminalG(g, gi, gv)
-  @state['goal'].any? {|terms| terms[0] == g and terms[1] == gi} and (state('dropped', g, gi, gv) or state('aborted', g, gi, gv))
+  @state['goal'].any? {|terms| terms.size == 3 and terms[0] == g and terms[1] == gi} and (state('dropped', g, gi, gv) or state('aborted', g, gi, gv))
 end

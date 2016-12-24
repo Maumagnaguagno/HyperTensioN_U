@@ -56,6 +56,6 @@ end
 # (:- (terminal ?c ?ci ?cv) (and (commitment ?c ?ci ?de ?cr) (or (cancelled ?c ?ci ?cv) (released ?c ?ci ?cv) (expired ?c ?ci ?cv)) ))
 def terminal(c, ci, cv)
   # Free variables de and cr requires special comparison
-  @state['commitment'].any? {|terms| terms[0] == c and terms[1] == ci and terms[2] == cv} and
+  @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == c and terms[1] == ci and terms[2] == cv} and
   (state('cancelled', c, ci, cv) or state('released', c, ci, cv) or state('expired', c, ci, cv))
 end

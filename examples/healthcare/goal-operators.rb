@@ -10,7 +10,7 @@
 # )
 
 def invisible_testSuccessG(g, gi, gv, state)
-  @state['goal'].any? {|terms| terms[0] == g and terms[1] == gi}
+  @state['goal'].any? {|terms| terms.size == 3 and terms[0] == g and terms[1] == gi}
 end
 
 # Regular transitions
