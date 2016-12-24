@@ -52,7 +52,7 @@ end
 
 def suspend(c, ci, de, cr, cv)
   if state('commitment', c, ci, de, cr) and active(c, ci, cv)
-    apply(['pending', c, ci, cv], [])
+    apply([['pending', c, ci, cv]], [])
   end
 end
 
@@ -72,7 +72,7 @@ end
 
 def reactivate(c, ci, de, cr, cv)
   if state('commitment', c, ci, de, cr) and state('pending', c, ci, cv)
-    apply([], ['pending', c, ci, cv])
+    apply([], [['pending', c, ci, cv]])
   end
 end
 

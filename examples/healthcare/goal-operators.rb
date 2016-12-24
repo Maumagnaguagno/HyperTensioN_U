@@ -27,7 +27,7 @@ end
 
 def consider(g, gi, a, gv)
   if state('goal', g, gi, a) and nullG(g, gi, gv) and state('pg', g, gi, gv)
-    apply(['varG', g, gi, gv], [])
+    apply([['varG', g, gi, gv]], [])
   end
 end
 
@@ -43,7 +43,7 @@ end
 
 def activate(g, gi, a, gv)
   if state('goal', g, gi, a) and inactiveG(g, gi, gv)
-    apply(['activatedG', g, gi, gv], [])
+    apply([['activatedG', g, gi, gv]], [])
   end
 end
 
@@ -79,7 +79,7 @@ end
 
 def reconsider(g, gi, a, gv)
   if state('goal', g, gi, a) and state('suspendedG', g, gi, gv) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
-    apply(['dropped', g, gi, gv], [])
+    apply([['dropped', g, gi, gv]], [])
   end
 end
 
@@ -115,7 +115,7 @@ end
 
 def drop(g, gi, a, gv)
   if state('goal', g, gi, a) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
-    apply(['dropped', g, gi, gv], [])
+    apply([['dropped', g, gi, gv]], [])
   end
 end
 
@@ -132,7 +132,7 @@ end
 
 def abort(g, gi, a, gv)
   if state('goal', g, gi, a) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
-    apply(['aborted', g, gi, gv], [])
+    apply([['aborted', g, gi, gv]], [])
   end
 end
 
