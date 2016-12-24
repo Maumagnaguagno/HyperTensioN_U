@@ -109,7 +109,6 @@ def seekHelp_case0(patient)
     ],
     [], physician, radiologist, ci1
   ) {
-    # TODO review list containing NIL
     yield [
       ['create', 'C1', ci1, physician, patient, list('nil')],
       ['requestAssessment', patient, physician]

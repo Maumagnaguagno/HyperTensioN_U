@@ -57,7 +57,6 @@ Healthcare.problem(
   },
   # Tasks
   [
-    # TODO review list term
     ['create', c1, c1, bob, alice, list('nil')],
     ['requestAssessment', alice, bob],
     ['requestImaging', bob, alice, clyde],
@@ -76,7 +75,6 @@ Healthcare.problem(
     ['addPatientToRegistry', alice, evelyn],
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
 
-    # TODO review list term
     ['testCommitment', c1, c1, list('nil'), satisfied],
   ],
   # Debug
