@@ -39,6 +39,7 @@
 - ``radRequestsAssessment``
 - ``phyRequestsAssessment``
 - ``patRequestsAssessment``
+- ``biopsyReports``
 
 ### Axioms
 - ``(null ?c ?ci ?cv)``
