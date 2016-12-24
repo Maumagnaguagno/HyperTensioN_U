@@ -21,8 +21,8 @@ def p(c, parameter1)
       a = cterms[3]
       case parameter1
       when 'C1' # (:- (p ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (diagnosisRequested ?a ?d) (not (violated ?c C2 ?cv)) (not (violated ?c C3 ?cv)))))
-        # TODO fix cv variable
-        raise 'cv variable is free'
+        # TODO cv is a free variable
+        cv = 'nil'
         state('var', c, ci) and state('diagnosisRequested', a, d) and not violated(c, 'C2', cv) and not violated(c, 'C3', cv)
       when 'C2' # (:- (p ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (iAppointmentRequested ?d ?radiologist))))
         state('var', c, ci) and @state['iAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
@@ -39,8 +39,8 @@ def p(c, parameter1)
       when 'C8' # (:- (p ?c C8 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (patientReportedToRegistrar ?patient ?d))))
         state('var', c, ci) and @state['patientReportedToRegistrar'].any? {|terms| terms[1] == d}
       when 'C9' # (:- (p ?c C9 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (violated ?c C5 ?cv) (escalate))))
-        # TODO fix cv variable
-        raise 'cv variable is free'
+        # TODO cv is a free variable
+        cv = 'nil'
         state('var', c, ci) and violated(c, 'C5', cv) and state('escalate')
       when 'C10' # (:- (p ?c C10 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (radRequestsAssessment))))
         state('var', c, ci) and state('radRequestsAssessment')
