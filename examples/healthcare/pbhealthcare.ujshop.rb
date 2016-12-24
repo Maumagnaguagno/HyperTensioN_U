@@ -65,8 +65,7 @@ Healthcare.problem(
     'escalate' => [],
     'radRequestsAssessment' => [],
     'phyRequestsAssessment' => [],
-    'patRequestsAssessment' => [],
-    'biopsyReports' => []
+    'patRequestsAssessment' => []
   },
   # Tasks
   [

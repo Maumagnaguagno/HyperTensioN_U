@@ -58,8 +58,7 @@ Healthcare.problem(
     'escalate' => [],
     'radRequestsAssessment' => [],
     'phyRequestsAssessment' => [],
-    'patRequestsAssessment' => [],
-    'biopsyReports' => []
+    'patRequestsAssessment' => []
   },
   # Tasks
   [
@@ -141,8 +140,7 @@ Healthcare.problem(
     'escalate' => [],
     'radRequestsAssessment' => [],
     'phyRequestsAssessment' => [],
-    'patRequestsAssessment' => [],
-    'biopsyReports' => []
+    'patRequestsAssessment' => []
   },
   # Tasks
   [
@@ -163,7 +161,7 @@ Healthcare.problem(
     ['requestBiopsy', bob, alice, clyde],
     ['performImaging', clyde, alice, bob],
     ['performBiopsy', clyde, alice, bob],
-    
+
     ['testCommitment', c2, c2, list(clyde), satisfied],
     ['testCommitment', c3, c3, list(clyde), satisfied],
 

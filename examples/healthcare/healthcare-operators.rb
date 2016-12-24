@@ -119,7 +119,7 @@ end
 # )
 
 def sendPathologyReport(radiologist, physician, pathologist, patient)
-  if state('physician', physician) and state('radiologist', radiologist) and state('patient', patient) and state('biopsyReports', patient, physician) and state('pathologyRequested', physician, pathologist, patient)
+  if state('physician', physician) and state('radiologist', radiologist) and state('patient', patient) and state('biopsyReport', patient, physician) and state('pathologyRequested', physician, pathologist, patient)
     apply(
       [
         ['radPathResultsReported', radiologist, physician, patient],
