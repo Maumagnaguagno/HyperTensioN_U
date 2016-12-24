@@ -36,11 +36,11 @@ def p(c, parameter1)
 end
 
 def q(c, parameter1)
-  @state['commitment'].any? {|terms|
-    if terms.size == 4 and terms[0] == c
-      ci = terms[1]
-      d = terms[2]
-      a = terms[3]
+  @state['commitment'].any? {|cterms|
+    if cterms.size == 4 and cterms[0] == c
+      ci = cterms[1]
+      d = cterms[2]
+      a = cterms[3]
       case parameter1
       when 'C1' # (:- (q ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (diagnosisProvided ?d ?a))))
         state('var', c, ci) and @state['diagnosisProvided'].any? {|term| terms.size == 2 and terms[0] == d and terms[1] == a}
