@@ -39,6 +39,8 @@
 - ``radRequestsAssessment``
 - ``phyRequestsAssessment``
 - ``patRequestsAssessment``
+- ``integratedReport``
+- ``reportNeedsReview``
 
 ### Axioms
 - ``(null ?c ?ci ?cv)``
