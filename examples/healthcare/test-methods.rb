@@ -148,8 +148,7 @@ def testGoalCommitmentRule_case0(rule, g, gi, a, c, ci, de, cr)
       if terms.size == 4 and terms[0] == g and terms[2] == c
         gv = terms[1]
         cv = terms[3]
-        # TODO support parameter1 list
-        yield [['invisible_testRuleSuccess', rule, [g, gi, gv, c, ci, cv]]]
+        yield [['invisible_testRuleSuccess', rule, list(g, gi, gv, c, ci, cv)]]
       end
     }
   end
