@@ -36,19 +36,32 @@ def p(c, parameter1)
 end
 
 def q(c, parameter1)
-  # TODO complete this axiom
-  case parameter1
-  when 'C1' # (:- (q ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (diagnosisProvided ?d ?a)) ) )
-  when 'C2' # (:- (q ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (iAppointmentKept ?d ?radiologist))))
-  when 'C3' # (:- (q ?c C3 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (bAppointmentKept ?d ?pathologist)) ) )
-  when 'C4' # (:- (q ?c C4 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (radPathResultsReported ?d ?a ?patient)) ) )
-  when 'C5' # (:- (q ?c C5 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (imagingResultsReported ?d ?a ?patient)) ) )
-  when 'C6' # (:- (q ?c C6 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (pathResultsReported ?a ?physician ?patient)) ))
-  when 'C7' # (:- (q ?c C7 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (patientReportedToRegistrar ?patient ?registrar)) ))
-  when 'C8' # (:- (q ?c C8 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (inRegistry ?patient)) ) )
-  when 'C9' # (:- (q ?c C9 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci))) ) )
-  when 'C10' # (:- (q ?c C10 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (or (TBAgreesPath) (TBDisagreesPath)) ))
-  when 'C11' # (:- (q ?c C11 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (or (TBAgreesRad) (TBDisagreesRad)) ) )
-  when 'C12' # (:- (q ?c C12 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (or (TBAgreesPCP) (TBDisagreesPCP) ) ) )
-  end
+  @state['commitment'].any? {|c, ci, d, a|
+    case parameter1
+    when 'C1' # (:- (q ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (diagnosisProvided ?d ?a))))
+      state('var', c, ci) and @state['diagnosisProvided'].any? {|term0, term1| term0 == d and term1 == a}
+    when 'C2' # (:- (q ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (iAppointmentKept ?d ?radiologist))))
+      state('var', c, ci) and @state['iAppointmentKept'].any? {|term0, term1| term0 == d}
+    when 'C3' # (:- (q ?c C3 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (bAppointmentKept ?d ?pathologist))))
+      state('var', c, ci) and @state['bAppointmentKept'].any? {|term0, term1| term0 == d}
+    when 'C4' # (:- (q ?c C4 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (radPathResultsReported ?d ?a ?patient))))
+      state('var', c, ci) and @state['radPathResultsReported'].any? {|term0, term1, term2| term0 == d and term1 == a}
+    when 'C5' # (:- (q ?c C5 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (imagingResultsReported ?d ?a ?patient))))
+      state('var', c, ci) and @state['imagingResultsReported'].any? {|term0, term1, term2| term0 == d and term1 == a}
+    when 'C6' # (:- (q ?c C6 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (pathResultsReported ?a ?physician ?patient))))
+      state('var', c, ci) and @state['pathResultsReported'].any? {|term0, term1, term2| term0 == a}
+    when 'C7' # (:- (q ?c C7 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (patientReportedToRegistrar ?patient ?registrar))))
+      state('var', c, ci) and @state['patientReportedToRegistrar'].any? {|terms| terms.size == 2}
+    when 'C8' # (:- (q ?c C8 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (inRegistry ?patient))))
+      state('var', c, ci) and @state['inRegistry'].any? {|terms| terms.size == 1}
+    when 'C9' # (:- (q ?c C9 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci)))))
+      state('var', c, ci) and not null(c, 'C5', ci) and not null(c, 'D5', ci)
+    when 'C10' # (:- (q ?c C10 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (or (TBAgreesPath) (TBDisagreesPath))))
+      state('var', c, ci) and (state('TBAgreesPath') or state('TBDisagreesPath'))
+    when 'C11' # (:- (q ?c C11 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (or (TBAgreesRad) (TBDisagreesRad))))
+      state('var', c, ci) and (state('TBAgreesRad') or state('TBDisagreesRad'))
+    when 'C12' # (:- (q ?c C12 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (or (TBAgreesPCP) (TBDisagreesPCP))))
+      state('var', c, ci) and (state('TBAgreesPCP') or state('TBDisagreesPCP'))
+    end
+  }
 end
