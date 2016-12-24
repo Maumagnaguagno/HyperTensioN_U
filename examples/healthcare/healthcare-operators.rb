@@ -194,7 +194,7 @@ end
 # )
 
 def reportPatient(patient, pathologist, registrar)
-  if state('patient', patient) and state('pathologists', pathologist) and state('registrar', registrar) and state('patientHasCancer', patient)
+  if state('patient', patient) and state('pathologist', pathologist) and state('registrar', registrar) and state('patientHasCancer', patient)
     apply([['patientReportedToRegistrar', patient, registrar]], [])
   end
 end
