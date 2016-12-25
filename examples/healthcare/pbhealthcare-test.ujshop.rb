@@ -113,7 +113,7 @@ Kernel.abort('Problem 1 failed to generate expected plan') if plan1 != [
   ]
 ]
 
-puts '','Test problem 2'
+puts "\n\nTest problem 2"
 plan2 = Healthcare.problem(
   # Start
   {
