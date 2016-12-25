@@ -39,10 +39,10 @@
 #   ((commitment ?c ?ci ?d ?a) (call = ?s terminal) (terminal ?c ?ci ?cv))
 #   ((!!testSuccess ?c ?ci ?cv ?s))
 
-#   ((commitment ?c ?ci ?d ?a) (call = ?s p) (p ?c ?ci))
+#   ((commitment ?c ?ci ?d ?a) (call = ?s p) (p ?c ?ci ?cv))
 #   ((!!testSuccess ?c ?ci ?cv ?s))
 
-#   ((commitment ?c ?ci ?d ?a) (call = ?s q) (q ?c ?ci))
+#   ((commitment ?c ?ci ?d ?a) (call = ?s q) (q ?c ?ci ?cv))
 #   ((!!testSuccess ?c ?ci ?cv ?s))
 
 #   failed
@@ -64,8 +64,8 @@ def testCommitment_case0(c, ci, cv, s)
        (s == 'satisfied' and satisfied(c, ci, cv)) or
        (s == 'cancelled' and state(s, c, ci, cv)) or
        (s == 'terminal' and terminal(c, ci, cv)) or
-       (s == 'p' and p(c, ci)) or
-       (s == 'q' and q(c, ci))
+       (s == 'p' and p(c, ci, cv)) or
+       (s == 'q' and q(c, ci, cv))
       yield [['invisible_testSuccess', c, ci, cv, s]]
     else
       yield [['invisible_testFailure', c, s]]

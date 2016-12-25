@@ -45,9 +45,9 @@ def violated(c, ci, cv)
   state('p', c, ci, cv) and state('cancelled', c, ci, cv)
 end
 
-# (:- (satisfied ?c ?ci ?cv) (and (not (null ?c ?ci ?cv)) (not (terminal ?c ?ci ?cv)) (q ?c ?ci) ))
+# (:- (satisfied ?c ?ci ?cv) (and (not (null ?c ?ci ?cv)) (not (terminal ?c ?ci ?cv)) (q ?c ?ci ?cv) ))
 def satisfied(c, ci, cv)
-  not null(c, ci, cv) and not terminal(c, ci, cv) and q(c, ci)
+  not null(c, ci, cv) and not terminal(c, ci, cv) and q(c, ci, cv)
 end
 
 # ;(:- (expired ?c ?ci ?cv) (and (not (null ?c ?ci ?cv)) (not (p ?c ?ci ?cv)) ) )
