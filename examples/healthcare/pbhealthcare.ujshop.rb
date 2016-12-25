@@ -67,7 +67,10 @@ Healthcare.problem(
     'phyRequestsAssessment' => [],
     'patRequestsAssessment' => [],
     'integratedReport' => [],
-    'reportNeedsReview' => []
+    'reportNeedsReview' => [],
+    'cancelled' => [],
+    'released' => [],
+    'expired' => []
   },
   # Tasks
   [

@@ -41,6 +41,9 @@
 - ``patRequestsAssessment``
 - ``integratedReport``
 - ``reportNeedsReview``
+- ``cancelled``
+- ``released``
+- ``expired``
 
 ### Axioms
 - ``(null ?c ?ci ?cv)``

@@ -60,7 +60,10 @@ plan1 = Healthcare.problem(
     'phyRequestsAssessment' => [],
     'patRequestsAssessment' => [],
     'integratedReport' => [],
-    'reportNeedsReview' => []
+    'reportNeedsReview' => [],
+    'cancelled' => [],
+    'released' => [],
+    'expired' => []
   },
   # Tasks
   [
@@ -165,7 +168,10 @@ plan2 = Healthcare.problem(
     'phyRequestsAssessment' => [],
     'patRequestsAssessment' => [],
     'integratedReport' => [],
-    'reportNeedsReview' => []
+    'reportNeedsReview' => [],
+    'cancelled' => [],
+    'released' => [],
+    'expired' => []
   },
   # Tasks
   [
