@@ -76,24 +76,6 @@ def reactivate(c, ci, de, cr, cv)
   end
 end
 
-# Satisfy should be an operator if we want the state never to leave satisfied
-# (:operator (!satisfy ?c ?ci ?de ?cr ?cv)
-#   (
-#     (commitment ?c ?ci ?de ?cr)
-#     (active ?c ?ci ?cv)
-#     (q ?c ?ci ?cv)
-#   )
-#   ()
-#   ((satisfied ?c ?ci ?cv))
-#   1
-# )
-
-def satisfy(c, ci, de, cr, cv)
-  if state('commitment', c, ci, de, cr) and active(c, ci, cv) and q(c, ci, cv)
-    apply([['satisfied', c, ci, cv]], []) # TODO check if satisfied is both predicate and axiom
-  end
-end
-
 # (:operator (!expire ?c ?ci ?de ?cr ?cv)
 #   (
 #     (commitment ?c ?ci ?de ?cr)
