@@ -186,7 +186,6 @@ def performImagingTests_imaging(patient)
     ],
     [], physician, ci, radiologist, pathologist, ci2, ci5
   ) {
-    # TODO review lists in the subtasks
     yield [
       ['create', 'C2', ci2, patient, physician, list(radiologist)],
       ['create', 'C5', ci5, radiologist, physician, list(pathologist)],
@@ -257,7 +256,6 @@ def performPathologyTests_imaging_plus_biopsy(patient)
     ],
     [], physician, radiologist, pathologist, ci, cv, ci3, ci4
   ) {
-    # TODO review lists in the subtasks
     yield [
       ['create', 'C3', ci3, patient, physician, list(radiologist)],
       ['create', 'C4', ci4, radiologist, physician, list(pathologist)],
