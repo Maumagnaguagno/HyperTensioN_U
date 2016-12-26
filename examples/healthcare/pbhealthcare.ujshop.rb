@@ -15,6 +15,7 @@ c5 = 'C5'
 c6 = 'C6'
 c7 = 'C7'
 c8 = 'C8'
+satisfied = 'satisfied'
 
 plan = Healthcare.problem(
   # Start
@@ -90,24 +91,17 @@ Kernel.abort('Problem failed to generate expected plan') if plan != [
     ['create', c1, c1, bob, alice, list('nil')],
     ['requestAssessment', alice, bob],
     ['create', c2, c2, alice, bob, list(clyde)],
-    ['create', c5, c5, clyde, bob, (doug)],
+    ['create', c5, c5, clyde, bob, list(doug)],
     ['requestImaging', bob, alice, clyde],
     ['performImaging', clyde, alice, bob],
-    ['create', c3, c3, alice, bob, list(clyde)],
-    ['create', c4, c4, clyde, bob, list(doug)],
-    ['requestBiopsy', bob, alice, clyde],
-    ['performBiopsy', clyde, alice, bob],
     ['requestRadiologyReport', bob, clyde, alice],
-    ['requestPathologyReport', bob, clyde, doug, alice],
     ['sendRadiologyReport', clyde, bob, alice],
-    ['sendPathologyReport', clyde, bob, doug, alice],
-    ['sendIntegratedReport', clyde, doug, alice, bob],
     ['generateTreatmentPlan', bob, alice],
-    ['invisible_testFailure', c1, satisfied],
-    ['invisible_testFailure', c2, satisfied],
+    ['invisible_testSuccess', c1, c1, list('nil'), satisfied],
+    ['invisible_testSuccess', c2, c2, list(clyde), satisfied],
     ['invisible_testFailure', c3, satisfied],
     ['invisible_testFailure', c4, satisfied],
-    ['invisible_testFailure', c5, satisfied],
+    ['invisible_testSuccess', c5, c5, list(doug), satisfied],
     ['invisible_testFailure', c6, satisfied],
     ['invisible_testFailure', c7, satisfied],
     ['invisible_testFailure', c8, satisfied]

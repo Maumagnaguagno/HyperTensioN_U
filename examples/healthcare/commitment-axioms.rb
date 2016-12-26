@@ -7,7 +7,7 @@
 
 # (:- (null ?c ?ci ?cv) (not (var ?c ?ci ?cv) ))
 def null(c, ci, cv)
-  not state('var', c, ci, cv)
+  cv.empty? ? @state['var'].none? {|terms| terms.size == 3 and terms[0] == c and terms[1] == ci and cv.replace(terms[2])} : !state('var', c, ci, cv)
 end
 
 # (:- (conditional ?c ?ci ?cv) (and (active ?c ?ci ?cv) (not (p ?c ?ci ?cv)) ))

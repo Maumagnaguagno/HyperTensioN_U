@@ -78,17 +78,15 @@ def testCommitments_case0
     ],
     [], c1, d1, a1, c2, d2, a2, c3, d3, a3, c4, d4, a4, c5, d5, a5, c6, d6, a6, c7, d7, a7, c8, d8, a8
   ) {
-    # TODO Variables cv1..cv8 are not bounded
-    cv1 = cv2 = cv3 = cv4 = cv5 = cv6 = cv7 = cv8 = 'nil'
     yield [
-      ['testCommitment', 'C1', c1, cv1, 'satisfied'],
-      ['testCommitment', 'C2', c2, cv2, 'satisfied'],
-      ['testCommitment', 'C3', c3, cv3, 'satisfied'],
-      ['testCommitment', 'C4', c4, cv4, 'satisfied'],
-      ['testCommitment', 'C5', c5, cv5, 'satisfied'],
-      ['testCommitment', 'C6', c6, cv6, 'satisfied'],
-      ['testCommitment', 'C7', c7, cv7, 'satisfied'],
-      ['testCommitment', 'C8', c8, cv8, 'satisfied'],
+      ['testCommitment', 'C1', c1, '', 'satisfied'],
+      ['testCommitment', 'C2', c2, '', 'satisfied'],
+      ['testCommitment', 'C3', c3, '', 'satisfied'],
+      ['testCommitment', 'C4', c4, '', 'satisfied'],
+      ['testCommitment', 'C5', c5, '', 'satisfied'],
+      ['testCommitment', 'C6', c6, '', 'satisfied'],
+      ['testCommitment', 'C7', c7, '', 'satisfied'],
+      ['testCommitment', 'C8', c8, '', 'satisfied'],
     ]
   }
 end
