@@ -46,6 +46,7 @@
 - ``expired``
 
 ### Axioms
+[Commitment axioms](commitment-axioms.rb)
 - ``(null ?c ?ci ?cv)``
 - ``(conditional ?c ?ci ?cv)``
 - ``(detached ?c ?ci ?cv)``
@@ -54,10 +55,10 @@
 - ``(violated ?c ?ci ?cv)``
 - ``(satisfied ?c ?ci ?cv)``
 - ``(terminal ?c ?ci ?cv)``
-
+[Healthcare axioms](healthcare-axioms.rb)
 - ``(p ?c CN)``
 - ``(q ?c CN)``
-
+[Goal axioms](goal-axioms.rb)
 - ``(nullG ?g ?gi ?gv)``
 - ``(inactiveG ?g ?gi ?gv)``
 - ``(activeG ?g ?gi ?gv)``
@@ -65,10 +66,11 @@
 - ``(failedG ?g ?gi ?gv)``
 - ``(terminatedG ?g ?gi ?gv)``
 - ``(terminalG ?g ?gi ?gv)``
-
+[Goal commitment methods, added for readbility, used by method negotiate](goal-commitment-methods.rb)
 - ``(negotiable ?g ?gi ?gv ?c ?ci ?cv)``
 
 ### Operators
+[commitment operators](commitment-operators.rb)
 - ``(!!testSuccess ?c ?ci ?cv ?state)``
 - ``(!!testFailure ?cg ?state)``
 - ``(!create ?c ?ci ?de ?cr ?cv)``
@@ -79,7 +81,7 @@
 - ``(!timeoutviolate ?c ?ci ?de ?cr ?cv)``
 - ``(!cancel ?c ?ci ?de ?cr ?cv)``
 - ``(!release ?c ?ci ?de ?cr ?cv)``
-
+[Goal operators](goal-operators.rb)
 - ``(!!testSuccessG ?g ?gi ?gv ?state)``
 - ``(!consider ?g ?gi ?a ?gv)``
 - ``(!activate ?g ?gi ?a ?gv)``
@@ -88,7 +90,7 @@
 - ``(!reactivateG ?gi ?a ?gv)``
 - ``(!drop ?g ?gi ?a ?gv)``
 - ``(!abort ?g ?gi ?a ?gv)``
-
+[Healthcare operators](healthcare-operators.rb)
 - ``(!requestAssessment ?patient ?physician)``
 - ``(!requestImaging ?physician ?patient ?radiologist)``
 - ``(!requestBiopsy ?physician ?patient ?pathologist)``
@@ -108,9 +110,10 @@
 - ``(!requestPathologyReportAssessment ?radiologist ?pathologist ?patient ?hospital)``
 
 ### Methods
+[Goal methods](goal-methods.rb)
 - ``(achieveGoals)``
 - ``(achieveGoal C1 ?gi C2)``
-
+[Goal and commitment methods](goal-commitment-methods.rb)
 - ``(entice ?g ?gi ?gv ?c ?ci ?cv ?d ?a)``
 - ``(suspendOffer ?g ?gi ?gv ?c ?ci ?cv ?d ?a)``
 - ``(revive ?g ?gi ?gv ?c ?ci ?cv ?d ?a)``
@@ -124,11 +127,11 @@
 - ``(abandonMeansGoal ?g ?gi ?gv ?c ?ci ?cv ?d ?a)``
 - ``(persist ?g ?gi ?gv ?c ?ci ?cv ?g2 ?gi2 ?gv2 ?d ?a)``
 - ``(giveUp ?g ?gi ?gv ?c ?ci ?cv ?d ?a)``
-
+[Test methods](test-methods.rb)
 - ``(testCommitment ?c ?ci ?cv ?s)``
 - ``(testGoal ?g ?gi ?gv ?s)``
 - ``(testGoalCommitmentRule ?rule ?g ?gi ?a ?c ?ci ?de ?cr)``
-
+[Healthcare methods](healthcare-methods.rb)
 - ``(hospitalScenario)``
 - ``(testCommitments)``
 - ``(seekHelp ?patient)``
@@ -137,3 +140,6 @@
 - ``(performPathologyTests ?patient)``
 - ``(attendTest ?patient)``
 - ``(deliverDiagnostics ?patient)``
+
+## TODOs
+- Complete signature of predicates, ``(pre ?t0 ?t1)`` instead of ``pre``
