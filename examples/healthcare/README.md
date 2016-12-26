@@ -57,8 +57,8 @@
 - ``(terminal ?c ?ci ?cv)``
 
 [Healthcare axioms](healthcare-axioms.rb)
-- ``(p ?c CN)``
-- ``(q ?c CN)``
+- ``(p ?c CN ?cv)``
+- ``(q ?c CN ?cv)``
 
 [Goal axioms](goal-axioms.rb)
 - ``(nullG ?g ?gi ?gv)``
