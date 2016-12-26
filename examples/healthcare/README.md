@@ -46,6 +46,11 @@
 - ``expired``
 
 ### Axioms
+[Equality axioms](equality-axioms.rb)
+- ``(eqGSCP ?g ?gv ?c ?cv)``
+- ``(eqGSCQ ?g ?gv ?c ?cv)``
+- ``(eqCPCQ ?c1 ?cv1 ?c2 ?cv2)``
+
 [Commitment axioms](commitment-axioms.rb)
 - ``(null ?c ?ci ?cv)``
 - ``(conditional ?c ?ci ?cv)``

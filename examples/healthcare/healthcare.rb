@@ -4,6 +4,7 @@ def list(*terms)
   "(#{terms.join(' ')})"
 end
 
+require_relative 'equality-axioms'
 require_relative 'commitment-axioms'
 require_relative 'healthcare-axioms'
 require_relative 'commitment-operators'
