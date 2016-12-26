@@ -129,18 +129,15 @@ end
 
 def processPatient_process_patient_healthy(patient)
   physician = ''
-  radiologist = ''
   ci1 = ''
   generate(
     [
       ['patient', patient],
       ['physician', physician],
-      ['commitment', 'C1', ci1, physician, patient],
-      ['radiologist', radiologist]
+      ['commitment', 'C1', ci1, physician, patient]
     ],
-    [], physician, radiologist, ci1
+    [], physician, ci1
   ) {
-    # TODO do we need any of the free variables [physician, radiologist, ci1] in this method?
     yield [
       ['performImagingTests', patient],
       ['performPathologyTests', patient],
@@ -202,18 +199,15 @@ end
 # )
 
 def performPathologyTests_biopsy_unnecessary(patient)
-  # TODO review radiologist variable in the preconditions
   physician = ''
   ci = ''
-  radiologist = ''
   generate(
     [
       ['patient', patient],
       ['physician', physician],
       ['commitment', 'C1', ci, physician, patient],
-      ['radiologist', radiologist]
     ],
-    [], physician, ci, radiologist
+    [], physician, ci
   ) {
     yield []
   }
@@ -254,7 +248,7 @@ def performPathologyTests_imaging_plus_biopsy(patient)
       ['commitment', 'C3', ci3, patient, physician],
       ['commitment', 'C4', ci4, radiologist, physician]
     ],
-    [], physician, radiologist, pathologist, ci, cv, ci3, ci4
+    [], physician, radiologist, pathologist, ci, ci3, ci4
   ) {
     yield [
       ['create', 'C3', ci3, patient, physician, list(radiologist)],
