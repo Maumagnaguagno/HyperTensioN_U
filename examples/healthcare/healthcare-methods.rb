@@ -6,15 +6,17 @@
 # )
 
 def hospitalScenario_case0
+  subtasks = []
   @state['patient'].each {|terms|
     if terms.size == 1
       patient = terms[0]
-      yield [
+      subtasks.push(
         ['seekHelp', patient],
         ['processPatient', patient]
-      ]
+      )
     end
   }
+  yield subtasks
 end
 
 # (:method (testCommitments)
