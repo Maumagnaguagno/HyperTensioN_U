@@ -611,7 +611,7 @@
 			(commitment C1 ?Ci1 ?physician ?patient)
 			
 		 ) ; Precondition
-		((!create C1 ?Ci1 ?physician ?patient (nil))
+		((!create C1 ?Ci1 ?physician ?patient (?patient))
 		 (!requestAssessment ?patient ?physician)
 		 ) ; Task Network
 	)

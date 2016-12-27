@@ -14,7 +14,7 @@
 ; 	) ; Initial State
 ;
 ; 	(
-; 		(!create C1 C1 bob alice (nil))
+; 		(!create C1 C1 bob alice (alice))
 ; 		(!requestAssessment alice bob)
 ; 		(!requestImaging bob alice clyde)
 ; 		(!requestBiopsy bob alice clyde)
@@ -32,7 +32,7 @@
 ; 		(!addPatientToRegistry alice evelyn)
 ; 		(!requestPhysicianReportAssessment alice bob simhospital)
 ;
-; 		(testCommitment C1 C1 (nil) satisfied)
+; 		(testCommitment C1 C1 (alice) satisfied)
 ;
 ; 	) ;tn
 	
@@ -59,7 +59,7 @@
 	) ; Initial State
 	
 	(
-		(!create C1 C1 bob alice (nil))
+		(!create C1 C1 bob alice (alice))
 		(!requestAssessment alice bob)
 		
 		(!create C2 C2 alice bob (clyde))
@@ -102,7 +102,7 @@
 		
 		(!requestPhysicianReportAssessment alice bob simhospital)
 		
-		(testCommitment C1 C1 (nil) satisfied)
+		(testCommitment C1 C1 (alice) satisfied)
 
 	) ;tn
 )
