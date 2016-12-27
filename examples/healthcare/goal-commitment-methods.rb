@@ -22,7 +22,7 @@
 # )
 
 def entice_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and activeG(g, gi, gv) and state('commitment', c, ci, d, a) and null(c, ci, cv) and state('eqGSCP', g, gv, c, cv)
+  if state('goal', g, gi, d) and activeG(g, gi, gv) and state('commitment', c, ci, d, a) and null(c, ci, cv) and eqGSCP(g, gv, c, cv)
     yield [['create', c, ci, d, a, cv]]
   end
 end

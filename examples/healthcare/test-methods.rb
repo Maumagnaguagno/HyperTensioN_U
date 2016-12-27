@@ -142,13 +142,10 @@ end
 # )
 
 def testGoalCommitmentRule_case0(rule, g, gi, a, c, ci, de, cr)
-  if state('goal', g, gi, a) and state('commitment', c, ci, de, cr) and rule == 'eqGSCP'
-    @state['eqGSCP'].each {|terms|
-      if terms.size == 4 and terms[0] == g and terms[2] == c
-        gv = terms[1]
-        cv = terms[3]
-        yield [['invisible_testRuleSuccess', rule, list(g, gi, gv, c, ci, cv)]]
-      end
-    }
+  # TODO eqGSCP may have multiple unifications for gv and cv
+  gv = ''
+  cv = ''
+  if state('goal', g, gi, a) and state('commitment', c, ci, de, cr) and rule == 'eqGSCP' and eqGSCP(g, gv, c, cv)
+    yield [['invisible_testRuleSuccess', rule, list(g, gi, gv, c, ci, cv)]]
   end
 end

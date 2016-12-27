@@ -78,9 +78,6 @@ def achieveGoals_multipleCommitments
   ci1 = ''
   c2 = ''
   ci2 = ''
-  cv1 = ''
-  cv2 = ''
-  # TODO verify definition of eqGSCP
   generate(
     [
       ['goal', g1, gi1, a1],
@@ -88,13 +85,14 @@ def achieveGoals_multipleCommitments
       ['goal', g2, gi2, a2],
       ['activatedG', g2, gi2, gv2],
       ['commitment', c1, ci1, a1, a2],
-      ['commitment', c2, ci2, a2, a1],
-      ['eqGSCP', g1, gv1, c1, cv1],
-      ['eqGSCP', g2, gv2, c2, cv2]
+      ['commitment', c2, ci2, a2, a1]
     ],
-    [], g1, gi1, a1, gv1, g2, gi2, a2, gv2, c1, ci1, c2, ci2, cv1, cv2
+    [], g1, gi1, a1, gv1, g2, gi2, a2, gv2, c1, ci1, c2, ci2
   ) {
-    if activeG(g1, gi1, gv1) and activeG(g2, gi2, gv2)
+    # TODO eqGSCP may have multiple unifications for cv1 and cv2
+    cv1 = ''
+    cv2 = ''
+    if activeG(g1, gi1, gv1) and activeG(g2, gi2, gv2) and eqGSCP(g1, gv1, c1, cv1) and eqGSCP(g2, gv2, c2, cv2)
       yield [
         ['entice', g1, c1, a1, a2],
         ['entice', g2, c2, a2, a1],
@@ -118,19 +116,16 @@ def achieveGoal_genericEnticeToAchieve(g, gi, a, gv)
     d = ''
     g2 = ''
     gi2 = ''
-    gv2 = cv = gv
-    # TODO verify definition of eqGSCP
     generate(
       [
         ['goal', g, gi, a],
         ['commitment', c, ci, a, d],
-        ['eqGSCP', g, gv, c, cv],
-        ['goal', g2, gi2, a],
-        ['eqGSCQ', g2, gv2, c, cv]
+        ['goal', g2, gi2, a]
       ],
-      [], c, ci, d, g2, gi2, gv2
+      [], c, ci, d, g2, gi2
     ) {
-      if g != g2
+      gv2 = cv = gv
+      if g != g2 and eqGSCP(g, gv, c, cv) and eqGSCQ(g2, gv2, c, cv)
         yield [
           ['entice', g, gi, gv, c, ci, cv, a, d],
           ['detach', c, ci, cv],
