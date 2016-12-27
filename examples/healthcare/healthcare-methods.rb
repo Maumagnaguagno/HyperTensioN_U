@@ -95,7 +95,7 @@ end
 
 # (:method (seekHelp ?patient)
 #   ((patient ?patient) (physician ?physician) (radiologist ?radiologist) (commitment C1 ?Ci1 ?physician ?patient))
-#   ((!create C1 ?Ci1 ?physician ?patient (nil)) (!requestAssessment ?patient ?physician))
+#   ((!create C1 ?Ci1 ?physician ?patient (?patient)) (!requestAssessment ?patient ?physician))
 # )
 
 def seekHelp_case0(patient)
@@ -112,7 +112,7 @@ def seekHelp_case0(patient)
     [], physician, radiologist, ci1
   ) {
     yield [
-      ['create', 'C1', ci1, physician, patient, list('nil')],
+      ['create', 'C1', ci1, physician, patient, list(patient)],
       ['requestAssessment', patient, physician]
     ]
   }

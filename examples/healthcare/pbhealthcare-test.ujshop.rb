@@ -67,7 +67,7 @@ plan1 = Healthcare.problem(
   },
   # Tasks
   [
-    ['create', c1, c1, bob, alice, list('nil')],
+    ['create', c1, c1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
     ['requestImaging', bob, alice, clyde],
     ['requestBiopsy', bob, alice, clyde],
@@ -85,7 +85,7 @@ plan1 = Healthcare.problem(
     ['addPatientToRegistry', alice, evelyn],
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
 
-    ['testCommitment', c1, c1, list('nil'), satisfied],
+    ['testCommitment', c1, c1, list(alice), satisfied],
   ],
   # Debug
   ARGV.first == '-d',
@@ -97,7 +97,7 @@ plan1 = Healthcare.problem(
 
 Kernel.abort('Problem 1 failed to generate expected plan') if plan1 != [
   [1, 0,
-    ['create', c1, c1, bob, alice, list('nil')],
+    ['create', c1, c1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
     ['requestImaging', bob, alice, clyde],
     ['requestBiopsy', bob, alice, clyde],
@@ -112,7 +112,7 @@ Kernel.abort('Problem 1 failed to generate expected plan') if plan1 != [
     ['reportPatient', alice, doug, evelyn],
     ['addPatientToRegistry', alice, evelyn],
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
-    ['invisible_testSuccess', c1, c1, list('nil'), satisfied]
+    ['invisible_testSuccess', c1, c1, list(alice), satisfied]
   ]
 ]
 
@@ -175,7 +175,7 @@ plan2 = Healthcare.problem(
   },
   # Tasks
   [
-    ['create', c1, c1, bob, alice, list('nil')],
+    ['create', c1, c1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
 
     ['create', c2, c2, alice, bob, list(clyde)],
@@ -218,7 +218,7 @@ plan2 = Healthcare.problem(
 
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
 
-    ['testCommitment', c1, c1, list('nil'), satisfied]
+    ['testCommitment', c1, c1, list(alice), satisfied]
   ],
   # Debug
   ARGV.first == '-d',
@@ -230,7 +230,7 @@ plan2 = Healthcare.problem(
 
 Kernel.abort('Problem 2 failed to generate expected plan') if plan2 != [
   [1, 0,
-    ['create', c1, c1, bob, alice, list('nil')],
+    ['create', c1, c1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
     ['create', c2, c2, alice, bob, list(clyde)],
     ['create', c3, c3, alice, bob, list(clyde)],
@@ -259,6 +259,6 @@ Kernel.abort('Problem 2 failed to generate expected plan') if plan2 != [
     ['addPatientToRegistry', alice, evelyn],
     ['invisible_testSuccess', c8, c8, list(alice), satisfied],
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
-    ['invisible_testSuccess', c1, c1, list('nil'), satisfied]
+    ['invisible_testSuccess', c1, c1, list(alice), satisfied]
   ]
 ]

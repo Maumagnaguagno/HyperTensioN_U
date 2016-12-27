@@ -88,7 +88,7 @@ plan = Healthcare.problem(
 
 Kernel.abort('Problem failed to generate expected plan') if plan != [
   [1, 0,
-    ['create', c1, c1, bob, alice, list('nil')],
+    ['create', c1, c1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
     ['create', c2, c2, alice, bob, list(clyde)],
     ['create', c5, c5, clyde, bob, list(doug)],
@@ -97,7 +97,7 @@ Kernel.abort('Problem failed to generate expected plan') if plan != [
     ['requestRadiologyReport', bob, clyde, alice],
     ['sendRadiologyReport', clyde, bob, alice],
     ['generateTreatmentPlan', bob, alice],
-    ['invisible_testSuccess', c1, c1, list('nil'), satisfied],
+    ['invisible_testSuccess', c1, c1, list(alice), satisfied],
     ['invisible_testSuccess', c2, c2, list(clyde), satisfied],
     ['invisible_testFailure', c3, satisfied],
     ['invisible_testFailure', c4, satisfied],
