@@ -30,54 +30,52 @@ while opt = ARGV.shift
 end
 
 # Objects
+c1 = 'C1'
+c2 = 'C2'
+c3 = 'C3'
+c4 = 'C4'
+c5 = 'C5'
+c6 = 'C6'
+c7 = 'C7'
+c8 = 'C8'
+satisfied = 'satisfied'
 PATIENT_SET     = Array.new(patients)     {|i| "patient_#{i}"}
 PHYSICIAN_SET   = Array.new(physicians)   {|i| "physician_#{i}"}
 RADIOLOGIST_SET = Array.new(radiologists) {|i| "radiologist_#{i}"}
 PATHOLOGIST_SET = Array.new(pathologists) {|i| "pathologist_#{i}"}
 REGISTRAR_SET   = Array.new(registrars)   {|i| "registrar_#{i}"}
 HOSPITAL_SET    = Array.new(hospitals)    {|i| "hospital_#{i}"}
-satisfied = 'satisfied'
 
-def commitments
-  c1 = 'C1'
-  c2 = 'C2'
-  c3 = 'C3'
-  c4 = 'C4'
-  c5 = 'C5'
-  c6 = 'C6'
-  c7 = 'C7'
-  c8 = 'C8'
-  comm = []
-  PHYSICIAN_SET.each {|physician|
-    PATIENT_SET.each {|patient|
-      comm.push(
-        [c1, c1, physician, patient],
-        [c2, c2, patient, physician],
-        [c3, c3, patient, physician]
-      )
-    }
-    RADIOLOGIST_SET.each {|radiologist|
-      comm.push(
-        [c4, c4, radiologist, physician],
-        [c5, c5, radiologist, physician]
-      )
-    }
+# Expand commitment permutations
+COMMITMENT_SET = []
+PHYSICIAN_SET.each {|physician|
+  PATIENT_SET.each {|patient|
+    COMMITMENT_SET.push(
+      [c1, c1, physician, patient],
+      [c2, c2, patient, physician],
+      [c3, c3, patient, physician]
+    )
   }
   RADIOLOGIST_SET.each {|radiologist|
-    PATHOLOGIST_SET.each {|pathologist|
-      comm << [c6, c6, pathologist, radiologist]
-    }
+    COMMITMENT_SET.push(
+      [c4, c4, radiologist, physician],
+      [c5, c5, radiologist, physician]
+    )
   }
-  HOSPITAL_SET.each {|hospital|
-    PATHOLOGIST_SET.each {|pathologist|
-      comm << [c7, c7, pathologist, hospital]
-    }
-    REGISTRAR_SET.each {|registrar|
-      comm << [c8, c8, registrar, hospital]
-    }
+}
+RADIOLOGIST_SET.each {|radiologist|
+  PATHOLOGIST_SET.each {|pathologist|
+    COMMITMENT_SET << [c6, c6, pathologist, radiologist]
   }
-  comm
-end
+}
+HOSPITAL_SET.each {|hospital|
+  PATHOLOGIST_SET.each {|pathologist|
+    COMMITMENT_SET << [c7, c7, pathologist, hospital]
+  }
+  REGISTRAR_SET.each {|registrar|
+    COMMITMENT_SET << [c8, c8, registrar, hospital]
+  }
+}
 
 plan = Healthcare.problem(
   # Start
@@ -89,7 +87,7 @@ plan = Healthcare.problem(
     'registrar' => REGISTRAR_SET.map {|i| [i]},
     'hospital' => HOSPITAL_SET.map {|i| [i]},
     'patientHasCancer' => PATIENT_SET.first(cancers).map {|i| [i]},
-    'commitment' => commitments,
+    'commitment' => COMMITMENT_SET,
     'var' => [],
     'diagnosisRequested' => [],
     'iAppointmentRequested' => [],
