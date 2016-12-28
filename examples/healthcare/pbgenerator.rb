@@ -1,5 +1,23 @@
 require_relative 'healthcare'
 
+# Help
+if ARGV.include?('-h')
+  puts "  Usage:
+    pbgenerator [-d] [-option arg]\n
+  Options:
+    -d            - debug mode
+    -min_prob     - Minimal probability to include plan (default 0)
+    -max_plans    - Maximum amount of plans to search (default 1)
+    -patients     - Amount of patients (default 1)
+    -physicians   - Amount of physicians (default 1)
+    -radiologists - Amount of radiologists (default 1)
+    -pathologists - Amount of pathologists (default 1)
+    -registrars   - Amount of registrars (default 1)
+    -hospitals    - Amount of hospitals (default 1)
+    -cancers      - Amount of patients with cancer (default 1)"
+  exit
+end
+
 # Default values
 debug = false
 min_probability = 0
