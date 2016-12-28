@@ -578,6 +578,7 @@
  	
 	; Domain dependent methods
 	(:method (hospitalScenario)
+		; TODO expand to forall patients
 		((patient ?patient))
 		((seekHelp ?patient) 
 		 (processPatient ?patient))
@@ -636,8 +637,8 @@
 			(commitment C2 ?Ci2 ?patient ?physician)
 			(commitment C5 ?Ci5 ?radiologist ?physician)
 		 ) ; Precondition
-		((!create C2 ?Ci2 ?patient ?physician (?radiologist)) 
-		 (!create C5 ?Ci5 ?radiologist ?physician (?pathologist)) 
+		((!create C2 ?Ci2 ?patient ?physician (?patient ?radiologist)) 
+		 (!create C5 ?Ci5 ?radiologist ?physician (?patient ?pathologist)) 
 		 (!requestImaging ?physician ?patient ?radiologist)
 		 (attendTest ?patient)
 		) ; Just request imaging
