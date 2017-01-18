@@ -48,14 +48,14 @@ while opt = ARGV.shift
 end
 
 # Objects
-c1 = 'C1'
-c2 = 'C2'
-c3 = 'C3'
-c4 = 'C4'
-c5 = 'C5'
-c6 = 'C6'
-c7 = 'C7'
-c8 = 'C8'
+C1 = 'C1'
+C2 = 'C2'
+C3 = 'C3'
+C4 = 'C4'
+C5 = 'C5'
+C6 = 'C6'
+C7 = 'C7'
+C8 = 'C8'
 satisfied = 'satisfied'
 PATIENT_SET     = Array.new(patients)     {|i| "patient_#{i}"}
 PHYSICIAN_SET   = Array.new(physicians)   {|i| "physician_#{i}"}
@@ -69,29 +69,29 @@ COMMITMENT_SET = []
 PHYSICIAN_SET.each {|physician|
   PATIENT_SET.each {|patient|
     COMMITMENT_SET.push(
-      [c1, c1, physician, patient],
-      [c2, c2, patient, physician],
-      [c3, c3, patient, physician]
+      [C1, C1, physician, patient],
+      [C2, C2, patient, physician],
+      [C3, C3, patient, physician]
     )
   }
   RADIOLOGIST_SET.each {|radiologist|
     COMMITMENT_SET.push(
-      [c4, c4, radiologist, physician],
-      [c5, c5, radiologist, physician]
+      [C4, C4, radiologist, physician],
+      [C5, C5, radiologist, physician]
     )
   }
 }
 RADIOLOGIST_SET.each {|radiologist|
   PATHOLOGIST_SET.each {|pathologist|
-    COMMITMENT_SET << [c6, c6, pathologist, radiologist]
+    COMMITMENT_SET << [C6, C6, pathologist, radiologist]
   }
 }
 HOSPITAL_SET.each {|hospital|
   PATHOLOGIST_SET.each {|pathologist|
-    COMMITMENT_SET << [c7, c7, pathologist, hospital]
+    COMMITMENT_SET << [C7, C7, pathologist, hospital]
   }
   REGISTRAR_SET.each {|registrar|
-    COMMITMENT_SET << [c8, c8, registrar, hospital]
+    COMMITMENT_SET << [C8, C8, registrar, hospital]
   }
 }
 
