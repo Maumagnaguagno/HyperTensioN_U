@@ -145,7 +145,7 @@ plan = Healthcare.problem(
   # Tasks
   [
     ['hospitalScenario'],
-    ['testCommitments']
+    ['testCommitments'] # TODO review necessity of this task
   ],
   # Debug
   debug,

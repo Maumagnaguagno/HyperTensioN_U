@@ -154,4 +154,5 @@
 - ``(deliverDiagnostics ?patient)``
 
 ## TODOs
-- Complete signature of predicates, ``(pre ?t0 ?t1)`` instead of ``pre``
+- Add complete predicate signatures, ``(pre ?t0 ?t1)`` instead of ``pre``
+- Review necessity of ``testCommitments`` task
