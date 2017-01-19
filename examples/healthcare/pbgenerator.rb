@@ -143,10 +143,7 @@ Healthcare.problem(
     'expired' => []
   },
   # Tasks
-  [
-    ['hospitalScenario'],
-    ['testCommitments'] # TODO review necessity of this task
-  ],
+  [['hospitalScenario']],
   # Debug
   debug,
   # Minimal probability for plans

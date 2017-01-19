@@ -155,4 +155,3 @@
 
 ## TODOs
 - Add complete predicate signatures, ``(pre ?t0 ?t1)`` instead of ``pre``
-- Review necessity of ``testCommitments`` task
