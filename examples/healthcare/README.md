@@ -1,13 +1,13 @@
 # Healthcare
 
 ### Predicates
-- ``patient``
-- ``physician``
-- ``radiologist``
-- ``pathologist``
-- ``registrar``
-- ``hospital``
-- ``patientHasCancer``
+- ``(patient ?patient)``
+- ``(physician ?physician)``
+- ``(radiologist ?radiologist)``
+- ``(pathologist ?pathologist)``
+- ``(registrar ?registrar)``
+- ``(hospital ?hospital)``
+- ``(patientHasCancer ?patient)``
 - ``commitment``
 - ``var``
 - ``diagnosisRequested``
