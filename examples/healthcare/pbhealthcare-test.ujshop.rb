@@ -96,7 +96,7 @@ plan1 = Healthcare.problem(
 )
 
 Kernel.abort('Problem 1 failed to generate expected plan') if plan1 != [
-  [1, 0,
+  [0.42, 0,
     ['create', c1, c1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
     ['requestImaging', bob, alice, clyde],
@@ -229,7 +229,7 @@ plan2 = Healthcare.problem(
 )
 
 Kernel.abort('Problem 2 failed to generate expected plan') if plan2 != [
-  [1, 0,
+  [0.42, 0,
     ['create', c1, c1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
     ['create', c2, c2, alice, bob, list(clyde)],
