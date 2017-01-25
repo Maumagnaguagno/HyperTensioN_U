@@ -7,7 +7,7 @@ if ARGV.include?('-h')
     pbgenerator [-d] [-option arg]\n
   Options:
     -d            - debug mode
-    -min_prob     - Minimal probability to include plan (default 0)
+    -min_prob     - Minimum probability to include plan (default 0)
     -max_plans    - Maximum amount of plans to search (default 1)
     -patients     - Amount of patients (default 1)
     -physicians   - Amount of physicians (default 1)
