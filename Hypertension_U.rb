@@ -202,8 +202,8 @@ module Hypertension_U
     puts "Time: #{Time.now.to_f - t}s", "Plans found: #{@plans.size}"
     @plans.each_with_index {|plan,i|
       puts "Plan #{i.succ}".center(50,'-'),
-           "Valuation: #{plan[VALUATION]}",
-           "Probability: #{plan[PROBABILITY]}"
+           "Probability: #{plan[PROBABILITY]}",
+           "Valuation: #{plan[VALUATION]}"
       if plan.size == 2
         puts 'Empty plan'
       else print_data(plan.drop(2).delete_if {|op| op.first.start_with?('invisible_')})
