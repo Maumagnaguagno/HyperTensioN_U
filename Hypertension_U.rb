@@ -29,14 +29,12 @@ module Hypertension_U
         case decomposition = @domain[(current_task = tasks.shift).first]
         # Operator with single outcome
         when Numeric
-          return execute(current_task, decomposition, tasks, level, plan)
+          execute(current_task, decomposition, tasks, level, plan)
         # Operator with multiple outcomes
         when Hash
-          old_state = @state
           decomposition.each {|task_prob,probability|
             current_task.first.replace(task_prob)
             execute(current_task, probability, tasks, level, plan)
-            @state = old_state
           }
         # Method
         when Array
@@ -46,13 +44,12 @@ module Hypertension_U
           decomposition.each {|method|
             puts "#{'  ' * level.pred}#{method}(#{current_task.join(',')})" if @debug
             # Every unification is tested
-            send(method, *current_task) {|subtasks| return true if planning(subtasks.concat(tasks), level, plan)}
+            send(method, *current_task) {|subtasks| planning(subtasks.concat(tasks), level, plan)}
           }
           current_task.unshift(task_name)
         # Error
         else raise "Domain defines no decomposition for #{current_task.first}"
         end
-        nil
       end
     end
   end
@@ -70,20 +67,17 @@ module Hypertension_U
   #-----------------------------------------------
 
   def execute(current_task, probability, tasks, level, plan)
+    old_state = @state
     puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(',')})" if @debug
-    if (new_prob = plan[PROBABILITY] * probability) >= @min_prob
-      old_state = @state
-      # If operator applied
-      if send(*current_task)
-        new_plan = plan.dup << current_task
-        new_plan[PROBABILITY] = new_prob
-        new_plan[VALUATION] += state_valuation(old_state) * probability
-        # Keep decomposing the hierarchy
-        return true if planning(tasks, level, new_plan)
-      end
-      @state = old_state
+    # Minimum probability and applied
+    if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and send(*current_task)
+      new_plan = plan.dup << current_task
+      new_plan[PROBABILITY] = new_prob
+      new_plan[VALUATION] += state_valuation(old_state) * probability
+      # Keep decomposing the hierarchy
+      planning(tasks, level, new_plan)
     end
-    nil
+    @state = old_state
   end
 
   #-----------------------------------------------
