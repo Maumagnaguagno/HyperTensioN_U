@@ -16,7 +16,7 @@ module Hype
   attr_reader :parser
 
   HELP = "  Usage:
-    Hype domain problem output\n
+    Hype domain problem output [min probability=0] [max plans=-1(all)]\n
   Output:
     rb    - generate Ruby files to Hypertension U(default)
     run   - same as rb with execution
@@ -77,9 +77,8 @@ if $0 == __FILE__
         t = Time.now.to_f
         Hype.parse(domain, problem)
         Hype.compile(domain, problem)
-        if type == 'run' or (type == 'debug' and ARGV[0] = '-d')
-          require File.expand_path(problem)
-        end
+        ARGV.unshift(type == 'debug' ? '-d' : nil)
+        require File.expand_path(problem) if type == 'run'
         puts "Total time: #{Time.now.to_f - t}s"
       end
     end
