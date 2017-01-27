@@ -6,7 +6,7 @@ Hype can help you in the conversion process from [UJSHOP](#ujshop "Jump to UJSHO
 
 ```Shell
 Usage:
-    Hype domain problem output [-d] [max plans=-1(all)] [minprobability=0]\n
+    Hype domain problem [output] [max plans=-1(all)] [minprobability=0]\n
 
   Output:
     rb    - generate Ruby files to Hypertension U(default)
