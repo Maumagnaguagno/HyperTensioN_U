@@ -33,8 +33,8 @@ Disjunction.problem(
   ],
   # Debug
   ARGV.first == '-d',
-  # Minimal probability for plans
-  ARGV[1] ? ARGV[1].to_f : 0,
   # Maximum plans found
-  ARGV[2] ? ARGV[2].to_i : -1
+  ARGV[1] ? ARGV[1].to_i : -1,
+  # Minimum probability for plans
+  ARGV[2] ? ARGV[2].to_f : 0
 )

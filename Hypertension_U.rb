@@ -10,7 +10,7 @@
 module Hypertension_U
   extend self
 
-  attr_accessor :domain, :state, :min_prob, :max_found, :plans, :debug
+  attr_accessor :domain, :state, :min_prob, :max_plans, :plans, :debug
 
   # Probabilistic plan = [PROBABILITY = 1, VALUATION = 0, op0, ..., opN]
   PROBABILITY = 0
@@ -22,7 +22,7 @@ module Hypertension_U
 
   def planning(tasks, level = 0, plan = [1,0])
     # Limit test
-    if @plans.size != @max_found
+    if @plans.size != @max_plans
       if tasks.empty?
         @plans << plan if plan[PROBABILITY] >= @min_prob
       else
@@ -188,11 +188,11 @@ module Hypertension_U
   # Problem
   #-----------------------------------------------
 
-  def problem(start, tasks, debug = false, min_prob = 0, max_found = -1)
+  def problem(start, tasks, debug = false, max_plans = -1, min_prob = 0)
     @debug = debug
     @state = start
     @min_prob = min_prob
-    @max_found = max_found
+    @max_plans = max_plans
     @plans = []
     puts 'Tasks'.center(50,'-')
     print_data(tasks)

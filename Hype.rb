@@ -16,7 +16,7 @@ module Hype
   attr_reader :parser
 
   HELP = "  Usage:
-    Hype domain problem output [min probability=0] [max plans=-1(all)]\n
+    Hype domain problem output [max plans=-1(all)] [min probability=0]\n
   Output:
     rb    - generate Ruby files to Hypertension U(default)
     run   - same as rb with execution
