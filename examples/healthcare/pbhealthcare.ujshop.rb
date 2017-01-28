@@ -11,14 +11,14 @@ clyde = 'clyde'
 doug = 'doug'
 evelyn = 'evelyn'
 simhospital = 'simhospital'
-c1 = 'C1'
-c2 = 'C2'
-c3 = 'C3'
-c4 = 'C4'
-c5 = 'C5'
-c6 = 'C6'
-c7 = 'C7'
-c8 = 'C8'
+C1 = 'C1'
+C2 = 'C2'
+C3 = 'C3'
+C4 = 'C4'
+C5 = 'C5'
+C6 = 'C6'
+C7 = 'C7'
+C8 = 'C8'
 satisfied = 'satisfied'
 
 plan = Healthcare.problem(
@@ -32,14 +32,14 @@ plan = Healthcare.problem(
     'hospital' => [[simhospital]],
     'patientHasCancer' => [[alice]],
     'commitment' => [
-      [c1, c1, bob, alice],
-      [c2, c2, alice, bob],
-      [c3, c3, alice, bob],
-      [c4, c4, clyde, bob],
-      [c5, c5, clyde, bob],
-      [c6, c6, doug, clyde],
-      [c7, c7, doug, simhospital],
-      [c8, c8, evelyn, simhospital]
+      [C1, C1, bob, alice],
+      [C2, C2, alice, bob],
+      [C3, C3, alice, bob],
+      [C4, C4, clyde, bob],
+      [C5, C5, clyde, bob],
+      [C6, C6, doug, clyde],
+      [C7, C7, doug, simhospital],
+      [C8, C8, evelyn, simhospital]
     ],
     'var' => [],
     'diagnosisRequested' => [],
@@ -92,22 +92,22 @@ plan = Healthcare.problem(
 
 Kernel.abort('Problem failed to generate expected plan') if plan != [
   [0.7, 0,
-    ['create', c1, c1, bob, alice, list(alice)],
+    ['create', C1, C1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
-    ['create', c2, c2, alice, bob, list(alice, clyde)],
-    ['create', c5, c5, clyde, bob, list(alice, doug)],
+    ['create', C2, C2, alice, bob, list(alice, clyde)],
+    ['create', C5, C5, clyde, bob, list(alice, doug)],
     ['requestImaging', bob, alice, clyde],
-    ['performImaging', clyde, alice, bob],
+    ['performImaging_success', clyde, alice, bob],
     ['requestRadiologyReport', bob, clyde, alice],
     ['sendRadiologyReport', clyde, bob, alice],
     ['generateTreatmentPlan', bob, alice],
-    ['invisible_testSuccess', c1, c1, list(alice), satisfied],
-    ['invisible_testSuccess', c2, c2, list(alice, clyde), satisfied],
-    ['invisible_testFailure', c3, satisfied],
-    ['invisible_testFailure', c4, satisfied],
-    ['invisible_testSuccess', c5, c5, list(alice, doug), satisfied],
-    ['invisible_testFailure', c6, satisfied],
-    ['invisible_testFailure', c7, satisfied],
-    ['invisible_testFailure', c8, satisfied]
+    ['invisible_testSuccess', C1, C1, list(alice), satisfied],
+    ['invisible_testSuccess', C2, C2, list(alice, clyde), satisfied],
+    ['invisible_testFailure', C3, satisfied],
+    ['invisible_testFailure', C4, satisfied],
+    ['invisible_testSuccess', C5, C5, list(alice, doug), satisfied],
+    ['invisible_testFailure', C6, satisfied],
+    ['invisible_testFailure', C7, satisfied],
+    ['invisible_testFailure', C8, satisfied]
   ]
 ]
