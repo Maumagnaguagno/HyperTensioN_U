@@ -7,8 +7,8 @@ if ARGV.include?('-h')
     pbgenerator [-d] [-option arg]\n
   Options:
     -d            - debug mode
-    -min_prob     - Minimal probability to include plan (default 0)
     -max_plans    - Maximum amount of plans to search (default 1)
+    -min_prob     - Minimum probability to include plan (default 0)
     -patients     - Amount of patients (default 1)
     -physicians   - Amount of physicians (default 1)
     -radiologists - Amount of radiologists (default 1)
@@ -21,8 +21,8 @@ end
 
 # Default values
 debug = false
-min_probability = 0
 max_plans_found = 1
+min_probability = 0
 patients     = 1
 physicians   = 1
 radiologists = 1
@@ -147,8 +147,8 @@ Healthcare.problem(
   [['hospitalScenario']],
   # Debug
   debug,
-  # Minimal probability for plans
-  min_probability,
   # Maximum plans found
-  max_plans_found
+  max_plans_found,
+  # Minimum probability for plans
+  min_probability
 )
