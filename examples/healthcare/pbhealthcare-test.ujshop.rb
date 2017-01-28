@@ -117,6 +117,21 @@ Kernel.abort('Problem 1 failed to generate expected plan') if plan1 != [
     ['addPatientToRegistry', alice, evelyn],
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
     ['invisible_testSuccess', C1, C1, list(alice), satisfied]
+  ],
+  [0.7 * 0.4, 0,
+    ['create', C1, C1, bob, alice, list(alice)],
+    ['requestAssessment', alice, bob],
+    ['requestImaging', bob, alice, clyde],
+    ['requestBiopsy', bob, alice, clyde],
+    ['performImaging_success', clyde, alice, bob],
+    ['performBiopsy_failure', clyde, alice, bob]
+  ],
+  [0.3, 0,
+    ['create', C1, C1, bob, alice, list(alice)],
+    ['requestAssessment', alice, bob],
+    ['requestImaging', bob, alice, clyde],
+    ['requestBiopsy', bob, alice, clyde],
+    ['performImaging_failure', clyde, alice, bob]
   ]
 ]
 
