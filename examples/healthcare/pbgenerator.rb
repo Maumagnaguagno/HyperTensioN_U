@@ -21,8 +21,8 @@ end
 
 # Default values
 debug = false
-max_plans_found = 1
-min_probability = 0
+max_plans = 1
+min_prob  = 0
 patients     = 1
 physicians   = 1
 radiologists = 1
@@ -35,8 +35,8 @@ cancers      = 1
 while opt = ARGV.shift
   case opt
   when '-d' then debug = true
-  when '-min_prob' then min_probability = ARGV.shift.to_f
-  when '-max_plans' then max_plans_found = ARGV.shift.to_i
+  when '-min_prob' then min_prob = ARGV.shift.to_f
+  when '-max_plans' then max_plans = ARGV.shift.to_i
   when '-patients' then patients = ARGV.shift.to_i
   when '-physicians' then physicians = ARGV.shift.to_i
   when '-radiologists' then radiologists = ARGV.shift.to_i
@@ -148,7 +148,7 @@ Healthcare.problem(
   # Debug
   debug,
   # Maximum plans found
-  max_plans_found,
+  max_plans,
   # Minimum probability for plans
-  min_probability
+  min_prob
 )
