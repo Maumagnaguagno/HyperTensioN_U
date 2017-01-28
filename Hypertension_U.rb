@@ -34,8 +34,8 @@ module Hypertension_U
         # Operator with multiple outcomes
         when Hash
           decomposition.each {|task_prob,probability|
-            current_task.first.replace(task_prob)
-            execute(current_task, probability, tasks, level, plan)
+            current_task[0] = task_prob
+            execute(current_task.dup, probability, tasks, level, plan)
           }
         # Method
         when Array
