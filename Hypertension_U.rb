@@ -24,6 +24,7 @@ module Hypertension_U
     # Limit test
     if @plans.size != @max_plans
       if tasks.empty?
+        puts "#{'  ' * level}plan found" if @debug
         @plans << plan if plan[PROBABILITY] >= @min_prob
       else
         case decomposition = @domain[(current_task = tasks.shift).first]
