@@ -46,7 +46,7 @@ end
 #   1 ; Cost
 # )
 
-def performImaging(radiologist, patient, physician)
+def performImaging_success(radiologist, patient, physician)
   if state('patient', patient) and state('radiologist', radiologist) and state('physician', physician) and state('iAppointmentRequested', patient, radiologist)
     apply(
       [
@@ -60,6 +60,10 @@ def performImaging(radiologist, patient, physician)
   end
 end
 
+def performImaging_failure(radiologist, patient, physician)
+  state('patient', patient) and state('radiologist', radiologist) and state('physician', physician) and state('iAppointmentRequested', patient, radiologist)
+end
+
 # ;; Change this to have the radiologist doing the biopsy
 # (:operator (!performBiopsy ?radiologist ?patient ?physician)
 #   (and (patient ?patient) (radiologist ?radiologist) (physician ?physician)) ; Pre
@@ -68,7 +72,7 @@ end
 #   1 ; Cost
 # )
 
-def performBiopsy(radiologist, patient, physician)
+def performBiopsy_success(radiologist, patient, physician)
   if state('patient', patient) and state('radiologist', radiologist) and state('physician', physician)
     apply(
       [
@@ -81,6 +85,10 @@ def performBiopsy(radiologist, patient, physician)
       ]
     )
   end
+end
+
+def performBiopsy_failure(radiologist, patient, physician)
+  state('patient', patient) and state('radiologist', radiologist) and state('physician', physician)
 end
 
 # ;; Instead of performDiagnosis, we need:

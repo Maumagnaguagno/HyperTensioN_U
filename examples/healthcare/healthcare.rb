@@ -49,8 +49,14 @@ module Healthcare
     'requestAssessment' => 1,
     'requestImaging' => 1,
     'requestBiopsy' => 1,
-    'performImaging' => 0.7,
-    'performBiopsy' => 0.6,
+    'performImaging' => {
+      'performImaging_success' => 0.7,
+      'performImaging_failure' => 0.3
+    },
+    'performBiopsy' => {
+      'performBiopsy_success' => 0.6,
+      'performBiopsy_failure' => 0.4
+    },
     'requestPathologyReport' => 1,
     'requestRadiologyReport' => 1,
     'sendPathologyReport' => 1,
