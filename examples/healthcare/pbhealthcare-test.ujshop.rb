@@ -1,5 +1,9 @@
 require_relative 'healthcare'
 
+debug = ARGV.first == '-d'
+max_plans = ARGV[1] ? ARGV[1].to_i : -1
+min_prob  = ARGV[2] ? ARGV[2].to_f : 0
+
 # Objects
 alice = 'alice'
 bob = 'bob'
@@ -88,11 +92,11 @@ plan1 = Healthcare.problem(
     ['testCommitment', c1, c1, list(alice), satisfied],
   ],
   # Debug
-  ARGV.first == '-d',
+  debug,
   # Maximum plans found
-  ARGV[1] ? ARGV[1].to_i : -1,
+  max_plans,
   # Minimum probability for plans
-  ARGV[2] ? ARGV[2].to_f : 0
+  min_prob
 )
 
 Kernel.abort('Problem 1 failed to generate expected plan') if plan1 != [
@@ -221,11 +225,11 @@ plan2 = Healthcare.problem(
     ['testCommitment', c1, c1, list(alice), satisfied]
   ],
   # Debug
-  ARGV.first == '-d',
+  debug,
   # Maximum plans found
-  ARGV[1] ? ARGV[1].to_i : -1,
+  max_plans,
   # Minimum probability for plans
-  ARGV[2] ? ARGV[2].to_f : 0,
+  min_prob
 )
 
 Kernel.abort('Problem 2 failed to generate expected plan') if plan2 != [
