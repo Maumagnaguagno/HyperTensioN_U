@@ -199,18 +199,7 @@ end
 # )
 
 def performPathologyTests_biopsy_unnecessary(patient)
-  physician = ''
-  ci = ''
-  generate(
-    [
-      ['patient', patient],
-      ['physician', physician],
-      ['commitment', 'C1', ci, physician, patient],
-    ],
-    [], physician, ci
-  ) {
-    yield []
-  }
+  yield [] if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == 'C1' and terms[3] == patient and state('patient', patient) and state('physician', terms[2])}
 end
 
 # (:method (performPathologyTests ?patient)
@@ -314,39 +303,11 @@ end
 # )
 
 def attendTest_no_show_imaging(patient)
-  physician = ''
-  radiologist = ''
-  generate(
-    [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['iAppointmentRequested', patient, radiologist]
-    ],
-    [
-      ['bAppointmentKept', patient, radiologist]
-    ], physician, radiologist
-  ) {
-    yield []
-  }
+  yield [] if @state['iAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == patient and state('patient', patient) and state('radiologist', terms[1]) and not state('iAppointmentKept', patient, terms[1])}
 end
 
 def attendTest_no_show_biopsy(patient)
-  physician = ''
-  radiologist = ''
-  generate(
-    [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['bAppointmentRequested', patient, radiologist]
-    ],
-    [
-      ['bAppointmentKept', patient, radiologist]
-    ], physician, radiologist
-  ) {
-    yield []
-  }
+  yield [] if @state['bAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == patient and state('patient', patient) and state('radiologist', terms[1]) and not state('bAppointmentKept', patient, terms[1])}
 end
 
 # (:method (deliverDiagnostics ?patient)
