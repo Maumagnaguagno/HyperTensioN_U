@@ -24,6 +24,7 @@ module Hypertension_U
     # Limit test
     if @plans.size != @max_plans
       if tasks.empty?
+        puts "#{'  ' * level}plan found" if @debug
         @plans << plan if plan[PROBABILITY] >= @min_prob
       else
         case decomposition = @domain[(current_task = tasks.shift).first]
@@ -33,8 +34,8 @@ module Hypertension_U
         # Operator with multiple outcomes
         when Hash
           decomposition.each {|task_prob,probability|
-            current_task.first.replace(task_prob)
-            execute(current_task, probability, tasks, level, plan)
+            current_task[0] = task_prob
+            execute(current_task.dup, probability, tasks, level, plan)
           }
         # Method
         when Array

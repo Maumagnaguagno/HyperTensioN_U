@@ -1,5 +1,9 @@
 require_relative 'healthcare'
 
+debug = ARGV.first == '-d'
+max_plans = ARGV[1] ? ARGV[1].to_i : -1
+min_prob  = ARGV[2] ? ARGV[2].to_f : 0
+
 # Objects
 alice = 'alice'
 bob = 'bob'
@@ -7,14 +11,14 @@ clyde = 'clyde'
 doug = 'doug'
 evelyn = 'evelyn'
 simhospital = 'simhospital'
-c1 = 'C1'
-c2 = 'C2'
-c3 = 'C3'
-c4 = 'C4'
-c5 = 'C5'
-c6 = 'C6'
-c7 = 'C7'
-c8 = 'C8'
+C1 = 'C1'
+C2 = 'C2'
+C3 = 'C3'
+C4 = 'C4'
+C5 = 'C5'
+C6 = 'C6'
+C7 = 'C7'
+C8 = 'C8'
 satisfied = 'satisfied'
 
 puts 'Test problem 1'
@@ -28,7 +32,7 @@ plan1 = Healthcare.problem(
     'registrar' => [[evelyn]],
     'hospital' => [[simhospital]],
     'patientHasCancer' => [[alice]],
-    'commitment' => [[c1, c1, bob, alice]],
+    'commitment' => [[C1, C1, bob, alice]],
     'var' => [],
     'diagnosisRequested' => [],
     'iAppointmentRequested' => [],
@@ -67,7 +71,7 @@ plan1 = Healthcare.problem(
   },
   # Tasks
   [
-    ['create', c1, c1, bob, alice, list(alice)],
+    ['create', C1, C1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
     ['requestImaging', bob, alice, clyde],
     ['requestBiopsy', bob, alice, clyde],
@@ -85,24 +89,24 @@ plan1 = Healthcare.problem(
     ['addPatientToRegistry', alice, evelyn],
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
 
-    ['testCommitment', c1, c1, list(alice), satisfied],
+    ['testCommitment', C1, C1, list(alice), satisfied],
   ],
   # Debug
-  ARGV.first == '-d',
+  debug,
   # Maximum plans found
-  ARGV[1] ? ARGV[1].to_i : -1,
+  max_plans,
   # Minimum probability for plans
-  ARGV[2] ? ARGV[2].to_f : 0
+  min_prob
 )
 
 Kernel.abort('Problem 1 failed to generate expected plan') if plan1 != [
   [0.42, 0,
-    ['create', c1, c1, bob, alice, list(alice)],
+    ['create', C1, C1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
     ['requestImaging', bob, alice, clyde],
     ['requestBiopsy', bob, alice, clyde],
-    ['performImaging', clyde, alice, bob],
-    ['performBiopsy', clyde, alice, bob],
+    ['performImaging_success', clyde, alice, bob],
+    ['performBiopsy_success', clyde, alice, bob],
     ['requestRadiologyReport', bob, clyde, alice],
     ['requestPathologyReport', bob, clyde, doug, alice],
     ['sendRadiologyReport', clyde, bob, alice],
@@ -112,7 +116,22 @@ Kernel.abort('Problem 1 failed to generate expected plan') if plan1 != [
     ['reportPatient', alice, doug, evelyn],
     ['addPatientToRegistry', alice, evelyn],
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
-    ['invisible_testSuccess', c1, c1, list(alice), satisfied]
+    ['invisible_testSuccess', C1, C1, list(alice), satisfied]
+  ],
+  [0.7 * 0.4, 0,
+    ['create', C1, C1, bob, alice, list(alice)],
+    ['requestAssessment', alice, bob],
+    ['requestImaging', bob, alice, clyde],
+    ['requestBiopsy', bob, alice, clyde],
+    ['performImaging_success', clyde, alice, bob],
+    ['performBiopsy_failure', clyde, alice, bob]
+  ],
+  [0.3, 0,
+    ['create', C1, C1, bob, alice, list(alice)],
+    ['requestAssessment', alice, bob],
+    ['requestImaging', bob, alice, clyde],
+    ['requestBiopsy', bob, alice, clyde],
+    ['performImaging_failure', clyde, alice, bob]
   ]
 ]
 
@@ -128,14 +147,14 @@ plan2 = Healthcare.problem(
     'hospital' => [[simhospital]],
     'patientHasCancer' => [[alice]],
     'commitment' => [
-      [c1, c1, bob, alice],
-      [c2, c2, alice, bob],
-      [c3, c3, alice, bob],
-      [c4, c4, clyde, bob],
-      [c5, c5, clyde, bob],
-      [c6, c6, doug, clyde],
-      [c7, c7, doug, simhospital],
-      [c8, c8, evelyn, simhospital]
+      [C1, C1, bob, alice],
+      [C2, C2, alice, bob],
+      [C3, C3, alice, bob],
+      [C4, C4, clyde, bob],
+      [C5, C5, clyde, bob],
+      [C6, C6, doug, clyde],
+      [C7, C7, doug, simhospital],
+      [C8, C8, evelyn, simhospital]
     ],
     'var' => [],
     'diagnosisRequested' => [],
@@ -175,26 +194,26 @@ plan2 = Healthcare.problem(
   },
   # Tasks
   [
-    ['create', c1, c1, bob, alice, list(alice)],
+    ['create', C1, C1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
 
-    ['create', c2, c2, alice, bob, list(clyde)],
-    ['create', c3, c3, alice, bob, list(clyde)],
+    ['create', C2, C2, alice, bob, list(clyde)],
+    ['create', C3, C3, alice, bob, list(clyde)],
 
-    ['create', c4, c4, clyde, bob, list(doug)],
-    ['create', c5, c5, clyde, bob, list(doug)],
-    ['create', c6, c6, doug, clyde, list(bob, alice)],
+    ['create', C4, C4, clyde, bob, list(doug)],
+    ['create', C5, C5, clyde, bob, list(doug)],
+    ['create', C6, C6, doug, clyde, list(bob, alice)],
 
-    ['create', c7, c7, doug, simhospital, list(alice, evelyn)],
-    ['create', c8, c8, evelyn, simhospital, list(alice)],
+    ['create', C7, C7, doug, simhospital, list(alice, evelyn)],
+    ['create', C8, C8, evelyn, simhospital, list(alice)],
 
     ['requestImaging', bob, alice, clyde],
     ['requestBiopsy', bob, alice, clyde],
     ['performImaging', clyde, alice, bob],
     ['performBiopsy', clyde, alice, bob],
 
-    ['testCommitment', c2, c2, list(clyde), satisfied],
-    ['testCommitment', c3, c3, list(clyde), satisfied],
+    ['testCommitment', C2, C2, list(clyde), satisfied],
+    ['testCommitment', C3, C3, list(clyde), satisfied],
 
     ['requestRadiologyReport', bob, clyde, alice],
     ['requestPathologyReport', bob, clyde, doug, alice],
@@ -202,63 +221,63 @@ plan2 = Healthcare.problem(
     ['sendRadiologyReport', clyde, bob, alice],
     ['sendPathologyReport', clyde, bob, doug, alice],
 
-    ['testCommitment', c4, c4, list(doug), satisfied],
-    ['testCommitment', c5, c5, list(doug), satisfied],
-    ['testCommitment', c6, c6, list(bob, alice), satisfied],
+    ['testCommitment', C4, C4, list(doug), satisfied],
+    ['testCommitment', C5, C5, list(doug), satisfied],
+    ['testCommitment', C6, C6, list(bob, alice), satisfied],
 
     ['sendIntegratedReport', clyde, doug, alice, bob],
     ['generateTreatmentPlan', bob, alice],
     ['reportPatient', alice, doug, evelyn],
 
-    ['testCommitment', c7, c7, list(alice, evelyn), satisfied],
+    ['testCommitment', C7, C7, list(alice, evelyn), satisfied],
 
     ['addPatientToRegistry', alice, evelyn],
 
-    ['testCommitment', c8, c8, list(alice), satisfied],
+    ['testCommitment', C8, C8, list(alice), satisfied],
 
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
 
-    ['testCommitment', c1, c1, list(alice), satisfied]
+    ['testCommitment', C1, C1, list(alice), satisfied]
   ],
   # Debug
-  ARGV.first == '-d',
+  debug,
   # Maximum plans found
-  ARGV[1] ? ARGV[1].to_i : -1,
+  max_plans,
   # Minimum probability for plans
-  ARGV[2] ? ARGV[2].to_f : 0,
+  min_prob
 )
 
 Kernel.abort('Problem 2 failed to generate expected plan') if plan2 != [
   [0.42, 0,
-    ['create', c1, c1, bob, alice, list(alice)],
+    ['create', C1, C1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
-    ['create', c2, c2, alice, bob, list(clyde)],
-    ['create', c3, c3, alice, bob, list(clyde)],
-    ['create', c4, c4, clyde, bob, list(doug)],
-    ['create', c5, c5, clyde, bob, list(doug)],
-    ['create', c6, c6, doug, clyde, list(bob, alice)],
-    ['create', c7, c7, doug, simhospital, list(alice, evelyn)],
-    ['create', c8, c8, evelyn, simhospital, list(alice)],
+    ['create', C2, C2, alice, bob, list(clyde)],
+    ['create', C3, C3, alice, bob, list(clyde)],
+    ['create', C4, C4, clyde, bob, list(doug)],
+    ['create', C5, C5, clyde, bob, list(doug)],
+    ['create', C6, C6, doug, clyde, list(bob, alice)],
+    ['create', C7, C7, doug, simhospital, list(alice, evelyn)],
+    ['create', C8, C8, evelyn, simhospital, list(alice)],
     ['requestImaging', bob, alice, clyde],
     ['requestBiopsy', bob, alice, clyde],
-    ['performImaging', clyde, alice, bob],
-    ['performBiopsy', clyde, alice, bob],
-    ['invisible_testSuccess', c2, c2, list(clyde), satisfied],
-    ['invisible_testSuccess', c3, c3, list(clyde), satisfied],
+    ['performImaging_success', clyde, alice, bob],
+    ['performBiopsy_success', clyde, alice, bob],
+    ['invisible_testSuccess', C2, C2, list(clyde), satisfied],
+    ['invisible_testSuccess', C3, C3, list(clyde), satisfied],
     ['requestRadiologyReport', bob, clyde, alice],
     ['requestPathologyReport', bob, clyde, doug, alice],
     ['sendRadiologyReport', clyde, bob, alice],
     ['sendPathologyReport', clyde, bob, doug, alice],
-    ['invisible_testSuccess', c4, c4, list(doug), satisfied],
-    ['invisible_testSuccess', c5, c5, list(doug), satisfied],
-    ['invisible_testSuccess', c6, c6, list(bob, alice), satisfied],
+    ['invisible_testSuccess', C4, C4, list(doug), satisfied],
+    ['invisible_testSuccess', C5, C5, list(doug), satisfied],
+    ['invisible_testSuccess', C6, C6, list(bob, alice), satisfied],
     ['sendIntegratedReport', clyde, doug, alice, bob],
     ['generateTreatmentPlan', bob, alice],
     ['reportPatient', alice, doug, evelyn],
-    ['invisible_testSuccess', c7, c7, list(alice, evelyn), satisfied],
+    ['invisible_testSuccess', C7, C7, list(alice, evelyn), satisfied],
     ['addPatientToRegistry', alice, evelyn],
-    ['invisible_testSuccess', c8, c8, list(alice), satisfied],
+    ['invisible_testSuccess', C8, C8, list(alice), satisfied],
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
-    ['invisible_testSuccess', c1, c1, list(alice), satisfied]
+    ['invisible_testSuccess', C1, C1, list(alice), satisfied]
   ]
 ]
