@@ -35,7 +35,7 @@ module Hypertension_U
         when Hash
           decomposition.each {|task_prob,probability|
             current_task[0] = task_prob
-            execute(current_task.dup, probability, tasks, level, plan)
+            execute(current_task, probability, tasks, level, plan)
           }
         # Method
         when Array
@@ -72,7 +72,7 @@ module Hypertension_U
     puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(',')})" if @debug
     # Minimum probability and applied
     if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and send(*current_task)
-      new_plan = plan.dup << current_task
+      new_plan = plan.dup << Marshal.load(Marshal.dump(current_task))
       new_plan[PROBABILITY] = new_prob
       new_plan[VALUATION] += state_valuation(old_state) * probability
       # Keep decomposing the hierarchy
