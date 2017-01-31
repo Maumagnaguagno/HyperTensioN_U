@@ -128,22 +128,13 @@ end
 # )
 
 def processPatient_process_patient_healthy(patient)
-  physician = ''
-  ci1 = ''
-  generate(
-    [
-      ['patient', patient],
-      ['physician', physician],
-      ['commitment', 'C1', ci1, physician, patient]
-    ],
-    [], physician, ci1
-  ) {
+  if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == 'C1' and terms[3] == patient and state('patient', patient) and state('physician', terms[2])}
     yield [
       ['performImagingTests', patient],
       ['performPathologyTests', patient],
       ['deliverDiagnostics', patient]
     ]
-  }
+  end
 end
 
 # (:method (performImagingTests ?patient)
