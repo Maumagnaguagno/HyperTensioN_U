@@ -100,16 +100,14 @@ end
 
 def seekHelp_case0(patient)
   physician = ''
-  radiologist = ''
   ci1 = ''
   generate(
     [
       ['patient', patient],
       ['physician', physician],
-      ['radiologist', radiologist],
       ['commitment', 'C1', ci1, physician, patient]
     ],
-    [], physician, radiologist, ci1
+    [], physician, ci1
   ) {
     yield [
       ['create', 'C1', ci1, physician, patient, list(patient)],
