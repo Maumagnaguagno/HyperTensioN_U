@@ -100,16 +100,14 @@ end
 
 def seekHelp_case0(patient)
   physician = ''
-  radiologist = ''
   ci1 = ''
   generate(
     [
       ['patient', patient],
       ['physician', physician],
-      ['radiologist', radiologist],
       ['commitment', 'C1', ci1, physician, patient]
     ],
-    [], physician, radiologist, ci1
+    [], physician, ci1
   ) {
     yield [
       ['create', 'C1', ci1, physician, patient, list(patient)],
@@ -128,22 +126,13 @@ end
 # )
 
 def processPatient_process_patient_healthy(patient)
-  physician = ''
-  ci1 = ''
-  generate(
-    [
-      ['patient', patient],
-      ['physician', physician],
-      ['commitment', 'C1', ci1, physician, patient]
-    ],
-    [], physician, ci1
-  ) {
+  if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == 'C1' and terms[3] == patient and state('patient', patient) and state('physician', terms[2])}
     yield [
       ['performImagingTests', patient],
       ['performPathologyTests', patient],
       ['deliverDiagnostics', patient]
     ]
-  }
+  end
 end
 
 # (:method (performImagingTests ?patient)
