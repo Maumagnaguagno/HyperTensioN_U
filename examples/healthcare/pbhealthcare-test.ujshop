@@ -136,7 +136,7 @@
 		; Goals
 		(goal G1 G1 bob)
 		(goal G2 G2 alice)
-		(goal G3 G3 clyde)
+		(goal G3 G3 bob)
 		(goal G4 G4 clyde)
 		(goal G5 G5 doug)
 
@@ -150,10 +150,16 @@
 		(entice G1 G1 (alice) C1 C1 (alice) bob alice)
 		
 		; This is a vacuous definition of detach
-		(!consider G2 G2 alice (bob) )
-		(!activate G2 G2 alice (bob) )
+		; (!consider G2 G2 alice (bob) )
+		; (!activate G2 G2 alice (bob) )
+		; Alice detaches
+		(detach G2 G2 (alice) C1 C1 (alice) bob alice)
 		
 		(!requestAssessment alice bob)
+		
+		(testGoal G1 G1 (alice) satisfied)
+		
+		(deliver G3 G3 (alice) C1 C1 (alice) bob alice)
 
 		(!create C2 C2 alice bob (clyde))
 		(!create C3 C3 alice bob (clyde))
@@ -196,6 +202,8 @@
 		(!requestPhysicianReportAssessment alice bob simhospital)
 		
 		(testCommitment C1 C1 (alice) satisfied)
+		(testGoal G2 G2 (alice) satisfied)
+		(testGoal G3 G3 (alice) satisfied)
 
 	) ;tn
 )
