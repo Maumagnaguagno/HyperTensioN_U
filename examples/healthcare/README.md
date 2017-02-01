@@ -10,19 +10,19 @@
 - ``(patientHasCancer ?patient)``
 - ``commitment``
 - ``var``
-- ``diagnosisRequested``
+- ``(diagnosisRequested ?patient ?physician)``
 - ``iAppointmentRequested``
 - ``iAppointmentKept``
 - ``imagingScan``
-- ``imagingRequested``
+- ``(imagingRequested ?physician ?patient)``
 - ``imagingResultsReported``
 - ``bAppointmentRequested``
 - ``bAppointmentKept``
 - ``biopsyReport``
-- ``biopsyRequested``
+- ``(biopsyRequested ?physician ?patient)``
 - ``radiologyRequested``
 - ``treatmentPlan``
-- ``diagnosisProvided``
+- ``(diagnosisProvided ?physician ?patient)``
 - ``tissueProvided``
 - ``radPathResultsReported``
 - ``pathResultsReported``
@@ -34,7 +34,7 @@
 - ``TBDisagreesRad``
 - ``TBAgreesPCP``
 - ``TBDisagreesPCP``
-- ``pathologyRequested``
+- ``(pathologyRequested ?physician ?pathologist ?patient)``
 - ``escalate``
 - ``radRequestsAssessment``
 - ``phyRequestsAssessment``
@@ -44,6 +44,8 @@
 - ``cancelled``
 - ``released``
 - ``expired``
+- ``(goal ?g ?gi ?a)``
+- ``(dontknow ?patient)``
 
 ### Axioms
 [Equality axioms](equality-axioms.rb)
@@ -64,6 +66,9 @@
 [Healthcare axioms](healthcare-axioms.rb)
 - ``(p ?c CN ?cv)``
 - ``(q ?c CN ?cv)``
+- ``(pg ?g G1 (?t))``
+- ``(s  ?g G1 (?t))``
+- ``(f  ?g G1 (?t))``
 
 [Goal axioms](goal-axioms.rb)
 - ``(nullG ?g ?gi ?gv)``
