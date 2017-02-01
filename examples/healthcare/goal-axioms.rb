@@ -19,8 +19,8 @@ end
 
 def inactiveG(g, gi, gv)
   nullG(g, gi, gv) and
-  not state('f', g, gi, gv) and
-  not state('s', g, gi, gv) and
+  not f(g, gi, gv) and
+  not s(g, gi, gv) and
   not terminalG(g, gi, gv) and
   not state('suspendedG', g, gi, gv) and
   not activeG(g, gi, gv)
@@ -37,7 +37,7 @@ end
 
 def activeG(g, gi, gv)
   state('activatedG', g, gi, gv) and
-  not state('f', g, gi, gv) and
+  not f(g, gi, gv) and
   not satisfiedG(g, gi, gv) and
   not terminalG(g, gi, gv) and
   not state('suspendedG', g, gi, gv)
@@ -54,9 +54,9 @@ end
 def satisfiedG(g, gi, gv)
   not nullG(g, gi, gv) and
   not terminalG(g, gi, gv) and
-  state('pg', g, gi, gv) and
+  pg(g, gi, gv) and
   s(g, gi, gv) and
-  not state('f', g, gi, gv)
+  not f(g, gi, gv)
 end
 
 # ; (:- (suspended ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (not (terminal ?g ?gi ?gv)) (suspended ?g ?gi ?gv) ))
@@ -64,7 +64,7 @@ end
 # (:- (failedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (f ?g ?gi ?gv) ))
 
 def failedG(g, gi, gv)
-  not nullG(g, gi, gv) and state('f', g, gi, gv)
+  not nullG(g, gi, gv) and f(g, gi, gv)
 end
 
 # (:- (terminatedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv)) ))

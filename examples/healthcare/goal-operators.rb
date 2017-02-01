@@ -26,7 +26,7 @@ end
 # )
 
 def consider(g, gi, a, gv)
-  if state('goal', g, gi, a) and nullG(g, gi, gv) and state('pg', g, gi, gv)
+  if state('goal', g, gi, a) and nullG(g, gi, gv) and pg(g, gi, gv)
     apply([['varG', g, gi, gv]], [])
   end
 end
