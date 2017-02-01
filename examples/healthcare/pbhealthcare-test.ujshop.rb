@@ -34,6 +34,7 @@ plan1 = Healthcare.problem(
     'patientHasCancer' => [[alice]],
     'commitment' => [[C1, C1, bob, alice]],
     'var' => [],
+    'varG' => [],
     'diagnosisRequested' => [],
     'iAppointmentRequested' => [],
     'iAppointmentKept' => [],
@@ -67,7 +68,13 @@ plan1 = Healthcare.problem(
     'reportNeedsReview' => [],
     'cancelled' => [],
     'released' => [],
-    'expired' => []
+    'expired' => [],
+    'dropped' => [],
+    'aborted' => [],
+    'activatedG' => [],
+    'suspendedG' => [],
+    'goal' => [],
+    'dontknow' => []
   },
   # Tasks
   [
@@ -157,6 +164,7 @@ plan2 = Healthcare.problem(
       [C8, C8, evelyn, simhospital]
     ],
     'var' => [],
+    'varG' => [],
     'diagnosisRequested' => [],
     'iAppointmentRequested' => [],
     'iAppointmentKept' => [],
@@ -190,7 +198,13 @@ plan2 = Healthcare.problem(
     'reportNeedsReview' => [],
     'cancelled' => [],
     'released' => [],
-    'expired' => []
+    'expired' => [],
+    'dropped' => [],
+    'aborted' => [],
+    'activatedG' => [],
+    'suspendedG' => [],
+    'goal' => [],
+    'dontknow' => []
   },
   # Tasks
   [

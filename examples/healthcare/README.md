@@ -10,6 +10,7 @@
 - ``(patientHasCancer ?patient)``
 - ``commitment``
 - ``var``
+- ``(varG ?g ?gi ?gv)``
 - ``(diagnosisRequested ?patient ?physician)``
 - ``iAppointmentRequested``
 - ``iAppointmentKept``
@@ -44,6 +45,10 @@
 - ``cancelled``
 - ``released``
 - ``expired``
+- ``(dropped ?g ?gi ?gv)``
+- ``(aborted ?g ?gi ?gv)``
+- ``(activatedG ?g ?gi ?gv)``
+- ``(suspendedG ?g ?gi ?gv)``
 - ``(goal ?g ?gi ?a)``
 - ``(dontknow ?patient)``
 

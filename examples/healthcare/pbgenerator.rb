@@ -108,6 +108,7 @@ Healthcare.problem(
     'patientHasCancer' => PATIENT_SET.first(cancers).map {|i| [i]},
     'commitment' => COMMITMENT_SET,
     'var' => [],
+    'varG' => [],
     'diagnosisRequested' => [],
     'iAppointmentRequested' => [],
     'iAppointmentKept' => [],
@@ -141,7 +142,11 @@ Healthcare.problem(
     'reportNeedsReview' => [],
     'cancelled' => [],
     'released' => [],
-    'expired' => []
+    'expired' => [],
+    'activatedG' => [],
+    'suspendedG' => [],
+    'goal' => [],
+    'dontknow' => []
   },
   # Tasks
   [['hospitalScenario']],

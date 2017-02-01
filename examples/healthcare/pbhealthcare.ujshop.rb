@@ -42,6 +42,7 @@ plan = Healthcare.problem(
       [C8, C8, evelyn, simhospital]
     ],
     'var' => [],
+    'varG' => [],
     'diagnosisRequested' => [],
     'iAppointmentRequested' => [],
     'iAppointmentKept' => [],
@@ -75,7 +76,11 @@ plan = Healthcare.problem(
     'reportNeedsReview' => [],
     'cancelled' => [],
     'released' => [],
-    'expired' => []
+    'expired' => [],
+    'activatedG' => [],
+    'suspendedG' => [],
+    'goal' => [],
+    'dontknow' => []
   },
   # Tasks
   [
