@@ -384,10 +384,16 @@ plan3 = Healthcare.problem(
     ['entice', G1, G1, list(alice), C1, C1, list(alice), bob, alice],
     
     # This is a vacuous definition of detach
-    ['consider', G2, G2, alice, list(bob)],
-    ['activate', G2, G2, alice, list(bob)],
+    # ['consider', G2, G2, alice, list(bob)],
+    # ['activate', G2, G2, alice, list(bob)],
+    # Alice detaches
+    ['detach', G2, G2, list(alice), C1, C1, list(alice), bob, alice],
     
     ['requestAssessment', alice, bob],
+
+    ['testGoal', G1, G1, list(alice), satisfied],
+
+    ['deliver', G3, G3, list(alice), C1, C1, list(alice), bob, alice],
 
     ['create', C2, C2, alice, bob, list(clyde)],
     ['create', C3, C3, alice, bob, list(clyde)],
@@ -429,7 +435,9 @@ plan3 = Healthcare.problem(
     
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
     
-    ['testCommitment', C1, C1, list(alice), satisfied]
+    ['testCommitment', C1, C1, list(alice), satisfied],
+    ['testGoal', G2, G2, list(alice), satisfied],
+    ['testGoal', G3, G3, list(alice), satisfied]
   ],
   # Debug
   debug,
