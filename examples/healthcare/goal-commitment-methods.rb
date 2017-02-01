@@ -108,10 +108,10 @@ end
 
 # Deliver and Deliver' are encoded in a single method
 # (:method (deliver ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
-#   ; Deliver
+#   ; Deliver (debtor delivers)
 #   ((goal ?g ?gi ?d) (nullG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv))
 #   ( (!consider ?g ?gi ?d ?gv) (!activate ?g ?gi ?d ?gv) )
-#   ; Deliver'
+#   ; Deliver' (debtor delivers)
 #   ((goal ?g ?gi ?d) (inactiveG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv))
 #   ((!activate ?g ?gi ?d ?gv))
 # )
@@ -128,6 +128,27 @@ end
 def deliver_case1(g, gi, gv, c, ci, cv, d, a)
   if state('goal', g, gi, d) and inactiveG(g, gi, gv) and state('commitment', c, ci, d, a) and detached(c, ci, cv)
     yield [['activate', g, gi, d, gv]]
+  end
+end
+
+# (:method (detach ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
+#   ; Detach (creditor detaches)
+#   ((goal ?g ?gi ?a) (nullG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (conditional ?c ?ci ?cv))
+#   ((!consider ?g ?gi ?a ?gv) (!activate ?g ?gi ?a ?gv))
+#   ; Detach' (creditor detaches)
+#   ((goal ?g ?gi ?a) (inactiveG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (conditional ?c ?ci ?cv))
+#   ((!activate ?g ?gi ?a ?gv))
+# )
+
+def detach_case0(g, gi, gv, c, ci, cv, d, a)
+  if state('goal', g, gi, a) and nullG(g, gi, gv) and state('commitment', c, ci, d, a) and conditional(c, ci, cv)
+    yield [['consider', g, gi, a, gv], ['activate', g, gi, a, gv]]
+  end
+end
+
+def detach_case1(g, gi, gv, c, ci, cv, d, a)
+  if state('goal', g, gi, a) and inactiveG(g, gi, gv) and state('commitment', c, ci, d, a) and conditional(c, ci, cv)
+    yield [['activate', g, gi, a, gv]]
   end
 end
 

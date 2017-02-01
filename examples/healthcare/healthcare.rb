@@ -105,6 +105,10 @@ module Healthcare
       'deliver_case0',
       'deliver_case1'
     ],
+    'detach' => [
+      'detach_case0',
+      'detach_case1'
+    ],
     'backBurner' => [
       'backBurner_case0'
     ],
