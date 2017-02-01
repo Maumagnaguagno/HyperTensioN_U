@@ -19,6 +19,11 @@ C5 = 'C5'
 C6 = 'C6'
 C7 = 'C7'
 C8 = 'C8'
+G1 = 'G1'
+G2 = 'G2'
+G3 = 'G3'
+G4 = 'G4'
+G5 = 'G5'
 satisfied = 'satisfied'
 
 puts 'Test problem 1'
@@ -295,3 +300,141 @@ Kernel.abort('Problem 2 failed to generate expected plan') if plan2 != [
     ['invisible_testSuccess', C1, C1, list(alice), satisfied]
   ]
 ]
+
+puts "\n\nTest problem 3"
+plan3 = Healthcare.problem(
+  # Start
+  {
+    'patient' => [[alice]],
+    'physician' => [[bob]],
+    'radiologist' => [[clyde]],
+    'pathologist' => [[doug]],
+    'registrar' => [[evelyn]],
+    'hospital' => [[simhospital]],
+    'patientHasCancer' => [[alice]],
+
+    'commitment' => [
+      [C1, C1, bob, alice],
+      [C2, C2, alice, bob],
+      [C3, C3, alice, bob],
+      [C4, C4, clyde, bob],
+      [C5, C5, clyde, bob],
+      [C6, C6, doug, clyde],
+      [C7, C7, doug, simhospital],
+      [C8, C8, evelyn, simhospital]
+    ],
+
+    # Goals
+    'goal' => [
+      [G1, G1, bob],
+      [G2, G2, alice],
+      [G3, G3, clyde],
+      [G4, G4, clyde],
+      [G5, G5, doug]
+    ],
+
+    'var' => [],
+    'varG' => [],
+    'diagnosisRequested' => [],
+    'iAppointmentRequested' => [],
+    'iAppointmentKept' => [],
+    'imagingScan' => [],
+    'imagingRequested' => [],
+    'imagingResultsReported' => [],
+    'bAppointmentRequested' => [],
+    'bAppointmentKept' => [],
+    'biopsyReport' => [],
+    'biopsyRequested' => [],
+    'radiologyRequested' => [],
+    'treatmentPlan' => [],
+    'diagnosisProvided' => [],
+    'tissueProvided' => [],
+    'radPathResultsReported' => [],
+    'pathResultsReported' => [],
+    'patientReportedToRegistrar' => [],
+    'inRegistry' => [],
+    'TBAgreesPath' => [],
+    'TBDisagreesPath' => [],
+    'TBAgreesRad' => [],
+    'TBDisagreesRad' => [],
+    'TBAgreesPCP' => [],
+    'TBDisagreesPCP' => [],
+    'pathologyRequested' => [],
+    'escalate' => [],
+    'radRequestsAssessment' => [],
+    'phyRequestsAssessment' => [],
+    'patRequestsAssessment' => [],
+    'integratedReport' => [],
+    'reportNeedsReview' => [],
+    'cancelled' => [],
+    'released' => [],
+    'dropped' => [],
+    'aborted' => [],
+    'expired' => [],
+    'activatedG' => [],
+    'suspendedG' => [],
+    'dontknow' => []
+  },
+  # Tasks
+  [
+    ['consider', G1, G1, bob, list(alice)],
+    ['activate', G1, G1, bob, list(alice)],
+    
+    # ['create', C1, C1, bob, alice, list(alice)],
+    ['entice', G1, G1, list(alice), C1, C1, list(alice), bob, alice],
+    
+    # This is a vacuous definition of detach
+    ['consider', G2, G2, alice, list(bob)],
+    ['activate', G2, G2, alice, list(bob)],
+    
+    ['requestAssessment', alice, bob],
+
+    ['create', C2, C2, alice, bob, list(clyde)],
+    ['create', C3, C3, alice, bob, list(clyde)],
+
+    ['create', C4, C4, clyde, bob, list(doug)],
+    ['create', C5, C5, clyde, bob, list(doug)],
+    ['create', C6, C6, doug, clyde, list(bob, alice)],
+
+    ['create', C7, C7, doug, simhospital, list(alice, evelyn)],
+    ['create', C8, C8, evelyn, simhospital, list(alice)],
+    
+    ['requestImaging', bob, alice, clyde],
+    ['requestBiopsy', bob, alice, clyde],
+    ['performImaging', clyde, alice, bob],
+    ['performBiopsy', clyde, alice, bob],
+    
+    ['testCommitment', C2, C2, list(clyde), satisfied],
+    ['testCommitment', C3, C3, list(clyde), satisfied],
+    
+    ['requestRadiologyReport', bob, clyde, alice],
+    ['requestPathologyReport', bob, clyde, doug, alice],
+
+    ['sendRadiologyReport', clyde, bob, alice],
+    ['sendPathologyReport', clyde, bob, doug, alice],
+    
+    ['testCommitment', C4, C4, list(doug), satisfied],
+    ['testCommitment', C5, C5, list(doug), satisfied],
+    ['testCommitment', C6, C6, list(bob, alice), satisfied],
+
+    ['sendIntegratedReport', clyde, doug, alice, bob],
+    ['generateTreatmentPlan', bob, alice],
+    ['reportPatient', alice, doug, evelyn],
+    
+    ['testCommitment', C7, C7, list(alice, evelyn), satisfied],
+    
+    ['addPatientToRegistry', alice, evelyn],
+    
+    ['testCommitment', C8, C8, list(alice), satisfied],
+    
+    ['requestPhysicianReportAssessment', alice, bob, simhospital],
+    
+    ['testCommitment', C1, C1, list(alice), satisfied]
+  ],
+  # Debug
+  debug,
+  # Maximum plans found
+  max_plans,
+  # Minimum probability for plans
+  min_prob
+)
