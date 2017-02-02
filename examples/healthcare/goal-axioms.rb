@@ -18,7 +18,7 @@ end
 # )
 
 def inactiveG(g, gi, gv)
-  nullG(g, gi, gv) and
+  not nullG(g, gi, gv) and
   not f(g, gi, gv) and
   not s(g, gi, gv) and
   not terminalG(g, gi, gv) and
