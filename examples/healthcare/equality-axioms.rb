@@ -4,11 +4,12 @@
 
 # ; True if the success condition of ?g matches the antecedent of ?c 
 # ;(?gv and ?cv will unify with the specific instance of ?g and ?c that match this)
-# (:- (eqGSCP ?g ?gv ?c ?cv) (and (imply (s ?g ?gi ?gv) (p ?c ?ci ?cv)) (imply (p ?c ?ci ?cv) (s ?g ?gi ?gv)) ) ) ; Basically a logical equivalence <-> 
+# (:- (eqGSCP ?g ?gv ?c ?cv) (and (imply (s ?g ?gi ?gv) (p ?c ?ci ?cv)) (imply (p ?c ?ci ?cv) (s ?g ?gi ?gv)) ) ) ; Basically a logical equivalence <->
 
 def eqGSCP(g, gv, c, cv)
-  # TODO eqGSCP
-  raise 'eqGSCP is not implemented'
+  s_si_unified = [G1, G2, G3, G4, G5].any? {|gi| s(g, gi, gv)}
+  p_ci_unified = [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12].any? {|ci| p(c, ci, cv)}
+  s_si_unified == p_ci_unified
 end
 
 #     ;TODO make sure that the variables ?gv and ?cv get instantiated
