@@ -19,29 +19,29 @@ def p(c, parameter1, cv)
       d = cterms[2]
       a = cterms[3]
       case parameter1
-      when 'C1' # (:- (p ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (diagnosisRequested ?a ?d) (not (violated ?c C2 ?cv)) (not (violated ?c C3 ?cv)))))
-        state('diagnosisRequested', a, d) and not violated(c, 'C2', cv) and not violated(c, 'C3', cv)
-      when 'C2' # (:- (p ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (iAppointmentRequested ?d ?radiologist))))
+      when C1 # (:- (p ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (diagnosisRequested ?a ?d) (not (violated ?c C2 ?cv)) (not (violated ?c C3 ?cv)))))
+        state('diagnosisRequested', a, d) and not violated(c, C2, cv) and not violated(c, C3, cv)
+      when C2 # (:- (p ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (iAppointmentRequested ?d ?radiologist))))
         @state['iAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when 'C3' # (:- (p ?c C3 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (bAppointmentRequested ?d ?pathologist))))
+      when C3 # (:- (p ?c C3 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (bAppointmentRequested ?d ?pathologist))))
         @state['bAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when 'C4' # (:- (p ?c C4 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (biopsyRequested ?a ?patient) (bAppointmentKept ?patient ?a))))
+      when C4 # (:- (p ?c C4 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (biopsyRequested ?a ?patient) (bAppointmentKept ?patient ?a))))
         @state['biopsyRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('bAppointmentKept', terms[1], a)}
-      when 'C5' # (:- (p ?c C5 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (imagingRequested ?a ?patient) (iAppointmentKept ?patient ?a))))
+      when C5 # (:- (p ?c C5 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (imagingRequested ?a ?patient) (iAppointmentKept ?patient ?a))))
         @state['imagingRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('iAppointmentKept', terms[1], a)}
-      when 'C6' # (:- (p ?c C6 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient))))
+      when C6 # (:- (p ?c C6 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient))))
         @state['pathologyRequested'].any? {|terms| terms.size == 3 and terms[1] == d and state('tissueProvided', terms[2])}
-      when 'C7' # (:- (p ?c C7 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patientHasCancer ?patient))))
+      when C7 # (:- (p ?c C7 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patientHasCancer ?patient))))
         @state['patientHasCancer'].any? {|terms| terms.size == 1}
-      when 'C8' # (:- (p ?c C8 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patientReportedToRegistrar ?patient ?d))))
+      when C8 # (:- (p ?c C8 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patientReportedToRegistrar ?patient ?d))))
         @state['patientReportedToRegistrar'].any? {|terms| terms[1] == d}
-      when 'C9' # (:- (p ?c C9 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (violated ?c C5 ?cv) (escalate))))
-        violated(c, 'C5', cv) and state('escalate')
-      when 'C10' # (:- (p ?c C10 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (radRequestsAssessment))))
+      when C9 # (:- (p ?c C9 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (violated ?c C5 ?cv) (escalate))))
+        violated(c, C5, cv) and state('escalate')
+      when C10 # (:- (p ?c C10 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (radRequestsAssessment))))
         state('radRequestsAssessment')
-      when 'C11' # (:- (p ?c C11 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (phyRequestsAssessment))))
+      when C11 # (:- (p ?c C11 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (phyRequestsAssessment))))
         state('phyRequestsAssessment')
-      when 'C12' # (:- (p ?c C12 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patRequestsAssessment))))
+      when C12 # (:- (p ?c C12 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patRequestsAssessment))))
         state('patRequestsAssessment')
       end
     end
@@ -54,29 +54,29 @@ def q(c, parameter1, cv)
       d = cterms[2]
       a = cterms[3]
       case parameter1
-      when 'C1' # (:- (q ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (diagnosisProvided ?d ?a))))
+      when C1 # (:- (q ?c C1 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (diagnosisProvided ?d ?a))))
         @state['diagnosisProvided'].any? {|terms| terms.size == 2 and terms[0] == d and terms[1] == a}
-      when 'C2' # (:- (q ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (iAppointmentKept ?d ?radiologist))))
+      when C2 # (:- (q ?c C2 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (iAppointmentKept ?d ?radiologist))))
         @state['iAppointmentKept'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when 'C3' # (:- (q ?c C3 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (bAppointmentKept ?d ?pathologist))))
+      when C3 # (:- (q ?c C3 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (bAppointmentKept ?d ?pathologist))))
         @state['bAppointmentKept'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when 'C4' # (:- (q ?c C4 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (radPathResultsReported ?d ?a ?patient))))
+      when C4 # (:- (q ?c C4 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (radPathResultsReported ?d ?a ?patient))))
         @state['radPathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a}
-      when 'C5' # (:- (q ?c C5 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (imagingResultsReported ?d ?a ?patient))))
+      when C5 # (:- (q ?c C5 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (imagingResultsReported ?d ?a ?patient))))
         @state['imagingResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a}
-      when 'C6' # (:- (q ?c C6 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (pathResultsReported ?a ?physician ?patient))))
+      when C6 # (:- (q ?c C6 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (pathResultsReported ?a ?physician ?patient))))
         @state['pathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == a}
-      when 'C7' # (:- (q ?c C7 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patientReportedToRegistrar ?patient ?registrar))))
+      when C7 # (:- (q ?c C7 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patientReportedToRegistrar ?patient ?registrar))))
         @state['patientReportedToRegistrar'].any? {|terms| terms.size == 2}
-      when 'C8' # (:- (q ?c C8 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (inRegistry ?patient))))
+      when C8 # (:- (q ?c C8 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (inRegistry ?patient))))
         @state['inRegistry'].any? {|terms| terms.size == 1}
-      when 'C9' # (:- (q ?c C9 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci)))))
-        not null(c, 'C5', ci) and not null(c, 'D5', ci)
-      when 'C10' # (:- (q ?c C10 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (or (TBAgreesPath) (TBDisagreesPath))))
+      when C9 # (:- (q ?c C9 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci)))))
+        not null(c, C5, ci) and not null(c, 'D5', ci)
+      when C10 # (:- (q ?c C10 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (or (TBAgreesPath) (TBDisagreesPath))))
         state('TBAgreesPath') or state('TBDisagreesPath')
-      when 'C11' # (:- (q ?c C11 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (or (TBAgreesRad) (TBDisagreesRad))))
+      when C11 # (:- (q ?c C11 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (or (TBAgreesRad) (TBDisagreesRad))))
         state('TBAgreesRad') or state('TBDisagreesRad')
-      when 'C12' # (:- (q ?c C12 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (or (TBAgreesPCP) (TBDisagreesPCP))))
+      when C12 # (:- (q ?c C12 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (or (TBAgreesPCP) (TBDisagreesPCP))))
         state('TBAgreesPCP') or state('TBDisagreesPCP')
       end
     end
@@ -96,7 +96,7 @@ end
 # (:- (pg ?g G5 (?t)) (and (goal ?g ?gi ?a) ) )
 
 def pg(g, gn, t)
-  if gn == 'G1' or gn == 'G2' or gn == 'G3' or gn == 'G4' or gn == 'G5'
+  if gn == G1 or gn == G2 or gn == G3 or gn == G4 or gn == G5
     @state['goal'].any? {|terms| terms.size == 3 and terms[0] == g}
   end
 end
@@ -110,11 +110,12 @@ end
 def s(g, gn, t)
   @state['goal'].any? {|terms|
     if terms.size == 3 and terms[0] == g and state('var', g, terms[1], t)
-      if gn == 'G1' then @state['diagnosisRequested'].any? {|terms| terms.size == 2}
-      elsif gn == 'G2' then @state['diagnosisProvided'].any? {|terms| terms.size == 2}
-      elsif gn == 'G3' then @state['biopsyRequested'].any? {|terms| terms.size == 2}
-      elsif gn == 'G4' then @state['imagingRequested'].any? {|terms| terms.size == 2}
-      elsif gn == 'G5' then @state['pathologyRequested'].any? {|terms| terms.size == 3}
+      case gn
+      when G1 then @state['diagnosisRequested'].any? {|terms| terms.size == 2}
+      when G2 then @state['diagnosisProvided'].any? {|terms| terms.size == 2}
+      when G3 then @state['biopsyRequested'].any? {|terms| terms.size == 2}
+      when G4 then @state['imagingRequested'].any? {|terms| terms.size == 2}
+      when G5 then @state['pathologyRequested'].any? {|terms| terms.size == 3}
       end
     end
   }
@@ -127,7 +128,7 @@ end
 # (:- (f ?g G5 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (dontknow ?patient) ))
 
 def f(g, gn, t)
-  if gn == 'G1' or gn == 'G2' or gn == 'G3' or gn == 'G4' or gn == 'G5'
+  if gn == G1 or gn == G2 or gn == G3 or gn == G4 or gn == G5
     @state['goal'].any? {|terms| terms.size == 3 and terms[0] == g and state('var', g, terms[1], t)} and @state['dontknow'].any? {|terms| terms.size == 1}
   end
 end

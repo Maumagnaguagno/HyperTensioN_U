@@ -69,26 +69,26 @@ def testCommitments_case0
   a8 = ''
   generate(
     [
-      ['commitment', 'C1', c1, d1, a1],
-      ['commitment', 'C2', c2, d2, a2],
-      ['commitment', 'C3', c3, d3, a3],
-      ['commitment', 'C4', c4, d4, a4],
-      ['commitment', 'C5', c5, d5, a5],
-      ['commitment', 'C6', c6, d6, a6],
-      ['commitment', 'C7', c7, d7, a7],
-      ['commitment', 'C8', c8, d8, a8]
+      ['commitment', C1, c1, d1, a1],
+      ['commitment', C2, c2, d2, a2],
+      ['commitment', C3, c3, d3, a3],
+      ['commitment', C4, c4, d4, a4],
+      ['commitment', C5, c5, d5, a5],
+      ['commitment', C6, c6, d6, a6],
+      ['commitment', C7, c7, d7, a7],
+      ['commitment', C8, c8, d8, a8]
     ],
     [], c1, d1, a1, c2, d2, a2, c3, d3, a3, c4, d4, a4, c5, d5, a5, c6, d6, a6, c7, d7, a7, c8, d8, a8
   ) {
     yield [
-      ['testCommitment', 'C1', c1, '', 'satisfied'],
-      ['testCommitment', 'C2', c2, '', 'satisfied'],
-      ['testCommitment', 'C3', c3, '', 'satisfied'],
-      ['testCommitment', 'C4', c4, '', 'satisfied'],
-      ['testCommitment', 'C5', c5, '', 'satisfied'],
-      ['testCommitment', 'C6', c6, '', 'satisfied'],
-      ['testCommitment', 'C7', c7, '', 'satisfied'],
-      ['testCommitment', 'C8', c8, '', 'satisfied'],
+      ['testCommitment', C1, c1, '', 'satisfied'],
+      ['testCommitment', C2, c2, '', 'satisfied'],
+      ['testCommitment', C3, c3, '', 'satisfied'],
+      ['testCommitment', C4, c4, '', 'satisfied'],
+      ['testCommitment', C5, c5, '', 'satisfied'],
+      ['testCommitment', C6, c6, '', 'satisfied'],
+      ['testCommitment', C7, c7, '', 'satisfied'],
+      ['testCommitment', C8, c8, '', 'satisfied'],
     ]
   }
 end
@@ -105,12 +105,12 @@ def seekHelp_case0(patient)
     [
       ['patient', patient],
       ['physician', physician],
-      ['commitment', 'C1', ci1, physician, patient]
+      ['commitment', C1, ci1, physician, patient]
     ],
     [], physician, ci1
   ) {
     yield [
-      ['create', 'C1', ci1, physician, patient, list(patient)],
+      ['create', C1, ci1, physician, patient, list(patient)],
       ['requestAssessment', patient, physician]
     ]
   }
@@ -126,7 +126,7 @@ end
 # )
 
 def processPatient_process_patient_healthy(patient)
-  if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == 'C1' and terms[3] == patient and state('patient', patient) and state('physician', terms[2])}
+  if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == C1 and terms[3] == patient and state('patient', patient) and state('physician', terms[2])}
     yield [
       ['performImagingTests', patient],
       ['performPathologyTests', patient],
@@ -164,17 +164,17 @@ def performImagingTests_imaging(patient)
     [
       ['patient', patient],
       ['physician', physician],
-      ['commitment', 'C1', ci, physician, patient],
+      ['commitment', C1, ci, physician, patient],
       ['radiologist', radiologist],
       ['pathologist', pathologist],
-      ['commitment', 'C2', ci2, patient, physician],
-      ['commitment', 'C5', ci5, radiologist, physician]
+      ['commitment', C2, ci2, patient, physician],
+      ['commitment', C5, ci5, radiologist, physician]
     ],
     [], physician, ci, radiologist, pathologist, ci2, ci5
   ) {
     yield [
-      ['create', 'C2', ci2, patient, physician, list(patient, radiologist)],
-      ['create', 'C5', ci5, radiologist, physician, list(patient, pathologist)],
+      ['create', C2, ci2, patient, physician, list(patient, radiologist)],
+      ['create', C5, ci5, radiologist, physician, list(patient, pathologist)],
       ['requestImaging', physician, patient, radiologist],
       ['attendTest', patient]
     ]
@@ -188,7 +188,7 @@ end
 # )
 
 def performPathologyTests_biopsy_unnecessary(patient)
-  yield [] if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == 'C1' and terms[3] == patient and state('patient', patient) and state('physician', terms[2])}
+  yield [] if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == C1 and terms[3] == patient and state('patient', patient) and state('physician', terms[2])}
 end
 
 # (:method (performPathologyTests ?patient)
@@ -223,14 +223,14 @@ def performPathologyTests_imaging_plus_biopsy(patient)
       ['physician', physician],
       ['radiologist', radiologist],
       ['pathologist', pathologist],
-      ['commitment', 'C3', ci3, patient, physician],
-      ['commitment', 'C4', ci4, radiologist, physician]
+      ['commitment', C3, ci3, patient, physician],
+      ['commitment', C4, ci4, radiologist, physician]
     ],
     [], physician, radiologist, pathologist, ci, ci3, ci4
   ) {
     yield [
-      ['create', 'C3', ci3, patient, physician, list(radiologist)],
-      ['create', 'C4', ci4, radiologist, physician, list(pathologist)],
+      ['create', C3, ci3, patient, physician, list(radiologist)],
+      ['create', C4, ci4, radiologist, physician, list(pathologist)],
       ['requestBiopsy', physician, patient, radiologist],
       ['attendTest', patient]
     ]

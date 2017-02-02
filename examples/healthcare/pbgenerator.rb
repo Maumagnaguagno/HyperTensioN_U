@@ -49,15 +49,6 @@ while opt = ARGV.shift
 end
 
 # Objects
-C1 = 'C1'
-C2 = 'C2'
-C3 = 'C3'
-C4 = 'C4'
-C5 = 'C5'
-C6 = 'C6'
-C7 = 'C7'
-C8 = 'C8'
-
 PATIENT_SET     = Array.new(patients)     {|i| "patient_#{i}"}
 PHYSICIAN_SET   = Array.new(physicians)   {|i| "physician_#{i}"}
 RADIOLOGIST_SET = Array.new(radiologists) {|i| "radiologist_#{i}"}
