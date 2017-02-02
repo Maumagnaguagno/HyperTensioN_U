@@ -15,7 +15,7 @@
 
 def p(c, parameter1, cv)
   @state['commitment'].any? {|cterms|
-    if cterms.size == 4 and cterm[0] == c and state('var', c, cterms[1], cv)
+    if cterms.size == 4 and cterms[0] == c and state('var', c, cterms[1], cv)
       d = cterms[2]
       a = cterms[3]
       case parameter1
