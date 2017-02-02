@@ -63,6 +63,7 @@ plan1 = Healthcare.problem(
     'expired' => [],
     'dropped' => [],
     'aborted' => [],
+    'pending' => [],
     'activatedG' => [],
     'suspendedG' => [],
     'goal' => [],

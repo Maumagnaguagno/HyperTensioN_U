@@ -47,6 +47,7 @@
 - ``expired``
 - ``(dropped ?g ?gi ?gv)``
 - ``(aborted ?g ?gi ?gv)``
+- ``(pending ?c ?ci ?cv)``
 - ``(activatedG ?g ?gi ?gv)``
 - ``(suspendedG ?g ?gi ?gv)``
 - ``(goal ?g ?gi ?a)``
