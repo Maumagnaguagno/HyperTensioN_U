@@ -317,7 +317,7 @@ plan3 = Healthcare.problem(
     'goal' => [
       [G1, G1, bob],
       [G2, G2, alice],
-      [G3, G3, clyde],
+      [G3, G3, bob],
       [G4, G4, clyde],
       [G5, G5, doug]
     ],
@@ -369,16 +369,16 @@ plan3 = Healthcare.problem(
   [
     ['consider', G1, G1, bob, list(alice)],
     ['activate', G1, G1, bob, list(alice)],
-    
+
     # ['create', C1, C1, bob, alice, list(alice)],
     ['entice', G1, G1, list(alice), C1, C1, list(alice), bob, alice],
-    
+
     # This is a vacuous definition of detach
     # ['consider', G2, G2, alice, list(bob)],
     # ['activate', G2, G2, alice, list(bob)],
     # Alice detaches
     ['detach', G2, G2, list(alice), C1, C1, list(alice), bob, alice],
-    
+
     ['requestAssessment', alice, bob],
 
     ['testGoal', G1, G1, list(alice), satisfied],
@@ -394,12 +394,12 @@ plan3 = Healthcare.problem(
 
     ['create', C7, C7, doug, simhospital, list(alice, evelyn)],
     ['create', C8, C8, evelyn, simhospital, list(alice)],
-    
+
     ['requestImaging', bob, alice, clyde],
     ['requestBiopsy', bob, alice, clyde],
     ['performImaging', clyde, alice, bob],
     ['performBiopsy', clyde, alice, bob],
-    
+
     ['testCommitment', C2, C2, list(clyde), satisfied],
     ['testCommitment', C3, C3, list(clyde), satisfied],
     
@@ -408,7 +408,7 @@ plan3 = Healthcare.problem(
 
     ['sendRadiologyReport', clyde, bob, alice],
     ['sendPathologyReport', clyde, bob, doug, alice],
-    
+
     ['testCommitment', C4, C4, list(doug), satisfied],
     ['testCommitment', C5, C5, list(doug), satisfied],
     ['testCommitment', C6, C6, list(bob, alice), satisfied],
@@ -416,15 +416,15 @@ plan3 = Healthcare.problem(
     ['sendIntegratedReport', clyde, doug, alice, bob],
     ['generateTreatmentPlan', bob, alice],
     ['reportPatient', alice, doug, evelyn],
-    
+
     ['testCommitment', C7, C7, list(alice, evelyn), satisfied],
-    
+
     ['addPatientToRegistry', alice, evelyn],
-    
+
     ['testCommitment', C8, C8, list(alice), satisfied],
-    
+
     ['requestPhysicianReportAssessment', alice, bob, simhospital],
-    
+
     ['testCommitment', C1, C1, list(alice), satisfied],
     ['testGoal', G2, G2, list(alice), satisfied],
     ['testGoal', G3, G3, list(alice), satisfied]
