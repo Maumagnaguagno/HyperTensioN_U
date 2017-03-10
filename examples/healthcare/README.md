@@ -70,11 +70,11 @@
 - ``(terminal ?c ?ci ?cv)``
 
 [Healthcare axioms](healthcare-axioms.rb)
-- ``(p ?c CN ?cv)``
-- ``(q ?c CN ?cv)``
-- ``(pg ?g G1 (?t))``
-- ``(s  ?g G1 (?t))``
-- ``(f  ?g G1 (?t))``
+- ``(p  ?c CN (?t))``
+- ``(q  ?c CN (?t))``
+- ``(pg ?g GN (?t))``
+- ``(s  ?g GN (?t))``
+- ``(f  ?g GN (?t))``
 
 [Goal axioms](goal-axioms.rb)
 - ``(nullG ?g ?gi ?gv)``
