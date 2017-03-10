@@ -4,10 +4,10 @@
 
 # ; True if the success condition of ?g matches the antecedent of ?c 
 # ;(?gv and ?cv will unify with the specific instance of ?g and ?c that match this)
-# (:- (eqGSCP ?g ?gv ?c ?cv) (and (imply (s ?g ?gi ?gv) (p ?c ?ci ?cv)) (imply (p ?c ?ci ?cv) (s ?g ?gi ?gv)) ) ) ; Basically a logical equivalence <->
+# (:- (eqGSCP ?g ?gv ?c ?cv) (and (imply (s ?g ?g ?gv) (p ?c ?c ?cv)) (imply (p ?c ?c ?cv) (s ?g ?g ?gv)) ) ) ; Basically a logical equivalence <->
 
 def eqGSCP(g, gv, c, cv)
-  GOALS.any? {|gi| s(g, gi, gv)} == COMMITMENTS.any? {|ci| p(c, ci, cv)}
+  s(g, g, gv) == p(c, c, cv)
 end
 
 # ; TODO make sure that the variables ?gv and ?cv get instantiated
