@@ -108,26 +108,27 @@ end
 
 # Deliver and Deliver' are encoded in a single method
 # (:method (deliver ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
-#   ; Deliver (debtor delivers)
-#   ((goal ?g ?gi ?d) (nullG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv))
-#   ( (!consider ?g ?gi ?d ?gv) (!activate ?g ?gi ?d ?gv) )
 #   ; Deliver' (debtor delivers)
 #   ((goal ?g ?gi ?d) (inactiveG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv))
 #   ((!activate ?g ?gi ?d ?gv))
+#   ; Deliver (debtor delivers) but considers first since it's not detached
+#   ((goal ?g ?gi ?d) (nullG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) ;(detached ?c ?ci ?cv)
+#   )
+#   ( (!consider ?g ?gi ?d ?gv) (!activate ?g ?gi ?d ?gv) )
 # )
 
 def deliver_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and nullG(g, gi, gv) and state('commitment', c, ci, d, a) and detached(c, ci, cv)
-    yield [
-      ['consider', g, gi, d, gv],
-      ['activate', g, gi, d, gv]
-    ]
+  if state('goal', g, gi, d) and inactiveG(g, gi, gv) and state('commitment', c, ci, d, a) and detached(c, ci, cv)
+    yield [['activate', g, gi, d, gv]]
   end
 end
 
 def deliver_case1(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and inactiveG(g, gi, gv) and state('commitment', c, ci, d, a) and detached(c, ci, cv)
-    yield [['activate', g, gi, d, gv]]
+  if state('goal', g, gi, d) and nullG(g, gi, gv) and state('commitment', c, ci, d, a)
+    yield [
+      ['consider', g, gi, d, gv],
+      ['activate', g, gi, d, gv]
+    ]
   end
 end
 
