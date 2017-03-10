@@ -133,23 +133,24 @@ def deliver_case1(g, gi, gv, c, ci, cv, d, a)
 end
 
 # (:method (detach ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
-#   ; Detach (creditor detaches)
-#   ((goal ?g ?gi ?a) (nullG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (conditional ?c ?ci ?cv))
-#   ((!consider ?g ?gi ?a ?gv) (!activate ?g ?gi ?a ?gv))
 #   ; Detach' (creditor detaches)
 #   ((goal ?g ?gi ?a) (inactiveG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (conditional ?c ?ci ?cv))
 #   ((!activate ?g ?gi ?a ?gv))
+#   ; Detach (creditor detaches)
+#   ((goal ?g ?gi ?a) (nullG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) ;(conditional ?c ?ci ?cv) ; must not be conditional
+#   )
+#   ((!consider ?g ?gi ?a ?gv) (!activate ?g ?gi ?a ?gv))
 # )
 
 def detach_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, a) and nullG(g, gi, gv) and state('commitment', c, ci, d, a) and conditional(c, ci, cv)
-    yield [['consider', g, gi, a, gv], ['activate', g, gi, a, gv]]
+  if state('goal', g, gi, a) and inactiveG(g, gi, gv) and state('commitment', c, ci, d, a) and conditional(c, ci, cv)
+    yield [['activate', g, gi, a, gv]]
   end
 end
 
 def detach_case1(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, a) and inactiveG(g, gi, gv) and state('commitment', c, ci, d, a) and conditional(c, ci, cv)
-    yield [['activate', g, gi, a, gv]]
+  if state('goal', g, gi, a) and nullG(g, gi, gv) and state('commitment', c, ci, d, a)
+    yield [['consider', g, gi, a, gv], ['activate', g, gi, a, gv]]
   end
 end
 
