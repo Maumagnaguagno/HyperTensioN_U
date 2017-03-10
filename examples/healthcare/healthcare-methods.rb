@@ -146,8 +146,8 @@ end
 #     (commitment C5 ?Ci5 ?radiologist ?physician)
 #   )
 #   (
-#     (!create C2 ?Ci2 ?patient ?physician (?patient ?radiologist))
-#     (!create C5 ?Ci5 ?radiologist ?physician (?patient ?pathologist))
+#     (!create C2 ?Ci2 ?patient ?physician (?radiologist))
+#     (!create C5 ?Ci5 ?radiologist ?physician (?pathologist))
 #     (!requestImaging ?physician ?patient ?radiologist)
 #     (attendTest ?patient)
 #   )
@@ -173,8 +173,8 @@ def performImagingTests_imaging(patient)
     [], physician, ci, radiologist, pathologist, ci2, ci5
   ) {
     yield [
-      ['create', C2, ci2, patient, physician, list(patient, radiologist)],
-      ['create', C5, ci5, radiologist, physician, list(patient, pathologist)],
+      ['create', C2, ci2, patient, physician, list(radiologist)],
+      ['create', C5, ci5, radiologist, physician, list(pathologist)],
       ['requestImaging', physician, patient, radiologist],
       ['attendTest', patient]
     ]
