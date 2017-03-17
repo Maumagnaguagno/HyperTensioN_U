@@ -7,7 +7,7 @@
 ;==========================================================
 ; True if the success condition of ?g matches the antecedent of ?c 
 ;(?gv and ?cv will unify with the specific instance of ?g and ?c that match this)
-(:- (eqGSCP ?g ?gv ?c ?cv) (and (imply (s ?g ?gi ?gv) (p ?c ?ci ?cv)) (imply (p ?c ?ci ?cv) (s ?g ?gi ?gv)) ) ) ; Basically a logical equivalence <-> 
+(:- (eqGSCP ?g ?gv ?c ?cv) (and (imply (s ?g ?gi ?gv) (p ?c ?ci ?cv)) (imply (p ?c ?c ?cv) (s ?g ?g ?gv)) ) ) ; Basically a logical equivalence <-> 
     ;TODO make sure that the variables ?gv and ?cv get instantiated
 ; True of the success condition of ?g matches the consequent of ?c
 (:- (eqGSCQ ?g ?gv ?c ?cv) (and (imply (s ?g ?gi ?gv) (q ?c ?ci ?cv)) (imply (q ?c ?ci ?cv) (s ?g ?gi ?gv)) ) ) ; Basically a logical equivalence <->

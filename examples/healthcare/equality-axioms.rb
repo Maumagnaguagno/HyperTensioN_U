@@ -2,7 +2,7 @@
 # Equalities between conditions on commitments and on goals
 #==========================================================
 
-# ; True if the success condition of ?g matches the antecedent of ?c 
+# ; True if the success condition of ?g matches the antecedent of ?c
 # ;(?gv and ?cv will unify with the specific instance of ?g and ?c that match this)
 # (:- (eqGSCP ?g ?gv ?c ?cv) (and (imply (s ?g ?g ?gv) (p ?c ?c ?cv)) (imply (p ?c ?c ?cv) (s ?g ?g ?gv)) ) ) ; Basically a logical equivalence <->
 
