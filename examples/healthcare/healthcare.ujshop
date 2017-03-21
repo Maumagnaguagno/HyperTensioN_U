@@ -79,9 +79,10 @@
 
 
 
-;C7(PATHOLOGIST, HOSPITAL, patientHasCancer, patientReportedToRegistrar)
-(:- (p ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientHasCancer ?patient)) ))
-(:- (q ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?registrar)) ))
+;C7 = C(REGISTRAR, PATHOLOGIST, reportPatientWithCancer, addPatientToRegistry)
+(:- (p ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?d)) ) )
+(:- (q ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (inRegistry ?patient)) ) )
+
 
 
 

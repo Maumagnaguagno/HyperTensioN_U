@@ -5,7 +5,7 @@
 # C4(RADIOLOGIST, PHYSICIAN, imagingRequested ^ iAppointmentKept, imagingResultsReported)
 # C5(RADIOLOGIST, PHYSICIAN, biopsyRequested ^ bAppointmentKept, radPathResultsReported)
 # C6(PATHOLOGIST, RADIOLOGIST, pathologyRequested ^ tissueProvided, pathResultsReported)
-# C7(PATHOLOGIST, HOSPITAL, patientHasCancer, patientReportedToRegistrar)
+# C7(REGISTRAR, PATHOLOGIST, reportPatientWithCancer, addPatientToRegistry)
 # C8(REGISTRAR, HOSPITAL, patientReportedToRegistrar, addPatientToCancerRegistry)
 # C9(HOSPITAL, PHYSICIAN, vio(C5) ^ escalate, create(C5') ^ create(D2')) - Does not work because it depends D5
 #; (:- (q ?c C9 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ) (and (create ?C5) (create ?D2)) ) )
@@ -32,7 +32,7 @@ def p(c, parameter1, t)
       when C6 # (:- (p ?c C6 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient))))
         @state['pathologyRequested'].any? {|terms| terms.size == 3 and terms[1] == d and state('tissueProvided', terms[2])}
       when C7 # (:- (p ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientHasCancer ?patient))))
-        @state['patientHasCancer'].any? {|terms| terms.size == 1}
+        @state['patientReportedToRegistrar'].any? {|terms| terms.size == 2 and terms[1] == d}
       #when C8 # (:- (p ?c C8 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?d))))
       #  @state['patientReportedToRegistrar'].any? {|terms| terms[1] == d}
       #when C9 # (:- (p ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (violated ?c C5 ?t) (escalate))))
@@ -67,7 +67,7 @@ def q(c, parameter1, t)
       when C6 # (:- (q ?c C6 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (pathResultsReported ?a ?physician ?patient))))
         @state['pathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == a}
       when C7 # (:- (q ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?registrar))))
-        @state['patientReportedToRegistrar'].any? {|terms| terms.size == 2}
+        @state['inRegistry '].any? {|terms| terms.size == 1}
       #when C8 # (:- (q ?c C8 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (inRegistry ?patient))))
       #  @state['inRegistry'].any? {|terms| terms.size == 1}
       #when C9 # (:- (q ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci)))))
