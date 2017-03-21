@@ -3,7 +3,7 @@
 #=============================================
 
 # (:operator (!!testSuccessG ?g ?gi ?gv ?state)
-#   ((goal ?g ?gi ?a))
+#   (goal ?g ?gi ?a)
 #   ()
 #   ()
 #   0

@@ -3,7 +3,7 @@
 #======================
 
 # (:operator (!!testSuccess ?c ?ci ?cv ?state)
-#   ((commitment ?c ?ci ?de ?cr))
+#   (commitment ?c ?ci ?de ?cr)
 #   ()
 #   ()
 #   0
