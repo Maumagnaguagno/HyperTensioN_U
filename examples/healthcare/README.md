@@ -9,10 +9,10 @@
 - ``(hospital ?hospital)``
 - ``(patientHasCancer ?patient)``
 - ``commitment``
-- ``var``
+- ``(var ?g ?gi (?t)))``
 - ``(varG ?g ?gi ?gv)``
 - ``(diagnosisRequested ?patient ?physician)``
-- ``iAppointmentRequested``
+- ``(iAppointmentRequested ?patient ?radiologist)``
 - ``iAppointmentKept``
 - ``imagingScan``
 - ``(imagingRequested ?physician ?patient)``
