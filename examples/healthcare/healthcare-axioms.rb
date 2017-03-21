@@ -2,8 +2,8 @@
 # C1(PHYSICIAN, PATIENT, diagnosisRequested ^ -vio(C2) ^ -vio(C3), diagnosisProvided)
 # C2(PATIENT, PHYSICIAN, iAppointmentRequested, iAppointmentKept)
 # C3(PATIENT, PHYSICIAN, bAppointmentRequested, bAppointmentKept)
-# C4(RADIOLOGIST, PHYSICIAN, biopsyRequested ^ bAppointmentKept, radPathResultsReported)
-# C5(RADIOLOGIST, PHYSICIAN, imagingRequested ^ iAppointmentKept, imagingResultsReported)
+# C4(RADIOLOGIST, PHYSICIAN, imagingRequested ^ iAppointmentKept, imagingResultsReported)
+# C5(RADIOLOGIST, PHYSICIAN, biopsyRequested ^ bAppointmentKept, radPathResultsReported)
 # C6(PATHOLOGIST, RADIOLOGIST, pathologyRequested ^ tissueProvided, pathResultsReported)
 # C7(PATHOLOGIST, HOSPITAL, patientHasCancer, patientReportedToRegistrar)
 # C8(REGISTRAR, HOSPITAL, patientReportedToRegistrar, addPatientToCancerRegistry)
@@ -25,10 +25,10 @@ def p(c, parameter1, t)
         @state['iAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
       when C3 # (:- (p ?c C3 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (bAppointmentRequested ?d ?pathologist))))
         @state['bAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when C4 # (:- (p ?c C4 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (biopsyRequested ?a ?patient) (bAppointmentKept ?patient ?a))))
-        @state['biopsyRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('bAppointmentKept', terms[1], a)}
-      when C5 # (:- (p ?c C5 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (imagingRequested ?a ?patient) (iAppointmentKept ?patient ?a))))
-        @state['imagingRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('iAppointmentKept', terms[1], a)}
+      when C4 # (:- (p ?c C4 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (imagingRequested ?a ?patient) (iAppointmentKept ?patient ?d))))
+        @state['imagingRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('iAppointmentKept', terms[1], d)}
+      when C5 # (:- (p ?c C5 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (biopsyRequested ?a ?patient) (bAppointmentKept ?patient ?d))))
+        @state['biopsyRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('bAppointmentKept', terms[1], d)}
       when C6 # (:- (p ?c C6 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient))))
         @state['pathologyRequested'].any? {|terms| terms.size == 3 and terms[1] == d and state('tissueProvided', terms[2])}
       when C7 # (:- (p ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientHasCancer ?patient))))
@@ -60,10 +60,10 @@ def q(c, parameter1, t)
         @state['iAppointmentKept'].any? {|terms| terms.size == 2 and terms[0] == d}
       when C3 # (:- (q ?c C3 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (bAppointmentKept ?d ?pathologist))))
         @state['bAppointmentKept'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when C4 # (:- (q ?c C4 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (radPathResultsReported ?d ?a ?patient))))
-        @state['radPathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a}
-      when C5 # (:- (q ?c C5 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (imagingResultsReported ?d ?a ?patient))))
+      when C4 # (:- (q ?c C4 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (imagingResultsReported ?d ?a ?patient))))
         @state['imagingResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a}
+      when C5 # (:- (q ?c C5 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (radPathResultsReported ?d ?a ?patient))))
+        @state['radPathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a}
       when C6 # (:- (q ?c C6 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (pathResultsReported ?a ?physician ?patient))))
         @state['pathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == a}
       when C7 # (:- (q ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?registrar))))
