@@ -67,7 +67,7 @@ def q(c, parameter1, t)
       when C6 # (:- (q ?c C6 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (pathResultsReported ?a ?physician ?patient))))
         @state['pathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == a}
       when C7 # (:- (q ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?registrar))))
-        @state['inRegistry '].any? {|terms| terms.size == 1}
+        @state['inRegistry'].any? {|terms| terms.size == 1}
       #when C8 # (:- (q ?c C8 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (inRegistry ?patient))))
       #  @state['inRegistry'].any? {|terms| terms.size == 1}
       #when C9 # (:- (q ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci)))))
@@ -109,7 +109,7 @@ def s(g, gn, t)
     if terms.size == 3 and terms[0] == g and state('varG', g, terms[1], t)
       case gn
       when G1, G2 then @state['diagnosisRequested'].any? {|terms| terms.size == 2}
-      when G3 then @state['imagingRequested'].any? {|terms2| terms2.size == 2 and @state['iAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms2[1] == terms3[0]}
+      when G3 then @state['imagingRequested'].any? {|terms2| terms2.size == 2 and @state['iAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms2[1] == terms3[0]}}
       when G4 then @state['imagingRequested'].any? {|terms| terms.size == 2}
       end
     end
