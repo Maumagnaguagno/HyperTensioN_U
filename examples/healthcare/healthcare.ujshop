@@ -1,13 +1,13 @@
-(defdomain healthcare 
+(defdomain healthcare
  (
 ; Generic Axioms
 
 ;==========================================================
 ;Equalities between conditions on commitments and on goals
 ;==========================================================
-; True if the success condition of ?g matches the antecedent of ?c 
+; True if the success condition of ?g matches the antecedent of ?c
 ;(?gv and ?cv will unify with the specific instance of ?g and ?c that match this)
-(:- (eqGSCP ?g ?gv ?c ?cv) (and (imply (s ?g ?gi ?gv) (p ?c ?ci ?cv)) (imply (p ?c ?c ?cv) (s ?g ?g ?gv)) ) ) ; Basically a logical equivalence <-> 
+(:- (eqGSCP ?g ?gv ?c ?cv) (and (imply (s ?g ?g ?gv) (p ?c ?c ?cv)) (imply (p ?c ?c ?cv) (s ?g ?g ?gv)) ) ) ; Basically a logical equivalence <->
     ;TODO make sure that the variables ?gv and ?cv get instantiated
 ; True of the success condition of ?g matches the consequent of ?c
 (:- (eqGSCQ ?g ?gv ?c ?cv) (and (imply (s ?g ?gi ?gv) (q ?c ?ci ?cv)) (imply (q ?c ?ci ?cv) (s ?g ?gi ?gv)) ) ) ; Basically a logical equivalence <->
@@ -16,28 +16,28 @@
 
 ;=============================================
 ; Axioms for commitments
-; predicates on commitments 
-; null(c,ci,cv) cancelled(c,ci,cv) released(c,ci,cv) 
+; predicates on commitments
+; null(c,ci,cv) cancelled(c,ci,cv) released(c,ci,cv)
 ; pending(c,ci,cv) satisfied(c,ci,cv)
 ;=============================================
 
 (:- (null ?c ?ci ?cv) (not (var ?c ?ci ?cv)) )
 
-(:- (conditional ?c ?ci ?cv) 
+(:- (conditional ?c ?ci ?cv)
       (and (active ?c ?ci ?cv) (not (p ?c ?ci ?cv)) ) )
-(:- (detached ?c ?ci ?cv) 
+(:- (detached ?c ?ci ?cv)
       (and (active ?c ?ci ?cv) (p ?c ?ci ?cv) ) )
 ; A conditional commitment is active
-(:- (active ?c ?ci ?cv) (and (var ?c ?ci ?cv);(not (null ?c ?ci ?cv)) 
+(:- (active ?c ?ci ?cv) (and (var ?c ?ci ?cv);(not (null ?c ?ci ?cv))
 	           (not (terminal ?c ?ci ?cv))
-               (not (pending ?c ?ci ?cv)) 
-	           (not (satisfied ?c ?ci ?cv)) 
+               (not (pending ?c ?ci ?cv))
+	           (not (satisfied ?c ?ci ?cv))
 		  ) )
 
 (:- (terminated ?c ?ci ?cv)  (or (and (not (p ?c ?ci ?cv)) (cancelled ?c ?ci ?cv)) (released ?c ?ci ?cv)) )
 
 ; (:- (violated ?c ?ci ?cv) (or (and (p ?c ?ci ?cv) (cancelled ?c ?ci ?cv)) (and (not (p ?c ?ci ?cv)) ) ) ) ; Previous formalization with a mistaken disjunction, detected by Pankaj
-(:- (violated ?c ?ci ?cv) (and (p ?c ?ci ?cv) (cancelled ?c ?ci ?cv)) ) 
+(:- (violated ?c ?ci ?cv) (and (p ?c ?ci ?cv) (cancelled ?c ?ci ?cv)) )
 
 (:- (satisfied ?c ?ci ?cv) (and (not (null ?c ?ci ?cv)) (not (terminal ?c ?ci ?cv)) (q ?c ?ci ?cv)) )
 
@@ -47,72 +47,71 @@
 (:- (terminal ?c ?ci ?cv) (and (commitment ?c ?ci ?de ?cr) (or (cancelled ?c ?ci ?cv) (released ?c ?ci ?cv) (expired ?c ?ci ?cv))) )
 
 
- 	
+
 ; Domain specific axioms
 ;C1(PHYSICIAN, PATIENT, diagnosisRequested ^ -vio(C2) ^ -vio(C3), diagnosisProvided)
-(:- (p ?c C1 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (diagnosisRequested ?a ?d) (not (violated ?c C2 ?cv)) (not (violated ?c C3 ?cv))) ) )
-(:- (q ?c C1 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (diagnosisProvided ?d ?a)) ) )
+(:- (p ?c C1 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (diagnosisRequested ?a ?d) (not (violated ?c C2 (?t))) (not (violated ?c C3 (?t)))) ) )
+; TODO Correct this, to "include inactive for the two commitments"
+(:- (q ?c C1 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (diagnosisProvided ?d ?a)) ) )
 
 ;C2(PATIENT, PHYSICIAN, iAppointmentRequested, iAppointmentKept)
-(:- (p ?c C2 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (iAppointmentRequested ?d ?radiologist))))
-(:- (q ?c C2 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (iAppointmentKept ?d ?radiologist))))
+(:- (p ?c C2 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (iAppointmentRequested ?d ?radiologist))))
+(:- (q ?c C2 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (iAppointmentKept ?d ?radiologist))))
 
 ;C3(PATIENT, PHYSICIAN, bAppointmentRequested, bAppointmentKept)
-(:- (p ?c C3 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (bAppointmentRequested ?d ?pathologist)) ) )
-(:- (q ?c C3 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (bAppointmentKept ?d ?pathologist)) ) )
+(:- (p ?c C3 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (bAppointmentRequested ?d ?pathologist)) ) )
+(:- (q ?c C3 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (bAppointmentKept ?d ?pathologist)) ) )
 
 ;C4(RADIOLOGIST, PHYSICIAN, biopsyRequested ^ bAppointmentKept, radPathResultsReported)
-(:- (p ?c C4 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (biopsyRequested ?a ?patient) (bAppointmentKept ?patient ?a)) ) )
-(:- (q ?c C4 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (radPathResultsReported ?d ?a ?patient)) ) )
+(:- (p ?c C4 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (biopsyRequested ?a ?patient) (bAppointmentKept ?patient ?a)) ) )
+(:- (q ?c C4 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (radPathResultsReported ?d ?a ?patient)) ) )
 
 ;C5(RADIOLOGIST, PHYSICIAN, imagingRequested ^ iAppointmentKept, imagingResultsReported)
-(:- (p ?c C5 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (imagingRequested ?a ?patient) (iAppointmentKept ?patient ?a)) ) )
-(:- (q ?c C5 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (imagingResultsReported ?d ?a ?patient)) ) )
+(:- (p ?c C5 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (imagingRequested ?a ?patient) (iAppointmentKept ?patient ?a)) ) )
+(:- (q ?c C5 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (imagingResultsReported ?d ?a ?patient)) ) )
 
 ;C6(PATHOLOGIST, RADIOLOGIST, pathologyRequested ^ tissueProvided, pathResultsReported)
-(:- (p ?c C6 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ? ?cv) (and (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient)) ))
-(:- (q ?c C6 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (pathResultsReported ?a ?physician ?patient)) ))
+(:- (p ?c C6 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient)) ))
+(:- (q ?c C6 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (pathResultsReported ?a ?physician ?patient)) ))
 
 ;C7(PATHOLOGIST, HOSPITAL, patientHasCancer, patientReportedToRegistrar)
-(:- (p ?c C7 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patientHasCancer ?patient)) ))
-(:- (q ?c C7 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patientReportedToRegistrar ?patient ?registrar)) ))
+(:- (p ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientHasCancer ?patient)) ))
+(:- (q ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?registrar)) ))
 
 ;C8(REGISTRAR, HOSPITAL, patientReportedToRegistrar, addPatientToCancerRegistry)
-(:- (p ?c C8 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patientReportedToRegistrar ?patient ?d)) ) )
-(:- (q ?c C8 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (inRegistry ?patient)) ) )
+(:- (p ?c C8 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?d)) ) )
+(:- (q ?c C8 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (inRegistry ?patient)) ) )
 
 ;C9(HOSPITAL, PHYSICIAN, vio(C5) ^ escalate, create(C5') ^ create(D2')) - Does not work because it depends D5
-(:- (p ?c C9 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (violated ?c C5 ?cv) (escalate)) ) )
-; (:- (q ?c C9 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (create ?C5) (create ?D2)) ) )
-(:- (q ?c C9 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci))) ) )
+(:- (p ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (violated ?c C5 (?t)) (escalate)) ) )
+; (:- (q ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (create ?C5) (create ?D2)) ) )
+(:- (q ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci))) ) )
 
-;C10(TUMORBOARD, RADIOLOGIST, radRequestsAssessment, TBAgreesPath _ TBDisagreesPath)
-(:- (p ?c C10 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (radRequestsAssessment)) ) )
-(:- (q ?c C10 ?cv) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (or (TBAgreesPath) (TBDisagreesPath)) ))
+; ;C10(TUMORBOARD, RADIOLOGIST, radRequestsAssessment, TBAgreesPath _ TBDisagreesPath)
+; (:- (p ?c C10 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (radRequestsAssessment)) ) )
+; (:- (q ?c C10 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesPath) (TBDisagreesPath)) ))
 
-;C11(TUMORBOARD, PHYSICIAN, phyRequestsAssessment, TBAgreesRad _ TBDisagreesRad)
-(:- (p ?c C11 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (phyRequestsAssessment)) ) )
-(:- (q ?c C11 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (or (TBAgreesRad) (TBDisagreesRad)) ) )
+; ;C11(TUMORBOARD, PHYSICIAN, phyRequestsAssessment, TBAgreesRad _ TBDisagreesRad)
+; (:- (p ?c C11 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (phyRequestsAssessment)) ) )
+; (:- (q ?c C11 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesRad) (TBDisagreesRad)) ) )
 
-;C12(TUMORBOARD, PATIENT, patRequestsAssessment, TBAgreesPCP _ TBDisagreesPCP)
-(:- (p ?c C12 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (and (patRequestsAssessment) ) ) )
-(:- (q ?c C12 ) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci ?cv) (or (TBAgreesPCP) (TBDisagreesPCP) ) ) )
+; ;C12(TUMORBOARD, PATIENT, patRequestsAssessment, TBAgreesPCP _ TBDisagreesPCP)
+; (:- (p ?c C12 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patRequestsAssessment) ) ) )
+; (:- (q ?c C12 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesPCP) (TBDisagreesPCP) ) ) )
 
 
-
- 	
  ; Generic operators
  ;======================
  ; Commitment operators
  ;======================
 
   (:operator (!!testSuccess ?c ?ci ?cv ?state)
-	((commitment ?c ?ci ?de ?cr))
+	(commitment ?c ?ci ?de ?cr)
 	()
 	()
 	0
   )
-  
+
   (:operator (!!testFailure ?cg ?state)
 	nil
 	nil
@@ -121,7 +120,7 @@
   )
 
   (:operator (!create ?c ?ci ?de ?cr ?cv)
-    ((commitment ?c ?ci ?de ?cr) 
+    ((commitment ?c ?ci ?de ?cr)
      (null ?c ?ci ?cv)
     )
 
@@ -131,22 +130,22 @@
   )
 
   (:operator (!suspend ?c ?ci ?de ?cr ?cv)
-    ((commitment ?c ?ci ?de ?cr) 
+    ((commitment ?c ?ci ?de ?cr)
      (active ?c ?ci ?cv)
     )
 
     ( )
     ((pending ?c ?ci ?cv))
-    1 
+    1
   )
 
   ; FM: In PDDL it was revive, but in the papers it's called reactivate
-  ; PT: Without checking for p in the pre-condition, these operators will 
+  ; PT: Without checking for p in the pre-condition, these operators will
   ;     not work correctly
   ; FM (26/12/2012): Which ones? Just reactivate?  <------ TODO: Check this Pankaj
 
   (:operator (!reactivate ?c ?ci ?de ?cr ?cv)
-    ((commitment ?c ?ci ?de ?cr) 
+    ((commitment ?c ?ci ?de ?cr)
      (pending ?c ?ci ?cv)
     )
 
@@ -157,17 +156,17 @@
 
   ; Satisfy should be an operator if we want the state never to leave satisfied
   ; (:operator (!satisfy ?c ?ci ?de ?cr ?cv)
-  ;     ((commitment ?c ?ci ?de ?cr) 
+  ;     ((commitment ?c ?ci ?de ?cr)
   ;      (active ?c ?ci ?cv)
   ;      (q ?c ?ci ?cv)
   ;     )
-  ; 
+  ;
   ;     ( )
   ;     ((satisfied ?c ?ci ?cv))
-  ;     1 
+  ;     1
   ;   )
   (:operator (!expire ?c ?ci ?de ?cr ?cv)
-    ((commitment ?c ?ci ?de ?cr) 
+    ((commitment ?c ?ci ?de ?cr)
      (conditional ?c ?ci ?cv)
      (activetimeout ?c ?ci ?cv)
     )
@@ -176,9 +175,9 @@
     ((expired ?c ?ci ?cv))
     5
   )
-  
+
   (:operator (!timeoutviolate ?c ?ci ?de ?cr ?cv)
-    ((commitment ?c ?ci ?de ?cr) 
+    ((commitment ?c ?ci ?de ?cr)
      (detached ?c ?ci ?cv)
      (detachedtimeout ?c ?ci ?cv)
     )
@@ -189,7 +188,7 @@
   )
 
   (:operator (!cancel ?c ?ci ?de ?cr ?cv)
-    ((commitment ?c ?ci ?de ?cr) 
+    ((commitment ?c ?ci ?de ?cr)
      (active ?c ?ci ?cv)
     )
 
@@ -200,13 +199,13 @@
 
 
   (:operator (!release ?c ?ci ?de ?cr ?cv)
-    ((commitment ?c ?ci ?de ?cr) 
+    ((commitment ?c ?ci ?de ?cr)
      (active ?c ?ci ?cv)
     )
 
     ( )
     ((released ?c ?ci ?cv))
-    1 
+    1
   )
 
 
@@ -217,16 +216,16 @@
 
   (:- (nullG ?g ?gi ?gv) (not (varG ?g ?gi ?gv) ) )
 
-  (:- (inactiveG ?g ?gi ?gv) 
-    	        (and (not (nullG ?g ?gi ?gv)) (not (f ?g ?gi ?gv)) 
-					 (not (s ?g ?gi ?gv)) (not (terminalG ?g ?gi ?gv)) 
+  (:- (inactiveG ?g ?gi ?gv)
+    	        (and (not (nullG ?g ?gi ?gv)) (not (f ?g ?gi ?gv))
+					 (not (s ?g ?gi ?gv)) (not (terminalG ?g ?gi ?gv))
 				     (not (suspendedG ?g ?gi ?gv)) (not (activeG ?g ?gi ?gv))) )
   ; Fix this
-  (:- (activeG ?g ?gi ?gv) 
-     	        (and (activatedG ?g ?gi ?gv) (not (f ?g ?gi ?gv)) (not (satisfiedG ?g ?gi ?gv)) 
+  (:- (activeG ?g ?gi ?gv)
+     	        (and (activatedG ?g ?gi ?gv) (not (f ?g ?gi ?gv)) (not (satisfiedG ?g ?gi ?gv))
 					 (not (terminalG ?g ?gi ?gv)) (not (suspendedG ?g ?gi ?gv))) )
 
-  (:- (satisfiedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (not (terminalG ?g ?gi ?gv)) 
+  (:- (satisfiedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (not (terminalG ?g ?gi ?gv))
 	                               (pg ?g ?gi ?gv) (s ?g ?gi ?gv) (not (f ?g ?gi ?gv))) )
 
 ;  (:- (suspended ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (not (terminal ?g ?gi ?gv)) (suspended ?g ?gi ?gv) ) )
@@ -239,7 +238,7 @@
   (:- (terminalG ?g ?gi ?gv) (and (goal ?g ?gi ?a) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv) )) )
 
   ;Domain-specific axioms
-  
+
 ;G1 = G(physician, diagnosisRequested, - diagnosisRequested)
 ;G2 = G(patient, diagnosisProvided, - diagnosisProvided)
 ;G3 = G(radiologist, biopsyRequested, - biopsyRequested)
@@ -272,14 +271,14 @@
 ;=============================================
 
   (:operator (!!testSuccessG ?g ?gi ?gv ?state)
-	((goal ?g ?gi ?a))
+	(goal ?g ?gi ?a)
 	()
 	()
 	0
   )
-  
 
-  ; Regular transitions 
+
+  ; Regular transitions
   (:operator (!consider ?g ?gi ?a ?gv)
     ((goal ?g ?gi ?a)
      (nullG ?g ?gi ?gv)
@@ -288,12 +287,12 @@
 
     ()
     ((varG ?g ?gi ?gv))
-    1 
+    1
   )
 
  (:operator (!activate ?g ?gi ?a ?gv)
 	((goal ?g ?gi ?a) (inactiveG ?g ?gi ?gv))
-	
+
 	()
 	((activatedG ?g ?gi ?gv))
 	1
@@ -307,7 +306,7 @@
 
     ((activatedG ?g ?gi ?gv))
     ((suspendedG ?g ?gi ?gv))
-    1 
+    1
   )
 
   (:operator (!reconsider ?g ?gi ?a ?gv)
@@ -320,7 +319,7 @@
 
     ((suspendedG ?g ?gi ?gv))
     ( )
-    1 
+    1
   )
 
 
@@ -365,7 +364,7 @@
   ;      (not (nullG ?g ?gi ?gv))
   ;      (f ?g ?gi ?gv)
   ;     )
-  ; 
+  ;
   ;     ( )
   ;     ((failed ?g ?gi ?gv))
   ;     1
@@ -385,7 +384,7 @@
     activateGoal
     ((goal ?g ?gi ?a) (goalPossible ?g ?gi ?gv))
 	((!consider ?g ?gi ?a ?gv) (!activate ?g ?gi ?a ?gv) (achieveGoals))
-	
+
 	noGoalsPossible
 	()
 	()
@@ -393,13 +392,13 @@
 
   (:method (achieveGoals)
   	multipleCommitments
-	((goal ?g1 ?gi1 ?a1) (activeG ?g1 ?gi1 ?gv1) (goal ?g2 ?gi2 ?a2) (activeG ?g2 ?gi2 ?gv2) (commitment ?c1 ?ci1 ?a1 ?a2) (commitment ?c2 ?ci2 ?a2 ?a1) 
+	((goal ?g1 ?gi1 ?a1) (activeG ?g1 ?gi1 ?gv1) (goal ?g2 ?gi2 ?a2) (activeG ?g2 ?gi2 ?gv2) (commitment ?c1 ?ci1 ?a1 ?a2) (commitment ?c2 ?ci2 ?a2 ?a1)
 	  (eqGSCP ?g1 ?gv1 ?c1 ?cv1) (eqGSCP ?g2 ?gv2 ?c2 ?cv2))
 	( (entice ?g1 ?c1 ?a1 ?a2) (entice ?g2 ?c2 ?a2 ?a1) (detach ?c1 ?ci1 ?cv1) (detach ?c2 ?ci2 ?cv2))
   )
 
-  (:method (achieveGoal ?g ?gi ?a ?gv) 
-	genericEnticeToAchieve ;FM (2013/01/04): I'm deliberately forcing the variables of the 
+  (:method (achieveGoal ?g ?gi ?a ?gv)
+	genericEnticeToAchieve ;FM (2013/01/04): I'm deliberately forcing the variables of the
 						   ; commitment to be equal to those in the goal
 	((activeG ?g ?gi ?gv) (goal ?g ?gi ?a) (commitment ?c ?ci ?a ?d) (assign ?cv ?gv) (eqGSCP ?g ?gv ?c ?cv) (goal ?g2 ?gi2 ?a) (assign ?gv2 ?cv) (eqGSCQ ?g2 ?gv2 ?c ?cv) (call != ?g ?g2))
 	((entice ?g ?gi ?gv ?c ?ci ?cv ?a ?d) (detach ?c ?ci ?cv) (deliver ?g2 ?gi2 ?gv2 ?c ?ci ?cv ?a ?d) (achieveGoal ?g2 ?gi2 ?gv2 ?a))
@@ -414,24 +413,24 @@
   ; PT: These methods need to relate  commitment's antecedent
   ; and consequent with goals success condition.
   ; If G = G(x, s, f), then C should be C(x, y, s, u) where u
-  ; can be any condition, but "s" need to be the same. 
+  ; can be any condition, but "s" need to be the same.
   ; I am not sure how to write it in this language.
 
   ;TODO (2013/01/04) Make sure that my current equality of ?cv and ?gv for the eqGSCP is correct
   (:method (entice ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
-    ((goal ?g ?gi ?d) (activeG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (null ?c ?ci ?cv) 
+    ((goal ?g ?gi ?d) (activeG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (null ?c ?ci ?cv)
      (eqGSCP ?g ?gv ?c ?cv) ; In theory, this axiom will ensure that the S of G is true at the same time as the P of C
      )
     ((!create ?c ?ci ?d ?a ?cv))
   )
-	
- 
+
+
   ; Suspends an offer from ?d to ?a
   (:method (suspendOffer ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
      ((goal ?g ?gi ?d) (suspendedG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (active ?c ?ci ?cv))
      ((!suspend ?c ?ci ?d ?a ?cv))
   )
-  
+
  ; Revives a commitment when a goal becomes active
   (:method (revive ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
     ((goal ?g ?gi ?d) (activeG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (pending ?c ?ci ?cv))
@@ -444,28 +443,28 @@
     ((!cancel ?c ?ci ?d ?a ?cv))
   )
 
-  ; Revives a commitment to withdraw it?	
+  ; Revives a commitment to withdraw it?
   (:method (reviveToWithdraw ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
     ((goal ?g ?gi ?d) (or (failedG ?g ?gi ?gv) (terminatedG ?g ?gi ?gv)) (commitment ?c ?ci ?d ?a) (pending ?c ?ci ?cv))
     ((!reactivate ?c ?ci ?d ?a ?cv))
   )
-	
-  ;Axioms Added for readbility 
+
+  ;Axioms Added for readbility
   (:- (negotiable ?g ?gi ?gv ?c ?ci ?cv) (and (or (activeG ?g ?gi ?gv) (suspendedG ?g ?gi ?gv) ) (or (expired ?c ?ci ?cv) (terminated ?c ?ci ?cv)) ) )
-	
+
   (:method (negotiate ?g ?gi ?gv ?c1 ?ci1 ?cv1 ?c2 ?ci2 ?cv2 ?d ?a1 ?a2)
     ;Replaced by this expression TODO check what we are using a1 for
     ((goal ?g ?gi ?d) (commitment ?c1 ?ci1 ?d ?a2) (commitment ?c2 ?ci2 ?d ?a2) (null ?c2 ?ci2 ?cv2) (negotiable ?g ?gi ?gv ?c1 ?ci1 ?cv2))
     ((!create ?c2 ?ci2 ?d ?a2 ?ci2)) ;check that we really want ?ci2 as the last parameter instead of cv2
   )
-	
+
   (:method (abandonEndGoal ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
   ; Combinations of (A v U) and (E v T): AE AT UE UT
 
     ((goal ?g ?gi ?d) (or (activeG ?g ?gi ?gv) (suspendedG ?g ?gi ?gv)) (commitment ?c ?ci ?d ?a) (or (expired ?c ?ci ?cv) (terminated ?c ?ci ?cv)))
     ((!drop ?g ?gi ?d ?gv))
   )
-	
+
   ;Deliver and Deliver' are encoded in a single method
   (:method (deliver ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
     ; Deliver (debtor delivers)
@@ -481,35 +480,36 @@
   	; Detach (creditor detaches)
 	((goal ?g ?gi ?a) (nullG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (conditional ?c ?ci ?cv))
 	((!consider ?g ?gi ?a ?gv) (!activate ?g ?gi ?a ?gv))
-	
+
 	; Detach' (creditor detaches)
 	((goal ?g ?gi ?a) (inactiveG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (conditional ?c ?ci ?cv))
 	((!activate ?g ?gi ?a ?gv))
   )
 
+
   (:method (backBurner ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
     ((goal ?g ?gi ?d) (activeG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (pending ?c ?ci ?cv))
     ((!suspendG ?g ?gi ?d ?gv))
   )
-	
+
 
   (:method (frontBurner ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
     ((goal ?g ?gi ?d) (suspendedG ?g ?gi ?gv) (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv))
     ((!reactivateG ?g ?gi ?d ?gv))
   )
-	
+
   (:method (abandonMeansGoal ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
-    ((goal ?g ?gi ?d) (or (activeG ?g ?gi ?gv) (suspendedG ?g ?gi ?gv)) (commitment ?c ?ci ?d ?a) 
+    ((goal ?g ?gi ?d) (or (activeG ?g ?gi ?gv) (suspendedG ?g ?gi ?gv)) (commitment ?c ?ci ?d ?a)
 		              (or (expired ?c ?ci ?cv) (terminated ?c ?ci ?cv)) )
     ((!drop ?g ?gi ?d ?gv))
   )
-	
+
   (:method (persist ?g ?gi ?gv ?c ?ci ?cv ?g2 ?gi2 ?gv2 ?d ?a)
-    ((goal ?g ?gi ?d) (or (terminatedG ?g ?gi ?gv) (failedG ?g ?gi ?gv)) 
+    ((goal ?g ?gi ?d) (or (terminatedG ?g ?gi ?gv) (failedG ?g ?gi ?gv))
      (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv) (goal ?g2 ?gi2 ?d) (nullG ?g2 ?gi2 ?gv2))
     ((!consider ?g2 ?gi2 ?d ?gv2) (!activate ?g2 ?gi2 ?d ?gv2))
   )
-	
+
   (:method (giveUp ?g ?gi ?gv ?c ?ci ?cv ?d ?a)
     ((goal ?g ?gi ?d) (or (terminatedG ?g ?gi ?gv) (failed ?g ?gi ?gv)) (commitment ?c ?ci ?d ?a) (detached ?c ?ci ?cv))
     ((!cancel ?c ?ci ?d ?a ?cv))
@@ -551,16 +551,16 @@
 
     ((commitment ?c ?ci ?d ?a) (call = ?s cancelled) (cancelled ?c ?ci ?cv))
     ((!!testSuccess ?c ?ci ?cv ?s))
-	
+
     ((commitment ?c ?ci ?d ?a) (call = ?s terminal) (terminal ?c ?ci ?cv))
     ((!!testSuccess ?c ?ci ?cv ?s))
-	
+
     ((commitment ?c ?ci ?d ?a) (call = ?s p) (p ?c ?ci ?cv))
     ((!!testSuccess ?c ?ci ?cv ?s))
-	
+
     ((commitment ?c ?ci ?d ?a) (call = ?s q) (q ?c ?ci ?cv))
     ((!!testSuccess ?c ?ci ?cv ?s))
-	
+
 	failed
 	((commitment ?c ?ci ?d ?a) )
 	((!!testFailure ?c ?s))
@@ -569,62 +569,62 @@
 	(:method (testGoal ?g ?gi ?gv ?s)
 	    ((goal ?g ?gi ?a) (call = ?s null) (nullG ?g ?gi ?gv))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-	
+
 	   	((goal ?g ?gi ?a) (call = ?s inactive) (inactiveG ?g ?gi ?gv))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-	
+
 	    ((goal ?g ?gi ?a) (call = ?s ninactive) (not (inactiveG ?g ?gi ?gv)))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-	
+
 	   	((goal ?g ?gi ?a) (call = ?s active) (activeG ?g ?gi ?gv))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-	
+
 	   	((goal ?g ?gi ?a) (call = ?s nactive) (not (activeG ?g ?gi ?gv)))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-	
+
 	    ((goal ?g ?gi ?a) (call = ?s suspended) (suspendedG ?g ?gi ?gv))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-	
+
 	    ((goal ?g ?gi ?a) (call = ?s nsuspended) (not (suspendedG ?g ?gi ?gv)))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-	
+
 	   	((goal ?g ?gi ?a) (call = ?s terminated) (terminatedG ?g ?gi ?gv))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-	
+
 	   	((goal ?g ?gi ?a) (call = ?s failed) (failed ?g ?gi ?gv))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-	   
+
 	   	((goal ?g ?gi ?a) (call = ?s satisfied) (satisfiedG ?g ?gi ?gv))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-	
+
 	   	((goal ?g ?gi ?a) (call = ?s nsatisfied) (not (satisfiedG ?g ?gi ?gv)))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-		
+
 	   	((goal ?g ?gi ?a) (call = ?s terminal) (terminalG ?g ?gi ?gv))
 	    ((!!testSuccessG ?g ?gi ?gv ?s))
-		
+
 		failed
 		((goal ?g ?gi ?a))
 		((!!testFailure ?g ?s))
 	)
-	
+
 	(:method (testGoalCommitmentRule ?rule ?g ?gi ?a ?c ?ci ?de ?cr)
 		((goal ?g ?gi ?a) (commitment ?c ?ci ?de ?cr) (call = ?rule eqGSCP) (eqGSCP ?g ?gv ?c ?cv))
 		((!!testRuleSuccess ?rule (?g ?gi ?gv ?c ?ci ?cv) ))
 	)
- 	
+
 	; Domain dependent methods
 	(:method (hospitalScenario)
 		; TODO expand to forall patients
 		((patient ?patient))
-		((seekHelp ?patient) 
+		((seekHelp ?patient)
 		 (processPatient ?patient))
 	)
-	
+
 	(:method (testCommitments)
 		(
-		 (commitment C1 ?c1 ?d1 ?a1) 
-		 (commitment C2 ?c2 ?d2 ?a2) 
+		 (commitment C1 ?c1 ?d1 ?a1)
+		 (commitment C2 ?c2 ?d2 ?a2)
 	     (commitment C3 ?c3 ?d3 ?a3)
 		 (commitment C4 ?c4 ?d4 ?a4)
 		 (commitment C5 ?c5 ?d5 ?a5)
@@ -643,54 +643,54 @@
 		 (testCommitment C8 ?c8 ?cv8 satisfied)
 		)
 	)
-	
+
 	(:method (seekHelp ?patient)
 		((patient ?patient) (physician ?physician) (radiologist ?radiologist)
 			(commitment C1 ?Ci1 ?physician ?patient)
-			
+
 		 ) ; Precondition
 		((!create C1 ?Ci1 ?physician ?patient (?patient))
 		 (!requestAssessment ?patient ?physician)
 		 ) ; Task Network
 	)
-	
+
 	(:method (processPatient ?patient)
 		process-patient-healthy
-		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient) 
+		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient)
 			(radiologist ?radiologist)
 			;(conditional C1 ?Ci ?Cv)
 		 ) ; Precondition
 		((performImagingTests ?patient)
-		 (performPathologyTests ?patient) 
+		 (performPathologyTests ?patient)
 		 (deliverDiagnostics ?patient)) ; Task Network
 	)
-	
+
 	(:method (performImagingTests ?patient)
 		imaging
-		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient) 
+		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient)
 			(radiologist ?radiologist)
 			(pathologist ?pathologist)
 			;(conditional C1 ?Ci ?Cv)
 			(commitment C2 ?Ci2 ?patient ?physician)
 			(commitment C5 ?Ci5 ?radiologist ?physician)
 		 ) ; Precondition
-		((!create C2 ?Ci2 ?patient ?physician (?patient ?radiologist)) 
-		 (!create C5 ?Ci5 ?radiologist ?physician (?patient ?pathologist)) 
+		((!create C2 ?Ci2 ?patient ?physician (?radiologist))
+		 (!create C5 ?Ci5 ?radiologist ?physician (?pathologist))
 		 (!requestImaging ?physician ?patient ?radiologist)
 		 (attendTest ?patient)
 		) ; Just request imaging
 	)
-	
+
 	(:method (performPathologyTests ?patient)
 		biopsy-unnecessary
 		((patient ?patient) (physician ?physician) (commitment C1 ?Ci ?physician ?patient)
 			(radiologist ?radiologist))
 		() ; Does nothing
 	)
-	
+
 	(:method (performPathologyTests ?patient)
 		imaging-plus-biopsy
-		((patient ?patient) (physician ?physician) 
+		((patient ?patient) (physician ?physician)
 			(radiologist ?radiologist)
 			(pathologist ?pathologist)
 			;(conditional C1 ?Ci ?Cv)
@@ -698,49 +698,49 @@
 			(commitment C4 ?Ci4 ?radiologist ?physician)
 		 ) ; Precondition
 		((!create C3 ?Ci3 ?patient ?physician (?radiologist))
-		 (!create C4 ?Ci4 ?radiologist ?physician (?pathologist)) 
+		 (!create C4 ?Ci4 ?radiologist ?physician (?pathologist))
  		 (!requestBiopsy ?physician ?patient ?radiologist)
 		 (attendTest ?patient)
 		) ; Request
 	)
-	
+
 	(:method (attendTest ?patient)
 		attend-imaging
 		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentRequested ?patient ?radiologist) (not (iAppointmentKept ?patient ?radiologist)) )
 		((!performImaging ?radiologist ?patient ?physician))
-		
+
 		attend-biopsy
 		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (bAppointmentRequested ?patient ?radiologist) (not (bAppointmentKept ?patient ?radiologist)))
 		((!performBiopsy ?radiologist ?patient ?physician))
 	)
-	
+
 	(:method (attendTest ?patient)
 		no-show-imaging
 		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentRequested ?patient ?radiologist) (not (iAppointmentKept ?patient ?radiologist)) )
 		() ; No show
-		
+
 		no-show-biopsy
 		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (bAppointmentRequested ?patient ?radiologist) (not (bAppointmentKept ?patient ?radiologist)))
 		()
 	)
-	
+
 	(:method (deliverDiagnostics ?patient)
 		only-imaging
 		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (iAppointmentKept ?patient ?radiologist) (not (biopsyRequested ?physician ?patient)) )
-		((!requestRadiologyReport ?physician ?radiologist ?patient) 
-		 (!sendRadiologyReport ?radiologist ?physician ?patient) 
+		((!requestRadiologyReport ?physician ?radiologist ?patient)
+		 (!sendRadiologyReport ?radiologist ?physician ?patient)
 		 (!generateTreatmentPlan ?physician ?patient) )
-		
+
 		imaging-biopsy-integrated
 		((patient ?patient) (physician ?physician) (radiologist ?radiologist) (pathologist ?pathologist) (iAppointmentKept ?patient ?radiologist) (bAppointmentKept ?patient ?radiologist) )
 		((!requestRadiologyReport ?physician ?radiologist ?patient)
 		 (!requestPathologyReport ?physician ?radiologist ?pathologist ?patient)
-		 (!sendRadiologyReport ?radiologist ?physician ?patient) 
-		 (!sendPathologyReport ?radiologist ?physician ?pathologist ?patient) 
+		 (!sendRadiologyReport ?radiologist ?physician ?patient)
+		 (!sendPathologyReport ?radiologist ?physician ?pathologist ?patient)
 		 (!sendIntegratedReport ?radiologist ?pathologist ?patient ?physician)
 	     (!generateTreatmentPlan ?physician ?patient) )
 	)
-	
+
  	; Domain dependent operators
 	(:operator (!requestAssessment ?patient ?physician)
 		() ; Pre
@@ -748,15 +748,15 @@
 		((diagnosisRequested ?patient ?physician)) ; Add
 		1 ; Cost
 	)
-	
-	
+
+
  	(:operator (!requestImaging ?physician ?patient ?radiologist)
 		(and (physician ?physician) (patient ?patient) (radiologist ?radiologist)) ;Pre
 		() ;Del
 		((iAppointmentRequested ?patient ?radiologist) (imagingRequested ?physician ?patient)) ;Add
 		1	; Cost
 	)
-	
+
 	(:operator (!requestBiopsy ?physician ?patient ?radiologist)
 		(and (physician ?physician) (patient ?patient) (radiologist ?radiologist)) ;Pre
 		() ;Del
@@ -765,7 +765,7 @@
 	)
 
 
-	;; PT: performImaging and sendImagingResults can be combined. 
+	;; PT: performImaging and sendImagingResults can be combined.
 
 	(:operator (!performImaging ?radiologist ?patient ?physician)
 		(and (patient ?patient) (radiologist ?radiologist) (physician ?physician) (iAppointmentRequested ?patient ?radiologist)) ; Pre
@@ -785,18 +785,18 @@
 	;; Instead of performDiagnosis, we need:
 	;; (A) requestPathologyReport operator; radiologist requests a pathologist for pathology report
 	;; (B) requestRadiologyReport operator; pathologist requests a radiologist for radiology report
-		
+
 	(:operator (!requestPathologyReport ?physician ?radiologist ?pathologist ?patient)
 		(and (physician ?physician) (pathologist ?pathologist) (radiologist ?radiologist) (patient ?patient) (biopsyReport ?patient ?physician) ) ; Pre
 		() ; Del
 		((pathologyRequested ?physician ?pathologist ?patient)) ; Add
 		1 ; Cost
 	)
-	
+
 	(:operator (!requestRadiologyReport ?physician ?radiologist ?patient)
 		(and (physician ?physician) (radiologist ?radiologist) (patient ?patient) (imagingScan ?patient ?physician)) ; Pre
 		() ; Del
-		((radiologyRequested ?physician ?radiologist ?patient)) ; Add 
+		((radiologyRequested ?physician ?radiologist ?patient)) ; Add
 		1 ; Cost
 	)
 
@@ -808,16 +808,16 @@
   )
 
   (:operator (!sendRadiologyReport ?radiologist ?physician ?patient)
-    (and (physician ?physician) (radiologist ?radiologist) (patient ?patient) 
+    (and (physician ?physician) (radiologist ?radiologist) (patient ?patient)
 		 (imagingScan ?patient ?physician) ;(biopsyReport ?patient ?physician)
 		 (radiologyRequested ?physician ?radiologist ?patient)
 	)
     () ;Del
     ( (imagingResultsReported ?radiologist ?physician ?patient) ) ;Add
   )
-	
+
 	(:operator (!sendIntegratedReport ?radiologist ?pathologist ?patient ?physician)
-		(and (radPathResultsReported ?radiologist ?physician ?patient) 
+		(and (radPathResultsReported ?radiologist ?physician ?patient)
 			(imagingResultsReported ?radiologist ?physician ?patient)
 			(radiologist ?radiologist) (physician ?physician)
 			(patient ?patient) (pathologist ?pathologist)) ; Pre
@@ -834,21 +834,21 @@
 		((treatmentPlan ?physician ?patient) (diagnosisProvided ?physician ?patient)) ; Add
 		1 ; Cost
 	)
-	
+
 	(:operator (!reportPatient ?patient ?pathologist ?registrar)
 		(and (patient ?patient) (pathologist ?pathologist) (registrar ?registrar) (patientHasCancer ?patient)) ; Pre
 		() ; Del
 		( (patientReportedToRegistrar ?patient ?registrar) ) ; Add
 		1 ; Cost
 	)
-	
+
 	(:operator (!addPatientToRegistry ?patient ?registrar)
 		(and (patient ?patient) (registrar ?registrar) (patientReportedToRegistrar ?patient ?registrar)) ; Pre
 		() ; Del
 		( (inRegistry ?patient) ) ; Add
 		1 ; Cost
 	)
-	
+
 	;; TODO Add operators to re-assign radiologist (perhaps through appointment)
 	(:operator (!escalateFailure ?patient ?physician ?radiologist ?hospital)
 		(and (radiologist ?radiologist) (physician ?physician) (patient ?patient) (hospital ?hospital) (not (imagingScan ?patient ?radiologist)) ) ; Pre
@@ -856,20 +856,20 @@
 		( (radiologistReported ?patient ?physician ?radiologist ?hospital)) ; Add
 		1 ; Cost
 	)
-	
+
 	;; TODO Ask Pankaj about how this works
 
-	;; Patient, Physician, Radiologist, or Pathologist can request Tumor Board (TB) for assessment of a 
-	;; report sent to them by a counter party.  
-	;; (A) Patient can request TB to assess Physician's report; TB either agrees or disagrees 
-	;; with Physician's report.  
+	;; Patient, Physician, Radiologist, or Pathologist can request Tumor Board (TB) for assessment of a
+	;; report sent to them by a counter party.
+	;; (A) Patient can request TB to assess Physician's report; TB either agrees or disagrees
+	;; with Physician's report.
 	;; FIXME FRM - Pankaj, so far, I had not seen a "physician's" report, I'm assuming this is the treatment plan
 	;; (B) Physician can request TB to assess the "integratedReport" sent by Radiologist; TB either agrees
 	;; or disagrees with Radiologist's report.
 	;; FIXME FRM - Pankaj, I'm not sure I understand that the integrated report is created by the radiologist
 	;; (C) Pathologist can request TB to assess Radiologist's report; TB either agrees or disagress
 	;;  with Radiologist's report.
-	;; 
+	;;
 	;; (D) Radiologist can request TB to assess Pathologist's report; TB either agrees or disagress
 	;; with Pathologist's report.
 
@@ -884,11 +884,11 @@
 ; 		() ; Add
 ; 		1 ; Cost
 ; 	)
-	
-	; Patient requests assessment of physician report 
+
+	; Patient requests assessment of physician report
 	(:operator (!requestPhysicianReportAssessment ?patient ?physician ?hospital)
-		(and (hospital ?hospital) 
-			(patient ?patient) (physician ?physician) 
+		(and (hospital ?hospital)
+			(patient ?patient) (physician ?physician)
 			(integratedReport ?patient ?physician)
 			) ; Pre
 		() ; Del
@@ -896,10 +896,10 @@
 			; () ; Add # Option 2, TB agrees with physician (nothing happens)
 		1 ; Cost
 	)
-	
+
 	(:operator (!requestRadiologyReportAssessment ?pathologist ?radiologist ?patient ?hospital)
-		(and (hospital ?hospital) 
-			(patient ?patient) (pathologist ?pathologist) (radiologist ?radiologist) 
+		(and (hospital ?hospital)
+			(patient ?patient) (pathologist ?pathologist) (radiologist ?radiologist)
 			(radiologyReport ?patient ?radiologist)
 			) ; Pre
 		() ; Del
@@ -907,16 +907,16 @@
 			; () ; Add # Option 2, TB agrees with radiologist (nothing happens)
 		1 ; Cost
 	)
-	
+
 	(:operator (!requestPathologyReportAssessment ?radiologist ?pathologist ?patient ?hospital)
-		(and (hospital ?hospital) 
-			(patient ?patient) (pathologist ?pathologist) (radiologist ?radiologist) 
+		(and (hospital ?hospital)
+			(patient ?patient) (pathologist ?pathologist) (radiologist ?radiologist)
 			(pathologyReport ?patient ?pathologist)
 			) ; Pre
 		() ; Del
 		((reportNeedsReview ?patient ?pathologist)) ; Add # Option 1, TB disagrees
 			; () ; Add # Option 2, TB agrees with pathologist (nothing happens)
 		1 ; Cost
-	) 
+	)
  )
 )
