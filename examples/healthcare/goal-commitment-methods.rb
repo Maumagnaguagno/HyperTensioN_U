@@ -150,7 +150,10 @@ end
 
 def detach_case1(g, gi, gv, c, ci, cv, d, a)
   if state('goal', g, gi, a) and nullG(g, gi, gv) and state('commitment', c, ci, d, a)
-    yield [['consider', g, gi, a, gv], ['activate', g, gi, a, gv]]
+    yield [
+      ['consider', g, gi, a, gv],
+      ['activate', g, gi, a, gv]
+    ]
   end
 end
 
