@@ -33,10 +33,10 @@ def p(c, parameter1, t)
         @state['pathologyRequested'].any? {|terms| terms.size == 3 and terms[1] == d and state('tissueProvided', terms[2])}
       when C7 # (:- (p ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientHasCancer ?patient))))
         @state['patientHasCancer'].any? {|terms| terms.size == 1}
-      when C8 # (:- (p ?c C8 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?d))))
-        @state['patientReportedToRegistrar'].any? {|terms| terms[1] == d}
-      when C9 # (:- (p ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (violated ?c C5 ?t) (escalate))))
-        violated(c, C5, t) and state('escalate')
+      #when C8 # (:- (p ?c C8 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?d))))
+      #  @state['patientReportedToRegistrar'].any? {|terms| terms[1] == d}
+      #when C9 # (:- (p ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (violated ?c C5 ?t) (escalate))))
+      #  violated(c, C5, t) and state('escalate')
       #when C10 # (:- (p ?c C10 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (radRequestsAssessment))))
       #  state('radRequestsAssessment')
       #when C11 # (:- (p ?c C11 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (phyRequestsAssessment))))
@@ -68,10 +68,10 @@ def q(c, parameter1, t)
         @state['pathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == a}
       when C7 # (:- (q ?c C7 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?patient ?registrar))))
         @state['patientReportedToRegistrar'].any? {|terms| terms.size == 2}
-      when C8 # (:- (q ?c C8 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (inRegistry ?patient))))
-        @state['inRegistry'].any? {|terms| terms.size == 1}
-      when C9 # (:- (q ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci)))))
-        not null(c, C5, ci) and not null(c, 'D5', ci)
+      #when C8 # (:- (q ?c C8 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (inRegistry ?patient))))
+      #  @state['inRegistry'].any? {|terms| terms.size == 1}
+      #when C9 # (:- (q ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci)))))
+      #  not null(c, C5, ci) and not null(c, 'D5', ci)
       #when C10 # (:- (q ?c C10 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesPath) (TBDisagreesPath))))
       #  state('TBAgreesPath') or state('TBDisagreesPath')
       #when C11 # (:- (q ?c C11 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesRad) (TBDisagreesRad))))
