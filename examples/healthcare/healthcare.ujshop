@@ -14,6 +14,35 @@
 ; True of the the antecedent of commitment ?c1 matches the consequent of commitment ?c2 (so they are reciprocal)
 (:- (eqCPCQ ?c1 ?cv1 ?c2 ?cv2) (and (imply (p ?c1 ?ci1 ?cv1) (q ?c2 ?ci2 ?cv2)) (imply (q ?c2 ?ci2 ?cv2) (p ?c1 ?ci1 ?cv1)) ) ) ; Basically a logical equivalence <->
 
+
+
+;Domain-specific axioms
+
+; G1 = G(PHYSICIAN, diagnosisRequested, - diagnosisRequested)
+(:- (pg ?g G1 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G1 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (diagnosisRequested ?patient ?physician) ) )
+(:- (f  ?g G1 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+
+; G2 = G(PATIENT, diagnosisRequested, - diagnosisRequested)
+(:- (pg ?g G2 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G2 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (diagnosisRequested ?patient ?physician) ) )
+(:- (f  ?g G2 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+
+; G3 = G(RADIOLOGIST, imagingRequested ^ iAppointmentRequested, - imagingRequested v - iAppointmentRequested)
+(:- (pg ?g G3 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G3 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (imagingRequested ?physician ?patient) (iAppointmentRequested ?patient ?radiologist) ) )
+(:- (f  ?g G3 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+
+; G4 = G(PHYSICIAN, imgagingRequested ^ iAppointmentRequested, - imagingRequested v - iAppointmentRequested)
+(:- (pg ?g G4 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G4 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (imagingRequested ?physician ?patient) ) )
+(:- (f  ?g G4 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+
+
 ;=============================================
 ; Axioms for commitments
 ; predicates on commitments
@@ -235,34 +264,6 @@
 
   ; A rule to ensure that once a goal enters a terminal state (e.g. dropped or aborted), it cannot return
   (:- (terminalG ?g ?gi ?gv) (and (goal ?g ?gi ?a) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv) )) )
-
-  ;Domain-specific axioms
-
-;G1 = G(physician, diagnosisRequested, - diagnosisRequested)
-;G2 = G(patient, diagnosisProvided, - diagnosisProvided)
-;G3 = G(radiologist, biopsyRequested, - biopsyRequested)
-;G4 = G(radiologist, imagingRequested, - imagingRequested)
-;G5 = G(pathologist, pathologyRequested, - pathologyRequested)
-
-(:- (pg ?g G1 (?t)) (and (goal ?g ?gi ?a) ) )
-(:- (s  ?g G1 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (diagnosisRequested ?patient ?physician) ) )
-(:- (f  ?g G1 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (dontknow ?patient) ))
-
-(:- (pg ?g G2 (?t)) (and (goal ?g ?gi ?a) ) )
-(:- (s  ?g G2 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (diagnosisProvided ?physician ?patient) ) )
-(:- (f  ?g G2 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (dontknow ?patient) ))
-
-(:- (pg ?g G3 (?t)) (and (goal ?g ?gi ?a) ) )
-(:- (s  ?g G3 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (biopsyRequested ?physician ?patient) ) )
-(:- (f  ?g G3 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (dontknow ?patient) ))
-
-(:- (pg ?g G4 (?t)) (and (goal ?g ?gi ?a) ) )
-(:- (s  ?g G4 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (imagingRequested ?physician ?patient) ) )
-(:- (f  ?g G4 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (dontknow ?patient) ))
-
-(:- (pg ?g G5 (?t)) (and (goal ?g ?gi ?a) ) )
-(:- (s  ?g G5 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (pathologyRequested ?physician ?pathologist ?patient) ) )
-(:- (f  ?g G5 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (dontknow ?patient) ))
 
 
 ;=============================================
