@@ -9,25 +9,25 @@
 - ``(hospital ?hospital)``
 - ``(patientHasCancer ?patient)``
 - ``commitment``
-- ``(var ?g ?gi (?t)))``
+- ``(var ?g ?gi (?t))``
 - ``(varG ?g ?gi ?gv)``
 - ``(diagnosisRequested ?patient ?physician)``
 - ``(iAppointmentRequested ?patient ?radiologist)``
-- ``iAppointmentKept``
+- ``(iAppointmentKept ?patient ?radiologist)``
 - ``imagingScan``
 - ``(imagingRequested ?physician ?patient)``
-- ``imagingResultsReported``
-- ``bAppointmentRequested``
-- ``bAppointmentKept``
+- ``(imagingResultsReported ?radiologist ?physician ?patient)``
+- ``(bAppointmentRequested ?patient ?pathologist)``
+- ``(bAppointmentKept ?patient ?pathologist)``
 - ``biopsyReport``
 - ``(biopsyRequested ?physician ?patient)``
 - ``radiologyRequested``
 - ``treatmentPlan``
 - ``(diagnosisProvided ?physician ?patient)``
-- ``tissueProvided``
+- ``(tissueProvided ?patient)``
 - ``radPathResultsReported``
-- ``pathResultsReported``
-- ``patientReportedToRegistrar``
+- ``(pathResultsReported ?pathologist ?physician ?patient)``
+- ``(patientReportedToRegistrar ?patient ?registrar)``
 - ``(inRegistry ?patient)``
 - ``TBAgreesPath``
 - ``TBDisagreesPath``
@@ -40,7 +40,7 @@
 - ``radRequestsAssessment``
 - ``phyRequestsAssessment``
 - ``patRequestsAssessment``
-- ``integratedReport``
+- ``(integratedReport ?patient ?physician)``
 - ``reportNeedsReview``
 - ``cancelled``
 - ``released``
