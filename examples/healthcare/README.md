@@ -8,21 +8,21 @@
 - ``(registrar ?registrar)``
 - ``(hospital ?hospital)``
 - ``(patientHasCancer ?patient)``
-- ``commitment``
+- ``(commitment ?c ?ci ?de ?cr)``
 - ``(var ?g ?gi (?t))``
 - ``(varG ?g ?gi ?gv)``
 - ``(diagnosisRequested ?patient ?physician)``
 - ``(iAppointmentRequested ?patient ?radiologist)``
 - ``(iAppointmentKept ?patient ?radiologist)``
-- ``imagingScan``
+- ``(imagingScan ?patient ?physician)``
 - ``(imagingRequested ?physician ?patient)``
 - ``(imagingResultsReported ?radiologist ?physician ?patient)``
 - ``(bAppointmentRequested ?patient ?pathologist)``
 - ``(bAppointmentKept ?patient ?pathologist)``
-- ``biopsyReport``
+- ``(biopsyReport ?patient ?physician)``
 - ``(biopsyRequested ?physician ?patient)``
-- ``radiologyRequested``
-- ``treatmentPlan``
+- ``(radiologyRequested ?physician ?radiologist ?patient)``
+- ``(treatmentPlan ?physician ?patient)``
 - ``(diagnosisProvided ?physician ?patient)``
 - ``(tissueProvided ?patient)``
 - ``radPathResultsReported``
