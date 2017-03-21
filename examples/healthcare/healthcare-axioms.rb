@@ -88,13 +88,13 @@ end
 # G3 = G(RADIOLOGIST, imagingRequested ^ iAppointmentRequested, - imagingRequested v - iAppointmentRequested)
 # G4 = G(PHYSICIAN, imgagingRequested ^ iAppointmentRequested, - imagingRequested v - iAppointmentRequested)
 
-# (:- (pg ?g G1 (?t)) (and (goal ?g ?gi ?a) ) )
-# (:- (pg ?g G2 (?t)) (and (goal ?g ?gi ?a) ) )
-# (:- (pg ?g G3 (?t)) (and (goal ?g ?gi ?a) ) )
-# (:- (pg ?g G4 (?t)) (and (goal ?g ?gi ?a) ) )
+# (:- (pg ?g ?gn (?t)) (and (goal ?g ?gi ?a) ) )
 
 def pg(g, gn, t)
-  if gn == G1 or gn == G2 or gn == G3 or gn == G4
+  if gn == G1 or gn == G2 or gn == G3 or gn == G4 or
+     gn == G6 or gn == G7 or gn == G8 or gn == G9 or
+     gn == G11 or gn == G12 or gn == G13 or gn == G15 or
+     gn == G16 or gn == G17 or gn == G18 or gn == G19
     @state['goal'].any? {|terms| terms.size == 3 and terms[0] == g}
   end
 end
@@ -103,14 +103,35 @@ end
 # (:- (s ?g G2 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (diagnosisRequested ?patient ?physician) ) )
 # (:- (s ?g G3 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (imagingRequested ?physician ?patient) (iAppointmentRequested ?patient ?radiologist) ) )
 # (:- (s ?g G4 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (imagingRequested ?physician ?patient) ) )
+# (:- (s ?g G6 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (iAppointmentKept ?patient ?radiologist) ) )
+# (:- (s ?g G7 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (imagingResultsReported ?radiologist ?physician ?patient) ) )
+# (:- (s ?g G8 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (biopsyRequested ?physician ?patient) (bAppointmentRequested ?patient ?pathologist) ) )
+# (:- (s ?g G9 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (biopsyRequested ?physician ?patient) (bAppointmentRequested ?patient ?pathologist) ) )
+# (:- (s ?g G11 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (bAppointmentKept ?patient ?pathologist) ) )
+# (:- (s ?g G12 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient)) )
+# (:- (s ?g G13 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient)) )
+# (:- (s ?g G15 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (pathResultsReported ?pathologist ?physician ?patient)) )
+# (:- (s ?g G16 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (integratedReport ?patient ?physician) ) )
+# (:- (s ?g G17 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (patientReportedToRegistrar ?patient ?registrar)) )
+# (:- (s ?g G18 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (patientReportedToRegistrar ?patient ?registrar)) )
+# (:- (s ?g G19 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (inRegistry ?patient)) )
 
 def s(g, gn, t)
   @state['goal'].any? {|terms|
     if terms.size == 3 and terms[0] == g and state('varG', g, terms[1], t)
       case gn
-      when G1, G2 then @state['diagnosisRequested'].any? {|terms| terms.size == 2}
+      when G1, G2 then @state['diagnosisRequested'].any? {|terms2| terms2.size == 2}
       when G3 then @state['imagingRequested'].any? {|terms2| terms2.size == 2 and @state['iAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms2[1] == terms3[0]}}
-      when G4 then @state['imagingRequested'].any? {|terms| terms.size == 2}
+      when G4 then @state['imagingRequested'].any? {|terms2| terms2.size == 2}
+      when G6 then @state['iAppointmentKept'].any? {|terms2| terms2.size == 2}
+      when G7 then @state['imagingResultsReported'].any? {|terms2| terms2.size == 3}
+      when G8, G9 then @state['biopsyRequested'].any? {|terms2| terms2.size == 2 and @state['bAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms2[1] == terms3[0]}}
+      when G11 then @state['bAppointmentKept'].any? {|terms2| terms2.size == 2}
+      when G12, G13 then @state['pathologyRequested'].any? {|terms2| terms2.size == 3 and state('tissueProvided', terms2[2])}
+      when G15 then @state['pathResultsReported'].any? {|terms2| terms2.size == 3}
+      when G16 then @state['integratedReport'].any? {|term2| terms2.size == 2}
+      when G17, G18 then @state['patientReportedToRegistrar'].any? {|terms2| terms2.size == 2}
+      when G19 then @state['inRegistry'].any? {|terms2| terms2.size == 1}
       end
     end
   }
@@ -122,7 +143,10 @@ end
 # (:- (f ?g G4 (?t)) (and (goal ?g ?gi ?a) (var ?g ?gi (?t)) (dontknow ?patient) ))
 
 def f(g, gn, t)
-  if gn == G1 or gn == G2 or gn == G3 or gn == G4
+  if gn == G1 or gn == G2 or gn == G3 or gn == G4 or
+     gn == G6 or gn == G7 or gn == G8 or gn == G9 or
+     gn == G11 or gn == G12 or gn == G13 or gn == G15 or
+     gn == G16 or gn == G17 or gn == G18 or gn == G19
     @state['goal'].any? {|terms| terms.size == 3 and terms[0] == g and state('varG', g, terms[1], t)} and @state['dontknow'].any? {|terms| terms.size == 1}
   end
 end

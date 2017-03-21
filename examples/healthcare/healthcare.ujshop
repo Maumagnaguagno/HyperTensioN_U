@@ -42,6 +42,69 @@
 (:- (f  ?g G4 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
 
 
+; G6 = G(PATIENT, iAppointmentKept, - iAppointmentKept)
+(:- (pg ?g G6 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G6 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (iAppointmentKept ?patient ?radiologist) ) )
+(:- (f  ?g G6 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+; G7 = G(RADIOLOGIST, imagingResultsReported, - imagingResultsReported)
+(:- (pg ?g G7 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G7 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (imagingResultsReported ?radiologist ?physician ?patient) ) )
+(:- (f  ?g G7 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+; G8 = G(RADIOLOGIST, biopsyRequested ^ bAppointmentRequested, - biopsyRequested V - bAppointmentRequested)
+(:- (pg ?g G8 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G8 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) ((biopsyRequested ?physician ?patient) (bAppointmentRequested ?patient ?pathologist)) ) )
+(:- (f  ?g G8 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+; G9 = G(PHYSICIAN, biopsyRequested ^ bAppointmentRequested, - biopsyRequested v - bAppointmentRequested)
+(:- (pg ?g G9 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G9 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (biopsyRequested ?physician ?patient) (bAppointmentRequested ?patient ?pathologist) ) )
+(:- (f  ?g G9 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+; G11 = G(PATIENT, bAppointmentKept, - bAppointmentKept)
+(:- (pg ?g G11 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G11 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (bAppointmentKept ?patient ?pathologist) ) )
+(:- (f  ?g G11 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+; G12 = G(PATHOLOGIST, pathologyRequested ^ tissueProvided, - pathologyRequested V - tissueProvided)
+(:- (pg ?g G12 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G12 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient)) )
+(:- (f  ?g G12 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+; G13 = G(RADIOLOGIST, pathologyRequested ^ tissueProvided, - pathologyRequested v -tissueProvided)
+(:- (pg ?g G13 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G13 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (pathologyRequested ?physician ?d ?patient) (tissueProvided ?patient)) )
+(:- (f  ?g G13 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+
+; G15 = G(PATHOLOGIST, pathResultsReported, - pathResultsReported)
+(:- (pg ?g G15 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G15 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (pathResultsReported ?pathologist ?physician ?patient)) )
+(:- (f  ?g G15 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+; G16 = G(RADIOLOGIST, radPathResultsReported, - radPathResultsReported)
+(:- (pg ?g G16 (?t)) (and (goal ?g ?gi ?a) ) )
+; (:- (s  ?g G16 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (radPathResultsReported ?radiologist ?physician ?patient) ) ) ; TODO check that this is really incorrect
+(:- (s  ?g G16 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (integratedReport ?patient ?physician) ) )
+(:- (f  ?g G16 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+; G17 = G(REGISTRAR, reportPatientWithCancer, - reportPatientWithCancer)
+(:- (pg ?g G17 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G17 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (patientReportedToRegistrar ?patient ?registrar)) )
+(:- (f  ?g G17 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+; G18 = G(PATHOLOGIST, reportPatientWithCancer, - reportPatientWithCancer)
+(:- (pg ?g G18 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G18 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (patientReportedToRegistrar ?patient ?registrar)) )
+(:- (f  ?g G18 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+; G19 = G(REGISTRAR, addPatientToRegistry, - addPatientToRegistry)
+(:- (pg ?g G19 (?t)) (and (goal ?g ?gi ?a) ) )
+(:- (s  ?g G19 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (inRegistry ?patient)) )
+(:- (f  ?g G19 (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
+
+
 
 ;=============================================
 ; Axioms for commitments
