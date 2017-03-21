@@ -37,12 +37,12 @@ def p(c, parameter1, t)
         @state['patientReportedToRegistrar'].any? {|terms| terms[1] == d}
       when C9 # (:- (p ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (violated ?c C5 ?t) (escalate))))
         violated(c, C5, t) and state('escalate')
-      when C10 # (:- (p ?c C10 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (radRequestsAssessment))))
-        state('radRequestsAssessment')
-      when C11 # (:- (p ?c C11 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (phyRequestsAssessment))))
-        state('phyRequestsAssessment')
-      when C12 # (:- (p ?c C12 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patRequestsAssessment))))
-        state('patRequestsAssessment')
+      #when C10 # (:- (p ?c C10 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (radRequestsAssessment))))
+      #  state('radRequestsAssessment')
+      #when C11 # (:- (p ?c C11 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (phyRequestsAssessment))))
+      #  state('phyRequestsAssessment')
+      #when C12 # (:- (p ?c C12 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patRequestsAssessment))))
+      #  state('patRequestsAssessment')
       end
     end
   }
@@ -72,12 +72,12 @@ def q(c, parameter1, t)
         @state['inRegistry'].any? {|terms| terms.size == 1}
       when C9 # (:- (q ?c C9 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (not (null ?c C5 ?ci)) (not (null ?c D5 ?ci)))))
         not null(c, C5, ci) and not null(c, 'D5', ci)
-      when C10 # (:- (q ?c C10 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesPath) (TBDisagreesPath))))
-        state('TBAgreesPath') or state('TBDisagreesPath')
-      when C11 # (:- (q ?c C11 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesRad) (TBDisagreesRad))))
-        state('TBAgreesRad') or state('TBDisagreesRad')
-      when C12 # (:- (q ?c C12 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesPCP) (TBDisagreesPCP))))
-        state('TBAgreesPCP') or state('TBDisagreesPCP')
+      #when C10 # (:- (q ?c C10 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesPath) (TBDisagreesPath))))
+      #  state('TBAgreesPath') or state('TBDisagreesPath')
+      #when C11 # (:- (q ?c C11 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesRad) (TBDisagreesRad))))
+      #  state('TBAgreesRad') or state('TBDisagreesRad')
+      #when C12 # (:- (q ?c C12 (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (or (TBAgreesPCP) (TBDisagreesPCP))))
+      #  state('TBAgreesPCP') or state('TBDisagreesPCP')
       end
     end
   }
