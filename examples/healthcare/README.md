@@ -28,7 +28,7 @@
 - ``radPathResultsReported``
 - ``pathResultsReported``
 - ``patientReportedToRegistrar``
-- ``inRegistry``
+- ``(inRegistry ?patient)``
 - ``TBAgreesPath``
 - ``TBDisagreesPath``
 - ``TBAgreesRad``
