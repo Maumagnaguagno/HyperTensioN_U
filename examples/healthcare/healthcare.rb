@@ -65,6 +65,7 @@ module Healthcare
     # Operators
     'invisible_testSuccess' => 1,
     'invisible_testFailure' => 1,
+    'invisible_testSuccessG' => 1,
     'create' => 1,
     'suspend' => 1,
     'reactivate' => 1,
