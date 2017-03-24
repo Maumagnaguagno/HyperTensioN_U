@@ -214,7 +214,6 @@ def performPathologyTests_imaging_plus_biopsy(patient)
   radiologist = ''
   pathologist = ''
   ci = ''
-  cv = ''
   ci3 = ''
   ci4 = ''
   generate(
