@@ -129,7 +129,7 @@ def s(g, gn, t)
       when G11 then @state['bAppointmentKept'].any? {|terms2| terms2.size == 2}
       when G12, G13 then @state['pathologyRequested'].any? {|terms2| terms2.size == 3 and state('tissueProvided', terms2[2])}
       when G15 then @state['pathResultsReported'].any? {|terms2| terms2.size == 3}
-      when G16 then @state['integratedReport'].any? {|term2| terms2.size == 2}
+      when G16 then @state['integratedReport'].any? {|terms2| terms2.size == 2}
       when G17, G18 then @state['patientReportedToRegistrar'].any? {|terms2| terms2.size == 2}
       when G19 then @state['inRegistry'].any? {|terms2| terms2.size == 1}
       end
