@@ -105,7 +105,7 @@ Kernel.abort('Problem failed to generate expected plan') if plan != [
     ['invisible_testSuccess', C2, C2, list(clyde), satisfied],
     ['invisible_testFailure', C3, satisfied],
     ['invisible_testFailure', C4, satisfied],
-    ['invisible_testSuccess', C5, C5, list(doug), satisfied],
+    ['invisible_testFailure', C5, satisfied],
     ['invisible_testFailure', C6, satisfied],
     ['invisible_testFailure', C7, satisfied],
     ['invisible_testFailure', C8, satisfied]
