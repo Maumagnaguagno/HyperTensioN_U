@@ -4,9 +4,9 @@
 This is a modified version of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with probabilities and rewards, currently **incompatible** with the original.
 Hype can help you in the conversion process from [UJSHOP](#ujshop "Jump to UJSHOP section") to Ruby, but you can ignore the Hype and use Hypertension U as a standalone library.
 
-```Shell
+```
 Usage:
-    Hype domain problem [output] [max plans=-1(all)] [minprobability=0]\n
+    Hype domain problem [output] [max plans=-1(all)] [minprobability=0]
 
   Output:
     rb    - generate Ruby files to Hypertension U(default)
