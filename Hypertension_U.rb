@@ -33,10 +33,12 @@ module Hypertension_U
           execute(current_task, decomposition, tasks, level, plan)
         # Operator with multiple outcomes
         when Hash
+          task_name = current_task.first
           decomposition.each {|task_prob,probability|
             current_task[0] = task_prob
             execute(current_task, probability, tasks, level, plan)
           }
+          current_task[0] = task_name
         # Method
         when Array
           # Keep decomposing the hierarchy
