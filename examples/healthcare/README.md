@@ -25,16 +25,16 @@
 - ``(treatmentPlan ?physician ?patient)``
 - ``(diagnosisProvided ?physician ?patient)``
 - ``(tissueProvided ?patient)``
-- ``radPathResultsReported``
+- ``(radPathResultsReported ?radiologist ?physician ?patient)``
 - ``(pathResultsReported ?pathologist ?physician ?patient)``
 - ``(patientReportedToRegistrar ?patient ?registrar)``
 - ``(inRegistry ?patient)``
 - ``(pathologyRequested ?physician ?pathologist ?patient)``
 - ``(integratedReport ?patient ?physician)``
-- ``reportNeedsReview``
-- ``cancelled``
-- ``released``
-- ``expired``
+- ``(reportNeedsReview ?patient ?pathologist)``
+- ``(cancelled ?c ?ci ?cv)``
+- ``(released ?c ?ci ?cv)``
+- ``(expired ?c ?ci ?cv)``
 - ``(dropped ?g ?gi ?gv)``
 - ``(aborted ?g ?gi ?gv)``
 - ``(pending ?c ?ci ?cv)``
@@ -154,6 +154,3 @@
 - ``(performPathologyTests ?patient)``
 - ``(attendTest ?patient)``
 - ``(deliverDiagnostics ?patient)``
-
-## TODOs
-- Add complete predicate signatures, ``(pre ?t0 ?t1)`` instead of ``pre``
