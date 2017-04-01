@@ -1,0 +1,10 @@
+(defproblem pb1 counter
+  ; Start
+  (
+    (at 0)
+  )
+  ; Tasks
+  (
+    (count-half 10)
+  )
+)

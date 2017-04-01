@@ -34,4 +34,40 @@
       (count ?goal)
     )
   )
+
+
+  (:operator (!add-half ?current)
+    ; Preconditions
+    (
+      (at ?current)
+    )
+    ; Del effects
+    (
+      (at ?current)
+    )
+    ; Add effects
+    (
+      (at (call + ?current 0.5))
+    )
+  )
+
+  (:method (count-half ?goal)
+    goal-reached
+    ; Preconditions
+    (
+      (at ?goal)
+    )
+    ; Subtasks
+    nil
+    increment
+    ; Preconditions
+    (
+      (at ?current)
+    )
+    ; Subtasks
+    (
+      (!add-half ?current)
+      (count-half ?goal)
+    )
+  )
 ))
