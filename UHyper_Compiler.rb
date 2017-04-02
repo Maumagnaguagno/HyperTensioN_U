@@ -51,11 +51,11 @@ module UHyper_Compiler
     ltoken = evaluate(precond_expression[2])
     rtoken = evaluate(precond_expression[3])
     if ['+', '-', '*', '/', '%', '**'].include?(function)
-      if ltoken =~ /^'(\d+)'$/ then ltoken = $1
-      elsif ltoken !~ /^\d+$/ then ltoken << '.to_i'
+      if ltoken =~ /^'(-?\d+(?>\.\d+)?)'$/ then ltoken = $1.to_f
+      elsif ltoken !~ /^-?\d+(?>\.\d+)?$/ then ltoken << '.to_f'
       end
-      if rtoken =~ /^'(\d+)'$/ then rtoken = $1
-      elsif rtoken !~ /^\d+$/ then rtoken << '.to_i'
+      if rtoken =~ /^'(-?\d+(?>\.\d+)?)'$/ then rtoken = $1.to_f
+      elsif rtoken !~ /^-?\d+(?>\.\d+)?$/ then rtoken << '.to_f'
       end
       "(#{ltoken} #{function} #{rtoken}).to_s"
     else
@@ -199,17 +199,17 @@ module UHyper_Compiler
     tasks.each {|pred,*terms| objects.concat(terms)}
     # Objects
     objects.uniq!
-    objects.each {|i| problem_str << "#{i} = '#{i}'\n" unless i =~ /^-?\d+$/}
+    objects.each {|i| problem_str << "#{i} = '#{i}'\n" if i !~ /^-?\d+(?>\.\d+)?$/}
     problem_str << "\n#{domain_name.capitalize}.problem(\n  # Start\n  {\n"
     # Start
     start_hash.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
-      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o =~ /^-?\d+$/ ? "'#{o}'" : o}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
+      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o =~ /^-?\d+(?>\.\d+)?$/ ? "'#{o.to_f}'" : o}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
       problem_str << (start_hash.size.pred == i ? ']' : "],\n")
     }
     # Tasks
     group = []
-    tasks.each {|t| group << "    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o =~ /^-?\d+$/ ? "'#{o}'" : o}.join(', ')}]"}
+    tasks.each {|t| group << "    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o =~ /^-?\d+(?>\.\d+)?$/ ? "'#{o.to_f}'" : o}.join(', ')}]"}
     problem_str << "\n  },\n  # Tasks\n  [\n" << group .join(",\n") << "\n  ],\n  # Debug\n  ARGV.first == '-d',\n  # Maximum plans found\n  ARGV[1] ? ARGV[1].to_i : -1,\n  # Minimum probability for plans\n  ARGV[2] ? ARGV[2].to_f : 0"
     tasks.unshift(ordered) unless tasks.empty?
     problem_str.gsub!(/\b-\b/,'_')
