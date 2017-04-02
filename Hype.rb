@@ -68,7 +68,7 @@ if $0 == __FILE__
     else
       domain = ARGV.shift
       problem = ARGV.shift
-      type = ARGV.shift
+      type = ARGV.first
       if not File.exist?(domain)
         puts "Domain file #{domain} not found"
       elsif not File.exist?(problem)
