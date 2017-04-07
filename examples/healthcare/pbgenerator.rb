@@ -58,32 +58,32 @@ HOSPITAL_SET    = Array.new(hospitals)    {|i| "hospital_#{i}"}
 
 # Expand commitment permutations
 COMMITMENT_SET = []
-PHYSICIAN_SET.each {|physician|
-  PATIENT_SET.each {|patient|
+PATIENT_SET.each {|patient|
+  PHYSICIAN_SET.each {|physician|
     COMMITMENT_SET.push(
-      [C1, C1, physician, patient],
-      [C2, C2, patient, physician],
-      [C3, C3, patient, physician]
+      [C1, "#{C1}_#{patient}", physician, patient],
+      [C2, "#{C2}_#{patient}", patient, physician],
+      [C3, "#{C3}_#{patient}", patient, physician]
     )
+    RADIOLOGIST_SET.each {|radiologist|
+      COMMITMENT_SET.push(
+        [C4, "#{C4}_#{patient}", radiologist, physician],
+        [C5, "#{C5}_#{patient}", radiologist, physician]
+      )
+    }
   }
   RADIOLOGIST_SET.each {|radiologist|
-    COMMITMENT_SET.push(
-      [C4, C4, radiologist, physician],
-      [C5, C5, radiologist, physician]
-    )
+    PATHOLOGIST_SET.each {|pathologist|
+      COMMITMENT_SET << ["#{C6}_#{patient}", C6, pathologist, radiologist]
+    }
   }
-}
-RADIOLOGIST_SET.each {|radiologist|
-  PATHOLOGIST_SET.each {|pathologist|
-    COMMITMENT_SET << [C6, C6, pathologist, radiologist]
-  }
-}
-HOSPITAL_SET.each {|hospital|
-  PATHOLOGIST_SET.each {|pathologist|
-    COMMITMENT_SET << [C7, C7, pathologist, hospital]
-  }
-  REGISTRAR_SET.each {|registrar|
-    COMMITMENT_SET << [C8, C8, registrar, hospital]
+  HOSPITAL_SET.each {|hospital|
+    PATHOLOGIST_SET.each {|pathologist|
+      COMMITMENT_SET << ["#{C7}_#{patient}", C7, pathologist, hospital]
+    }
+    REGISTRAR_SET.each {|registrar|
+      COMMITMENT_SET << ["#{C8}_#{patient}", C8, registrar, hospital]
+    }
   }
 }
 
