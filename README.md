@@ -24,10 +24,10 @@ ruby Hype.rb examples/cookie/cookie.ujshop examples/cookie/pb1.ujshop run
 Or call the Ruby problem:
 
 ```Shell
-# Use debug with -d option
-ruby examples/cookie/pb1.rb -d
+# Use with debug option
+ruby examples/cookie/pb1.rb debug
 # No need to call Hype twice, the problem will load the domain
-ruby examples/cookie/pb1.ujshop.rb -d
+ruby examples/cookie/pb1.ujshop.rb debug
 ```
 
 ## UJSHOP

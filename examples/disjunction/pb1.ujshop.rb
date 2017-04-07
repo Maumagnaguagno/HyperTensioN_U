@@ -32,7 +32,7 @@ Disjunction.problem(
     ['unify', t1]
   ],
   # Debug
-  ARGV.first == '-d',
+  ARGV.first == 'debug',
   # Maximum plans found
   ARGV[1] ? ARGV[1].to_i : -1,
   # Minimum probability for plans

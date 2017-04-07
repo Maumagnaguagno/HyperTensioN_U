@@ -4,9 +4,9 @@ require_relative 'healthcare'
 # Help
 if ARGV.include?('-h')
   puts "  Usage:
-    pbgenerator [-d] [-option arg]\n
+    pbgenerator [-option [arg]]\n
   Options:
-    -d            - debug mode
+    debug         - debug mode
     -max_plans    - Maximum amount of plans to search (default 1)
     -min_prob     - Minimum probability to include plan (default 0)
     -patients     - Amount of patients (default 1)
@@ -34,7 +34,7 @@ cancers      = 1
 # ARGV parser
 while opt = ARGV.shift
   case opt
-  when '-d' then debug = true
+  when 'debug' then debug = true
   when '-min_prob' then min_prob = ARGV.shift.to_f
   when '-max_plans' then max_plans = ARGV.shift.to_i
   when '-patients' then patients = ARGV.shift.to_i

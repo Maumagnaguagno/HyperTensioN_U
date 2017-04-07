@@ -1,6 +1,6 @@
 require_relative 'healthcare'
 
-debug = ARGV.first == '-d'
+debug = ARGV.first == 'debug'
 max_plans = ARGV[1] ? ARGV[1].to_i : -1
 min_prob  = ARGV[2] ? ARGV[2].to_f : 0
 

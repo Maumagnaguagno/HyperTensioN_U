@@ -77,7 +77,7 @@ if $0 == __FILE__
         t = Time.now.to_f
         Hype.parse(domain, problem)
         Hype.compile(domain, problem)
-        require File.expand_path(problem) if type == 'run' or (type == 'debug' and ARGV[0] = '-d')
+        require File.expand_path(problem) if type == 'run' or type == 'debug'
         puts "Total time: #{Time.now.to_f - t}s"
       end
     end

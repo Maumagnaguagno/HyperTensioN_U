@@ -13,5 +13,5 @@ plan = Cookie.problem(
     ['get_cookie', 'bob', 'home', 'cookie_store']
   ],
   # Debug
-  ARGV.first == '-d'
+  ARGV.first == 'debug'
 )
