@@ -87,6 +87,26 @@ PATIENT_SET.each {|patient|
   }
 }
 
+# Expand goal permutations
+GOAL_SET = []
+PATIENT_SET.each {|patient| GOAL_SET.push([G2, G2, patient], [G6, G6, patient], [G11, G11, patient])}
+PHYSICIAN_SET.each {|physician| GOAL_SET.push([G1, G1, physician], [G4, G4, physician], [G9, G9, physician])}
+RADIOLOGIST_SET.each {|radiologist| GOAL_SET.push([G3, G3, radiologist], [G7, G7, radiologist], [G8, G8, radiologist], [G13, G13, radiologist], [G16, G16, radiologist])}
+PATHOLOGIST_SET.each {|pathologist| GOAL_SET.push([G12, G12, pathologist], [G15, G15, pathologist], [G18, G18, pathologist])}
+REGISTRAR_SET.each {|registrar| GOAL_SET.push([G17, G17, registrar], [G19, G19, registrar])}
+
+# Create tasks
+TASKS = []
+PATIENT_SET.each_with_index {|patient,i|
+  TASKS.push(
+    ['step1', patient],
+    ['step2', patient],
+    ['step3', patient],
+    ['step4', patient]
+  )
+  TASKS << ['step5', patient] if i <= cancers
+}
+
 Healthcare.problem(
   # Start
   {
@@ -98,6 +118,7 @@ Healthcare.problem(
     'hospital' => HOSPITAL_SET.map {|i| [i]},
     'patientHasCancer' => PATIENT_SET.first(cancers).map {|i| [i]},
     'commitment' => COMMITMENT_SET,
+    'goal' => GOAL_SET,
     'var' => [],
     'varG' => [],
     'diagnosisRequested' => [],
@@ -129,11 +150,10 @@ Healthcare.problem(
     'pending' => [],
     'activatedG' => [],
     'suspendedG' => [],
-    'goal' => [],
     'dontknow' => []
   },
   # Tasks
-  [['hospitalScenario']],
+  TASKS,
   # Debug
   debug,
   # Maximum plans found
