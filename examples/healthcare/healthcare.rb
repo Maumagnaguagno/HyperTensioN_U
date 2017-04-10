@@ -15,6 +15,7 @@ require_relative 'goal-commitment-methods'
 require_relative 'test-methods'
 require_relative 'healthcare-methods'
 require_relative 'healthcare-operators'
+require_relative 'steps-methods'
 
 COMMITMENTS = [
   C1 = 'C1',
@@ -201,7 +202,22 @@ module Healthcare
     'deliverDiagnostics' => [
       'deliverDiagnostics_only_imaging',
       'deliverDiagnostics_imaging_biopsy_integrated'
-    ]
+    ],
+    'step1' => [
+      'step1'
+    ],
+    'step2' => [
+      'step2'
+    ],
+    'step3' => [
+      'step3'
+    ],
+    'step4' => [
+      'step4'
+    ],
+    'step5' => [
+      'step5'
+    ],
   }
 
   def state(pre, *terms)
