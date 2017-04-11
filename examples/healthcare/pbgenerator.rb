@@ -77,12 +77,9 @@ PATIENT_SET.each {|patient|
       COMMITMENT_SET << [C6, "#{C6}_#{patient}", pathologist, radiologist]
     }
   }
-  HOSPITAL_SET.each {|hospital|
+  REGISTRAR_SET.each {|registrar|
     PATHOLOGIST_SET.each {|pathologist|
-      COMMITMENT_SET << [C7, "#{C7}_#{patient}", pathologist, hospital]
-    }
-    REGISTRAR_SET.each {|registrar|
-      COMMITMENT_SET << [C8, "#{C8}_#{patient}", registrar, hospital]
+      COMMITMENT_SET << [C7, "#{C7}_#{patient}", registrar, pathologist]
     }
   }
 }
@@ -104,7 +101,7 @@ PATIENT_SET.each_with_index {|patient,i|
     ['step3', patient],
     ['step4', patient]
   )
-  TASKS << ['step5', patient] if i <= cancers
+  TASKS << ['step5', patient] if i < cancers
 }
 
 Healthcare.problem(
