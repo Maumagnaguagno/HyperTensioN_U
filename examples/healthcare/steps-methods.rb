@@ -267,7 +267,7 @@ end
 
 #     ;The above should satisfy G15 and C6
 #     (testGoal G15 G15 (?pathologist) satisfied)
-#     (testcommitment C6 C6 (?patient) satisfied)
+#     (testcommitment C6 ?c6_patient (?patient) satisfied)
 
 #     ;Radiologist employs DELIVER for C5 to consider and activate goal G16
 #     (deliver G16 G16 (?patient) C5 ?c5_patient (?patient) ?radiologist ?physician)

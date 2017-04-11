@@ -1138,7 +1138,7 @@
 
       ;The above should satisfy G13 and detach C6
       (testGoal G13 G13 (?radiologist) satisfied)
-      (testCommitment C6 C6 (?patient) detached)
+      (testCommitment C6 ?c6_patient (?patient) detached)
 
       ;Pathologist employs DELIVER for C6 to consider and activate goal G15
       (deliver G15 G15 (?pathologist) C6 C6 (?patient) ?pathologist ?radiologist)
