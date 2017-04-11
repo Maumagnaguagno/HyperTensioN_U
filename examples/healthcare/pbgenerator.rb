@@ -74,15 +74,15 @@ PATIENT_SET.each {|patient|
   }
   RADIOLOGIST_SET.each {|radiologist|
     PATHOLOGIST_SET.each {|pathologist|
-      COMMITMENT_SET << ["#{C6}_#{patient}", C6, pathologist, radiologist]
+      COMMITMENT_SET << [C6, "#{C6}_#{patient}", pathologist, radiologist]
     }
   }
   HOSPITAL_SET.each {|hospital|
     PATHOLOGIST_SET.each {|pathologist|
-      COMMITMENT_SET << ["#{C7}_#{patient}", C7, pathologist, hospital]
+      COMMITMENT_SET << [C7, "#{C7}_#{patient}", pathologist, hospital]
     }
     REGISTRAR_SET.each {|registrar|
-      COMMITMENT_SET << ["#{C8}_#{patient}", C8, registrar, hospital]
+      COMMITMENT_SET << [C8, "#{C8}_#{patient}", registrar, hospital]
     }
   }
 }
