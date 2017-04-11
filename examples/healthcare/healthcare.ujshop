@@ -991,22 +991,24 @@
       (patient ?patient)
       (physician ?physician)
       (radiologist ?radiologist)
+      (commitment C1 ?c1_patient ?physician ?patient)
+      (commitment C2 ?c2_patient ?patient ?physician)
+      (commitment C3 ?c3_patient ?patient ?physician)
     )
     (
       (!consider G1 G1 ?physician (?patient) )
       (!activate G1 G1 ?physician (?patient) )
 
       ; Physician employs ENTICE rule to create C1
-      (entice G1 G1 (?patient) C1 C1 (?patient) ?physician ?patient)
+      (entice G1 G1 (?patient) C1 ?c1_patient (?patient) ?physician ?patient)
 
       ; Patient employs DETACH for C1 which results in considering and activating of G2
-      (detach G2 G2 (?patient) C1 C1 (?patient) ?physician ?patient)
+      (detach G2 G2 (?patient) C1 ?c1_patient (?patient) ?physician ?patient)
 
       ; TODO: DETACH should also create C2 and C3. Since it does not, creating
       ; C2 and C3 explicitly
-      (!create C2 C2 ?patient ?physician (?radiologist))
-      (!create C3 C3 ?patient ?physician (?radiologist))
-
+      (!create C2 ?c2_patient ?patient ?physician (?radiologist))
+      (!create C3 ?c3_patient ?patient ?physician (?radiologist))
 
       ; Patient brings about requestAssessment
       (!requestAssessment ?patient ?physician)
@@ -1014,7 +1016,7 @@
       ; The above should satisfy G1 and G2 and detach C1
       (testGoal G1 G1 (?patient) satisfied)
       (testGoal G2 G2 (?patient) satisfied)
-      (testCommitment C1 C1 (?patient) detached)
+      (testCommitment C1 ?c1_patient (?patient) detached)
     )
   )
 
@@ -1023,6 +1025,8 @@
       (patient ?patient)
       (physician ?physician)
       (radiologist ?radiologist)
+      (commitment C2 ?c2_patient ?patient ?physician)
+      (commitment C4 ?c4_patient ?radiologist ?physician)
     )
     (
       ; Radiologist considers and activates G3
@@ -1030,33 +1034,31 @@
       (!activate G3 G3 ?radiologist (?patient) )
 
       ; Radiologist employs ENTICE for G3 to create C4
-      (entice G3 G3 (?patient) C4 C4 (?patient) ?radiologist ?physician)
+      (entice G3 G3 (?patient) C4 ?c4_patient (?patient) ?radiologist ?physician)
 
       ; Physician employs DETACH for C4 to create G4
-      (detach G4 G4 (?patient) C4 C4 (?patient) ?radiologist ?physician)
+      (detach G4 G4 (?patient) C4 ?c4_patient (?patient) ?radiologist ?physician)
 
       ; Physician brings about imagingRequested and iAppointmentRequested
       (!requestImaging ?physician ?patient ?radiologist)
 
       ; The above should satisfy G4 and detach C2
       (testGoal G4 G4 (?patient) satisfied)
-      (testCommitment C2 C2 (?radiologist) detached)
-
+      (testCommitment C2 ?c2_patient (?radiologist) detached)
 
       ; Patient employs DELIVER for C2 to consider and activate goal G6
-      (deliver G6 G6 (?patient) C2 C2 (?radiologist) ?patient ?physician)
-
+      (deliver G6 G6 (?patient) C2 ?c2_patient (?radiologist) ?patient ?physician)
 
       ; Patient brings about iAppointmentKept
       (attendTest ?patient)
-      (testCommitment C4 C4 (?patient) detached) ; TODO This won't detach C4 because it also requires the imaging appotintment to have been kept (this only happens attendTest below)
+      (testCommitment C4 ?c4_patient (?patient) detached) ; TODO This won't detach C4 because it also requires the imaging appotintment to have been kept (this only happens attendTest below)
 
       ; The above should satisfy G6 and C2
       (testGoal G6 G6 (?patient) satisfied)
-      (testCommitment C2 C2 (?radiologist) satisfied)
+      (testCommitment C2 ?c2_patient (?radiologist) satisfied)
 
       ; Radiologist employs DELIVER for C4 to consider and activate goal G7
-      (deliver G7 G7 (?radiologist) C4 C4 (?patient) ?radiologist ?physician)
+      (deliver G7 G7 (?radiologist) C4 ?c4_patient (?patient) ?radiologist ?physician)
 
       ; Physician requests radiology report
       (!requestRadiologyReport ?physician ?radiologist ?patient)
@@ -1065,7 +1067,7 @@
 
       ; The above should satisfy G7 and C4
       (testGoal G7 G7 (?radiologist) satisfied)
-      (testCommitment C4 C4 (?patient) satisfied)
+      (testCommitment C4 ?c4_patient (?patient) satisfied)
     )
   )
 
@@ -1074,38 +1076,39 @@
       (patient ?patient)
       (physician ?physician)
       (radiologist ?radiologist)
+      (commitment C3 ?c3_patient ?patient ?physician)
+      (commitment C5 ?c5_patient ?radiologist ?physician)
     )
     (
       ; Radiologist considers and activates goal G8
       (!consider G8 G8 ?radiologist (?patient) )
       (!activate G8 G8 ?radiologist (?patient) )
 
-      ;  Radiologist employs ENTICE for G8 to create commitment C5
-      (entice G8 G8 (?patient) C5 C5 (?patient) ?radiologist ?physician)
+      ; Radiologist employs ENTICE for G8 to create commitment C5
+      (entice G8 G8 (?patient) C5 ?c5_patient (?patient) ?radiologist ?physician)
 
       ; Physician employs DETACH for C5 to consider and activate goal G9
-      (detach G9 G9 (?patient) C5 C5 (?patient) ?radiologist ?physician)
+      (detach G9 G9 (?patient) C5 ?c5_patient (?patient) ?radiologist ?physician)
 
       ; Physician brings about biopsyRequested and bAppointmentRequested.
       (!requestBiopsy ?physician ?patient ?radiologist)
 
       ; The above should satisfy G9 and detach C3
       (testGoal G9 G9 (?patient) satisfied)
-      (testCommitment C3 C3 (?radiologist) detached)
-
+      (testCommitment C3 ?c3_patient (?radiologist) detached)
 
       ; Patient employs DELIVER for C3 to consider and activate goal G11
-      (deliver G11 G11 (?patient) C3 C3 (?radiologist) ?patient ?physician)
+      (deliver G11 G11 (?patient) C3 ?c3_patient (?radiologist) ?patient ?physician)
 
       ; Patient brings about bAppointmentKept
       (!performBiopsy ?radiologist ?patient ?physician)
 
       ; The above should detach C4
-      (testCommitment C5 C5 (?patient) detached)
+      (testCommitment C5 ?c5_patient (?patient) detached)
 
       ; The above should satisfy G11 and C3
       (testGoal G11 G11 (?patient) satisfied)
-      (testcommitment C3 C3 (?radiologist) satisfied)
+      (testcommitment C3 ?c3_patient (?radiologist) satisfied)
     )
   )
 
@@ -1115,6 +1118,8 @@
       (physician ?physician)
       (radiologist ?radiologist)
       (pathologist ?pathologist)
+      (commitment C5 ?c5_patient ?radiologist ?physician)
+      (commitment C6 ?c6_patient ?pathologist ?radiologist)
     )
     (
       ;  Pathologist considers and activates goal G12
@@ -1146,7 +1151,7 @@
       (testcommitment C6 C6 (?patient) satisfied)
 
       ;Radiologist employs DELIVER for C5 to consider and activate goal G16
-      (deliver G16 G16 (?patient) C5 C5  (?patient) ?radiologist ?physician)
+      (deliver G16 G16 (?patient) C5 ?c5_patient (?patient) ?radiologist ?physician)
 
       ;Radiologist brings about radPathResultsReported
       (!sendRadiologyReport ?radiologist ?physician ?patient)
@@ -1154,7 +1159,7 @@
 
       ;The above should satisfies G16 and C5
       (testGoal G16 G16 (?patient) satisfied)
-      (testcommitment C5 C5 (?patient) satisfied)
+      (testcommitment C5 ?c5_patient (?patient) satisfied)
     )
   )
 
@@ -1163,6 +1168,7 @@
       (patient ?patient)
       (pathologist ?pathologist)
       (registrar ?registrar)
+      (commitment C7 ?c7_patient ?registrar ?pathologist)
     )
     (
       ; Registrar considers and activates goal
@@ -1170,27 +1176,27 @@
       (!activate G17 G17 ?registrar (?patient) )
 
       ; Registrar employs ENTICE for G17 to create commitment C7
-      (entice G17 G17 (?patient) C7 C7 (?patient) ?registrar ?pathologist)
+      (entice G17 G17 (?patient) C7 ?c7_patient (?patient) ?registrar ?pathologist)
 
       ; Pathologist employs DETACH rule if patient has cancer to consider and activate goal G18
-      (detach G18 G18 (?pathologist) C7 C7 (?patient) ?registrar ?pathologist)
+      (detach G18 G18 (?pathologist) C7 ?c7_patient (?patient) ?registrar ?pathologist)
 
       ; Pathologist reports patient to registrar
       (!reportPatient ?patient ?pathologist ?registrar)
 
       ;The above should satisfies G16 and C5
       (testGoal G17 G17 (?patient) satisfied)
-      (testCommitment C7 C7 (?patient) detached)
+      (testCommitment C7 ?c7_patient (?patient) detached)
 
       ; Registrar employs DELIVER rule for C7 to consider and activate goal G19
-      (deliver G19 G19 (?registrar) C7 C7 (?patient) ?registrar ?pathologist)
+      (deliver G19 G19 (?registrar) C7 ?c7_patient (?patient) ?registrar ?pathologist)
 
       ; Registrar brings about addPatientToRegistry. This:
       (!addPatientToRegistry ?patient ?registrar)
 
       ;The above should satisfy G19 and C7
       (testGoal G19 G19 (?registrar) satisfied)
-      (testCommitment C7 C7 (?patient) satisfied)
+      (testCommitment C7 ?c7_patient (?patient) satisfied)
     )
   )
  )
