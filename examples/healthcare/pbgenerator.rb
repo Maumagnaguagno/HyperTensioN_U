@@ -75,13 +75,11 @@ PATIENT_SET.each {|patient|
       )
     }
   }
-  RADIOLOGIST_SET.each {|radiologist|
-    PATHOLOGIST_SET.each {|pathologist|
+  PATHOLOGIST_SET.each {|pathologist|
+    RADIOLOGIST_SET.each {|radiologist|
       COMMITMENT_SET << [C6, "#{C6}_#{patient}", pathologist, radiologist]
     }
-  }
-  REGISTRAR_SET.each {|registrar|
-    PATHOLOGIST_SET.each {|pathologist|
+    REGISTRAR_SET.each {|registrar|
       COMMITMENT_SET << [C7, "#{C7}_#{patient}", registrar, pathologist]
     }
   }
