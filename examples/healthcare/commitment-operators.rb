@@ -13,14 +13,14 @@ def invisible_testSuccess(c, ci, cv, state)
   @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == c and terms[1] == ci}
 end
 
-# (:operator (!!testFailure ?cg ?state)
+# (:operator (!!testFailure ?cg ?cgi ?state)
 #   ()
 #   ()
 #   ()
 #   0
 # )
 
-def invisible_testFailure(cg, state)
+def invisible_testFailure(cg, cgi, state)
   true
 end
 

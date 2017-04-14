@@ -47,7 +47,7 @@
 
 #   failed
 #   ((commitment ?c ?ci ?d ?a))
-#   ((!!testFailure ?c ?s))
+#   ((!!testFailure ?c ?ci ?s))
 # )
 
 def testCommitment_case0(c, ci, cv, s)
@@ -68,7 +68,7 @@ def testCommitment_case0(c, ci, cv, s)
        (s == 'q' and q(c, ci, cv))
       yield [['invisible_testSuccess', c, ci, cv, s]]
     else
-      yield [['invisible_testFailure', c, s]]
+      yield [['invisible_testFailure', c, ci, s]]
     end
   end
 end
@@ -112,7 +112,7 @@ end
 
 #   failed
 #   ((goal ?g ?gi ?a))
-#   ((!!testFailure ?g ?s))
+#   ((!!testFailure ?g ?gi ?s))
 # )
 
 def testGoal_case0(g, gi, gv, s)
@@ -131,7 +131,7 @@ def testGoal_case0(g, gi, gv, s)
        (s == 'terminal' and terminalG(g, gi, gv))
       yield [['invisible_testSuccessG', g, gi, gv, s]]
     else
-      yield [['invisible_testFailure', g, s]]
+      yield [['invisible_testFailure', g, gi, s]]
     end
   end
 end
