@@ -93,11 +93,11 @@ Kernel.abort('Problem failed to generate expected plan') if plan != [
     ['generateTreatmentPlan', bob, alice],
     ['invisible_testSuccess', C1, C1, list(alice), satisfied],
     ['invisible_testSuccess', C2, C2, list(clyde), satisfied],
-    ['invisible_testFailure', C3, satisfied],
-    ['invisible_testFailure', C4, satisfied],
-    ['invisible_testFailure', C5, satisfied],
-    ['invisible_testFailure', C6, satisfied],
-    ['invisible_testFailure', C7, satisfied],
-    ['invisible_testFailure', C8, satisfied]
+    ['invisible_testFailure', C3, C3, satisfied],
+    ['invisible_testFailure', C4, C4, satisfied],
+    ['invisible_testFailure', C5, C5, satisfied],
+    ['invisible_testFailure', C6, C6, satisfied],
+    ['invisible_testFailure', C7, C7, satisfied],
+    ['invisible_testFailure', C8, C8, satisfied]
   ]
 ]
