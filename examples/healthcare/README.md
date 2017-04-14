@@ -60,11 +60,11 @@
 - ``(terminal ?c ?ci ?cv)``
 
 [Healthcare axioms](healthcare-axioms.rb)
-- ``(p  ?c CN (?t))``
-- ``(q  ?c CN (?t))``
-- ``(pg ?g GN (?t))``
-- ``(s  ?g GN (?t))``
-- ``(f  ?g GN (?t))``
+- ``(p  CN ?ci (?t))``
+- ``(q  CN ?ci (?t))``
+- ``(pg GN ?gi (?t))``
+- ``(s  GN ?gi (?t))``
+- ``(f  GN ?gi (?t))``
 
 [Goal axioms](goal-axioms.rb)
 - ``(nullG ?g ?gi ?gv)``
@@ -81,7 +81,7 @@
 ### Operators
 [commitment operators](commitment-operators.rb)
 - ``(!!testSuccess ?c ?ci ?cv ?state)``
-- ``(!!testFailure ?cg ?state)``
+- ``(!!testFailure ?cg ?cgi ?state)``
 - ``(!create ?c ?ci ?de ?cr ?cv)``
 - ``(!suspend ?c ?ci ?de ?cr ?cv)``
 - ``(!reactivate ?c ?ci ?de ?cr ?cv)``
@@ -154,3 +154,8 @@
 - ``(performPathologyTests ?patient)``
 - ``(attendTest ?patient)``
 - ``(deliverDiagnostics ?patient)``
+- ``(step1 ?patient)``
+- ``(step2 ?patient)``
+- ``(step3 ?patient)``
+- ``(step4 ?patient)``
+- ``(step5 ?patient)``
