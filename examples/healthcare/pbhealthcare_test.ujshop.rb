@@ -132,14 +132,14 @@ plans = Healthcare.problem(
 
     # Patient brings about iAppointmentKept
     ['attendTest', alice],
-    ['testCommitment', C4, C4, list(alice), detached], # TODO This won't detach C4 because it also requires the imaging appotintment to have been kept (this only happens attendTest below)
+    ['testCommitment', C4, C4, list(alice), detached],
 
     # The above should satisfy G6 and C2
     ['testGoal', G6, G6, list(alice), satisfied],
     ['testCommitment', C2, C2, list(clyde), satisfied],
 
     # Radiologist employs DELIVER for C4 to consider and activate goal G7
-    ['deliver', G7, G7, list(clyde), C4, C4, list(alice), clyde, bob],
+    ['deliver', G7, G7, list(alice), C4, C4, list(alice), clyde, bob],
 
     # Physician requests radiology report
     ['requestRadiologyReport', bob, clyde, alice],
@@ -147,7 +147,7 @@ plans = Healthcare.problem(
     ['sendRadiologyReport', clyde, bob, alice],
 
     # The above should satisfy G7 and C4
-    ['testGoal', G7, G7, list(clyde), satisfied],
+    ['testGoal', G7, G7, list(alice), satisfied],
     ['testCommitment', C4, C4, list(alice), satisfied],
 
     #;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -190,24 +190,24 @@ plans = Healthcare.problem(
     ['entice', G12, G12, list(alice), C6, C6, list(alice), doug, clyde],
 
     # Radiologist employs DETACH for C6 to consider and activate goal G13
-    ['detach', G13, G13, list(clyde), C6, C6, list(alice), doug, clyde],
+    ['detach', G13, G13, list(alice), C6, C6, list(alice), doug, clyde],
 
     # Radiologist brings about pathologyRequested and tissueProvided
     ['performBiopsy', clyde, alice, bob],
     ['requestPathologyReport', bob, clyde, doug, alice],
 
     # The above should satisfy G13 and detach C6
-    ['testGoal', G13, G13, list(clyde), satisfied],
+    ['testGoal', G13, G13, list(alice), satisfied],
     ['testCommitment', C6, C6, list(alice), detached],
 
     # Pathologist employs DELIVER for C6 to consider and activate goal G15
-    ['deliver', G15, G15, list(doug), C6, C6, list(alice), doug, clyde],
+    ['deliver', G15, G15, list(alice), C6, C6, list(alice), doug, clyde],
 
     # Pathologist brings about pathResultsReported
     ['sendPathologyReport', clyde, bob, doug, alice],
 
     # The above should satisfy G15 and C6
-    ['testGoal', G15, G15, list(doug), satisfied],
+    ['testGoal', G15, G15, list(alice), satisfied],
     ['testCommitment', C6, C6, list(alice), satisfied],
 
     # Radiologist employs DELIVER for C5 to consider and activate goal G16
@@ -240,13 +240,13 @@ plans = Healthcare.problem(
     ['testCommitment', C7, C7, list(alice), detached],
 
     # Registrar employs DELIVER rule for C7 to consider and activate goal G19
-    ['deliver', G19, G19, list(evelyn), C7, C7, list(alice), evelyn, doug],
+    ['deliver', G19, G19, list(alice), C7, C7, list(alice), evelyn, doug],
 
     # Registrar brings about addPatientToRegistry. This:
     ['addPatientToRegistry', alice, evelyn],
 
     # The above should satisfy G19 and C7
-    ['testGoal', G19, G19, list(evelyn), satisfied],
+    ['testGoal', G19, G19, list(alice), satisfied],
     ['testCommitment', C7, C7, list(alice), satisfied]
   ],
   # Debug

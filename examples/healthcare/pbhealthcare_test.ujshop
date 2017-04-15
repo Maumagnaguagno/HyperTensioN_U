@@ -312,14 +312,14 @@
 
 		; Patient brings about iAppointmentKept
 		(attendTest alice)
-		(testCommitment C4 C4 (alice) detached) ; TODO This won't detach C4 because it also requires the imaging appotintment to have been kept (this only happens attendTest below)
+		(testCommitment C4 C4 (alice) detached)
 
 		; The above should satisfy G6 and C2
 		(testGoal G6 G6 (alice) satisfied)
 		(testCommitment C2 C2 (clyde) satisfied)
 
 		; Radiologist employs DELIVER for C4 to consider and activate goal G7
-		(deliver G7 G7 (clyde) C4 C4 (alice) clyde bob)
+		(deliver G7 G7 (alice) C4 C4 (alice) clyde bob)
 
 		; Physician requests radiology report
 		(!requestRadiologyReport bob clyde alice)
@@ -327,7 +327,7 @@
 		(!sendRadiologyReport clyde bob alice)
 
 		; The above should satisfy G7 and C4
-		(testGoal G7 G7 (clyde) satisfied)
+		(testGoal G7 G7 (alice) satisfied)
 		(testCommitment C4 C4 (alice) satisfied)
 
 
@@ -376,24 +376,24 @@
 		(entice G12 G12 (alice) C6 C6 (alice) doug clyde)
 
 		;Radiologist employs DETACH for C6 to consider and activate goal G13
-		(detach G13 G13 (clyde) C6 C6 (alice) doug clyde)
+		(detach G13 G13 (alice) C6 C6 (alice) doug clyde)
 
 		;Radiologist brings about pathologyRequested and tissueProvided
 		(!performBiopsy clyde alice bob)
 		(!requestPathologyReport bob clyde doug alice)
 
 		;The above should satisfy G13 and detach C6
-		(testGoal G13 G13 (clyde) satisfied)
+		(testGoal G13 G13 (alice) satisfied)
 		(testCommitment C6 C6 (alice) detached)
 		
 		;Pathologist employs DELIVER for C6 to consider and activate goal G15
-		(deliver G15 G15 (doug) C6 C6 (alice) doug clyde)
+		(deliver G15 G15 (alice) C6 C6 (alice) doug clyde)
 
 		;Pathologist brings about pathResultsReported
 		(!sendPathologyReport clyde bob doug alice)
 
 		;The above should satisfy G15 and C6
-		(testGoal G15 G15 (doug) satisfied)
+		(testGoal G15 G15 (alice) satisfied)
 		(testcommitment C6 C6 (alice) satisfied)
 		
 		;Radiologist employs DELIVER for C5 to consider and activate goal G16
@@ -427,13 +427,13 @@
 		(testCommitment C7 C7 (alice) detached)
 		
 		; Registrar employs DELIVER rule for C7 to consider and activate goal G19
-		(deliver G19 G19 (evelyn) C7 C7 (alice) evelyn doug)
+		(deliver G19 G19 (alice) C7 C7 (alice) evelyn doug)
 		
 		; Registrar brings about addPatientToRegistry. This:
 		(!addPatientToRegistry alice evelyn)
 		
 		;The above should satisfy G19 and C7
-		(testGoal G19 G19 (evelyn) satisfied)
+		(testGoal G19 G19 (alice) satisfied)
 		(testCommitment C7 C7 (alice) satisfied)
 	) ;tn
 )
