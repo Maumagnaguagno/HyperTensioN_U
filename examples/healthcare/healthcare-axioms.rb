@@ -166,10 +166,14 @@ end
 # (:- (f  G19 ?gi (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
 
 def f(gn, gi, t)
-  if gn == G1 or gn == G2 or gn == G3 or gn == G4 or
-     gn == G6 or gn == G7 or gn == G8 or gn == G9 or
-     gn == G11 or gn == G12 or gn == G13 or gn == G15 or
-     gn == G16 or gn == G17 or gn == G18 or gn == G19
-    @state['goal'].any? {|terms| terms.size == 3 and terms[1] == gi and state('varG', terms[0], gi, t)} and @state['dontknow'].any? {|terms| terms.size == 1} # and terms[0] == ?
-  end
+  @state['goal'].any? {|terms|
+    if terms.size == 3 and terms[1] == gi and state('varG', terms[0], gi, t)
+      a = terms[2]
+      case gn
+      when G1, G2, G6, G9, G11 then @state['dontknow'].any? {|terms2| terms2.size == 1 and terms2[0] == a}
+      when G3, G4, G7, G8, G13, G15, G16, G17, G18, G19 then @state['dontknow'].any? {|terms2| terms2.size == 1}
+      when G12 then @state['dontknow'].any? {|terms2| terms2.size == 1 and terms2[0] == t}
+      end
+    end
+  }
 end
