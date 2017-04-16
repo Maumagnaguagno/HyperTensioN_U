@@ -50,24 +50,24 @@ def step1(patient)
       ['commitment', C1, c1_patient, physician, patient],
       ['commitment', C2, c2_patient, patient, physician],
       ['commitment', C3, c3_patient, patient, physician],
-      ['goal', G1, gi1, physician],
-      ['goal', G2, gi2, patient]
+      ['goal', G1, g1i, physician],
+      ['goal', G2, g2i, patient]
     ],
     [], physician, radiologist, c1_patient, c2_patient, c3_patient
   ) {
     yield [
-      ['consider', G1, gi1, physician, list(patient)],
-      ['activate', G1, gi1, physician, list(patient)],
-      ['entice', G1, gi1, list(patient), C1, c1_patient, list(patient), physician, patient],
+      ['consider', G1, g1i, physician, list(patient)],
+      ['activate', G1, g1i, physician, list(patient)],
+      ['entice', G1, g1i, list(patient), C1, c1_patient, list(patient), physician, patient],
 
-      ['detach', G2, gi2, list(patient), C1, c1_patient, list(patient), physician, patient],
+      ['detach', G2, g2i, list(patient), C1, c1_patient, list(patient), physician, patient],
 
       ['create', C2, c2_patient, patient, physician, list(radiologist)],
       ['create', C3, c3_patient, patient, physician, list(radiologist)],
       ['requestAssessment', patient, physician],
 
-      ['testGoal', G1, gi1, list(patient), 'satisfied'],
-      ['testGoal', G2, gi2, list(patient), 'satisfied'],
+      ['testGoal', G1, g1i, list(patient), 'satisfied'],
+      ['testGoal', G2, g2i, list(patient), 'satisfied'],
       ['testCommitment', C1, c1_patient, list(patient), 'detached']
     ]
   }
