@@ -89,38 +89,38 @@ PATIENT_SET.each {|patient|
 GOAL_SET = []
 PATIENT_SET.each {|patient|
   GOAL_SET.push(
-    [G2, G2, patient],
-    [G6, G6, patient],
-    [G11, G11, patient]
+    [G2, "#{G2}_#{patient}", patient],
+    [G6, "#{G6}_#{patient}", patient],
+    [G11, "#{G11}_#{patient}", patient]
   )
 }
 PHYSICIAN_SET.each {|physician|
   GOAL_SET.push(
-    [G1, G1, physician],
-    [G4, G4, physician],
-    [G9, G9, physician]
+    [G1, "#{G1}_#{physician}", physician],
+    [G4, "#{G4}_#{physician}", physician],
+    [G9, "#{G9}_#{physician}", physician]
   )
 }
 RADIOLOGIST_SET.each {|radiologist|
   GOAL_SET.push(
-    [G3, G3, radiologist],
-    [G7, G7, radiologist],
-    [G8, G8, radiologist],
-    [G13, G13, radiologist],
-    [G16, G16, radiologist]
+    [G3, "#{G3}_#{radiologist}", radiologist],
+    [G7, "#{G7}_#{radiologist}", radiologist],
+    [G8, "#{G8}_#{radiologist}", radiologist],
+    [G13, "#{G13}_#{radiologist}", radiologist],
+    [G16, "#{G16}_#{radiologist}", radiologist]
   )
 }
 PATHOLOGIST_SET.each {|pathologist|
   GOAL_SET.push(
-    [G12, G12, pathologist],
-    [G15, G15, pathologist],
-    [G18, G18, pathologist]
+    [G12, "#{G12}_#{pathologist}", pathologist],
+    [G15, "#{G15}_#{pathologist}", pathologist],
+    [G18, "#{G18}_#{pathologist}", pathologist]
   )
 }
 REGISTRAR_SET.each {|registrar|
   GOAL_SET.push(
-    [G17, G17, registrar],
-    [G19, G19, registrar]
+    [G17, "#{G17}_#{registrar}", registrar],
+    [G19, "#{G19}_#{registrar}", registrar]
   )
 }
 
