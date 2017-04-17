@@ -154,6 +154,8 @@
 - ``(performPathologyTests ?patient)``
 - ``(attendTest ?patient)``
 - ``(deliverDiagnostics ?patient)``
+
+[Healthcare step methods](steps-methods.rb)
 - ``(step1 ?patient)``
 - ``(step2 ?patient)``
 - ``(step3 ?patient)``
