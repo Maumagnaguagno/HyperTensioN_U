@@ -26,7 +26,7 @@ def p(cn, ci, t)
       when C1 then state('diagnosisRequested', a, d) and not violated(c, C2, t) and not violated(c, C3, t)
       when C2 then @state['iAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
       when C3 then @state['bAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when C4 then @state['imagingRequested'].any? {|terms| terms.size == 2 and terms[0] == a and terms[1] == t and state('iAppointmentKept', t, d)}
+      when C4 then @state['imagingRequested'].any? {|terms| terms.size == 2 and terms[0] == a and list(terms[1]) == t and state('iAppointmentKept', terms[1], d)}
       when C5 then @state['biopsyRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('bAppointmentKept', terms[1], d)}
       when C6 then @state['pathologyRequested'].any? {|terms| terms.size == 3 and terms[1] == d and state('tissueProvided', terms[2])}
       when C7 then @state['patientReportedToRegistrar'].any? {|terms| terms.size == 2 and terms[0] == t and terms[1] == d}
@@ -133,9 +133,9 @@ def s(gn, gi, t)
       when G3 then @state['imagingRequested'].any? {|terms2| terms2.size == 2 and terms2[1] == t and @state['iAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms3[0] == t and terms3[1] == a}}
       when G4 then @state['imagingRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == a and list(terms2[1]) == t}
       when G6 then @state['iAppointmentKept'].any? {|terms2| terms2.size == 2 and terms2[0] == a}
-      when G7 then @state['imagingResultsReported'].any? {|terms2| terms2.size == 3 and terms2[0] == a and terms2[2] == t}
+      when G7 then @state['imagingResultsReported'].any? {|terms2| terms2.size == 3 and terms2[0] == a and list(terms2[2]) == t}
       when G8 then @state['biopsyRequested'].any? {|terms2| terms2.size == 2 and terms2[1] == t and @state['bAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms3[0] == t}}
-      when G9 then @state['biopsyRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == a and terms2[1] == t and @state['bAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms3[0] == t}}
+      when G9 then @state['biopsyRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == a and list(terms2[1]) == t and @state['bAppointmentRequested'].any? {|terms3| terms3.size == 2 and list(terms3[0]) == t}}
       when G11 then @state['bAppointmentKept'].any? {|terms2| terms2.size == 2 and terms2[0] == a}
       when G12 then @state['pathologyRequested'].any? {|terms2| terms2.size == 3 and terms2[1] == a and terms2[2] == t and state('tissueProvided', t)}
       when G13 then @state['pathologyRequested'].any? {|terms2| terms2.size == 3 and terms2[2] == t and state('tissueProvided', t)}
