@@ -128,9 +128,10 @@ def s(gn, gi, t)
     if terms.size == 3 and terms[1] == gi and state('varG', g, gi, t)
       a = terms[2]
       case gn
-      when G1, G2 then @state['diagnosisRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == t and terms2[1] == a}
+      when G1 then @state['diagnosisRequested'].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t and terms2[1] == a}
+      when G2 then @state['diagnosisRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == a}
       when G3 then @state['imagingRequested'].any? {|terms2| terms2.size == 2 and terms2[1] == t and @state['iAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms3[0] == t and terms3[1] == a}}
-      when G4 then @state['imagingRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == a and terms2[1] == t}
+      when G4 then @state['imagingRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == a and list(terms2[1]) == t}
       when G6 then @state['iAppointmentKept'].any? {|terms2| terms2.size == 2 and terms2[0] == a}
       when G7 then @state['imagingResultsReported'].any? {|terms2| terms2.size == 3 and terms2[0] == a and terms2[2] == t}
       when G8 then @state['biopsyRequested'].any? {|terms2| terms2.size == 2 and terms2[1] == t and @state['bAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms3[0] == t}}
