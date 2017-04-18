@@ -1,0 +1,48 @@
+(defproblem pbhealthcare_test_steps healthcare
+	(
+		(patient alice)
+		(physician bob)
+		(radiologist clyde)
+		(pathologist doug)
+		(registrar evelyn)
+		(hospital simhospital)
+		(patientHasCancer alice)
+
+		(commitment C1 C1a bob alice)
+		(commitment C2 C2a alice bob)
+		(commitment C3 C3a alice bob)
+		(commitment C4 C4a clyde bob)
+		(commitment C5 C5a clyde bob)
+		(commitment C6 C6a doug clyde)
+		(commitment C7 C7a evelyn doug)
+
+
+
+		; Goals
+		(goal G1 G1 bob)
+		(goal G2 G2 alice)
+		(goal G3 G3 clyde)
+		(goal G4 G4 bob)
+		(goal G6 G6 alice)
+		(goal G7 G7 clyde)
+		(goal G8 G8 clyde)
+		(goal G9 G9 bob)
+		(goal G11 G11 alice)
+		(goal G12 G12 doug)
+		(goal G13 G13 clyde)
+		(goal G15 G15 doug)
+		(goal G16 G16 clyde)
+		(goal G17 G17 evelyn)
+		(goal G18 G18 doug)
+		(goal G19 G19 evelyn)
+
+	) ; Initial State
+
+	(
+		(step1 alice)
+    (step2 alice)
+    (step3 alice)
+    (step4 alice)
+    (step5 alice)
+	) ;tn
+)
