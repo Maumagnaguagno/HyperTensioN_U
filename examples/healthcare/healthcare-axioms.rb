@@ -53,7 +53,7 @@ def q(cn, ci, t)
       when C1 then @state['diagnosisProvided'].any? {|terms| terms.size == 2 and terms[0] == d and terms[1] == a}
       when C2 then @state['iAppointmentKept'].any? {|terms| terms.size == 2 and terms[0] == d}
       when C3 then @state['bAppointmentKept'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when C4 then @state['imagingResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a and terms[2] == t}
+      when C4 then @state['imagingResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a and list(terms[2]) == t}
       when C5 then @state['radPathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a}
       when C6 then @state['pathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == a}
       when C7 then @state['inRegistry'].any? {|terms| terms.size == 1 and terms[0] == t}
