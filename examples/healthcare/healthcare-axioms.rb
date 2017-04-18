@@ -56,7 +56,7 @@ def q(cn, ci, t)
       when C4 then @state['imagingResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a and list(terms[2]) == t}
       when C5 then @state['radPathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a}
       when C6 then @state['pathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == a}
-      when C7 then @state['inRegistry'].any? {|terms| terms.size == 1 and terms[0] == t}
+      when C7 then @state['inRegistry'].any? {|terms| terms.size == 1 and list(terms[0]) == t}
       end
     end
   }
@@ -138,10 +138,10 @@ def s(gn, gi, t)
       when G9 then @state['biopsyRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == a and list(terms2[1]) == t and @state['bAppointmentRequested'].any? {|terms3| terms3.size == 2 and list(terms3[0]) == t}}
       when G11 then @state['bAppointmentKept'].any? {|terms2| terms2.size == 2 and terms2[0] == a}
       when G12 then @state['pathologyRequested'].any? {|terms2| terms2.size == 3 and terms2[1] == a and terms2[2] == t and state('tissueProvided', t)}
-      when G13 then @state['pathologyRequested'].any? {|terms2| terms2.size == 3 and terms2[2] == t and state('tissueProvided', t)}
-      when G15 then @state['pathResultsReported'].any? {|terms2| terms2.size == 3 and terms2[2] == t}
-      when G16 then @state['integratedReport'].any? {|terms2| terms2.size == 2 and terms2[0] == t}
-      when G17 then @state['patientReportedToRegistrar'].any? {|terms2| terms2.size == 2 and terms2[0] == t and terms2[1] == a}
+      when G13 then @state['pathologyRequested'].any? {|terms2| terms2.size == 3 and list(terms2[2]) == t and state('tissueProvided', terms2[2])}
+      when G15 then @state['pathResultsReported'].any? {|terms2| terms2.size == 3 and list(terms2[2]) == t}
+      when G16 then @state['integratedReport'].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t}
+      when G17 then @state['patientReportedToRegistrar'].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t and terms2[1] == a}
       when G18 then @state['patientReportedToRegistrar'].any? {|terms2| terms2.size == 2 and terms2[0] == t}
       when G19 then @state['inRegistry'].any? {|terms2| terms2.size == 1 and terms2[0] == t}
       end
