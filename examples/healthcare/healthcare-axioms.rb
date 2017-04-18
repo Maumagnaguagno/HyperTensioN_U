@@ -29,7 +29,7 @@ def p(cn, ci, t)
       when C4 then @state['imagingRequested'].any? {|terms| terms.size == 2 and terms[0] == a and list(terms[1]) == t and state('iAppointmentKept', terms[1], d)}
       when C5 then @state['biopsyRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('bAppointmentKept', terms[1], d)}
       when C6 then @state['pathologyRequested'].any? {|terms| terms.size == 3 and terms[1] == d and state('tissueProvided', terms[2])}
-      when C7 then @state['patientReportedToRegistrar'].any? {|terms| terms.size == 2 and terms[0] == t and terms[1] == d}
+      when C7 then @state['patientReportedToRegistrar'].any? {|terms| terms.size == 2 and list(terms[0]) == t and terms[1] == d}
       end
     end
   }
