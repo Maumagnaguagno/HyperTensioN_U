@@ -239,19 +239,19 @@ end
 #     ; Pathologist employs ENTICE for G12 to create commitment C6
 #     (entice G12 ?g12i (?patient) C6 C6 (?patient) ?pathologist ?radiologist)
 #     ;Radiologist employs DETACH for C6 to consider and activate goal G13
-#     (detach G13 ?g13i (?radiologist) C6 C6 (?patient) ?pathologist ?radiologist)
+#     (detach G13 ?g13i (?patient) C6 C6 (?patient) ?pathologist ?radiologist)
 #     ;Radiologist brings about pathologyRequested and tissueProvided
 #     (!performBiopsy ?radiologist ?patient ?physician)
 #     (!requestPathologyReport ?physician ?radiologist ?pathologist ?patient)
 #     ;The above should satisfy G13 and detach C6
-#     (testGoal G13 ?g13i (?radiologist) satisfied)
+#     (testGoal G13 ?g13i (?patient) satisfied)
 #     (testCommitment C6 C6 (?patient) detached)
 #     ;Pathologist employs DELIVER for C6 to consider and activate goal G15
-#     (deliver G15 ?g15i (?pathologist) C6 C6 (?patient) ?pathologist ?radiologist)
+#     (deliver G15 ?g15i (?patient) C6 C6 (?patient) ?pathologist ?radiologist)
 #     ;Pathologist brings about pathResultsReported
 #     (!sendPathologyReport ?radiologist ?physician ?pathologist ?patient)
 #     ;The above should satisfy G15 and C6
-#     (testGoal G15 ?g15i (?pathologist) satisfied)
+#     (testGoal G15 ?g15i (?patient) satisfied)
 #     (testcommitment C6 ?c6_patient (?patient) satisfied)
 #     ;Radiologist employs DELIVER for C5 to consider and activate goal G16
 #     (deliver G16 ?g16i (?patient) C5 ?c5_patient (?patient) ?radiologist ?physician)
@@ -293,14 +293,14 @@ def step4(patient)
       ['consider', G12, g12i, pathologist, list(patient)],
       ['activate', G12, g12i, pathologist, list(patient)],
       ['entice', G12, g12i, list(patient), C6, c6_patient, list(patient), pathologist, radiologist],
-      ['detach', G13, g13i, list(radiologist), C6, c6_patient, list(patient), pathologist, radiologist],
+      ['detach', G13, g13i, list(patient), C6, c6_patient, list(patient), pathologist, radiologist],
       ['performBiopsy', radiologist, patient, physician],
       ['requestPathologyReport', physician, radiologist, pathologist, patient],
-      ['testGoal', G13, g13i, list(radiologist), 'satisfied'],
+      ['testGoal', G13, g13i, list(patient), 'satisfied'],
       ['testCommitment', C6, c6_patient, list(patient), 'detached'],
-      ['deliver', G15, g15i, list(pathologist), C6, c6_patient, list(patient), pathologist, radiologist],
+      ['deliver', G15, g15i, list(patient), C6, c6_patient, list(patient), pathologist, radiologist],
       ['sendPathologyReport', radiologist, physician, pathologist, patient],
-      ['testGoal', G15, g15i, list(pathologist), 'satisfied'],
+      ['testGoal', G15, g15i, list(patient), 'satisfied'],
       ['testCommitment', C6, c6_patient, list(patient), 'satisfied'],
       ['deliver', G16, g16i, list(patient), C5, c5_patient, list(patient), radiologist, physician],
       ['sendRadiologyReport', radiologist, physician, patient],
@@ -336,7 +336,7 @@ end
 #     ; Registrar brings about addPatientToRegistry. This:
 #     (!addPatientToRegistry ?patient ?registrar)
 #     ;The above should satisfy G19 and C7
-#     (testGoal G19 ?g19i (?registrar) satisfied)
+#     (testGoal G19 ?g19i (?patient) satisfied)
 #     (testCommitment C7 ?c7_patient (?patient) satisfied)
 #   )
 # )
@@ -371,7 +371,7 @@ def step5(patient)
       ['testCommitment', C7, c7_patient, list(patient), 'detached'],
       ['deliver', G19, g19i, list(registrar), C7, c7_patient, list(patient), registrar, pathologist],
       ['addPatientToRegistry', patient, registrar],
-      ['testGoal', G19, g19i, list(registrar), 'satisfied'],
+      ['testGoal', G19, g19i, list(patient), 'satisfied'],
       ['testCommitment', C7, c7_patient, list(patient), 'satisfied']
     ]
   }
