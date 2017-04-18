@@ -18,5 +18,5 @@ script:
   - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb1.ujshop run 1
   - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb2.ujshop run 1
   - ruby Hype.rb examples/jumpmaze/jumpmaze.ujshop examples/jumpmaze/pb1.ujshop run
-  #- ruby examples/healthcare/pbhealthcare.ujshop.rb
-  #- ruby examples/healthcare/pbhealthcare_test.ujshop.rb
+  - ruby examples/healthcare/pbhealthcare.ujshop.rb
+  - ruby examples/healthcare/pbhealthcare_test_steps.ujshop.rb
