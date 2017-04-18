@@ -90,7 +90,7 @@ plans = Healthcare.problem(
     ['step2', alice],
     ['step3', alice],
     ['step4', alice],
-    ['step5', alice],
+    ['step5', alice]
   ],
   # Debug
   debug,
