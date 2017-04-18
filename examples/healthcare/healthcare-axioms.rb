@@ -143,7 +143,7 @@ def s(gn, gi, t)
       when G16 then @state['integratedReport'].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t}
       when G17 then @state['patientReportedToRegistrar'].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t and terms2[1] == a}
       when G18 then @state['patientReportedToRegistrar'].any? {|terms2| terms2.size == 2 and terms2[0] == t}
-      when G19 then @state['inRegistry'].any? {|terms2| terms2.size == 1 and terms2[0] == t}
+      when G19 then @state['inRegistry'].any? {|terms2| terms2.size == 1 and list(terms2[0]) == t}
       end
     end
   }
