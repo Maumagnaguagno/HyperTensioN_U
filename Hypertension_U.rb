@@ -45,7 +45,7 @@ module Hypertension_U
           task_name = current_task.shift
           level += 1
           decomposition.each {|method|
-            puts "#{'  ' * level.pred}#{method}(#{current_task.join(',')})" if @debug
+            puts "#{'  ' * level.pred}#{method}(#{current_task.join(' ')})" if @debug
             # Every unification is tested
             send(method, *current_task) {|subtasks| planning(subtasks.concat(tasks), level, plan)}
           }
@@ -71,7 +71,7 @@ module Hypertension_U
 
   def execute(current_task, probability, tasks, level, plan)
     old_state = @state
-    puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(',')})" if @debug
+    puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(' ')})" if @debug
     # Minimum probability and applied
     if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and send(*current_task)
       new_plan = plan.dup << Marshal.load(Marshal.dump(current_task))
@@ -185,7 +185,7 @@ module Hypertension_U
   #-----------------------------------------------
 
   def print_data(data)
-    data.each_with_index {|d,i| puts "#{i}: #{d.first}(#{d.drop(1).join(', ')})"}
+    data.each_with_index {|d,i| puts "#{i}: #{d.first}(#{d.drop(1).join(' ')})"}
   end
 
   #-----------------------------------------------
