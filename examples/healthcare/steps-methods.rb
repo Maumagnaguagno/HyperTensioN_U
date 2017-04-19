@@ -332,7 +332,7 @@ end
 #     (testGoal G17 ?g17i (?patient) satisfied)
 #     (testCommitment C7 ?c7_patient (?patient) detached)
 #     ; Registrar employs DELIVER rule for C7 to consider and activate goal G19
-#     (deliver G19 ?g19i (?registrar) C7 ?c7_patient (?patient) ?registrar ?pathologist)
+#     (deliver G19 ?g19i (?patient) C7 ?c7_patient (?patient) ?registrar ?pathologist)
 #     ; Registrar brings about addPatientToRegistry. This:
 #     (!addPatientToRegistry ?patient ?registrar)
 #     ;The above should satisfy G19 and C7
@@ -369,7 +369,7 @@ def step5(patient)
       ['reportPatient', patient, pathologist, registrar],
       ['testGoal', G17, g17i, list(patient) ,'satisfied'],
       ['testCommitment', C7, c7_patient, list(patient), 'detached'],
-      ['deliver', G19, g19i, list(registrar), C7, c7_patient, list(patient), registrar, pathologist],
+      ['deliver', G19, g19i, list(patient), C7, c7_patient, list(patient), registrar, pathologist],
       ['addPatientToRegistry', patient, registrar],
       ['testGoal', G19, g19i, list(patient), 'satisfied'],
       ['testCommitment', C7, c7_patient, list(patient), 'satisfied']
