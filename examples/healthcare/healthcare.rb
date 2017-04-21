@@ -1,5 +1,6 @@
-PLANNER = 'Hypertension_U'
-require_relative PLANNER == 'Hypertension_U' ? '../../Hypertension_U' : '../../../Hypertension/Hypertension'
+# Both planners can execute this domain
+require_relative '../../Hypertension_U'
+#require_relative '../../../Hypertension/Hypertension'
 
 def list(*terms)
   "(#{terms.join(' ')})"
