@@ -1,4 +1,5 @@
-require_relative '../../Hypertension_U'
+PLANNER = 'Hypertension_U'
+require_relative PLANNER == 'Hypertension_U' ? '../../Hypertension_U' : '../../../Hypertension/Hypertension'
 
 def list(*terms)
   "(#{terms.join(' ')})"
@@ -55,59 +56,71 @@ GOALS = [
 ]
 
 module Healthcare
-  include Hypertension_U
-  extend self
 
   #-----------------------------------------------
   # Domain
   #-----------------------------------------------
 
-  @domain = {
-    # Operators
-    'invisible_testSuccess' => 1,
-    'invisible_testFailure' => 1,
-    'invisible_testSuccessG' => 1,
-    'create' => 1,
-    'suspend' => 1,
-    'reactivate' => 1,
-    'satisfy' => 1,
-    'expire' => 1,
-    'timeoutviolate' => 1,
-    'cancel' => 1,
-    'release' => 1,
-
-    'testSuccessG' => 1,
-    'consider' => 1,
-    'activate' => 1,
-    'suspendG' => 1,
-    'reconsider' => 1,
-    'reactivateG' => 1,
-    'drop' => 1,
-    'abort' => 1,
-
-    'requestAssessment' => 1,
-    'requestImaging' => 1,
-    'requestBiopsy' => 1,
-    'performImaging' => {
+  if defined?(Hypertension)
+    include Hypertension
+    VISIBLE = true
+    INVISIBLE = false
+    PERFORMIMAGING_OUTCOMES = VISIBLE
+    PERFORMBIOPSY_OUTCOMES = VISIBLE
+  else
+    include Hypertension_U
+    VISIBLE = INVISIBLE = 1
+    PERFORMIMAGING_OUTCOMES = {
       'performImaging_success' => 0.7,
       'performImaging_failure' => 0.3
-    },
-    'performBiopsy' => {
+    }
+    PERFORMBIOPSY_OUTCOMES = {
       'performBiopsy_success' => 0.6,
       'performBiopsy_failure' => 0.4
-    },
-    'requestPathologyReport' => 1,
-    'requestRadiologyReport' => 1,
-    'sendPathologyReport' => 1,
-    'sendRadiologyReport' => 1,
-    'sendIntegratedReport' => 1,
-    'generateTreatmentPlan' => 1,
-    'reportPatient' => 1,
-    'addPatientToRegistry' => 1,
-    'escalateFailure' => 1,
-    'requestPhysicianReportAssessment' => 1,
-    'requestRadiologyReportAssessment' => 1,
-    'requestPathologyReportAssessment' => 1,
+    }
+  end
+  extend self
+
+  @domain = {
+    # Operators
+    'invisible_testSuccess' => INVISIBLE,
+    'invisible_testFailure' => INVISIBLE,
+    'invisible_testSuccessG' => INVISIBLE,
+    'create' => VISIBLE,
+    'suspend' => VISIBLE,
+    'reactivate' => VISIBLE,
+    'satisfy' => VISIBLE,
+    'expire' => VISIBLE,
+    'timeoutviolate' => VISIBLE,
+    'cancel' => VISIBLE,
+    'release' => VISIBLE,
+
+    'testSuccessG' => VISIBLE,
+    'consider' => VISIBLE,
+    'activate' => VISIBLE,
+    'suspendG' => VISIBLE,
+    'reconsider' => VISIBLE,
+    'reactivateG' => VISIBLE,
+    'drop' => VISIBLE,
+    'abort' => VISIBLE,
+
+    'requestAssessment' => VISIBLE,
+    'requestImaging' => VISIBLE,
+    'requestBiopsy' => VISIBLE,
+    'performImaging' => PERFORMIMAGING_OUTCOMES,
+    'performBiopsy' => PERFORMBIOPSY_OUTCOMES,
+    'requestPathologyReport' => VISIBLE,
+    'requestRadiologyReport' => VISIBLE,
+    'sendPathologyReport' => VISIBLE,
+    'sendRadiologyReport' => VISIBLE,
+    'sendIntegratedReport' => VISIBLE,
+    'generateTreatmentPlan' => VISIBLE,
+    'reportPatient' => VISIBLE,
+    'addPatientToRegistry' => VISIBLE,
+    'escalateFailure' => VISIBLE,
+    'requestPhysicianReportAssessment' => VISIBLE,
+    'requestRadiologyReportAssessment' => VISIBLE,
+    'requestPathologyReportAssessment' => VISIBLE,
     # Methods
     'achieveGoals' => [
       'achieveGoals_workTowardsGoal',
@@ -203,6 +216,7 @@ module Healthcare
       'deliverDiagnostics_only_imaging',
       'deliverDiagnostics_imaging_biopsy_integrated'
     ],
+
     'step1' => [
       'step1'
     ],

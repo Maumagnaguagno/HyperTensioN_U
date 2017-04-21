@@ -155,58 +155,54 @@ if jshop
   problem_str << "  )\n)"
   IO.write(jshop, problem_str)
 else
-  Healthcare.problem(
-    # Start
-    {
-      'patient' => PATIENT_SET.map {|i| [i]},
-      'physician' => PHYSICIAN_SET.map {|i| [i]},
-      'radiologist' => RADIOLOGIST_SET.map {|i| [i]},
-      'pathologist' => PATHOLOGIST_SET.map {|i| [i]},
-      'registrar' => REGISTRAR_SET.map {|i| [i]},
-      'hospital' => HOSPITAL_SET.map {|i| [i]},
-      'patientHasCancer' => PATIENT_SET.first(cancers).map {|i| [i]},
-      'commitment' => COMMITMENT_SET,
-      'goal' => GOAL_SET,
-      'var' => [],
-      'varG' => [],
-      'diagnosisRequested' => [],
-      'iAppointmentRequested' => [],
-      'iAppointmentKept' => [],
-      'imagingScan' => [],
-      'imagingRequested' => [],
-      'imagingResultsReported' => [],
-      'bAppointmentRequested' => [],
-      'bAppointmentKept' => [],
-      'biopsyReport' => [],
-      'biopsyRequested' => [],
-      'radiologyRequested' => [],
-      'treatmentPlan' => [],
-      'diagnosisProvided' => [],
-      'tissueProvided' => [],
-      'radPathResultsReported' => [],
-      'pathResultsReported' => [],
-      'patientReportedToRegistrar' => [],
-      'inRegistry' => [],
-      'pathologyRequested' => [],
-      'integratedReport' => [],
-      'reportNeedsReview' => [],
-      'cancelled' => [],
-      'released' => [],
-      'expired' => [],
-      'dropped' => [],
-      'aborted' => [],
-      'pending' => [],
-      'activatedG' => [],
-      'suspendedG' => [],
-      'dontknow' => []
-    },
-    # Tasks
-    TASKS,
-    # Debug
-    debug,
-    # Maximum plans found
-    max_plans,
-    # Minimum probability for plans
-    min_prob
-  )
+  # Start
+  START = {
+    'patient' => PATIENT_SET.map {|i| [i]},
+    'physician' => PHYSICIAN_SET.map {|i| [i]},
+    'radiologist' => RADIOLOGIST_SET.map {|i| [i]},
+    'pathologist' => PATHOLOGIST_SET.map {|i| [i]},
+    'registrar' => REGISTRAR_SET.map {|i| [i]},
+    'hospital' => HOSPITAL_SET.map {|i| [i]},
+    'patientHasCancer' => PATIENT_SET.first(cancers).map {|i| [i]},
+    'commitment' => COMMITMENT_SET,
+    'goal' => GOAL_SET,
+    'var' => [],
+    'varG' => [],
+    'diagnosisRequested' => [],
+    'iAppointmentRequested' => [],
+    'iAppointmentKept' => [],
+    'imagingScan' => [],
+    'imagingRequested' => [],
+    'imagingResultsReported' => [],
+    'bAppointmentRequested' => [],
+    'bAppointmentKept' => [],
+    'biopsyReport' => [],
+    'biopsyRequested' => [],
+    'radiologyRequested' => [],
+    'treatmentPlan' => [],
+    'diagnosisProvided' => [],
+    'tissueProvided' => [],
+    'radPathResultsReported' => [],
+    'pathResultsReported' => [],
+    'patientReportedToRegistrar' => [],
+    'inRegistry' => [],
+    'pathologyRequested' => [],
+    'integratedReport' => [],
+    'reportNeedsReview' => [],
+    'cancelled' => [],
+    'released' => [],
+    'expired' => [],
+    'dropped' => [],
+    'aborted' => [],
+    'pending' => [],
+    'activatedG' => [],
+    'suspendedG' => [],
+    'dontknow' => []
+  }
+  # Select planner
+  if defined?(Hypertension)
+    Healthcare.problem(START, TASKS, debug)
+  else
+    Healthcare.problem(START, TASKS, debug, max_plans, min_prob)
+  end
 end

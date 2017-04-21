@@ -59,6 +59,7 @@ def performImaging_success(radiologist, patient, physician)
     )
   end
 end
+alias :performImaging :performImaging_success
 
 def performImaging_failure(radiologist, patient, physician)
   state('patient', patient) and state('radiologist', radiologist) and state('physician', physician) and state('iAppointmentRequested', patient, radiologist)
@@ -86,6 +87,7 @@ def performBiopsy_success(radiologist, patient, physician)
     )
   end
 end
+alias :performBiopsy :performBiopsy_success
 
 def performBiopsy_failure(radiologist, patient, physician)
   state('patient', patient) and state('radiologist', radiologist) and state('physician', physician)
