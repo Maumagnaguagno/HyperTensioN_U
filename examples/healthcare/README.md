@@ -1,4 +1,29 @@
 # Healthcare
+The Healthcare domain is also compatible with Hypertension, but requires a modification of which planner ``healthcare.rb`` must require, just commment/uncomment the lines already present.
+
+## Problem Generator
+A problem generator is available in ``pbgenerator.rb``, it can either generate a problem and call the planner or output a JSHOP description.
+See ``batch.rb`` to generate multiple calls.
+
+```
+  Usage:
+    pbgenerator [-option [arg]]
+
+  Options:
+    debug         - debug mode
+    -jshop        - JSHOP file output
+    -max_plans    - maximum amount of plans to search (default 1)
+    -min_prob     - minimum probability to include plan (default 0)
+    -patients     - amount of patients (default 1)
+    -physicians   - amount of physicians (default 1)
+    -radiologists - amount of radiologists (default 1)
+    -pathologists - amount of pathologists (default 1)
+    -registrars   - amount of registrars (default 1)
+    -hospitals    - amount of hospitals (default 1)
+    -cancers      - amount of patients with cancer (default 1)"
+```
+
+## Description
 
 ### Predicates
 - ``(patient ?patient)``
