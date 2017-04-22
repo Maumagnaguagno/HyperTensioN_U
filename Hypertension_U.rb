@@ -37,6 +37,7 @@ module Hypertension_U
           decomposition.each {|task_prob,probability|
             current_task[0] = task_prob
             execute(current_task, probability, tasks, level, plan)
+            return if @plans.size == @max_plans
           }
           current_task[0] = task_name
         # Method
@@ -47,7 +48,10 @@ module Hypertension_U
           decomposition.each {|method|
             puts "#{'  ' * level.pred}#{method}(#{current_task.join(' ')})" if @debug
             # Every unification is tested
-            send(method, *current_task) {|subtasks| planning(subtasks.concat(tasks), level, plan)}
+            send(method, *current_task) {|subtasks|
+              planning(subtasks.concat(tasks), level, plan)
+              return if @plans.size == @max_plans
+            }
           }
           current_task.unshift(task_name)
         # Error
