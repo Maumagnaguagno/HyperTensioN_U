@@ -64,18 +64,14 @@ module UHyper_Compiler
         "(#{ltoken} #{function} #{rtoken}).to_s"
       end
     # Unary math
-    when '-', 'abs', 'sin', 'cos', 'tan'
+    when 'abs', 'sin', 'cos', 'tan'
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 1" if precond_expression.size != 3
       ltoken = evaluate(precond_expression[2])
       if ltoken =~ /^'(-?\d+(?>\.\d+)?)'$/ then ltoken = $1.to_f
       elsif ltoken !~ /^-?\d+(?>\.\d+)?$/ then ltoken << '.to_f'
       end
       if ltoken.instance_of?(Float)
-        case function
-        when '-' then (-ltoken).to_s
-        when 'abs' then abs(ltoken).to_s
-        else Math.send(function, ltoken).to_s
-        end
+        function == 'abs' ? ltoken.abs.to_s : Math.send(function, ltoken).to_s
       else "(#{function} #{ltoken}).to_s"
       end
     # Comparison
