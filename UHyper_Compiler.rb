@@ -72,7 +72,8 @@ module UHyper_Compiler
       end
       if ltoken.instance_of?(Float)
         function == 'abs' ? ltoken.abs.to_s : Math.send(function, ltoken).to_s
-      else "(#{function} #{ltoken}).to_s"
+      else
+        function == 'abs' ? "#{ltoken}.abs.to_s" : "(#{function} #{ltoken}).to_s"
       end
     # Comparison
     when '=', '!=', '<=>'
