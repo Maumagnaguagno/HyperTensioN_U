@@ -45,23 +45,49 @@ module UHyper_Compiler
   # Call
   #-----------------------------------------------
 
-  def call(precond_expression)
-    raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 4
-    function = '==' if (function = precond_expression[1]) == '='
-    ltoken = evaluate(precond_expression[2])
-    rtoken = evaluate(precond_expression[3])
-    if ['+', '-', '*', '/', '%', '**'].include?(function)
+  def callx(precond_expression)
+    case function = precond_expression[1]
+    # Binary math
+    when '+', '-', '*', '/', '%', '**'
+      raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 4
+      ltoken = evaluate(precond_expression[2])
+      rtoken = evaluate(precond_expression[3])
       if ltoken =~ /^'(-?\d+(?>\.\d+)?)'$/ then ltoken = $1.to_f
       elsif ltoken !~ /^-?\d+(?>\.\d+)?$/ then ltoken << '.to_f'
       end
       if rtoken =~ /^'(-?\d+(?>\.\d+)?)'$/ then rtoken = $1.to_f
       elsif rtoken !~ /^-?\d+(?>\.\d+)?$/ then rtoken << '.to_f'
       end
-      "(#{ltoken} #{function} #{rtoken}).to_s"
-    else
+      if ltoken.instance_of?(Float) and rtoken.instance_of?(Float)
+        ltoken.send(function, rtoken).to_s
+      else
+        "(#{ltoken} #{function} #{rtoken}).to_s"
+      end
+    # Unary math
+    when '-', 'abs', 'sin', 'cos', 'tan'
+      raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 1" if precond_expression.size != 3
+      ltoken = evaluate(precond_expression[2])
+      if ltoken =~ /^'(-?\d+(?>\.\d+)?)'$/ then ltoken = $1.to_f
+      elsif ltoken !~ /^-?\d+(?>\.\d+)?$/ then ltoken << '.to_f'
+      end
+      if ltoken.instance_of?(Float)
+        case function
+        when '-' then (-ltoken).to_s
+        when 'abs' then abs(ltoken).to_s
+        else Math.send(function, ltoken).to_s
+        end
+      else "(#{function} #{ltoken}).to_s"
+      end
+    # Comparison
+    when '=', '!=', '<=>'
+      raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 4
+      ltoken = evaluate(precond_expression[2])
+      rtoken = evaluate(precond_expression[3])
       ltoken << '.to_s' if ltoken !~ /^[\w']/
       rtoken << '.to_s' if rtoken !~ /^[\w']/
-      "(#{ltoken} #{function} #{rtoken})"
+      # TODO do comparisons at compile-time when possible
+      "(#{ltoken} #{function == '=' ? '==' : function} #{rtoken})"
+    else raise "Unknown function for #{precond_expression.join(' ')}"
     end
   end
 
