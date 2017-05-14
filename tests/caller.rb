@@ -37,4 +37,44 @@ class Caller < Test::Unit::TestCase
     call('1.0', ['call', '*', '-1', '-1.0'])
     call('1.0', ['call', '*', '-1', '-1.0'])
   end
+
+  def test_call_div
+    
+  end
+
+  def test_call_rest
+    
+  end
+
+  def test_call_exp
+    
+  end
+
+  def test_call_negative
+    
+  end
+
+  def test_call_sin
+    
+  end
+
+  def test_call_cos
+    
+  end
+
+  def test_call_tan
+    
+  end
+
+  def test_call_equal
+    
+  end
+
+  def test_call_diff
+    
+  end
+
+  def test_call_compare
+    
+  end
 end
