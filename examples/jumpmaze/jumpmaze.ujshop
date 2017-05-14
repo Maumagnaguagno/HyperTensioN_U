@@ -33,7 +33,7 @@
     ; Preconditions
     (
       (at ?pos)
-      (tile ?pos 0)
+      (tile ?pos 0.0)
     )
     ; Subtasks
     ()
