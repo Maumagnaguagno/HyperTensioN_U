@@ -98,15 +98,18 @@ class Caller < Test::Unit::TestCase
   end
 
   def test_call_sin
-    # TODO
+    call(Math.sin(0).to_s, ['call', 'sin', '0'])
+    call('Math.sin(a.to_f).to_s', ['call', 'sin', '?a'])
   end
 
   def test_call_cos
-    # TODO
+    call(Math.cos(0).to_s, ['call', 'cos', '0'])
+    call('Math.cos(a.to_f).to_s', ['call', 'cos', '?a'])
   end
 
   def test_call_tan
-    # TODO
+    call(Math.tan(0).to_s, ['call', 'tan', '0'])
+    call('Math.tan(a.to_f).to_s', ['call', 'tan', '?a'])
   end
 
   def test_call_equal
