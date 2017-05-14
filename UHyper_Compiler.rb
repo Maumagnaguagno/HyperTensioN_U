@@ -45,7 +45,7 @@ module UHyper_Compiler
   # Call
   #-----------------------------------------------
 
-  def callx(precond_expression)
+  def call(precond_expression)
     case function = precond_expression[1]
     # Binary math
     when '+', '-', '*', '/', '%', '**'
