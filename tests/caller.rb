@@ -74,7 +74,7 @@ class Caller < Test::Unit::TestCase
     call('(a.to_f % b.to_f).to_s', ['call', '%', '?a', '?b'])
   end
 
-  def test_call_exp
+  def test_call_power
     call('9.0', ['call', '**', '3', '2'])
     call('9.0', ['call', '**', '3', '2.0'])
     call('9.0', ['call', '**', '3.0', '2'])
@@ -113,26 +113,54 @@ class Caller < Test::Unit::TestCase
   end
 
   def test_call_equal
-    # TODO
-    #call('true', ['call', '=', '1', '1'])
-    #call('true', ['call', '=', '?a', '?a'])
-    #call('false', ['call', '=', '1', '2'])
-    #call('false', ['call', '=', '2', '1'])
+    call('true', ['call', '=', '1', '1'])
+    call('true', ['call', '=', '?a', '?a'])
+    # TODO optimize constant comparison
+    call("('1.0' == '2.0')", ['call', '=', '1', '2'])
+    call("('2.0' == '1.0')", ['call', '=', '2', '1'])
+    call("(a == '1.0')", ['call', '=', '?a', '1'])
+    call("('1.0' == a)", ['call', '=', '1', '?a'])
   end
 
   def test_call_diff
-    # TODO
-    #call('false', ['call', '!=', '1', '1'])
-    #call('false', ['call', '!=', '?a', '?a'])
-    #call('true', ['call', '!=', '1', '2'])
-    #call('true', ['call', '!=', '2', '1'])
+    call('false', ['call', '!=', '1', '1'])
+    call('false', ['call', '!=', '?a', '?a'])
+    # TODO optimize constant comparison
+    call("('1.0' != '2.0')", ['call', '!=', '1', '2'])
+    call("('2.0' != '1.0')", ['call', '!=', '2', '1'])
+    call("(a != '1.0')", ['call', '!=', '?a', '1'])
+    call("('1.0' != a)", ['call', '!=', '1', '?a'])
   end
 
-  def test_call_compare
-    # TODO
-    #call('0', ['call', '=', '1', '1'])
-    #call('0', ['call', '=', '?a', '?a'])
-    #call('-1', ['call', '=', '1', '2'])
-    #call('1', ['call', '=', '2', '1'])
+  def test_call_less
+    call('false', ['call', '<', '1', '1'])
+    call('false', ['call', '<', '?a', '?a'])
+    call('true', ['call', '<=', '1', '1'])
+    call('true', ['call', '<=', '?a', '?a'])
+    # TODO optimize constant comparison
+    call("('1.0' < '2.0')", ['call', '<', '1', '2'])
+    call("('2.0' < '1.0')", ['call', '<', '2', '1'])
+    call("('1.0' <= '2.0')", ['call', '<=', '1', '2'])
+    call("('2.0' <= '1.0')", ['call', '<=', '2', '1'])
+    call("(a < '1.0')", ['call', '<', '?a', '1'])
+    call("('1.0' < a)", ['call', '<', '1', '?a'])
+    call("(a <= '1.0')", ['call', '<=', '?a', '1'])
+    call("('1.0' <= a)", ['call', '<=', '1', '?a'])
+  end
+
+  def test_call_greater
+    call('false', ['call', '>', '1', '1'])
+    call('false', ['call', '>', '?a', '?a'])
+    call('true', ['call', '>=', '1', '1'])
+    call('true', ['call', '>=', '?a', '?a'])
+    # TODO optimize constant comparison
+    call("('1.0' > '2.0')", ['call', '>', '1', '2'])
+    call("('2.0' > '1.0')", ['call', '>', '2', '1'])
+    call("('1.0' >= '2.0')", ['call', '>=', '1', '2'])
+    call("('2.0' >= '1.0')", ['call', '>=', '2', '1'])
+    call("(a > '1.0')", ['call', '>', '?a', '1'])
+    call("('1.0' > a)", ['call', '>', '1', '?a'])
+    call("(a >= '1.0')", ['call', '>=', '?a', '1'])
+    call("('1.0' >= a)", ['call', '>=', '1', '?a'])
   end
 end
