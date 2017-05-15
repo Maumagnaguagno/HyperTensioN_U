@@ -74,18 +74,18 @@ class Caller < Test::Unit::TestCase
     call('(a.to_f % b.to_f).to_s', ['call', '%', '?a', '?b'])
   end
 
-  def test_call_power
-    call('9.0', ['call', '**', '3', '2'])
-    call('9.0', ['call', '**', '3', '2.0'])
-    call('9.0', ['call', '**', '3.0', '2'])
-    call('9.0', ['call', '**', '3.0', '2.0'])
-    call('-1.0', ['call', '**', '-1', '1.0'])
-    call('1.0', ['call', '**', '1', '-1.0'])
-    call('-1.0', ['call', '**', '-1', '-1.0'])
-    # TODO optmize exp by 1
-    call('(1.0 ** a.to_f).to_s', ['call', '**', '1', '?a'])
-    call('(a.to_f ** 1.0).to_s', ['call', '**', '?a', '1'])
-    call('(a.to_f ** b.to_f).to_s', ['call', '**', '?a', '?b'])
+  def test_call_pow
+    call('9.0', ['call', '^', '3', '2'])
+    call('9.0', ['call', '^', '3', '2.0'])
+    call('9.0', ['call', '^', '3.0', '2'])
+    call('9.0', ['call', '^', '3.0', '2.0'])
+    call('-1.0', ['call', '^', '-1', '1.0'])
+    call('1.0', ['call', '^', '1', '-1.0'])
+    call('-1.0', ['call', '^', '-1', '-1.0'])
+    # TODO optmize pow by 1
+    call('(1.0 ** a.to_f).to_s', ['call', '^', '1', '?a'])
+    call('(a.to_f ** 1.0).to_s', ['call', '^', '?a', '1'])
+    call('(a.to_f ** b.to_f).to_s', ['call', '^', '?a', '?b'])
   end
 
   def test_call_abs

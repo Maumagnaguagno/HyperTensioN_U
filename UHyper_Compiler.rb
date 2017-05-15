@@ -48,7 +48,7 @@ module UHyper_Compiler
   def call(precond_expression)
     case function = precond_expression[1]
     # Binary math
-    when '+', '-', '*', '/', '%', '**'
+    when '+', '-', '*', '/', '%', '^'
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
@@ -58,10 +58,10 @@ module UHyper_Compiler
       if rtoken =~ /^'(-?\d+(?>\.\d+)?)'$/ then rtoken = $1.to_f
       elsif rtoken !~ /^-?\d+(?>\.\d+)?$/ then rtoken << '.to_f'
       end
+      function = '**' if function == '^'
       if ltoken.instance_of?(Float) and rtoken.instance_of?(Float)
         ltoken.send(function, rtoken).to_s
-      else
-        "(#{ltoken} #{function} #{rtoken}).to_s"
+      else "(#{ltoken} #{function} #{rtoken}).to_s"
       end
     # Unary math
     when 'abs', 'sin', 'cos', 'tan'
