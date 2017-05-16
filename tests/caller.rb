@@ -163,4 +163,9 @@ class Caller < Test::Unit::TestCase
     call("(a >= '1.0')", ['call', '>=', '?a', '1'])
     call("('1.0' >= a)", ['call', '>=', '1', '?a'])
   end
+
+  def test_nested_calls
+    call('6.0', ['call', '+', '3', ['call', '+', '2', '1']])
+    call('(a.to_f + (b.to_f + c.to_f)).to_s', ['call', '+', '?a', ['call', '+', '?b', '?c']])
+  end
 end
