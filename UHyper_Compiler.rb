@@ -24,8 +24,9 @@ module UHyper_Compiler
   def expression_to_hyper(precond_expression, axioms)
     case precond_expression.first
     when 'and', 'or'
-      expression = precond_expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ")
-      precond_expression.size == 2 ? expression : '(' << expression << ')'
+      if precond_expression.size == 2 then expression_to_hyper(precond_expression[1], axioms)
+      else '(' << precond_expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
+      end
     when 'not' then 'not ' << expression_to_hyper(precond_expression[1], axioms)
     when 'call' then call(precond_expression)
     else
