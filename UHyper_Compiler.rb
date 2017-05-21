@@ -84,11 +84,12 @@ module UHyper_Compiler
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
-      ltoken << '.to_s' if ltoken !~ /^[\w']/
-      rtoken << '.to_s' if rtoken !~ /^[\w']/
       if ltoken == rtoken
         (function == '=' or function == '<=' or function == '>=').to_s
-      else "(#{ltoken} #{function == '=' ? '==' : function} #{rtoken})"
+      else
+        ltoken << '.to_s' if ltoken !~ /^[\w']/
+        rtoken << '.to_s' if rtoken !~ /^[\w']/
+        "(#{ltoken} #{function == '=' ? '==' : function} #{rtoken})"
       end
     else raise "Unknown function for #{precond_expression.join(' ')}"
     end
