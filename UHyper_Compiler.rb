@@ -166,14 +166,9 @@ module UHyper_Compiler
           predicates_to_hyper(define_methods, dec[4], '    ', 'yield ')
         # Ground
         elsif dec[1].empty?
-          # TODO modify parser and use expression_to_hyper(precond_expression, axioms)
-          precond_call = ''
-          precond_pos = dec[2].reject {|pred| precond_call << call(pred) << " and\n    " if pred.first == 'call'}
-          precond_not = dec[3].reject {|pred| precond_call << 'not ' << call(pred) << " and\n    " if pred.first == 'call'}
-          predicates_to_hyper(define_methods << "\n    if #{precond_call}applicable?(\n      # Positive preconditions", precond_pos)
-          predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not)
-          predicates_to_hyper(define_methods << "\n    )", dec[4], '      ', 'yield ')
-          define_methods << "\n    end"
+          # TODO modify parser to apply expression_to_hyper directly
+          define_methods << "\n    return unless " << expression_to_hyper(['and', *dec[2], *dec[3].map {|pre| ['not', pre]}], axioms)
+          predicates_to_hyper(define_methods, dec[4], '    ', 'yield ')
         # Lifted
         else
           dec[1].each {|free| define_methods << "\n    #{free.sub(/^\?/,'')} = ''"}
