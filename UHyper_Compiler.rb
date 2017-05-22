@@ -62,8 +62,7 @@ module UHyper_Compiler
       else rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
       end
       function = '**' if function == '^'
-      if ltoken.instance_of?(Float) and rtoken.instance_of?(Float)
-        ltoken.send(function, rtoken).to_s
+      if ltoken.instance_of?(Float) and rtoken.instance_of?(Float) then ltoken.send(function, rtoken).to_s
       else "(#{ltoken} #{function} #{rtoken}).to_s"
       end
     # Unary math
@@ -81,8 +80,7 @@ module UHyper_Compiler
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
-      if ltoken == rtoken
-        (function == '=' or function == '<=' or function == '>=').to_s
+      if ltoken == rtoken then (function == '=' or function == '<=' or function == '>=').to_s
       else
         ltoken << '.to_s' if ltoken !~ /^[\w']/
         rtoken << '.to_s' if rtoken !~ /^[\w']/
