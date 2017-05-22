@@ -55,12 +55,10 @@ module UHyper_Compiler
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
-      if ltoken =~ /^'(-?\d+(?>\.\d+)?)'$/ then ltoken = $1.to_f
-      elsif ltoken =~ /^-?\d+(?>\.\d+)?$/ then ltoken = ltoken.to_f
+      if ltoken =~ /^('?)(-?\d+(?>\.\d+)?)\1$/ then ltoken = $2.to_f
       else ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
       end
-      if rtoken =~ /^'(-?\d+(?>\.\d+)?)'$/ then rtoken = $1.to_f
-      elsif rtoken =~ /^-?\d+(?>\.\d+)?$/ then rtoken = rtoken.to_f
+      if rtoken =~ /^('?)(-?\d+(?>\.\d+)?)\1$/ then rtoken = $2.to_f
       else rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
       end
       function = '**' if function == '^'
@@ -72,13 +70,10 @@ module UHyper_Compiler
     when 'abs', 'sin', 'cos', 'tan'
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 3
       ltoken = evaluate(precond_expression[2])
-      if ltoken =~ /^'(-?\d+(?>\.\d+)?)'$/ then ltoken = $1.to_f
-      elsif ltoken =~ /^-?\d+(?>\.\d+)?$/ then ltoken = ltoken.to_f
-      else ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
-      end
-      if ltoken.instance_of?(Float)
-        function == 'abs' ? ltoken.abs.to_s : Math.send(function, ltoken).to_s
+      if ltoken =~ /^('?)(-?\d+(?>\.\d+)?)\1$/
+        function == 'abs' ? $2.sub(/^-/,'') : Math.send(function, $2.to_f).to_s
       else
+        ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
         function == 'abs' ? "#{ltoken}.abs.to_s" : "Math.#{function}(#{ltoken}).to_s"
       end
     # Comparison
