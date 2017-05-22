@@ -82,7 +82,7 @@ class Caller < Test::Unit::TestCase
     call('-1.0', ['call', '^', '-1', '1.0'])
     call('1.0', ['call', '^', '1', '-1.0'])
     call('-1.0', ['call', '^', '-1', '-1.0'])
-    # TODO optmize pow by 1
+    # TODO optimize pow by 1
     call('(1.0 ** a.to_f).to_s', ['call', '^', '1', '?a'])
     call('(a.to_f ** 1.0).to_s', ['call', '^', '?a', '1'])
     call('(a.to_f ** b.to_f).to_s', ['call', '^', '?a', '?b'])
@@ -93,8 +93,7 @@ class Caller < Test::Unit::TestCase
     call('1.0', ['call', 'abs', '1.0'])
     call('1.0', ['call', 'abs', '-1'])
     call('1.0', ['call', 'abs', '-1.0'])
-    # TODO sub(/^-/,'')
-    call('a.to_f.abs.to_s', ['call', 'abs', '?a'])
+    call("a.sub(/^-/,'')", ['call', 'abs', '?a'])
   end
 
   def test_call_sin
