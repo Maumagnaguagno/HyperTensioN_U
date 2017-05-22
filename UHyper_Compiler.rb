@@ -70,11 +70,11 @@ module UHyper_Compiler
     when 'abs', 'sin', 'cos', 'tan'
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 3
       ltoken = evaluate(precond_expression[2])
-      if ltoken =~ /^('?)(-?\d+(?>\.\d+)?)\1$/
-        function == 'abs' ? $2.sub(/^-/,'') : Math.send(function, $2.to_f).to_s
+      if ltoken =~ /^('?)(-?\d+(?>\.\d+)?)\1$/ then function == 'abs' ? $2.sub(/^-/,'') : Math.send(function, $2.to_f).to_s
+      elsif function == 'abs' then "#{ltoken}.sub(/^-/,'')"
       else
         ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
-        function == 'abs' ? "#{ltoken}.abs.to_s" : "Math.#{function}(#{ltoken}).to_s"
+        "Math.#{function}(#{ltoken}).to_s"
       end
     # Comparison
     when '=', '!=', '<', '<=', '>=', '>'
