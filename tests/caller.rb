@@ -167,4 +167,9 @@ class Caller < Test::Unit::TestCase
     call('6.0', ['call', '+', '3', ['call', '+', '2', '1']])
     call('(a.to_f + (b.to_f + c.to_f)).to_s', ['call', '+', '?a', ['call', '+', '?b', '?c']])
   end
+
+  def test_external_calls
+    call("External.test('1.0', a)", ['call', 'test', '1', '?a'])
+    call("External.test((1.0 + a.to_f).to_s)", ['call', 'test', ['call', '+', '1', '?a']])
+  end
 end
