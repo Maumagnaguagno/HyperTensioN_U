@@ -1,0 +1,10 @@
+(defproblem pb1 external
+  ; Start
+  nil
+  ; Tasks
+  (
+    (!get-next)
+    (!get-next)
+    (!get-next)
+  )
+)

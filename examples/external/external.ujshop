@@ -1,0 +1,15 @@
+(defdomain external (
+
+  (:operator (!get-next)
+    ; Preconditions
+    (
+      (not (call empty))
+    )
+    ; Del effects
+    nil
+    ; Add effects
+    (
+      (have (call get-next-element))
+    )
+  )
+))
