@@ -86,9 +86,7 @@ module UHyper_Compiler
         rtoken << '.to_s' if rtoken !~ /^[\w']/
         "(#{ltoken} #{function == '=' ? '==' : function} #{rtoken})"
       end
-    else
-      puts "Call to #{function} is considered an external call"
-      "External.#{function}(#{precond_expression.drop(2).map{|term| evaluate(term)}.join(', ')})"
+    else "External.#{function}(#{precond_expression.drop(2).map{|term| evaluate(term)}.join(', ')})"
     end
   end
 
