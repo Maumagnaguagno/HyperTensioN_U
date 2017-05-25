@@ -86,7 +86,9 @@ module UHyper_Compiler
         rtoken << '.to_s' if rtoken !~ /^[\w']/
         "(#{ltoken} #{function == '=' ? '==' : function} #{rtoken})"
       end
-    else raise "Unknown function for #{precond_expression.join(' ')}"
+    else
+      puts "Call to #{function} is considered an external call"
+      "External.#{function}(#{precond_expression.drop(2).map{|term| evaluate(term)}.join(', ')})"
     end
   end
 
@@ -132,7 +134,7 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def compile_domain(domain_name, problem_name, operators, methods, predicates, state, tasks, axioms, reward, hypertension_filename = File.expand_path('../Hypertension_U', __FILE__))
-    domain_str = "module #{domain_name.capitalize}\n  include Hypertension_U\n  extend self\n\n  ##{SPACER}\n  # Domain\n  ##{SPACER}\n\n  @domain = {\n    # Operators"
+    domain_str = "require_relative 'external' if File.exist?(File.expand_path('../external.rb', __FILE__))\n\nmodule #{domain_name.capitalize}\n  include Hypertension_U\n  extend self\n\n  ##{SPACER}\n  # Domain\n  ##{SPACER}\n\n  @domain = {\n    # Operators"
     # Operators
     define_operators = ''
     operators.each_with_index {|op,i|
