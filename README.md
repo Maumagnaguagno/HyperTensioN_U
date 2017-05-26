@@ -14,7 +14,7 @@ Usage:
     debug - same as run with execution log
 ```
 
-An example in both Ruby and UJSHOP formalism is given.
+Some problems require ``max plans`` to be ``1`` to avoid stack overflow.
 To convert and execute the [cookie example](examples/cookie) is simple:
 
 ```Shell
