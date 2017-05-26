@@ -12,4 +12,17 @@
       (have (call get-next-element))
     )
   )
+
+  (:method (get-all)
+    recursion
+    nil
+    (
+      (!get-next)
+      (get-all)
+    )
+
+    base
+    nil
+    nil
+  )
 ))
