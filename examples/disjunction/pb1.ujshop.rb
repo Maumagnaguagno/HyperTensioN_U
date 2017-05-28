@@ -25,7 +25,7 @@ Disjunction.problem(
     'pred' => [
       [t1]
     ],
-    'formula' => []
+    'axiom1' => []
   },
   # Tasks
   [

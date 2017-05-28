@@ -5,7 +5,6 @@ require_relative 'disjunction.ujshop'
 t1 = 't1'
 t2 = 't2'
 t1000 = 't1000'
-t2 = 't3'
 
 Disjunction.problem(
   # Start

@@ -24,7 +24,7 @@
     ; Preconditions
     (
       (pred ?z)
-      (axiom1 ?z ?x ?y)
+      (axiom1 ?z ?x ?y) ; TODO x and y unification inside axiom
     )
     ; Subtasks
     (
