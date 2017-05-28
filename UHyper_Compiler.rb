@@ -216,7 +216,7 @@ module UHyper_Compiler
     start_hash = {}
     predicates.each_key {|i| start_hash[i] = []}
     state.each {|pred,*terms|
-      start_hash[pred] << terms if predicates.include?(pred)
+      (start_hash[pred] ||= []) << terms
       objects.concat(terms)
     }
     ordered = tasks.shift
