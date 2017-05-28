@@ -1,8 +1,13 @@
 (defproblem pb1 external
   ; Start
-  nil
+  (
+    (at 10.0001 15.00001)
+    (at 100001 0.0016)
+  )
   ; Tasks
   (
+    (!near (at 10 15))
+    (!near (at 100000 0.0015))
     (get-all)
   )
 )

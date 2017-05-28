@@ -25,4 +25,15 @@
     nil
     nil
   )
+
+  (:operator (!near ?pred)
+    ; Preconditions
+    (
+      (call approx ?pred)
+    )
+    ; Del effects
+    nil
+    ; Add effects
+    nil
+  )
 ))
