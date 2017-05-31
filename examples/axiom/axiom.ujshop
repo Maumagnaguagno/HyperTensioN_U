@@ -11,8 +11,6 @@
     (at 0)
   )
 
-  ; Parameter ?parameter0 is a default name generated because the first definition of this axiom uses a constant instead
-  ; Other parameter names currently not work
   (:- (at-axiom ?var)
     double-negation
     (not (not (at ?var)))
