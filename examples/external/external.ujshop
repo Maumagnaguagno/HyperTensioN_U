@@ -13,6 +13,17 @@
     )
   )
 
+  (:operator (!near ?pred)
+    ; Preconditions
+    (
+      (call approx ?pred)
+    )
+    ; Del effects
+    nil
+    ; Add effects
+    nil
+  )
+
   (:method (get-all)
     recursion
     nil
@@ -23,17 +34,6 @@
 
     base
     nil
-    nil
-  )
-
-  (:operator (!near ?pred)
-    ; Preconditions
-    (
-      (call approx ?pred)
-    )
-    ; Del effects
-    nil
-    ; Add effects
     nil
   )
 ))
