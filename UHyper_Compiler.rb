@@ -158,13 +158,13 @@ module UHyper_Compiler
       met.drop(2).each_with_index {|dec,i|
         domain_str << "      '#{met.first}_#{dec.first}'#{',' if met.size - 3 != i}\n"
         define_methods << "\n  def #{met.first}_#{dec.first}#{variables}"
-        # No preconditions
-        if dec[2].empty? and dec[3].empty?
-          predicates_to_hyper(define_methods, dec[4], '    ', 'yield ')
         # Ground
-        elsif dec[1].empty?
-          # TODO modify parser to apply expression_to_hyper directly
-          define_methods << "\n    return unless " << expression_to_hyper(['and', *dec[2], *dec[3].map {|pre| ['not', pre]}], axioms)
+        if dec[1].empty?
+          # No preconditions
+          unless dec[2].empty? and dec[3].empty?
+            # TODO modify parser to apply expression_to_hyper directly
+            define_methods << "\n    return unless " << expression_to_hyper(['and', *dec[2], *dec[3].map {|pre| ['not', pre]}], axioms)
+          end
           predicates_to_hyper(define_methods, dec[4], '    ', 'yield ')
         # Lifted
         else
