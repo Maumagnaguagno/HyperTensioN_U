@@ -215,12 +215,12 @@ module UHyper_Compiler
     objects = []
     start_hash = {}
     predicates.each_key {|i| start_hash[i] = []}
-    state.each {|pred,*terms|
-      (start_hash[pred] ||= []) << terms
+    state.each {|pre,*terms|
+      (start_hash[pre] ||= []) << terms
       objects.concat(terms)
     }
     ordered = tasks.shift
-    tasks.each {|pred,*terms| objects.concat(terms)}
+    tasks.each {|pre,*terms| objects.concat(terms)}
     # Objects
     objects.uniq!
     objects.each {|i|
