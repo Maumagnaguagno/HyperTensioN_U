@@ -11,9 +11,8 @@ module UHyper_Compiler
     if predicates.empty?
       output << "\n#{indentation}#{yielder}[]"
     else
-      group = []
-      predicates.each {|g| group << g.map {|i| evaluate(i)}.join(', ')}
-      output << "\n#{indentation}#{yielder}[\n#{indentation}  [" << group.join("],\n#{indentation}  [") << "]\n#{indentation}]"
+      group = predicates.map {|g| g.map {|i| evaluate(i)}.join(', ')}.join("],\n#{indentation}  [")
+      output << "\n#{indentation}#{yielder}[\n#{indentation}  [" << group << "]\n#{indentation}]"
     end
   end
 
