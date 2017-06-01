@@ -161,10 +161,8 @@ module UHyper_Compiler
         # Ground
         if dec[1].empty?
           # No preconditions
-          unless dec[2].empty? and dec[3].empty?
-            # TODO modify parser to apply expression_to_hyper directly
-            define_methods << "\n    return unless " << expression_to_hyper(['and', *dec[2], *dec[3].map {|pre| ['not', pre]}], axioms)
-          end
+          # TODO modify parser to apply expression_to_hyper directly
+          define_methods << "\n    return unless " << expression_to_hyper(['and', *dec[2], *dec[3].map {|pre| ['not', pre]}], axioms) unless dec[2].empty? and dec[3].empty?
           predicates_to_hyper(define_methods, dec[4], '    ', 'yield ')
         # Lifted
         else
