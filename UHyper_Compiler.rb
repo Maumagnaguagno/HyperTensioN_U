@@ -170,6 +170,7 @@ module UHyper_Compiler
         else
           axioms_calls = []
           dec[2].reject! {|pre| axioms_calls << pre if pre.first.start_with?('call') or axioms.assoc(pre.first)}
+          dec[3].reject! {|pre| axioms_calls << ['not', pre] if pre.first.start_with?('call') or axioms.assoc(pre.first)}
           dec[1].each {|free| define_methods << "\n    #{free.sub(/^\?/,'')} = ''"}
           predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", dec[2])
           predicates_to_hyper(define_methods << ",\n      # Negative preconditions", dec[3])
