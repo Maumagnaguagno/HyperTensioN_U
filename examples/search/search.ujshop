@@ -1,0 +1,42 @@
+(defdomain search (
+
+  (:operator (!move ?agent ?from ?to)
+    (
+      (at ?agent ?from)
+      (call visible ?from ?to)
+    )
+    ((at ?agent ?from))
+    ((at ?agent ?to))
+  )
+
+  (:operator (!!visit ?agent ?pos)
+    nil
+    nil
+    ((visited ?agent ?pos))
+  )
+
+  (:operator (!!unvisit ?agent ?pos)
+    nil
+    ((visited ?agent ?pos))
+    nil
+  )
+
+  (:method (forward ?agent ?goal)
+    base
+    ((at ?agent ?goal))
+    nil
+
+    recursion
+    (
+      (at ?agent ?from)
+      (X nearby ?from ?place)    ; ?place is unified by a geometric predicate
+      (not (visited ?agent ?place))
+    )
+    (
+      (!move ?agent ?from ?place)
+      (!!visit ?agent ?from)
+      (forward ?agent ?goal)
+      (!!unvisit ?agent ?from)
+    )
+  )
+))
