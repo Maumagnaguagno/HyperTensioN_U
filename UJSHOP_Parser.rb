@@ -188,7 +188,7 @@ module UJSHOP_Parser
         when ':operator' then parse_operator(group)
         when ':method' then parse_method(group)
         when ':-' then parse_axiom(group)
-        when ':reward' then (@rewards = group).shift
+        when ':rewards' then (@rewards = group).shift
         else raise "#{group.first} is not recognized in domain"
         end
       end

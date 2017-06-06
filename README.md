@@ -44,7 +44,7 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
 (defdomain domain-name (
 
   ; Reward function
-  (:reward
+  (:rewards
     ((pre1 a)  10) ; Obtaining (pre1 a) from one state to another adds 10 to valuation
     ((pre2 b) -10) ; Any integer can be a reward, even negative values
   )
