@@ -66,7 +66,7 @@ class Biscuit < Test::Unit::TestCase
       :state => [['at', 'bob', 'home']],
       :tasks => [true, ['get_cookie', 'bob', 'home', 'cookie-store']],
       :axioms => [],
-      :reward => [
+      :rewards => [
         [['have', 'bob', 'good-cookie'], '10'],
         [['have', 'bob', 'bad-cookie'], '-10']
       ]
