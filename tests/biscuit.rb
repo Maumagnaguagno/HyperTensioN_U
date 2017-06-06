@@ -69,7 +69,8 @@ class Biscuit < Test::Unit::TestCase
       :rewards => [
         [['have', 'bob', 'good-cookie'], '10'],
         [['have', 'bob', 'bad-cookie'], '-10']
-      ]
+      ],
+      :attachments => []
     )
   end
 end

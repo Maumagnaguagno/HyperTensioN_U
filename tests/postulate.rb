@@ -50,7 +50,8 @@ class Postulate < Test::Unit::TestCase
           ['not', ['not', ['at', '?parameter0']]]
         ]
       ],
-      :rewards => []
+      :rewards => [],
+      :attachments => []
     )
   end
 end
