@@ -49,7 +49,7 @@ module Hype
       @parser.state,
       @parser.tasks,
       @parser.axioms,
-      @parser.reward
+      @parser.rewards
     ]
     data = compiler.compile_domain(*args)
     IO.write("#{domain}.rb", data) if data
