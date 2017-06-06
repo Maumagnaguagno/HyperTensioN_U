@@ -235,6 +235,22 @@ module Healthcare
     ],
   }
 
+
+  #-----------------------------------------------
+  # State valuation
+  #-----------------------------------------------
+
+  def state_valuation(old_state)
+    previous_iAppointmentKept = old_state['iAppointmentKept']
+    current_iAppointmentKept = @state['iAppointmentKept']
+    previous_bAppointmentKept = old_state['bAppointmentKept']
+    current_bAppointmentKept = @state['bAppointmentKept']
+    value = 0
+    value += 10 * (current_iAppointmentKept.size - previous_iAppointmentKept.size)
+    value += 10 * (current_bAppointmentKept.size - previous_bAppointmentKept.size)
+    value
+  end
+
   def state(pre, *terms)
     @state[pre].include?(terms)
   end

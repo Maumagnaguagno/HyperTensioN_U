@@ -101,7 +101,7 @@ plans = Healthcare.problem(
 )
 
 Kernel.abort('Problem failed to generate expected plans') if plans != [
-  [0.252, 0,
+  [0.252, 19,
     ['consider', G1, G1, bob, list(alice)],
     ['activate', G1, G1, bob, list(alice)],
     ['create', C1, C1, bob, alice, list(alice)],
@@ -181,7 +181,7 @@ Kernel.abort('Problem failed to generate expected plans') if plans != [
     ['invisible_testSuccessG', G19, G19, list(alice), satisfied],
     ['invisible_testSuccess', C7, C7, list(alice), satisfied]
   ],
-  [0.4 * 0.7 * 0.6, 0,
+  [0.4 * 0.7 * 0.6, 13,
     ['consider', G1, G1, bob, list(alice)],
     ['activate', G1, G1, bob, list(alice)],
     ['create', C1, C1, bob, alice, list(alice)],

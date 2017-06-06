@@ -81,7 +81,7 @@ plan = Healthcare.problem(
 )
 
 Kernel.abort('Problem failed to generate expected plan') if plan != [
-  [0.7, 0,
+  [0.7, 7,
     ['create', C1, C1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
     ['create', C2, C2, alice, bob, list(clyde)],
