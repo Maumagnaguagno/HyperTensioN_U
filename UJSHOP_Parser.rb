@@ -1,7 +1,7 @@
 module UJSHOP_Parser
   extend self
 
-  attr_reader :domain_name, :problem_name, :operators, :methods, :predicates, :state, :tasks, :axioms, :rewards
+  attr_reader :domain_name, :problem_name, :operators, :methods, :predicates, :state, :tasks, :axioms, :rewards, :attachments
 
   AND = 'and'
   OR  = 'or'
@@ -178,6 +178,7 @@ module UJSHOP_Parser
       @methods = []
       @axioms = []
       @rewards = []
+      @attachments = []
       raise 'Found group instead of domain name' if tokens.first.instance_of?(Array)
       @domain_name = tokens.shift
       @predicates = {}
@@ -189,6 +190,7 @@ module UJSHOP_Parser
         when ':method' then parse_method(group)
         when ':-' then parse_axiom(group)
         when ':rewards' then (@rewards = group).shift
+        when ':attachments' then (@attachments = group).shift
         else raise "#{group.first} is not recognized in domain"
         end
       end

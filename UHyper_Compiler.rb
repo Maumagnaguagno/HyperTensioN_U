@@ -128,7 +128,7 @@ module UHyper_Compiler
   # Compile domain
   #-----------------------------------------------
 
-  def compile_domain(domain_name, problem_name, operators, methods, predicates, state, tasks, axioms, rewards, hypertension_filename = File.expand_path('../Hypertension_U', __FILE__))
+  def compile_domain(domain_name, problem_name, operators, methods, predicates, state, tasks, axioms, rewards, attachments, hypertension_filename = File.expand_path('../Hypertension_U', __FILE__))
     domain_str = "require_relative 'external' if File.exist?(File.expand_path('../external.rb', __FILE__))\n\nmodule #{domain_name.capitalize}\n  include Hypertension_U\n  extend self\n\n  ##{SPACER}\n  # Domain\n  ##{SPACER}\n\n  @domain = {\n    # Operators"
     # Operators
     define_operators = ''
@@ -211,7 +211,7 @@ module UHyper_Compiler
   # Compile problem
   #-----------------------------------------------
 
-  def compile_problem(domain_name, problem_name, operators, methods, predicates, state, tasks, axioms, rewards, domain_filename = nil)
+  def compile_problem(domain_name, problem_name, operators, methods, predicates, state, tasks, axioms, rewards, attachments, domain_filename = nil)
     problem_str = "# Objects\n"
     # Extract information
     objects = []
