@@ -106,7 +106,7 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
 ### Problem
 
 ```Lisp
-(defproblem problem-name doman-name
+(defproblem problem-name domain-name
   ; Start with this ground predicates as true
   (
     (pre1 object)
