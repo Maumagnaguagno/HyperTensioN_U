@@ -1,5 +1,9 @@
 (defdomain search (
 
+  (:attachments
+    (nearby ?from ?place)
+  )
+
   (:operator (!move ?agent ?from ?to)
     (
       (at ?agent ?from)
@@ -29,7 +33,7 @@
     recursion
     (
       (at ?agent ?from)
-      (X nearby ?from ?place)    ; ?place is unified by a geometric predicate
+      (nearby ?from ?place) ; ?place is unified by an external geometric predicate
       (not (visited ?agent ?place))
     )
     (
