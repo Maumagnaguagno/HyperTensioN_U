@@ -21,6 +21,7 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def expression_to_hyper(precond_expression, axioms)
+    return 'false' if precond_expression == 'nil'
     case precond_expression.first
     when 'and', 'or'
       if precond_expression.size == 2 then expression_to_hyper(precond_expression[1], axioms)
@@ -31,8 +32,8 @@ module UHyper_Compiler
       'not ' << expression_to_hyper(precond_expression[1], axioms)
     when 'call' then call(precond_expression)
     else
-      # Empty list or nil is false
-      if precond_expression.empty?
+      # Empty list is false
+      if precond_expression.empty? or precond_expression == ['nil']
         'false'
       else
         terms = precond_expression.drop(1).map! {|i| evaluate(i)}.join(', ')

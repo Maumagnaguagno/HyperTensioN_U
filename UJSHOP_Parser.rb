@@ -46,7 +46,7 @@ module UJSHOP_Parser
   #-----------------------------------------------
 
   def define_expression(name, group)
-    # TODO support nil
+    return if group == NIL
     raise "Error with #{name}" unless group.instance_of?(Array)
     # Add implicit conjunction to expression
     group.unshift(first = AND) if (first = group.first).instance_of?(Array)

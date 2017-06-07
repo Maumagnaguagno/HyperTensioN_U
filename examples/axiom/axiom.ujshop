@@ -1,9 +1,9 @@
 (defdomain axiom (
 
   (:- (empty_axiom ?var)
-    ; Anything but an empty list or nil is true
+    ; Empty list is false
     negate-empty-list
-    (not (and (or ((((((())))))))))
+    (not (and (or ((((((nil)))))))))
   )
 
   (:- (at-axiom 0)
