@@ -48,13 +48,12 @@ module UJSHOP_Parser
   def define_expression(name, group)
     # TODO support nil
     raise "Error with #{name}" unless group.instance_of?(Array)
+    # Add implicit conjunction to expression
     group.unshift(first = AND) if (first = group.first).instance_of?(Array)
     if first == AND or first == OR
-      if group.size == 1
-        raise "Unexpected zero arguments for #{first} in #{name}"
-      elsif group.size == 2
-        define_expression(name, group.replace(group.last))
-      else group.drop(1).each {|g| define_expression(name, g)}
+      if group.size > 2 then group.drop(1).each {|g| define_expression(name, g)}
+      elsif group.size == 2 then define_expression(name, group.replace(group.last))
+      else raise "Unexpected zero arguments for #{first} in #{name}"
       end
     elsif first == NOT
       raise "Unexpected multiple arguments for not in #{name}" if group.size != 2
