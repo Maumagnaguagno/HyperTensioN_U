@@ -6,7 +6,6 @@ module UJSHOP_Parser
   AND = 'and'
   OR  = 'or'
   NOT = 'not'
-  NIL = 'nil'
 
   #-----------------------------------------------
   # Scan tokens
@@ -15,6 +14,7 @@ module UJSHOP_Parser
   def scan_tokens(filename)
     (str = IO.read(filename)).gsub!(/;.*$/,'')
     str.downcase!
+    str.gsub!(/\bnil\b/,'()')
     stack = []
     list = []
     str.scan(/[()]|[^\s()]+/) {|t|
@@ -46,7 +46,6 @@ module UJSHOP_Parser
   #-----------------------------------------------
 
   def define_expression(name, group)
-    return if group == NIL
     raise "Error with #{name}" unless group.instance_of?(Array)
     # Add implicit conjunction to expression
     group.unshift(first = AND) if (first = group.first).instance_of?(Array)
@@ -75,22 +74,20 @@ module UJSHOP_Parser
     raise "Operator #{name} have size #{op.size} instead of 4 or more" if op.size < 4
     @operators << operator = [name, op.shift, []]
     # Preconditions
-    if (group = op.shift) != NIL
-      define_expression("#{name} preconditions", operator[2] = group)
-    end
+    define_expression("#{name} preconditions", operator[2] = op.shift)
     # Effects
     if op.size < 2
       raise "Error with #{name} effects"
     elsif op.size <= 3
-      operator[4] = (group = op.shift) != NIL ? define_effects(name, group) : []
-      operator[3] = (group = op.shift) != NIL ? define_effects(name, group) : []
+      define_effects(name, operator[4] = op.shift)
+      define_effects(name, operator[3] = op.shift)
       operator << (op.empty? ? 1 : op.shift.to_f)
     else
       i = 0
       until op.empty?
         operator << (op.first.instance_of?(String) ? op.shift : "#{name}_#{i}")
-        del = (group = op.shift) != NIL ? define_effects(name, group) : []
-        add = (group = op.shift) != NIL ? define_effects(name, group) : []
+        define_effects(name, del = op.shift)
+        define_effects(name, add = op.shift)
         operator.push(add, del, op.shift.to_f)
         i += 1
       end
@@ -116,22 +113,16 @@ module UJSHOP_Parser
       end
       method << [label, free_variables = [], pos = [], neg = []]
       # Preconditions
-      if (group = met.shift) != NIL
-        raise "Error with #{name} preconditions" unless group.instance_of?(Array)
-        group.each {|pre|
-          pre.first != NOT ? pos << pre : pre.size == 2 ? neg << pre = pre.last : raise("Error with #{name} negative preconditions")
-          @predicates[pre.first.freeze] ||= false
-          free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not method[1].include?(i)})
-        }
-        free_variables.uniq!
-      end
+      raise "Error with #{name} preconditions" unless (group = met.shift).instance_of?(Array)
+      group.each {|pre|
+        pre.first != NOT ? pos << pre : pre.size == 2 ? neg << pre = pre.last : raise("Error with #{name} negative preconditions")
+        @predicates[pre.first.freeze] ||= false
+        free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not method[1].include?(i)})
+      }
+      free_variables.uniq!
       # Subtasks
-      if (group = met.shift) != NIL
-        raise "Error with #{name} subtasks" unless group.instance_of?(Array)
-        group.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}
-        method.last << group
-      else method.last << []
-      end
+      raise "Error with #{name} subtasks" unless (group = met.shift).instance_of?(Array)
+      method.last << group.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}
     end
   end
 
@@ -150,7 +141,7 @@ module UJSHOP_Parser
     const_param = []
     param.each_with_index {|p,i| const_param << ['call', '=', "?parameter#{i}", p] unless p.start_with?('?')}
     while exp = ax.shift
-      if exp.instance_of?(String) and exp != NIL
+      if exp.instance_of?(String)
         label = exp
         raise "Expected axiom definition after label #{label} on #{name}" unless exp = ax.shift
       else label = "case #{axiom.size - 2 >> 1}"
@@ -205,14 +196,11 @@ module UJSHOP_Parser
     if (tokens = scan_tokens(problem_filename)).instance_of?(Array) and tokens.size.between?(5,6) and tokens.shift == 'defproblem'
       @problem_name = tokens.shift
       raise 'Different domain specified in problem file' if @domain_name != tokens.shift
-      @state = (group = tokens.shift) != NIL ? group : []
-      if tokens.first != NIL
-        @tasks = tokens.shift
-        # Tasks may be ordered or unordered
-        @tasks.shift unless ordered = (@tasks.first != ':unordered')
-        @tasks.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}.unshift(ordered)
-      else @tasks = []
-      end
+      @state = tokens.shift
+      @tasks = tokens.shift
+      # Tasks may be ordered or unordered
+      @tasks.shift unless ordered = (@tasks.first != ':unordered')
+      @tasks.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}.unshift(ordered)
     else raise "File #{problem_filename} does not match problem pattern"
     end
   end
