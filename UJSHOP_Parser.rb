@@ -14,7 +14,6 @@ module UJSHOP_Parser
   def scan_tokens(filename)
     (str = IO.read(filename)).gsub!(/;.*$/,'')
     str.downcase!
-    str.gsub!(/\bnil\b/,'()')
     stack = []
     list = []
     str.scan(/[()]|[^\s()]+/) {|t|
@@ -24,6 +23,7 @@ module UJSHOP_Parser
         list = []
       when ')'
         stack.empty? ? raise('Missing open parentheses') : list = stack.pop << list
+      when 'nil' then list << []
       else list << t
       end
     }
