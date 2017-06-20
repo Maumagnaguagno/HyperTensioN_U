@@ -192,7 +192,7 @@ module UJSHOP_Parser
   #-----------------------------------------------
 
   def parse_problem(problem_filename)
-    if (tokens = scan_tokens(problem_filename)).instance_of?(Array) and tokens.size.between?(5,6) and tokens.shift == 'defproblem'
+    if (tokens = scan_tokens(problem_filename)).instance_of?(Array) and tokens.size == 5 and tokens.shift == 'defproblem'
       @problem_name = tokens.shift
       raise 'Different domain specified in problem file' if @domain_name != tokens.shift
       @state = tokens.shift
