@@ -214,7 +214,7 @@ module UHyper_Compiler
     # Extract information
     objects = []
     start_hash = {}
-    predicates.each_key {|i| start_hash[i] = []}
+    predicates.each_key {|i| start_hash[i] = [] unless attachments.assoc(i)}
     state.each {|pre,*terms|
       (start_hash[pre] ||= []) << terms
       objects.concat(terms)
