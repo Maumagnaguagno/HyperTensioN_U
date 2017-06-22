@@ -70,9 +70,7 @@ module UHyper_Compiler
       ltoken = evaluate(precond_expression[2])
       if ltoken =~ /^('?)(-?\d+(?>\.\d+)?)\1$/ then function == 'abs' ? $2.sub(/^-/,'') : Math.send(function, $2.to_f).to_s
       elsif function == 'abs' then "#{ltoken}.sub(/^-/,'')"
-      else
-        ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
-        "Math.#{function}(#{ltoken}).to_s"
+      else "Math.#{function}(#{ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'}).to_s"
       end
     # Comparison
     when '=', '!=', '<', '<=', '>=', '>'
