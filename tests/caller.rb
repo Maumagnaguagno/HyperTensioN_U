@@ -99,16 +99,19 @@ class Caller < Test::Unit::TestCase
   def test_call_sin
     call(Math.sin(0).to_s, ['call', 'sin', '0'])
     call('Math.sin(a.to_f).to_s', ['call', 'sin', '?a'])
+    call('Math.sin((a.to_f + b.to_f)).to_s', ['call', 'sin', ['call', '+', '?a', '?b']])
   end
 
   def test_call_cos
     call(Math.cos(0).to_s, ['call', 'cos', '0'])
     call('Math.cos(a.to_f).to_s', ['call', 'cos', '?a'])
+    call('Math.cos((a.to_f + b.to_f)).to_s', ['call', 'cos', ['call', '+', '?a', '?b']])
   end
 
   def test_call_tan
     call(Math.tan(0).to_s, ['call', 'tan', '0'])
     call('Math.tan(a.to_f).to_s', ['call', 'tan', '?a'])
+    call('Math.tan((a.to_f + b.to_f)).to_s', ['call', 'tan', ['call', '+', '?a', '?b']])
   end
 
   def test_call_equal
