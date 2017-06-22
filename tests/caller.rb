@@ -31,6 +31,8 @@ class Caller < Test::Unit::TestCase
     call('(1.0 - a.to_f).to_s', ['call', '-', '1', '?a'])
     call('(a.to_f - 1.0).to_s', ['call', '-', '?a', '1'])
     call('(a.to_f - b.to_f).to_s', ['call', '-', '?a', '?b'])
+    # TODO optimize variable minus itself
+    call('(a.to_f - a.to_f).to_s', ['call', '-', '?a', '?a'])
   end
 
   def test_call_mul
