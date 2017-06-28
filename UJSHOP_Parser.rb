@@ -116,7 +116,7 @@ module UJSHOP_Parser
       raise "Error with #{name} preconditions" unless (group = met.shift).instance_of?(Array)
       group.each {|pre|
         pre.first != NOT ? pos << pre : pre.size == 2 ? neg << pre = pre.last : raise("Error with #{name} negative preconditions")
-        @predicates[pre.first.freeze] ||= false unless @axioms.assoc(pre.first)
+        @predicates[pre.first.freeze] ||= false if not @axioms.assoc(pre.first) and not @attachments.assoc(pre.first)
         free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not method[1].include?(i)})
       }
       free_variables.uniq!
