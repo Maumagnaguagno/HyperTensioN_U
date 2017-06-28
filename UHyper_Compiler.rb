@@ -164,13 +164,18 @@ module UHyper_Compiler
           lifted_axioms_calls = []
           ground_axioms_calls = []
           precond_attachments = []
+          free_variables = []
           dec[2].reject! {|pre|
             if pre.first == 'call' or axioms.assoc(pre.first)
               (pre.flatten.any? {|i| i.start_with?('?') and dec[1].include?(i)} ? lifted_axioms_calls : ground_axioms_calls) << pre
             elsif attachments.assoc(pre.first)
               precond_attachments << pre
+            else
+              free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
+              nil
             end
           }
+          dec[1] = free_variables
           dec[3].reject! {|pre| (pre.flatten.any? {|i| i.start_with?('?') and dec[1].include?(i)} ? lifted_axioms_calls : ground_axioms_calls) << ['not', pre] if pre.first == 'call' or axioms.assoc(pre.first)}
           define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
           dec[1].each {|free| define_methods << "\n    #{free.sub(/^\?/,'')} = ''"}
