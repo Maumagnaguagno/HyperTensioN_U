@@ -175,7 +175,7 @@ module UHyper_Compiler
               nil
             end
           }
-          dec[1] = free_variables
+          (dec[1] = free_variables).uniq!
           dec[3].reject! {|pre| (pre.flatten.any? {|i| i.start_with?('?') and dec[1].include?(i)} ? lifted_axioms_calls : ground_axioms_calls) << ['not', pre] if pre.first == 'call' or axioms.assoc(pre.first)}
           define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
           dec[1].each {|free| define_methods << "\n    #{free.sub(/^\?/,'')} = ''"}
