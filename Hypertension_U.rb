@@ -93,7 +93,7 @@ module Hypertension_U
 
   def applicable?(precond_pos, precond_not)
     # All positive preconditions and no negative preconditions are found in the state
-    precond_pos.all? {|name,*objs| @state[name].include?(objs)} and precond_not.none? {|name,*objs| @state[name].include?(objs)}
+    precond_pos.all? {|pre,*terms| @state[pre].include?(terms)} and precond_not.none? {|pre,*terms| @state[pre].include?(terms)}
   end
 
   #-----------------------------------------------
@@ -103,8 +103,8 @@ module Hypertension_U
   def apply(effect_add, effect_del)
     # Create new state with added or deleted predicates
     @state = Marshal.load(Marshal.dump(@state))
-    effect_del.each {|name,*objs| @state[name].delete(objs)}
-    effect_add.each {|name,*objs| @state[name] << objs}
+    effect_del.each {|pre,*terms| @state[pre].delete(terms)}
+    effect_add.each {|pre,*terms| @state[pre] << terms}
     true
   end
 
@@ -126,12 +126,12 @@ module Hypertension_U
     objects = free.map {|i| [i]}
     # Unification by positive preconditions
     match_objects = []
-    precond_pos.each {|name,*terms|
+    precond_pos.each {|pre,*terms|
       next unless terms.include?('')
       # Swap free variables with matching set or maintain constant term
       terms.map! {|p| objects.find {|j| j.first.equal?(p)} || p}
       # Compare with current state
-      @state[name].each {|objs|
+      @state[pre].each {|objs|
         next unless terms.each_with_index {|t,i|
           # Free variable
           if t.instance_of?(Array)
