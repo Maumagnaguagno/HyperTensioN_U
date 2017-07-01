@@ -168,11 +168,11 @@ module UHyper_Compiler
           free_variables = []
           dec[2].reject! {|pre|
             if pre.first == 'call' or axioms.assoc(pre.first)
-              (pre.flatten.any? {|i| i.start_with?('?') and dec[1].include?(i)} ? lifted_axioms_calls : ground_axioms_calls) << pre
+              (pre.flatten.any? {|t| t.start_with?('?') and dec[1].include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
             elsif attachments.assoc(pre.first)
               precond_attachments << pre
             else
-              free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
+              free_variables.concat(pre.select {|t| t.instance_of?(String) and t.start_with?('?') and not met[1].include?(t)})
               nil
             end
           }
@@ -180,8 +180,8 @@ module UHyper_Compiler
           # TODO positive dependent attachments may exist and require a second pass on dec[2]
           dec[3].reject! {|pre|
             if pre.first == 'call' or axioms.assoc(pre.first)
-              (pre.flatten.any? {|i| i.start_with?('?') and free_variables.include?(i)} ? lifted_axioms_calls : ground_axioms_calls) << ['not', pre]
-            elsif pre.flatten.any? {|i| i.start_with?('?') and not free_variables.include?(i)}
+              (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << ['not', pre]
+            elsif pre.flatten.any? {|t| t.start_with?('?') and not free_variables.include?(t)}
               dependent_attachments << pre
             end
           }
