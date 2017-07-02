@@ -47,9 +47,8 @@ class Biscuit < Test::Unit::TestCase
       ],
       :methods => [
         ['get_cookie', ['?agent', '?from', '?to'],
-          ['goto_and_buy_cookie', [],
+          ['goto_and_buy_cookie',
             # Preconditions
-            [],
             [],
             # Subtasks
             [

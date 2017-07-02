@@ -153,42 +153,50 @@ module UHyper_Compiler
       met.drop(2).each_with_index {|dec,i|
         domain_str << "      '#{met.first}_#{dec.first}'#{',' if met.size - 3 != i}\n"
         define_methods << "\n  def #{met.first}_#{dec.first}#{variables}"
+        free_variables = []
+        # TODO refactor this block to work with complex expressions
+        dec[1] = dec[1].first == 'and' ? dec[1].drop(1) : [dec[1]]
+        dec[1].each {|pre|
+          unless pre.first == 'not' or pre.first == 'call' or axioms.assoc(pre.first) or attachments.assoc(pre.first)
+            free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
+          end
+        }
         # Ground
-        if dec[1].empty?
-          # No preconditions
-          # TODO modify parser to apply expression_to_hyper directly
-          define_methods << "\n    return unless " << expression_to_hyper(['and', *dec[2], *dec[3].map {|pre| ['not', pre]}], axioms) unless dec[2].empty? and dec[3].empty?
-          predicates_to_hyper(define_methods, dec[4], '    ', 'yield ')
+        if free_variables.empty?
+          define_methods << "\n    return unless " << expression_to_hyper(dec[1].unshift('and'), axioms) unless dec[1].empty?
+          predicates_to_hyper(define_methods, dec[2], '    ', 'yield ')
         # Lifted
         else
+          free_variables.uniq!
+          precond_pos = []
+          precond_not = []
           lifted_axioms_calls = []
           ground_axioms_calls = []
           precond_attachments = []
           dependent_attachments = []
-          free_variables = []
-          dec[2].reject! {|pre|
-            if pre.first == 'call' or axioms.assoc(pre.first)
-              (pre.flatten.any? {|t| t.start_with?('?') and dec[1].include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
-            elsif attachments.assoc(pre.first)
-              precond_attachments << pre
+          dec[1].each {|pre|
+            if pre.first != 'not'
+              if pre.first == 'call' or axioms.assoc(pre.first)
+                (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
+              elsif attachments.assoc(pre.first)
+                precond_attachments << pre
+              else precond_pos << pre
+              end
+              # TODO support positive dependent attachments
             else
-              free_variables.concat(pre.select {|t| t.instance_of?(String) and t.start_with?('?') and not met[1].include?(t)})
-              nil
-            end
-          }
-          free_variables.uniq!
-          # TODO positive dependent attachments may exist and require a second pass on dec[2]
-          dec[3].reject! {|pre|
-            if pre.first == 'call' or axioms.assoc(pre.first)
-              (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << ['not', pre]
-            elsif pre.flatten.any? {|t| t.start_with?('?') and not free_variables.include?(t)}
-              dependent_attachments << pre
+              pre = pre.last
+              if pre.first == 'call' or axioms.assoc(pre.first)
+                (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << ['not', pre]
+              elsif pre.flatten.any? {|t| t.start_with?('?') and not free_variables.include?(t)}
+                dependent_attachments << pre
+              else precond_not << pre
+              end
             end
           }
           define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
           free_variables.each {|free| define_methods << "\n    #{free.sub(/^\?/,'')} = ''"}
-          predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", dec[2])
-          predicates_to_hyper(define_methods << ",\n      # Negative preconditions", dec[3])
+          predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", precond_pos)
+          predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not)
           free_variables.each {|free| define_methods << ', ' << free.sub(/^\?/,'')}
           define_methods << "\n    ) {"
           define_methods << "\n      next if " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
@@ -200,10 +208,11 @@ module UHyper_Compiler
                 define_methods << "\n#{indentation}#{t.sub(/^\?/,'')} = ''"
               end
             }
+            # TODO evaluate terms for external calls
             define_methods << "\n#{indentation}External.#{pre}(#{terms.join(', ').gsub('?','')}) {"
           }
           define_methods << "\n      #{'  ' * precond_attachments.size}next if " << expression_to_hyper(dependent_attachments.unshift('and'), axioms) unless dependent_attachments.empty?
-          predicates_to_hyper(define_methods, dec[4], '  ' * (precond_attachments.size + 3), 'yield ')
+          predicates_to_hyper(define_methods, dec[2], '  ' * (precond_attachments.size + 3), 'yield ')
           precond_attachments.size.downto(0) {|pi| define_methods << "\n    #{'  ' * pi}}"}
         end
         define_methods << "\n  end\n"

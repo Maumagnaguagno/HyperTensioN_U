@@ -111,18 +111,11 @@ module UJSHOP_Parser
         raise "Method #{name} redefined #{label} decomposition" if method.drop(2).assoc(label)
       else label = "case_#{method.size - 2}"
       end
-      method << [label, free_variables = [], pos = [], neg = []]
       # Preconditions
-      raise "Error with #{name} preconditions" unless (group = met.shift).instance_of?(Array)
-      group.each {|pre|
-        pre.first != NOT ? pos << pre : pre.size == 2 ? neg << pre = pre.last : raise("Error with #{name} negative preconditions")
-        @predicates[pre.first.freeze] ||= false if not @axioms.assoc(pre.first) and not @attachments.assoc(pre.first)
-        free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not method[1].include?(i)})
-      }
-      free_variables.uniq!
+      define_expression("#{name} preconditions", precond = met.shift)
       # Subtasks
       raise "Error with #{name} subtasks" unless (group = met.shift).instance_of?(Array)
-      method.last << group.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}
+      method << [label, precond, group.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}]
     end
   end
 
