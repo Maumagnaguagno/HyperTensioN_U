@@ -204,8 +204,7 @@ module UHyper_Compiler
           }
           define_methods << "\n      #{'  ' * precond_attachments.size}next if " << expression_to_hyper(dependent_attachments.unshift('and'), axioms) unless dependent_attachments.empty?
           predicates_to_hyper(define_methods, dec[4], '  ' * (precond_attachments.size + 3), 'yield ')
-          precond_attachments.size.pred.downto(0) {|pi| define_methods << "\n      #{'  ' * pi}}"}
-          define_methods << "\n    }"
+          precond_attachments.size.downto(0) {|pi| define_methods << "\n    #{'  ' * pi}}"}
         end
         define_methods << "\n  end\n"
       }
