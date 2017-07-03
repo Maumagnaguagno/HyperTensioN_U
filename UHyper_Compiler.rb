@@ -155,8 +155,8 @@ module UHyper_Compiler
         define_methods << "\n  def #{met.first}_#{dec.first}#{variables}"
         free_variables = []
         # TODO refactor this block to work with complex expressions
-        unless dec[1].empty?
-          precond_expression = dec[1].first == 'and' ? dec[1].drop(1) : [dec[1]]
+        unless (precond_expression = dec[1]).empty?
+          precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
           precond_expression.each {|pre|
             unless pre.first == 'not' or pre.first == 'call' or axioms.assoc(pre.first) or attachments.assoc(pre.first)
               free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
