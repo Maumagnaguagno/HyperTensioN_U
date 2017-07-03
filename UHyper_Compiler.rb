@@ -156,8 +156,8 @@ module UHyper_Compiler
         free_variables = []
         # TODO refactor this block to work with complex expressions
         unless dec[1].empty?
-          dec[1] = dec[1].first == 'and' ? dec[1].drop(1) : [dec[1]]
-          dec[1].each {|pre|
+          precond_expression = dec[1].first == 'and' ? dec[1].drop(1) : [dec[1]]
+          precond_expression.each {|pre|
             unless pre.first == 'not' or pre.first == 'call' or axioms.assoc(pre.first) or attachments.assoc(pre.first)
               free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
             end
@@ -165,7 +165,7 @@ module UHyper_Compiler
         end
         # Ground
         if free_variables.empty?
-          define_methods << "\n    return unless " << expression_to_hyper(dec[1].unshift('and'), axioms) unless dec[1].empty?
+          define_methods << "\n    return unless " << expression_to_hyper(precond_expression.unshift('and'), axioms) unless precond_expression.empty?
           predicates_to_hyper(define_methods, dec[2], '    ', 'yield ')
         # Lifted
         else
@@ -176,7 +176,7 @@ module UHyper_Compiler
           ground_axioms_calls = []
           precond_attachments = []
           dependent_attachments = []
-          dec[1].each {|pre|
+          precond_expression.each {|pre|
             if pre.first != 'not'
               if pre.first == 'call' or axioms.assoc(pre.first)
                 (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
