@@ -155,12 +155,14 @@ module UHyper_Compiler
         define_methods << "\n  def #{met.first}_#{dec.first}#{variables}"
         free_variables = []
         # TODO refactor this block to work with complex expressions
-        dec[1] = dec[1].first == 'and' ? dec[1].drop(1) : [dec[1]] unless dec[1].empty?
-        dec[1].each {|pre|
-          unless pre.first == 'not' or pre.first == 'call' or axioms.assoc(pre.first) or attachments.assoc(pre.first)
-            free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
-          end
-        }
+        unless dec[1].empty?
+          dec[1] = dec[1].first == 'and' ? dec[1].drop(1) : [dec[1]]
+          dec[1].each {|pre|
+            unless pre.first == 'not' or pre.first == 'call' or axioms.assoc(pre.first) or attachments.assoc(pre.first)
+              free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
+            end
+          }
+        end
         # Ground
         if free_variables.empty?
           define_methods << "\n    return unless " << expression_to_hyper(dec[1].unshift('and'), axioms) unless dec[1].empty?
