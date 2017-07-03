@@ -202,7 +202,7 @@ module UHyper_Compiler
           predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not)
           free_variables.each {|free| define_methods << ', ' << free.sub(/^\?/,'')}
           define_methods << "\n    ) {"
-          define_methods << "\n      next if " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
+          define_methods << "\n      next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
           precond_attachments.each_with_index {|(pre,*terms),pi|
             indentation = '  ' * (pi + 3)
             terms.each {|t|
