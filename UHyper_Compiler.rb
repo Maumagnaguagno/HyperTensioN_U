@@ -192,10 +192,14 @@ module UHyper_Compiler
             end
           end
         }
-        # Ground axioms and calls
-        define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
-        # Unify free variables
-        unless free_variables.empty?
+        if free_variables.empty?
+          # Ground predicates, axioms and calls
+          precond_expression = precond_pos + precond_not + ground_axioms_calls
+          define_methods << "\n    return unless " << expression_to_hyper(precond_expression.unshift('and'), axioms) unless precond_expression.empty?
+        else
+          # Ground axioms and calls
+          define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
+          # Unify free variables
           free_variables.each {|free| define_methods << "\n    #{free.sub(/^\?/,'')} = ''"}
           predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", precond_pos)
           predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not)
