@@ -196,6 +196,7 @@ module UHyper_Compiler
           # Ground predicates, axioms and calls
           precond_expression = precond_pos + precond_not + ground_axioms_calls
           define_methods << "\n    return unless " << expression_to_hyper(precond_expression.unshift('and'), axioms) unless precond_expression.empty?
+          level = 2
         else
           # Ground axioms and calls
           define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
@@ -206,11 +207,11 @@ module UHyper_Compiler
           free_variables.each {|free| define_methods << ', ' << free.sub(/^\?/,'')}
           define_methods << "\n    ) {"
           define_methods << "\n      next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
+          level = 3
         end
         # Semantic attachments
-        precond_attachments.each_with_index {|(pre,*terms),pi|
-          # TODO indentation must be fixed
-          indentation = '  ' * (pi + 3)
+        precond_attachments.each {|pre,*terms|
+          indentation = '  ' * level
           terms.each {|t|
             unless met[1].include?(t) or free_variables.include?(t)
               free_variables << t
@@ -218,13 +219,12 @@ module UHyper_Compiler
             end
           }
           define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t)}.join(', ')}) {"
+          level += 1
         }
-        define_methods << "\n      #{'  ' * precond_attachments.size}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms) unless dependent_attachments.empty?
+        define_methods << "\n#{'  ' * level}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms) unless dependent_attachments.empty?
         # Subtasks
-        # TODO indentation must be fixed, original had 4 spaces
-        predicates_to_hyper(define_methods, dec[2], '  ' * (precond_attachments.size + 3), 'yield ')
-        precond_attachments.size.downto(1) {|pi| define_methods << "\n    #{'  ' * pi}}"}
-        define_methods << "\n    }" unless free_variables.empty?
+        predicates_to_hyper(define_methods, dec[2], '  ' * level, 'yield ')
+        level.pred.downto(2) {|l| define_methods << "\n#{'  ' * l}}"}
         define_methods << "\n  end\n"
       }
       domain_str << (methods.size.pred == mi ? '    ]' : '    ],')
