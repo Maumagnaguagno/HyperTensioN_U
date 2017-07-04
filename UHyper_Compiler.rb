@@ -153,70 +153,74 @@ module UHyper_Compiler
       met.drop(2).each_with_index {|dec,i|
         domain_str << "      '#{met.first}_#{dec.first}'#{',' if met.size - 3 != i}\n"
         define_methods << "\n  def #{met.first}_#{dec.first}#{variables}"
-        free_variables = []
+        # Obtain free variables
         # TODO refactor this block to work with complex expressions
+        free_variables = []
         unless (precond_expression = dec[1]).empty?
           precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
           precond_expression.each {|pre|
-            unless pre.first == 'not' or pre.first == 'call' or axioms.assoc(pre.first) or attachments.assoc(pre.first)
+            if not pre.first == 'not' || pre.first == 'call' || axioms.assoc(pre.first) || attachments.assoc(pre.first)
               free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
             end
           }
         end
-        # Ground
-        if free_variables.empty?
-          define_methods << "\n    return unless " << expression_to_hyper(precond_expression.unshift('and'), axioms) unless precond_expression.empty?
-          predicates_to_hyper(define_methods, dec[2], '    ', 'yield ')
-        # Lifted
-        else
-          free_variables.uniq!
-          precond_pos = []
-          precond_not = []
-          lifted_axioms_calls = []
-          ground_axioms_calls = []
-          precond_attachments = []
-          dependent_attachments = []
-          precond_expression.each {|pre|
-            if pre.first != 'not'
-              if pre.first == 'call' or axioms.assoc(pre.first)
-                (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
-              elsif attachments.assoc(pre.first)
-                precond_attachments << pre
-              elsif pre.flatten.any? {|t| t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
-                dependent_attachments << pre
-              else precond_pos << pre
-              end
-            else
-              pre = pre.last
-              if pre.first == 'call' or axioms.assoc(pre.first)
-                (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << ['not', pre]
-              elsif pre.flatten.any? {|t| t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
-                dependent_attachments << ['not', pre]
-              else precond_not << pre
-              end
+        free_variables.uniq!
+        # Filter elements from precondition
+        precond_pos = []
+        precond_not = []
+        lifted_axioms_calls = []
+        ground_axioms_calls = []
+        precond_attachments = []
+        dependent_attachments = []
+        precond_expression.each {|pre|
+          if pre.first != 'not'
+            if pre.first == 'call' or axioms.assoc(pre.first)
+              (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
+            elsif attachments.assoc(pre.first)
+              precond_attachments << pre
+            elsif pre.flatten.any? {|t| t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
+              dependent_attachments << pre
+            else precond_pos << pre
             end
-          }
-          define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
+          else
+            pre = pre.last
+            if pre.first == 'call' or axioms.assoc(pre.first)
+              (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << ['not', pre]
+            elsif pre.flatten.any? {|t| t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
+              dependent_attachments << ['not', pre]
+            else precond_not << pre
+            end
+          end
+        }
+        # Ground axioms and calls
+        define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
+        # Unify free variables
+        unless free_variables.empty?
           free_variables.each {|free| define_methods << "\n    #{free.sub(/^\?/,'')} = ''"}
           predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", precond_pos)
           predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not)
           free_variables.each {|free| define_methods << ', ' << free.sub(/^\?/,'')}
           define_methods << "\n    ) {"
           define_methods << "\n      next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
-          precond_attachments.each_with_index {|(pre,*terms),pi|
-            indentation = '  ' * (pi + 3)
-            terms.each {|t|
-              unless met[1].include?(t) or free_variables.include?(t)
-                free_variables << t
-                define_methods << "\n#{indentation}#{t.sub(/^\?/,'')} = ''"
-              end
-            }
-            define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t)}.join(', ')}) {"
-          }
-          define_methods << "\n      #{'  ' * precond_attachments.size}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms) unless dependent_attachments.empty?
-          predicates_to_hyper(define_methods, dec[2], '  ' * (precond_attachments.size + 3), 'yield ')
-          precond_attachments.size.downto(0) {|pi| define_methods << "\n    #{'  ' * pi}}"}
         end
+        # Semantic attachments
+        precond_attachments.each_with_index {|(pre,*terms),pi|
+          # TODO indentation must be fixed
+          indentation = '  ' * (pi + 3)
+          terms.each {|t|
+            unless met[1].include?(t) or free_variables.include?(t)
+              free_variables << t
+              define_methods << "\n#{indentation}#{t.sub(/^\?/,'')} = ''"
+            end
+          }
+          define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t)}.join(', ')}) {"
+        }
+        define_methods << "\n      #{'  ' * precond_attachments.size}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms) unless dependent_attachments.empty?
+        # Subtasks
+        # TODO indentation must be fixed, original had 4 spaces
+        predicates_to_hyper(define_methods, dec[2], '  ' * (precond_attachments.size + 3), 'yield ')
+        precond_attachments.size.downto(1) {|pi| define_methods << "\n    #{'  ' * pi}}"}
+        define_methods << "\n    }" unless free_variables.empty?
         define_methods << "\n  end\n"
       }
       domain_str << (methods.size.pred == mi ? '    ]' : '    ],')
