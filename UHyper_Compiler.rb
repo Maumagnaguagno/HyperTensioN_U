@@ -175,18 +175,18 @@ module UHyper_Compiler
         precond_expression.each {|pre|
           if pre.first != 'not'
             if pre.first == 'call' or axioms.assoc(pre.first)
-              (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
+              (pre.any? {|t| t.instance_of?(String) and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
             elsif attachments.assoc(pre.first)
               precond_attachments << pre
-            elsif pre.flatten.any? {|t| t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
+            elsif pre.any? {|t| t.instance_of?(String) and t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
               dependent_attachments << pre
             else precond_pos << pre
             end
           else
             pre2 = pre.last
             if pre2.first == 'call' or axioms.assoc(pre2.first)
-              (pre2.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
-            elsif pre2.flatten.any? {|t| t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
+              (pre2.any? {|t| t.instance_of?(String) and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
+            elsif pre2.any? {|t| t.instance_of?(String) and t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
               dependent_attachments << pre
             else precond_not << pre2
             end
