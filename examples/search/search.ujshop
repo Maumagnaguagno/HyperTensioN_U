@@ -37,6 +37,22 @@
       (not (visited ?agent ?place))
     )
     (
+      (step ?agent ?place ?goal)
+    )
+  )
+
+  (:method (step ?agent ?place ?goal)
+    goal-visible
+    (
+      (call (visible ?place ?goal))
+    )
+    (
+      ; TODO
+    )
+
+    keep-moving
+    nil
+    (
       (!move ?agent ?from ?place)
       (!!visit ?agent ?from)
       (forward ?agent ?goal)
