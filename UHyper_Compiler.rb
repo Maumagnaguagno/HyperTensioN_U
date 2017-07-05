@@ -183,12 +183,12 @@ module UHyper_Compiler
             else precond_pos << pre
             end
           else
-            pre = pre.last
-            if pre.first == 'call' or axioms.assoc(pre.first)
-              (pre.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << ['not', pre]
-            elsif pre.flatten.any? {|t| t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
-              dependent_attachments << ['not', pre]
-            else precond_not << pre
+            pre2 = pre.last
+            if pre2.first == 'call' or axioms.assoc(pre2.first)
+              (pre2.flatten.any? {|t| t.start_with?('?') and free_variables.include?(t)} ? lifted_axioms_calls : ground_axioms_calls) << pre
+            elsif pre2.flatten.any? {|t| t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
+              dependent_attachments << pre
+            else precond_not << pre2
             end
           end
         }
