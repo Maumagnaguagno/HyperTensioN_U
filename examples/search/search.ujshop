@@ -44,7 +44,7 @@
   (:method (step ?agent ?from ?place ?goal)
     goal-visible
     (
-      (call (visible ?place ?goal))
+      (call visible ?place ?goal)
     )
     (
       (!move ?agent ?from ?place)
