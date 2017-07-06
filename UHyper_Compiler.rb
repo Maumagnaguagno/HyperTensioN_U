@@ -32,8 +32,7 @@ module UHyper_Compiler
     when 'call' then call(precond_expression)
     else
       # Empty list is false
-      if precond_expression.empty?
-        'false'
+      if precond_expression.empty? then 'false'
       else
         terms = precond_expression.drop(1).map! {|i| evaluate(i)}.join(', ')
         if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
