@@ -27,15 +27,11 @@ module External
   end
 
   def visible(from, to)
-    a = @symbol_object[from]
-    b = @symbol_object[to]
-    visible?(a, b, ENVIRONMENT)
+    visible?(@symbol_object[from], @symbol_object[to], ENVIRONMENT)
   end
 
   def near(from, to, place)
-    a = @symbol_object[from]
-    b = @symbol_object[to]
-    nearby(a, b, ANGLE, ENVIRONMENT) {|pos|
+    nearby(@symbol_object[from], @symbol_object[to], ANGLE, ENVIRONMENT) {|pos|
       place.replace(symbol(pos))
       yield
     }
