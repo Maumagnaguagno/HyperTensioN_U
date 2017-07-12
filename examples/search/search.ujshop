@@ -1,7 +1,8 @@
 (defdomain search (
 
   (:attachments
-    (near ?from ?place)
+    (near ?from ?to ?place)
+    (visible-vertex ?from ?vertex)
   )
 
   (:operator (!move ?agent ?from ?to)
@@ -30,29 +31,22 @@
     ((at ?agent ?goal))
     nil
 
+    goal-visible
+    (
+      (at ?agent ?from)
+      (call visible ?from ?goal)
+    )
+    (
+      (!move ?agent ?from ?goal)
+    )
+
     recursion
     (
       (at ?agent ?from)
-      (near ?from ?place) ; ?place is unified by an external predicate
+      (visible-vertex ?from ?vertex)
+      (near ?from ?vertex ?place)
       (not (visited ?agent ?place))
     )
-    (
-      (step ?agent ?from ?place ?goal)
-    )
-  )
-
-  (:method (step ?agent ?from ?place ?goal)
-    goal-visible
-    (
-      (call visible ?place ?goal)
-    )
-    (
-      (!move ?agent ?from ?place)
-      (!move ?agent ?place ?goal)
-    )
-
-    keep-moving
-    nil
     (
       (!move ?agent ?from ?place)
       (!!visit ?agent ?from)

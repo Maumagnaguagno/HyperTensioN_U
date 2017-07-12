@@ -1,9 +1,9 @@
-require_relative '../../../Polygonoid/examples/search/Search'
+require_relative '../../../Polygonoid/examples/search/Search2'
 
 module External
   extend self
 
-  @symbolic_geometric = {
+  @symbol_object = {
     'start' => Point.new(80,50),
     'goal'  => Point.new(15,50)
   }
@@ -21,24 +21,35 @@ module External
     )
   ]
 
+  def symbol(object)
+    @symbol_object[symbol = "pos#{@pos_counter += 1}"] = object unless symbol = @symbol_object.key(object)
+    symbol
+  end
+
   def visible(from, to)
-    a = @symbolic_geometric[from]
-    b = @symbolic_geometric[to]
+    a = @symbol_object[from]
+    b = @symbol_object[to]
     visible?(a, b, ENVIRONMENT)
   end
 
-  def near(from, to)
-    a = @symbolic_geometric[from]
-    b = @symbolic_geometric[to]
+  def near(from, to, place)
+    a = @symbol_object[from]
+    b = @symbol_object[to]
     nearby(a, b, ANGLE, ENVIRONMENT) {|pos|
-      symbol = @symbolic_geometric.key(pos)
-      unless symbol
-        symbol = "pos#{@pos_counter}"
-        @pos_counter += 1
-        @symbolic_geometric[symbol] = pos
-      end
-      to.replace(symbol)
+      place.replace(symbol(pos))
       yield
+    }
+  end
+
+  def visible_vertex(from, vertex)
+    a = @symbol_object[from]
+    ENVIRONMENT.each {|polygon|
+      polygon.vertices.each {|v|
+        if visible?(a, v, ENVIRONMENT)
+          vertex.replace(symbol(v))
+          yield
+        end
+      }
     }
   end
 end
