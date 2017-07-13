@@ -49,6 +49,7 @@ module UJSHOP_Parser
     raise "Error with #{name}" unless group.instance_of?(Array)
     # Add implicit conjunction to expression
     group.unshift(first = AND) if (first = group.first).instance_of?(Array)
+    return unless first
     if first == AND or first == OR
       if group.size > 2 then group.drop(1).each {|g| define_expression(name, g)}
       elsif group.size == 2 then define_expression(name, group.replace(group.last))
@@ -57,15 +58,13 @@ module UJSHOP_Parser
     elsif first == NOT
       raise "Unexpected multiple arguments for not in #{name}" if group.size != 2
       define_expression(name, group.last)
-    elsif first
-      if first == 'call'
-        raise "Unexpected list as function name in #{name}" if group[1].instance_of?(Array)
-      elsif a = @axioms.assoc(first)
-        raise "Axiom #{first} defined with arity #{a[1].size}, unexpected arity #{group.size.pred}" if a[1].size != group.size.pred
-      elsif a = @attachments.assoc(first)
-        raise "Attachment #{first} defined with arity #{a.size.pred}, unexpected arity #{group.size.pred}" if a.size != group.size
-      else @predicates[first.freeze] ||= false
-      end
+    elsif first == 'call'
+      raise "Unexpected list as function name in #{name}" if group[1].instance_of?(Array)
+    elsif a = @axioms.assoc(first)
+      raise "Axiom #{first} defined with arity #{a[1].size}, unexpected arity #{group.size.pred}" if a[1].size != group.size.pred
+    elsif a = @attachments.assoc(first)
+      raise "Attachment #{first} defined with arity #{a.size.pred}, unexpected arity #{group.size.pred}" if a.size != group.size
+    else @predicates[first.freeze] ||= false
     end
   end
 
