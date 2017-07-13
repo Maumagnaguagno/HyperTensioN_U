@@ -12,6 +12,7 @@ script:
   # Tests
   - ruby tests/biscuit.rb
   - ruby tests/postulate.rb
+  - ruby tests/path.rb
   - ruby tests/caller.rb
   # Examples
   - ruby Hype.rb examples/axiom/axiom.ujshop examples/axiom/pb1.ujshop run
