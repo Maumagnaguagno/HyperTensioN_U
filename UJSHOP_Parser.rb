@@ -47,9 +47,9 @@ module UJSHOP_Parser
 
   def define_expression(name, group)
     raise "Error with #{name}" unless group.instance_of?(Array)
+    return unless first = group.first
     # Add implicit conjunction to expression
-    group.unshift(first = AND) if (first = group.first).instance_of?(Array)
-    return unless first
+    group.unshift(first = AND) if first.instance_of?(Array)
     if first == AND or first == OR
       if group.size > 2 then group.drop(1).each {|g| define_expression(name, g)}
       elsif group.size == 2 then define_expression(name, group.replace(group.last))
