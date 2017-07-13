@@ -63,7 +63,7 @@ module UJSHOP_Parser
       elsif a = @axioms.assoc(first)
         raise "Axiom #{first} defined with arity #{a[1].size}, unexpected arity #{group.size.pred}" if a[1].size != group.size.pred
       elsif a = @attachments.assoc(first)
-        raise "Attachment #{first} defined with arity #{a.size}, unexpected arity #{group.size}" if a.size != group.size
+        raise "Attachment #{first} defined with arity #{a.size.pred}, unexpected arity #{group.size.pred}" if a.size != group.size
       else @predicates[first.freeze] ||= false
       end
     end
