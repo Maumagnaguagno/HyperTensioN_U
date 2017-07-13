@@ -60,8 +60,11 @@ module UJSHOP_Parser
     elsif first
       if first == 'call'
         raise "Unexpected list as function name in #{name}" if group[1].instance_of?(Array)
-      elsif not @axioms.assoc(first) and not @attachments.assoc(first)
-        @predicates[first.freeze] ||= false
+      elsif a = @axioms.assoc(first)
+        raise "Axiom #{first} defined with arity #{a.size}, unexpected arity #{group.size}" if a.size != group.size
+      elsif a = @attachments.assoc(first)
+        raise "Attachment #{first} defined with arity #{a.size}, unexpected arity #{group.size}" if a.size != group.size
+      else @predicates[first.freeze] ||= false
       end
     end
   end
