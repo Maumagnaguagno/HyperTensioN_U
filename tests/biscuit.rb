@@ -24,7 +24,7 @@ class Biscuit < Test::Unit::TestCase
           [['at', '?agent', '?to']],
           [['at', '?agent', '?from']],
           # Probability
-          1.0
+          1
         ],
         ['buy_cookie', ['?agent'],
           # Preconditions

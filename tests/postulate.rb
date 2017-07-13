@@ -24,7 +24,7 @@ class Postulate < Test::Unit::TestCase
           [['at', ['call', '+', '?current', '1']]],
           [['at', '?current']],
           # Probability
-          1.0
+          1
         ]
       ],
       :methods => [],
