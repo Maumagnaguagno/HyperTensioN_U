@@ -3,7 +3,7 @@ require './tests/hypest'
 class Postulate < Test::Unit::TestCase
   include Hypest
 
-  def test_axiom_ujshop_parsing
+  def test_axiom_pb1_ujshop_parsing
     parser_tests(
       # Files
       'examples/axiom/axiom.ujshop',

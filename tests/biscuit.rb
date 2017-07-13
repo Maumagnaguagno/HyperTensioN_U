@@ -3,7 +3,7 @@ require './tests/hypest'
 class Biscuit < Test::Unit::TestCase
   include Hypest
 
-  def test_cookie_ujshop_parsing
+  def test_cookie_pb1_ujshop_parsing
     parser_tests(
       # Files
       'examples/cookie/cookie.ujshop',
