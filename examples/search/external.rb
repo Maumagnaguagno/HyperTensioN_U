@@ -3,13 +3,6 @@ require_relative '../../../Polygonoid/examples/search/Search2'
 module External
   extend self
 
-  @symbol_object = {
-    'start' => Point.new(80,50),
-    'goal'  => Point.new(15,50)
-  }
-  @pos_counter = 0
-
-  ANGLE = 10
   ENVIRONMENT = [
     Polygon.new(
       Point.new(35,30),
@@ -20,6 +13,13 @@ module External
       Point.new(35,70)
     )
   ]
+  ANGLE = 10
+
+  @symbol_object = {
+    'start' => Point.new(80,50),
+    'goal'  => Point.new(15,50)
+  }
+  @pos_counter = 0
 
   def symbol(object)
     @symbol_object[symbol = "pos#{@pos_counter += 1}"] = object unless symbol = @symbol_object.key(object)
