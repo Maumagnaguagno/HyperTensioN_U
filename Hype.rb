@@ -38,7 +38,6 @@ module Hype
   #-----------------------------------------------
 
   def compile(domain, problem)
-    raise 'No data to compile' unless @parser
     compiler = UHyper_Compiler
     args = [
       @parser.domain_name,
