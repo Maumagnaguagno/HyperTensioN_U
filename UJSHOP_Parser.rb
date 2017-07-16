@@ -142,7 +142,7 @@ module UJSHOP_Parser
     while exp = ax.shift
       if exp.instance_of?(String)
         label = exp
-        raise "Expected axiom definition after label #{label} on #{name}" unless exp = ax.shift
+        raise "Expected axiom definition after label #{label} in #{name}" unless exp = ax.shift
       else label = "case #{axiom.size - 2 >> 1}"
       end
       # Add constant parameters to expression if any
