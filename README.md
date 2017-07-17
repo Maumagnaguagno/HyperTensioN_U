@@ -38,7 +38,6 @@ Several problems may refer to the same domain, as many situations may happen wit
 Differently from JSHOP descriptions the operators may have uncertain effects with known probabilities.
 
 ### Domain
-
 ```Lisp
 ; This is a comment line
 (defdomain domain-name (
@@ -104,7 +103,6 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
 ```
 
 ### Problem
-
 ```Lisp
 (defproblem problem-name domain-name
   ; Start with this ground predicates as true
