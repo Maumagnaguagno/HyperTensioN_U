@@ -168,6 +168,11 @@ class Caller < Test::Unit::TestCase
     call("('1.0' >= a)", ['call', '>=', '1', '?a'])
   end
 
+  def test_call_member
+    call("['1.0', '2.0', '3.0'].include?('1.0')", ['call', 'member', '1', ['1', '2', '3']])
+    call("[['1.0'], ['2.0'], ['3.0']].include?(['1.0'])", ['call', 'member', ['1'], [['1'], ['2'], ['3']]])
+  end
+
   def test_nested_calls
     call('6.0', ['call', '+', '3', ['call', '+', '2', '1']])
     call('(a.to_f + (b.to_f + c.to_f)).to_s', ['call', '+', '?a', ['call', '+', '?b', '?c']])

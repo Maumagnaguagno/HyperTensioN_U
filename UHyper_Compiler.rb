@@ -82,6 +82,12 @@ module UHyper_Compiler
         rtoken << '.to_s' if rtoken !~ /^[\w']/
         "(#{ltoken} #{function == '=' ? '==' : function} #{rtoken})"
       end
+    # List
+    when 'member'
+      raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
+      ltoken = evaluate(precond_expression[2])
+      rtoken = evaluate(precond_expression[3])
+      "#{rtoken}.include?(#{ltoken})"
     else "External.#{function}(#{precond_expression.drop(2).map{|term| evaluate(term)}.join(', ')})"
     end
   end
