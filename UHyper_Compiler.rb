@@ -76,11 +76,17 @@ module UHyper_Compiler
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
-      if ltoken == rtoken then (function == '=' or function == '<=' or function == '>=').to_s
-      else
-        ltoken << '.to_s' if ltoken !~ /^[\w']/
-        rtoken << '.to_s' if rtoken !~ /^[\w']/
-        "(#{ltoken} #{function == '=' ? '==' : function} #{rtoken})"
+      # TODO lists may be compared for equality
+      if ltoken =~ /^-?\d+(?>\.\d+)?$/ then ltoken = ltoken.to_f
+      else ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
+      end
+      if rtoken =~ /^-?\d+(?>\.\d+)?$/ then rtoken = rtoken.to_f
+      else rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
+      end
+      function = '==' if function == '='
+      if ltoken == rtoken then (function == '==' or function == '<=' or function == '>=').to_s
+      elsif ltoken.instance_of?(Float) and rtoken.instance_of?(Float) then ltoken.send(function, rtoken).to_s
+      else "(#{ltoken} #{function} #{rtoken})"
       end
     # List
     when 'member'
