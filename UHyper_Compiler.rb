@@ -72,7 +72,7 @@ module UHyper_Compiler
       else "Math.#{function}(#{ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'}).to_s"
       end
     # Comparison
-    when '=', '!=', '<', '<=', '>=', '>'
+    when '=', '!=', '<', '>', '<=', '>='
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
