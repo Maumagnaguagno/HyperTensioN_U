@@ -147,10 +147,10 @@ class Caller < Test::Unit::TestCase
     call('false', ['call', '<', '2', '1'])
     call('true', ['call', '<=', '1', '2'])
     call('false', ['call', '<=', '2', '1'])
-    call("(a.to_f < 1.0)", ['call', '<', '?a', '1'])
-    call("(1.0 < a.to_f)", ['call', '<', '1', '?a'])
-    call("(a.to_f <= 1.0)", ['call', '<=', '?a', '1'])
-    call("(1.0 <= a.to_f)", ['call', '<=', '1', '?a'])
+    call('(a.to_f < 1.0)', ['call', '<', '?a', '1'])
+    call('(1.0 < a.to_f)', ['call', '<', '1', '?a'])
+    call('(a.to_f <= 1.0)', ['call', '<=', '?a', '1'])
+    call('(1.0 <= a.to_f)', ['call', '<=', '1', '?a'])
   end
 
   def test_call_greater
@@ -162,10 +162,10 @@ class Caller < Test::Unit::TestCase
     call('true', ['call', '>', '2', '1'])
     call('false', ['call', '>=', '1', '2'])
     call('true', ['call', '>=', '2', '1'])
-    call("(a.to_f > 1.0)", ['call', '>', '?a', '1'])
-    call("(1.0 > a.to_f)", ['call', '>', '1', '?a'])
-    call("(a.to_f >= 1.0)", ['call', '>=', '?a', '1'])
-    call("(1.0 >= a.to_f)", ['call', '>=', '1', '?a'])
+    call('(a.to_f > 1.0)', ['call', '>', '?a', '1'])
+    call('(1.0 > a.to_f)', ['call', '>', '1', '?a'])
+    call('(a.to_f >= 1.0)', ['call', '>=', '?a', '1'])
+    call('(1.0 >= a.to_f)', ['call', '>=', '1', '?a'])
   end
 
   def test_call_member
@@ -173,7 +173,7 @@ class Caller < Test::Unit::TestCase
     call("[['1.0'], ['2.0'], ['3.0']].include?(['1.0'])", ['call', 'member', ['1'], [['1'], ['2'], ['3']]])
     call("['2.0', '3.0', '4.0', '5.0'].include?('4.0')", ['call', 'member', ['call', '*', '2', '2'], ['2', '3', ['call', '+', '1', '3'], '5']])
     call("['1.0', '2.0', '3.0'].include?(a)", ['call', 'member', '?a', ['1', '2', '3']])
-    call("b.include?(a)", ['call', 'member', '?a', '?b'])
+    call('b.include?(a)', ['call', 'member', '?a', '?b'])
   end
 
   def test_nested_calls
@@ -183,6 +183,6 @@ class Caller < Test::Unit::TestCase
 
   def test_external_calls
     call("External.test('1.0', a)", ['call', 'test', '1', '?a'])
-    call("External.test((1.0 + a.to_f).to_s)", ['call', 'test', ['call', '+', '1', '?a']])
+    call('External.test((1.0 + a.to_f).to_s)', ['call', 'test', ['call', '+', '1', '?a']])
   end
 end
