@@ -11,7 +11,7 @@ module UHyper_Compiler
     if predicates.empty?
       output << "\n#{indentation}#{yielder}[]"
     else
-      group = predicates.map {|g| g.map {|i| evaluate(i)}.join(', ')}.join("],\n#{indentation}  [")
+      group = predicates.map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],\n#{indentation}  [")
       output << "\n#{indentation}#{yielder}[\n#{indentation}  [" << group << "]\n#{indentation}]"
     end
   end
@@ -34,7 +34,7 @@ module UHyper_Compiler
       # Empty list is false
       if precond_expression.empty? then 'false'
       else
-        terms = precond_expression.drop(1).map! {|i| evaluate(i)}.join(', ')
+        terms = precond_expression.drop(1).map! {|i| evaluate(i, true)}.join(', ')
         if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
         else "@state['#{precond_expression.first}'].include?([#{terms}])"
         end
@@ -53,10 +53,10 @@ module UHyper_Compiler
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
-      if ltoken =~ /^('?)(-?\d+(?>\.\d+)?)\1$/ then ltoken = $2.to_f
+      if ltoken =~ /^-?\d+(?>\.\d+)?$/ then ltoken = ltoken.to_f
       else ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
       end
-      if rtoken =~ /^('?)(-?\d+(?>\.\d+)?)\1$/ then rtoken = $2.to_f
+      if rtoken =~ /^-?\d+(?>\.\d+)?$/ then rtoken = rtoken.to_f
       else rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
       end
       function = '**' if function == '^'
@@ -67,7 +67,7 @@ module UHyper_Compiler
     when 'abs', 'sin', 'cos', 'tan'
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 3
       ltoken = evaluate(precond_expression[2])
-      if ltoken =~ /^('?)(-?\d+(?>\.\d+)?)\1$/ then function == 'abs' ? $2.sub(/^-/,'') : Math.send(function, $2.to_f).to_s
+      if ltoken =~ /^-?\d+(?>\.\d+)?$/ then function == 'abs' ? ltoken.sub(/^-/,'') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then "#{ltoken}.sub(/^-/,'')"
       else "Math.#{function}(#{ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'}).to_s"
       end
@@ -88,7 +88,7 @@ module UHyper_Compiler
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
       "#{rtoken}.include?(#{ltoken})"
-    else "External.#{function}(#{precond_expression.drop(2).map{|term| evaluate(term)}.join(', ')})"
+    else "External.#{function}(#{precond_expression.drop(2).map{|term| evaluate(term, true)}.join(', ')})"
     end
   end
 
@@ -96,10 +96,15 @@ module UHyper_Compiler
   # Evaluate
   #-----------------------------------------------
 
-  def evaluate(term)
+  def evaluate(term, quotes = false)
     case term
-    when Array then term.first == 'call' ? call(term) : "[#{term.map {|i| evaluate(i)}.join(', ')}]"
-    when String then term.start_with?('?') ? term.sub(/^\?/,'') : "'#{term =~ /^-?\d+$/ ? term.to_f : term}'"
+    when Array then term.first == 'call' ? call(term) : "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
+    when String
+      if term.start_with?('?') then term.sub(/^\?/,'')
+      else
+        term = term =~ /^-?\d+$/ ? term.to_f : term
+        quotes ? "'#{term}'" : term.to_s
+      end
     end
   end
 
@@ -221,7 +226,7 @@ module UHyper_Compiler
               define_methods << "\n#{indentation}#{t.sub(/^\?/,'')} = ''"
             end
           }
-          define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t)}.join(', ')}) {"
+          define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) {"
           level += 1
         }
         define_methods << "\n#{'  ' * level}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms) unless dependent_attachments.empty?
@@ -279,7 +284,7 @@ module UHyper_Compiler
     objects.each {|i|
       if i.instance_of?(String)
         problem_str << "#{i} = '#{i}'\n" if i !~ /^-?\d+(?>\.\d+)?$/
-      else problem_str << "#{i.join('_').delete('.')} = #{evaluate(i)}\n"
+      else problem_str << "#{i.join('_').delete('.')} = #{evaluate(i, true)}\n"
       end
     }
     problem_str << "\n#{domain_name.capitalize}.problem(\n  # Start\n  {\n"
