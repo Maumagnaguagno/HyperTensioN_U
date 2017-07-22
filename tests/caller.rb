@@ -123,6 +123,8 @@ class Caller < Test::Unit::TestCase
     call('false', ['call', '=', '2', '1'])
     call('(a.to_f == 1.0)', ['call', '=', '?a', '1'])
     call('(1.0 == a.to_f)', ['call', '=', '1', '?a'])
+    call('true', ['call', '=', ['a', 'b', 'c'], ['a', 'b', 'c']])
+    call("(['a', 'b', 'c'] == ['a', 'b', 'd'])", ['call', '=', ['a', 'b', 'c'], ['a', 'b', 'd']])
   end
 
   def test_call_diff
@@ -132,6 +134,8 @@ class Caller < Test::Unit::TestCase
     call('true', ['call', '!=', '2', '1'])
     call('(a.to_f != 1.0)', ['call', '!=', '?a', '1'])
     call('(1.0 != a.to_f)', ['call', '!=', '1', '?a'])
+    call('false', ['call', '!=', ['a', 'b', 'c'], ['a', 'b', 'c']])
+    call("(['a', 'b', 'c'] != ['a', 'b', 'd'])", ['call', '!=', ['a', 'b', 'c'], ['a', 'b', 'd']])
   end
 
   def test_call_less
