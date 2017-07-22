@@ -90,8 +90,8 @@ module UHyper_Compiler
     # List
     when 'member'
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
-      ltoken = evaluate(precond_expression[2])
-      rtoken = evaluate(precond_expression[3])
+      ltoken = evaluate(precond_expression[2], true)
+      rtoken = evaluate(precond_expression[3], true)
       "#{rtoken}.include?(#{ltoken})"
     else "External.#{function}(#{precond_expression.drop(2).map{|term| evaluate(term, true)}.join(', ')})"
     end
@@ -103,14 +103,17 @@ module UHyper_Compiler
 
   def evaluate(term, quotes = false)
     case term
-    when Array then term.first == 'call' ? call(term) : "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
+    when Array
+      if term.first == 'call'
+        term = call(term)
+        quotes ? evaluate(term, true) : term
+      else "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
+      end
     when String
       if term.start_with?('?') then term.sub(/^\?/,'')
-      else
-        if term =~ /^[a-z]/ then "'#{term}'"
-        elsif term =~ /^-?\d+$/ then quotes ? "'#{term.to_f}'" : term.to_f.to_s
-        else quotes ? "'#{term}'" : term.to_s
-        end
+      elsif term =~ /^[a-z]/ then "'#{term}'"
+      elsif term =~ /^-?\d/ then quotes ? "'#{term.to_f}'" : term.to_f.to_s
+      else term
       end
     end
   end
