@@ -53,10 +53,10 @@ module UHyper_Compiler
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
-      if ltoken =~ /^-?\d+(?>\.\d+)?$/ then ltoken = ltoken.to_f
+      if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
       else ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
       end
-      if rtoken =~ /^-?\d+(?>\.\d+)?$/ then rtoken = rtoken.to_f
+      if rtoken =~ /^-?\d/ then rtoken = rtoken.to_f
       else rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
       end
       function = '**' if function == '^'
@@ -67,7 +67,7 @@ module UHyper_Compiler
     when 'abs', 'sin', 'cos', 'tan'
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 3
       ltoken = evaluate(precond_expression[2])
-      if ltoken =~ /^-?\d+(?>\.\d+)?$/ then function == 'abs' ? ltoken.sub(/^-/,'') : Math.send(function, ltoken.to_f).to_s
+      if ltoken =~ /^-?\d/ then function == 'abs' ? ltoken.sub(/^-/,'') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then "#{ltoken}.sub(/^-/,'')"
       else "Math.#{function}(#{ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'}).to_s"
       end
@@ -77,10 +77,10 @@ module UHyper_Compiler
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
       # TODO lists may be compared for equality
-      if ltoken =~ /^-?\d+(?>\.\d+)?$/ then ltoken = ltoken.to_f
+      if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
       else ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
       end
-      if rtoken =~ /^-?\d+(?>\.\d+)?$/ then rtoken = rtoken.to_f
+      if rtoken =~ /^-?\d/ then rtoken = rtoken.to_f
       else rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
       end
       function = '==' if function == '='
@@ -291,7 +291,7 @@ module UHyper_Compiler
     objects.uniq!
     objects.each {|i|
       if i.instance_of?(String)
-        problem_str << "#{i} = '#{i}'\n" if i !~ /^-?\d+(?>\.\d+)?$/
+        problem_str << "#{i} = '#{i}'\n" if i !~ /^-?\d/
       else problem_str << "#{i.join('_').delete('.')} = #{evaluate(i, true)}\n"
       end
     }
@@ -299,12 +299,12 @@ module UHyper_Compiler
     # Start
     start_hash.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
-      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o =~ /^-?\d+(?>\.\d+)?$/ ? "'#{o.to_f}'" : o : o.join('_').delete('.')}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
+      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o =~ /^-?\d/ ? "'#{o.to_f}'" : o : o.join('_').delete('.')}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
       problem_str << (start_hash.size.pred == i ? ']' : "],\n")
     }
     # Tasks
     group = []
-    tasks.each {|t| group << "    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o.instance_of?(String) ? o =~ /^-?\d+(?>\.\d+)?$/ ? "'#{o.to_f}'" : o : o.join('_').delete('.')}.join(', ')}]"}
+    tasks.each {|t| group << "    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o.instance_of?(String) ? o =~ /^-?\d/ ? "'#{o.to_f}'" : o : o.join('_').delete('.')}.join(', ')}]"}
     problem_str << "\n  },\n  # Tasks\n  [\n" << group .join(",\n") << "\n  ],\n  # Debug\n  ARGV.first == 'debug',\n  # Maximum plans found\n  ARGV[1] ? ARGV[1].to_i : -1,\n  # Minimum probability for plans\n  ARGV[2] ? ARGV[2].to_f : 0"
     tasks.unshift(ordered) unless tasks.empty?
     problem_str.gsub!(/\b-\b/,'_')
