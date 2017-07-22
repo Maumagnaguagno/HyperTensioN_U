@@ -108,8 +108,10 @@ module UHyper_Compiler
     when String
       if term.start_with?('?') then term.sub(/^\?/,'')
       else
-        term = term =~ /^-?\d+$/ ? term.to_f : term
-        quotes ? "'#{term}'" : term.to_s
+        if term =~ /^[a-z]/ then "'#{term}'"
+        elsif term =~ /^-?\d+$/ then quotes ? "'#{term.to_f}'" : term.to_f.to_s
+        else quotes ? "'#{term}'" : term.to_s
+        end
       end
     end
   end
