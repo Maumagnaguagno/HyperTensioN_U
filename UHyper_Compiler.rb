@@ -76,12 +76,11 @@ module UHyper_Compiler
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
-      # TODO lists may be compared for equality
       if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
-      else ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
+      elsif not ltoken.start_with?('[') then ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
       end
       if rtoken =~ /^-?\d/ then rtoken = rtoken.to_f
-      else rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
+      elsif not rtoken.start_with?('[') then rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
       end
       function = '==' if function == '='
       if ltoken == rtoken then (function == '==' or function == '<=' or function == '>=').to_s
