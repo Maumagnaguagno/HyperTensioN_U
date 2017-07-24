@@ -30,6 +30,11 @@ module UHyper_Compiler
       raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 1" if precond_expression.size != 2
       'not ' << expression_to_hyper(precond_expression[1], axioms)
     when 'call' then call(precond_expression)
+    when 'assign'
+      raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 3
+      term = precond_expression[1]
+      raise "Expected a variable to assign, instead of #{term}" unless term.start_with?('?')
+      '(' << term.sub(/^\?/,'') << ' = ' << evaluate(precond_expression[2], true) << ')'
     else
       # Empty list is false
       if precond_expression.empty? then 'false'
