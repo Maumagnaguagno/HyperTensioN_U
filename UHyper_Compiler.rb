@@ -27,7 +27,7 @@ module UHyper_Compiler
       else '(' << precond_expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
       end
     when 'not'
-      raise "Wrong number of arguments #{precond_expression.join(' ')}, expected 1" if precond_expression.size != 2
+      raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 1" if precond_expression.size != 2
       'not ' << expression_to_hyper(precond_expression[1], axioms)
     when 'call' then call(precond_expression)
     else
