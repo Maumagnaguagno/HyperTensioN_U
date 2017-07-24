@@ -49,7 +49,7 @@ module UHyper_Compiler
     case function = precond_expression[1]
     # Binary math
     when '+', '-', '*', '/', '%', '^'
-      raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
+      raise "Wrong number of arguments for (#{precond_expression.join(' ')}), expected 3" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
       if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
@@ -64,7 +64,7 @@ module UHyper_Compiler
       end
     # Unary math
     when 'abs', 'sin', 'cos', 'tan'
-      raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 2" if precond_expression.size != 3
+      raise "Wrong number of arguments for (#{precond_expression.join(' ')}), expected 2" if precond_expression.size != 3
       ltoken = evaluate(precond_expression[2])
       if ltoken =~ /^-?\d/ then function == 'abs' ? ltoken.sub(/^-/,'') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then "#{ltoken}.sub(/^-/,'')"
@@ -72,7 +72,7 @@ module UHyper_Compiler
       end
     # Comparison
     when '=', '!=', '<', '>', '<=', '>='
-      raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
+      raise "Wrong number of arguments for (#{precond_expression.join(' ')}), expected 3" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2])
       rtoken = evaluate(precond_expression[3])
       if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
@@ -88,7 +88,7 @@ module UHyper_Compiler
       end
     # List
     when 'member'
-      raise "Wrong number of arguments for #{precond_expression.join(' ')}, expected 3" if precond_expression.size != 4
+      raise "Wrong number of arguments for (#{precond_expression.join(' ')}), expected 3" if precond_expression.size != 4
       ltoken = evaluate(precond_expression[2], true)
       rtoken = evaluate(precond_expression[3], true)
       "#{rtoken}.include?(#{ltoken})"
