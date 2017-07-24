@@ -92,6 +92,7 @@ module UHyper_Compiler
       ltoken = evaluate(precond_expression[2], true)
       rtoken = evaluate(precond_expression[3], true)
       "#{rtoken}.include?(#{ltoken})"
+    # External
     else "External.#{function}(#{precond_expression.drop(2).map{|term| evaluate(term, true)}.join(', ')})"
     end
   end
