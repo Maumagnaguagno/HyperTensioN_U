@@ -45,13 +45,13 @@ module UHyper_Compiler
   # Call
   #-----------------------------------------------
 
-  def call(precond_expression)
-    case function = precond_expression[1]
+  def call(expression)
+    case function = expression[1]
     # Binary math
     when '+', '-', '*', '/', '%', '^'
-      raise "Wrong number of arguments for (#{precond_expression.join(' ')}), expected 3" if precond_expression.size != 4
-      ltoken = evaluate(precond_expression[2])
-      rtoken = evaluate(precond_expression[3])
+      raise "Wrong number of arguments for (#{expression.join(' ')}), expected 3" if expression.size != 4
+      ltoken = evaluate(expression[2])
+      rtoken = evaluate(expression[3])
       if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
       else ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
       end
@@ -64,17 +64,17 @@ module UHyper_Compiler
       end
     # Unary math
     when 'abs', 'sin', 'cos', 'tan'
-      raise "Wrong number of arguments for (#{precond_expression.join(' ')}), expected 2" if precond_expression.size != 3
-      ltoken = evaluate(precond_expression[2])
+      raise "Wrong number of arguments for (#{expression.join(' ')}), expected 2" if expression.size != 3
+      ltoken = evaluate(expression[2])
       if ltoken =~ /^-?\d/ then function == 'abs' ? ltoken.sub(/^-/,'') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then "#{ltoken}.sub(/^-/,'')"
       else "Math.#{function}(#{ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'}).to_s"
       end
     # Comparison
     when '=', '!=', '<', '>', '<=', '>='
-      raise "Wrong number of arguments for (#{precond_expression.join(' ')}), expected 3" if precond_expression.size != 4
-      ltoken = evaluate(precond_expression[2])
-      rtoken = evaluate(precond_expression[3])
+      raise "Wrong number of arguments for (#{expression.join(' ')}), expected 3" if expression.size != 4
+      ltoken = evaluate(expression[2])
+      rtoken = evaluate(expression[3])
       if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
       elsif not ltoken.start_with?('[') then ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
       end
@@ -88,12 +88,12 @@ module UHyper_Compiler
       end
     # List
     when 'member'
-      raise "Wrong number of arguments for (#{precond_expression.join(' ')}), expected 3" if precond_expression.size != 4
-      ltoken = evaluate(precond_expression[2], true)
-      rtoken = evaluate(precond_expression[3], true)
+      raise "Wrong number of arguments for (#{expression.join(' ')}), expected 3" if expression.size != 4
+      ltoken = evaluate(expression[2], true)
+      rtoken = evaluate(expression[3], true)
       "#{rtoken}.include?(#{ltoken})"
     # External
-    else "External.#{function}(#{precond_expression.drop(2).map{|term| evaluate(term, true)}.join(', ')})"
+    else "External.#{function}(#{expression.drop(2).map{|term| evaluate(term, true)}.join(', ')})"
     end
   end
 
