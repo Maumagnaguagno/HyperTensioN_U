@@ -125,11 +125,8 @@ module UHyper_Compiler
   def operator_to_hyper(name, param, precond_expression, effect_add, effect_del, axioms, define_operators)
     define_operators << "\n  def #{name}#{"(#{param.map {|j| j.sub(/^\?/,'')}.join(', ')})" unless param.empty?}\n    "
     if effect_add.empty? and effect_del.empty?
-      # Empty
-      if precond_expression.empty? then define_operators << "true\n  end\n"
-      # Sensing
-      else define_operators << "#{expression_to_hyper(precond_expression, axioms)}\n  end\n"
-      end
+      # Empty or sensing
+      define_operators << (precond_expression.empty? ? "true\n  end\n" : "#{expression_to_hyper(precond_expression, axioms)}\n  end\n")
     else
       # Effective if preconditions hold
       define_operators << "return unless #{expression_to_hyper(precond_expression, axioms)}\n    " unless precond_expression.empty?
