@@ -1,7 +1,7 @@
 (defdomain search (
 
   (:attachments
-    (near ?from ?to ?place)
+    (arc ?from ?to ?arc_to)
     (visible-vertex ?from ?vertex)
   )
 
@@ -44,7 +44,7 @@
     (
       (at ?agent ?from)
       (visible-vertex ?from ?vertex)
-      (near ?from ?vertex ?place)
+      (arc ?from ?vertex ?place)
       (not (visited ?agent ?vertex))
     )
     (

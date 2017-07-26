@@ -67,7 +67,7 @@ class Path < Test::Unit::TestCase
             ['and',
               ['at', '?agent', '?from'],
               ['visible-vertex', '?from', '?vertex'],
-              ['near', '?from', '?vertex', '?place'],
+              ['arc', '?from', '?vertex', '?place'],
               ['not', ['visited', '?agent', '?vertex']],
             ],
             # Subtasks
@@ -89,7 +89,7 @@ class Path < Test::Unit::TestCase
       :axioms => [],
       :rewards => [],
       :attachments => [
-        ['near', '?from', '?to', '?place'],
+        ['arc', '?from', '?to', '?arc_to'],
         ['visible-vertex', '?from', '?vertex']
       ]
     )

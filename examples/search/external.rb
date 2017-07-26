@@ -1,4 +1,4 @@
-require_relative '../../../Polygonoid/examples/search/Search2'
+require_relative '../../../Polygonoid/examples/search/Search'
 
 module External
   extend self
@@ -30,9 +30,9 @@ module External
     visible?(@symbol_object[from], @symbol_object[to], ENVIRONMENT)
   end
 
-  def near(from, to, place)
-    nearby(@symbol_object[from], @symbol_object[to], ANGLE, ENVIRONMENT) {|pos|
-      place.replace(symbol(pos))
+  def arc(from, to, arc_to)
+    line_to_arc(@symbol_object[from], @symbol_object[to], ANGLE, ENVIRONMENT) {|pos|
+      arc_to.replace(symbol(pos))
       yield
     }
   end
