@@ -163,7 +163,7 @@ else
     'pathologist' => PATHOLOGIST_SET.map {|i| [i]},
     'registrar' => REGISTRAR_SET.map {|i| [i]},
     'hospital' => HOSPITAL_SET.map {|i| [i]},
-    'patientHasCancer' => PATIENT_SET.first(cancers).map {|i| [i]},
+    'patientHasCancer' => PATIENT_SET.first(cancers).map! {|i| [i]},
     'commitment' => COMMITMENT_SET,
     'goal' => GOAL_SET,
     'var' => [],

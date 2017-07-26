@@ -93,7 +93,7 @@ module UHyper_Compiler
       rtoken = evaluate(expression[3], true)
       "#{rtoken}.include?(#{ltoken})"
     # External
-    else "External.#{function}(#{expression.drop(2).map{|term| evaluate(term, true)}.join(', ')})"
+    else "External.#{function}(#{expression.drop(2).map! {|term| evaluate(term, true)}.join(', ')})"
     end
   end
 
