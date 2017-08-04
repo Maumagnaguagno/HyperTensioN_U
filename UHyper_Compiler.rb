@@ -209,7 +209,7 @@ module UHyper_Compiler
         }
         if free_variables.empty?
           # Ground predicates, axioms and calls
-          precond_expression = precond_pos + precond_not + ground_axioms_calls
+          precond_expression = precond_pos.concat(precond_not.map {|i| ['not', i]}).concat(ground_axioms_calls)
           define_methods << "\n    return unless " << expression_to_hyper(precond_expression.unshift('and'), axioms) unless precond_expression.empty?
           level = 2
         else
