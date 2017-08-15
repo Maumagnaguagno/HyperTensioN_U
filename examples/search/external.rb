@@ -22,7 +22,7 @@ module External
   @pos_counter = 0
 
   def symbol(object)
-    @symbol_object[symbol = "pos#{@pos_counter += 1}"] = object unless symbol = @symbol_object.key(object)
+    symbol = @symbol_object.key(object) or @symbol_object[symbol = "pos#{@pos_counter += 1}"] = object
     symbol
   end
 
