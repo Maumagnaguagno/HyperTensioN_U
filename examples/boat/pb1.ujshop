@@ -1,0 +1,12 @@
+(defproblem pb2 boat
+  ; Start
+  (
+    (at titanic start)
+    (angle titanic 0)
+  )
+  ; Tasks
+  (
+    ; TODO replace 1.57... by (call / PI 2)
+    (move-turn titanic 10 1.5707963267948966 4)
+  )
+)

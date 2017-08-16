@@ -1,0 +1,52 @@
+(defdomain boat (
+
+  (:attachments
+    (advance ?pos ?angle ?amount ?newpos)
+  )
+
+  (:operator (!move ?agent ?pos ?newpos)
+    ; Preconditions
+    ((at ?agent ?pos))
+    ; Del effects
+    ((at ?agent ?pos))
+    ; Add effects
+    ((at ?agent ?newpos))
+  )
+
+  (:operator (!turn ?agent ?rad ?turn)
+    ; Preconditions
+    ((angle ?agent ?rad))
+    ; Del effects
+    ((angle ?agent ?rad))
+    ; Add effects
+    ((angle ?agent (call + ?rad ?turn)))
+  )
+
+  (:operator (!sample ?agent ?pos)
+    ; Preconditions
+    ((at ?agent ?pos))
+    ; Del effects
+    nil
+    ; Add effects
+    ((have-sample ?agent ?pos))
+  )
+
+  (:method (move-turn ?agent ?amount ?turn ?times)
+    base
+    (call = ?times 0)
+    nil
+
+    recursion
+    (
+      (at ?agent ?pos)
+      (angle ?agent ?rad)
+      (advance ?pos ?rad ?amount ?newpos)
+      (call != ?times 0)
+    )
+    (
+      (!move ?agent ?pos ?newpos)
+      (!turn ?agent ?rad ?turn)
+      (move-turn ?agent ?amount ?turn (call - ?times 1))
+    )
+  )
+))
