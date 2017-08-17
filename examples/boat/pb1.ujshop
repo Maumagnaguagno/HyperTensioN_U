@@ -1,4 +1,4 @@
-(defproblem pb2 boat
+(defproblem pb1 boat
   ; Start
   (
     (at titanic start)
