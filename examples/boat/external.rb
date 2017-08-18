@@ -3,8 +3,11 @@ require_relative '../../../Polygonoid/examples/search/Search'
 module External
   extend self
 
+  attr_reader :pi
+
   @symbol_object = {'start' => Point.new(0,0)}
   @pos_counter = 0
+  @pi = Math::PI
 
   def symbol(object)
     symbol = @symbol_object.key(object) or @symbol_object[symbol = "pos#{@pos_counter += 1}"] = object
