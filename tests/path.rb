@@ -3,7 +3,7 @@ require './tests/hypest'
 class Path < Test::Unit::TestCase
   include Hypest
 
-  def test_search_pb1_ujshop_parsing
+  def test_search_angle_pb1_ujshop_parsing
     parser_tests(
       # Files
       'examples/search_angle/search.ujshop',
