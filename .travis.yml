@@ -6,6 +6,8 @@ rvm:
   - 2.1.5
   - 2.2.0
   - 2.3.0
+  # JRuby
+  - jruby
 before_script:
   - git clone https://github.com/Maumagnaguagno/Polygonoid.git ../Polygonoid
 script:
