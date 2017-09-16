@@ -1,4 +1,4 @@
-require_relative '../../../Polygonoid/examples/Circular/Circular'
+require_relative '../../../Polygonoid/examples/circular/Circular'
 
 CLOCK = 'clock'
 COUNTER = 'counter'

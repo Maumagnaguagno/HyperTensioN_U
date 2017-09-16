@@ -6,8 +6,8 @@ class Path < Test::Unit::TestCase
   def test_search_pb1_ujshop_parsing
     parser_tests(
       # Files
-      'examples/search/search.ujshop',
-      'examples/search/pb1.ujshop',
+      'examples/search_angle/search.ujshop',
+      'examples/search_angle/pb1.ujshop',
       # Parser and extensions
       UJSHOP_Parser, [],
       # Attributes
