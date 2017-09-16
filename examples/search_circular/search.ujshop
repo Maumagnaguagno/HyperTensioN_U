@@ -1,0 +1,63 @@
+(defdomain search (
+
+  (:attachments
+    (bitangent ?pos ?from ?to ?in-dir ?out-dir ?out-circle)
+  )
+
+  (:operator (!move ?agent ?from ?to)
+    nil
+    ((at ?agent ?from))
+    ((at ?agent ?to))
+  )
+
+  (:operator (!!visit ?agent ?pos)
+    nil
+    nil
+    ((visited ?agent ?pos))
+  )
+
+  (:operator (!!unvisit ?agent ?pos)
+    nil
+    ((visited ?agent ?pos))
+    nil
+  )
+
+  (:method (forward-start ?agent ?goal)
+    clockwise
+    ((at ?agent ?start))
+    ((forward ?agent ?start ?start clock ?goal))
+
+    counterclockwise
+    ((at ?agent ?start))
+    ((forward ?agent ?start ?start counter ?goal))
+  )
+
+  (:method (forward ?agent ?pos ?circle ?in-dir ?goal)
+    base
+    ((at ?agent ?goal))
+    nil
+
+    goal-visible ; TODO consider this block removal
+    (
+      (at ?agent ?pos)
+      (call visible ?pos ?goal ?circle ?goal)
+    )
+    ((!move ?agent ?pos ?goal))
+
+    recursion
+    (
+      (at ?agent ?pos)
+      (bitangent ?circle ?from ?to ?in-dir ?out-dir ?out-circle)
+      (not (visited ?agent ?from ?to))
+    )
+    (
+      (!move ?agent ?pos ?from)
+      (!move ?agent ?from ?to)
+      (!!visit ?agent ?pos)
+      (!!visit ?agent ?from)
+      (forward ?agent ?to ?out-circle ?out-dir ?goal)
+      (!!unvisit ?agent ?from)
+      (!!unvisit ?agent ?pos)
+    )
+  )
+))
