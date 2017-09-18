@@ -23,6 +23,10 @@
   )
 
   (:method (forward-start ?agent ?goal)
+    base
+    ((at ?agent ?goal))
+    nil
+
     clockwise
     ((at ?agent ?start))
     ((forward ?agent ?start ?start clock ?goal))
@@ -33,10 +37,6 @@
   )
 
   (:method (forward ?agent ?pos ?circle ?in-dir ?goal)
-    base
-    ((at ?agent ?goal))
-    nil
-
     goal-visible ; TODO consider this block removal
     (
       (at ?agent ?pos)
