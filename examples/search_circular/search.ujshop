@@ -37,7 +37,7 @@
   )
 
   (:method (forward ?agent ?pos ?circle ?in-dir ?goal)
-    goal-visible ; TODO consider this block removal
+    goal-visible
     ((call visible ?pos ?goal ?circle ?goal))
     ((!move ?agent ?pos ?goal))
 
