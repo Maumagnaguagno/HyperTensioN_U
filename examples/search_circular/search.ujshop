@@ -38,15 +38,11 @@
 
   (:method (forward ?agent ?pos ?circle ?in-dir ?goal)
     goal-visible ; TODO consider this block removal
-    (
-      (at ?agent ?pos)
-      (call visible ?pos ?goal ?circle ?goal)
-    )
+    ((call visible ?pos ?goal ?circle ?goal))
     ((!move ?agent ?pos ?goal))
 
     recursion
     (
-      (at ?agent ?pos)
       (bitangent ?circle ?from ?to ?in-dir ?out-dir ?out-circle)
       (not (visited ?agent ?from ?to))
     )
