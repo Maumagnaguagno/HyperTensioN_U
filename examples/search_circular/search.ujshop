@@ -16,22 +16,19 @@
       (at ?agent ?start)
       (call search-circular ?agent ?start ?goal)
     )
-    ((apply-plan 0 (call plan-size)))
+    ((apply-plan ?agent ?start 0 (call plan-size)))
   )
 
-  (:method (apply-plan ?index ?size)
+  (:method (apply-plan ?agent ?from ?index ?size)
     index-is-size
-    (call = ?index ?size)
+    ((call = ?index ?size))
     nil
 
     get-next-action
+    ((assign ?to (call plan-position ?index)))
     (
-      (at ?agent ?start)
-      (assign ?to (call plan-position ?index))
-    )
-    (
-      (!move ?agent ?start ?to)
-      (apply-plan (call + ?index 1) ?size)
+      (!move ?agent ?from ?to)
+      (apply-plan ?agent ?to (call + ?index 1) ?size)
     )
   )
 ))
