@@ -1,3 +1,4 @@
+require_relative '../../../Polygonoid/examples/search/Search'
 require_relative '../../../Polygonoid/examples/circular/Circular'
 
 CLOCK = 'clock'
@@ -6,7 +7,7 @@ COUNTER = 'counter'
 module External
   extend self
   srand(0)
-  CIRCLES = Array.new(10) {Circle.new(50 + rand(1000), 50 + rand(1000), 5 + rand(50))}
+  CIRCLES = Array.new(100) {Circle.new(50 + rand(1000), 50 + rand(1000), 5 + rand(50))}
 
   @symbol_object = {
     'start' => Circle.new(0,80,0),
@@ -31,5 +32,18 @@ module External
       out_circle.replace(symbol(c))
       yield
     }
+  end
+
+  def search_circular(agent, start, goal)
+    @plan = search(@symbol_object[start], @symbol_object[goal], CIRCLES)
+    @plan = @plan.map! {|i| symbol(i)} if @plan
+  end
+
+  def plan_position(index)
+    @plan[index.to_i]
+  end
+
+  def plan_size
+    @plan.size
   end
 end

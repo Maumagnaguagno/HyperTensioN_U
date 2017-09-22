@@ -1,59 +1,37 @@
 (defdomain search (
 
-  (:attachments
-    (bitangent ?pos ?from ?to ?in-dir ?out-dir ?out-circle)
-  )
-
   (:operator (!move ?agent ?from ?to)
     nil
     ((at ?agent ?from))
     ((at ?agent ?to))
   )
 
-  (:operator (!!visit ?agent ?pos)
-    nil
-    nil
-    ((visited ?agent ?pos))
-  )
-
-  (:operator (!!unvisit ?agent ?pos)
-    nil
-    ((visited ?agent ?pos))
-    nil
-  )
-
-  (:method (forward-start ?agent ?goal)
+  (:method (forward ?agent ?goal)
     base
     ((at ?agent ?goal))
     nil
 
-    clockwise
-    ((at ?agent ?start))
-    ((forward ?agent ?start ?start clock ?goal))
-
-    counterclockwise
-    ((at ?agent ?start))
-    ((forward ?agent ?start ?start counter ?goal))
+    search
+    (
+      (at ?agent ?start)
+      (call search-circular ?agent ?start ?goal)
+    )
+    ((apply-plan 0 (call plan-size)))
   )
 
-  (:method (forward ?agent ?pos ?circle ?in-dir ?goal)
-    goal-visible
-    ((call visible ?pos ?goal ?circle ?goal))
-    ((!move ?agent ?pos ?goal))
+  (:method (apply-plan ?index ?size)
+    index-is-size
+    (call = ?index ?size)
+    nil
 
-    recursion
+    get-next-action
     (
-      (bitangent ?circle ?from ?to ?in-dir ?out-dir ?out-circle)
-      (not (visited ?agent ?from ?to))
+      (at ?agent ?start)
+      (assign ?to (call plan-position ?index))
     )
     (
-      (!move ?agent ?pos ?from)
-      (!move ?agent ?from ?to)
-      (!!visit ?agent ?pos)
-      (!!visit ?agent ?from)
-      (forward ?agent ?to ?out-circle ?out-dir ?goal)
-      (!!unvisit ?agent ?from)
-      (!!unvisit ?agent ?pos)
+      (!move ?agent ?start ?to)
+      (apply-plan (call + ?index 1) ?size)
     )
   )
 ))

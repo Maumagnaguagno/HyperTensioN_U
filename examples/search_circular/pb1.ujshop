@@ -5,6 +5,6 @@
   )
   ; Tasks
   (
-    (forward-start robot goal)
+    (forward robot goal)
   )
 )
