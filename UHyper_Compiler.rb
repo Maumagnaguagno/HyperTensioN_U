@@ -173,9 +173,7 @@ module UHyper_Compiler
         unless (precond_expression = dec[1]).empty?
           precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
           precond_expression.each {|pre|
-            if pre.first == 'assign'
-              free_variables << pre[1]
-            elsif not pre.first == 'not' || pre.first == 'call' || axioms.assoc(pre.first) || attachments.assoc(pre.first)
+            if pre.first != 'not' and pre.first != 'call' and pre.first != 'assign' and not axioms.assoc(pre.first) and not attachments.assoc(pre.first)
               free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
             end
           }
