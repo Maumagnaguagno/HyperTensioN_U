@@ -82,11 +82,14 @@ module UHyper_Compiler
       end
       function = '==' if function == '='
       if ltoken == rtoken then (function == '==' or function == '<=' or function == '>=').to_s
-      elsif ltoken.instance_of?(Float)
-        if rtoken.instance_of?(Float) then ltoken.send(function, rtoken).to_s
-        else "(#{ltoken} #{function} #{rtoken}.to_f)"
+      else
+        if ltoken.instance_of?(Float)
+          return ltoken.send(function, rtoken).to_s if rtoken.instance_of?(Float)
+          rtoken << '.to_f'
+        elsif rtoken.instance_of?(Float)
+          ltoken << '.to_f'
         end
-      elsif rtoken.instance_of?(Float) then "(#{ltoken}.to_f #{function} #{rtoken})"
+        "(#{ltoken} #{function} #{rtoken})"
       end
     # List
     when 'member'
