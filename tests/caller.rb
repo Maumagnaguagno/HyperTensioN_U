@@ -194,8 +194,9 @@ class Caller < Test::Unit::TestCase
     call('true', ['call', '=', '5', ['call', '+', '4', '1']])
     call('true', ['call', '<', '0', ['call', '+', '1', '1']])
     call('(a.to_f < 2.0)', ['call', '<', '?a', ['call', '+', '1', '1']])
-    #call('(a < (b.to_f + 1.0).to_s)', ['call', '<', '?a', ['call', '+', '?b', '1']])
-    #call('(0.0 < (b.to_f + 1.0))', ['call', '<', '0', ['call', '+', '?b', '1']])
+    call('(a < (b.to_f + 1.0).to_s)', ['call', '<', '?a', ['call', '+', '?b', '1']])
+    call('(0.0 < (b.to_f + 1.0))', ['call', '<', '0', ['call', '+', '?b', '1']])
+    call('true', ['call', '=', ['call', '+', '?a', '?b'], ['call', '+', '?a', '?b']])
   end
 
   def test_external_calls

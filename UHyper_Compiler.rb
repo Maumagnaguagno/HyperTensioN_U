@@ -74,20 +74,16 @@ module UHyper_Compiler
       raise "Wrong number of arguments for (#{expression.join(' ')}), expected 3" if expression.size != 4
       ltoken = evaluate(expression[2])
       rtoken = evaluate(expression[3])
-      if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
-      else ltoken.sub!(/\.to_s$/,'')
-      end
-      if rtoken =~ /^-?\d/ then rtoken = rtoken.to_f
-      else rtoken.sub!(/\.to_s$/,'')
-      end
-      function = '==' if function == '='
-      if ltoken == rtoken then (function == '==' or function == '<=' or function == '>=').to_s
+      if ltoken == rtoken then (function == '=' or function == '<=' or function == '>=').to_s
       else
+        ltoken = ltoken.to_f if ltoken =~ /^-?\d/
+        rtoken = rtoken.to_f if rtoken =~ /^-?\d/
+        function = '==' if function == '='
         if ltoken.instance_of?(Float)
           return ltoken.send(function, rtoken).to_s if rtoken.instance_of?(Float)
-          rtoken << '.to_f'
+          rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
         elsif rtoken.instance_of?(Float)
-          ltoken << '.to_f'
+          ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
         end
         "(#{ltoken} #{function} #{rtoken})"
       end
