@@ -159,6 +159,8 @@ class Caller < Test::Unit::TestCase
     call('(1.0 < a.to_f)', ['call', '<', '1', '?a'])
     call('(a.to_f <= 1.0)', ['call', '<=', '?a', '1'])
     call('(1.0 <= a.to_f)', ['call', '<=', '1', '?a'])
+    call('(a < b)', ['call', '<', '?a', '?b'])
+    call('(a <= b)', ['call', '<=', '?a', '?b'])
   end
 
   def test_call_greater
@@ -174,6 +176,8 @@ class Caller < Test::Unit::TestCase
     call('(1.0 > a.to_f)', ['call', '>', '1', '?a'])
     call('(a.to_f >= 1.0)', ['call', '>=', '?a', '1'])
     call('(1.0 >= a.to_f)', ['call', '>=', '1', '?a'])
+    call('(a > b)', ['call', '>', '?a', '?b'])
+    call('(a >= b)', ['call', '>=', '?a', '?b'])
   end
 
   def test_call_member
@@ -187,6 +191,11 @@ class Caller < Test::Unit::TestCase
   def test_nested_calls
     call('6.0', ['call', '+', '3', ['call', '+', '2', '1']])
     call('(a.to_f + (b.to_f + c.to_f)).to_s', ['call', '+', '?a', ['call', '+', '?b', '?c']])
+    call('true', ['call', '=', '5', ['call', '+', '4', '1']])
+    call('true', ['call', '<', '0', ['call', '+', '1', '1']])
+    call('(a.to_f < 2.0)', ['call', '<', '?a', ['call', '+', '1', '1']])
+    #call('(a < (b.to_f + 1.0).to_s)', ['call', '<', '?a', ['call', '+', '?b', '1']])
+    #call('(0.0 < (b.to_f + 1.0))', ['call', '<', '0', ['call', '+', '?b', '1']])
   end
 
   def test_external_calls
