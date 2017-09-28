@@ -117,23 +117,31 @@ class Caller < Test::Unit::TestCase
   end
 
   def test_call_equal
-    call('true', ['call', '=', '1', '1'])
     call('true', ['call', '=', '?a', '?a'])
+    call('true', ['call', '=', '1', '1'])
     call('false', ['call', '=', '1', '2'])
     call('false', ['call', '=', '2', '1'])
     call('(a.to_f == 1.0)', ['call', '=', '?a', '1'])
     call('(1.0 == a.to_f)', ['call', '=', '1', '?a'])
+    call('true', ['call', '=', 'a', 'a'])
+    call("('a' == 'b')", ['call', '=', 'a', 'b'])
+    call("('a' == b)", ['call', '=', 'a', '?b'])
+    call("(a == 'b')", ['call', '=', '?a', 'b'])
     call('true', ['call', '=', ['a', 'b', 'c'], ['a', 'b', 'c']])
     call("(['a', 'b', 'c'] == ['a', 'b', 'd'])", ['call', '=', ['a', 'b', 'c'], ['a', 'b', 'd']])
   end
 
   def test_call_diff
-    call('false', ['call', '!=', '1', '1'])
     call('false', ['call', '!=', '?a', '?a'])
+    call('false', ['call', '!=', '1', '1'])
     call('true', ['call', '!=', '1', '2'])
     call('true', ['call', '!=', '2', '1'])
     call('(a.to_f != 1.0)', ['call', '!=', '?a', '1'])
     call('(1.0 != a.to_f)', ['call', '!=', '1', '?a'])
+    call('false', ['call', '!=', 'a', 'a'])
+    call("('a' != 'b')", ['call', '!=', 'a', 'b'])
+    call("('a' != b)", ['call', '!=', 'a', '?b'])
+    call("(a != 'b')", ['call', '!=', '?a', 'b'])
     call('false', ['call', '!=', ['a', 'b', 'c'], ['a', 'b', 'c']])
     call("(['a', 'b', 'c'] != ['a', 'b', 'd'])", ['call', '!=', ['a', 'b', 'c'], ['a', 'b', 'd']])
   end

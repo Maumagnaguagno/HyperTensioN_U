@@ -75,10 +75,15 @@ module UHyper_Compiler
       ltoken = evaluate(expression[2])
       rtoken = evaluate(expression[3])
       if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
-      elsif not ltoken.start_with?('[') then ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
+      elsif not ltoken.start_with?('[') then ltoken.sub!(/\.to_s$/,'')
       end
       if rtoken =~ /^-?\d/ then rtoken = rtoken.to_f
-      elsif not rtoken.start_with?('[') then rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
+      elsif not rtoken.start_with?('[') then rtoken.sub!(/\.to_s$/,'')
+      end
+      if ltoken.instance_of?(Float)
+        rtoken << '.to_f' unless rtoken.instance_of?(Float)
+      elsif rtoken.instance_of?(Float)
+        ltoken << '.to_f'
       end
       function = '==' if function == '='
       if ltoken == rtoken then (function == '==' or function == '<=' or function == '>=').to_s
