@@ -27,6 +27,6 @@ module External
   end
 
   def plan_size
-    @plan.size
+    @plan.size.to_f.to_s
   end
 end
