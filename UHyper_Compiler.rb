@@ -80,15 +80,13 @@ module UHyper_Compiler
       if rtoken =~ /^-?\d/ then rtoken = rtoken.to_f
       elsif not rtoken.start_with?('[') then rtoken.sub!(/\.to_s$/,'')
       end
-      if ltoken.instance_of?(Float)
-        rtoken << '.to_f' unless rtoken.instance_of?(Float)
-      elsif rtoken.instance_of?(Float)
-        ltoken << '.to_f'
-      end
       function = '==' if function == '='
       if ltoken == rtoken then (function == '==' or function == '<=' or function == '>=').to_s
-      elsif ltoken.instance_of?(Float) and rtoken.instance_of?(Float) then ltoken.send(function, rtoken).to_s
-      else "(#{ltoken} #{function} #{rtoken})"
+      elsif ltoken.instance_of?(Float)
+        if rtoken.instance_of?(Float) then ltoken.send(function, rtoken).to_s
+        else "(#{ltoken} #{function} #{rtoken}.to_f)"
+        end
+      elsif rtoken.instance_of?(Float) then "(#{ltoken}.to_f #{function} #{rtoken})"
       end
     # List
     when 'member'
