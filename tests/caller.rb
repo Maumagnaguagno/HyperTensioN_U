@@ -96,6 +96,7 @@ class Caller < Test::Unit::TestCase
     call('1.0', ['call', 'abs', '-1'])
     call('1.0', ['call', 'abs', '-1.0'])
     call("a.sub(/^-/,'')", ['call', 'abs', '?a'])
+    call('(a.to_f + b.to_f).abs.to_s', ['call', 'abs', ['call', '+', '?a', '?b']])
   end
 
   def test_call_sin
@@ -197,6 +198,7 @@ class Caller < Test::Unit::TestCase
     call('(a < (b.to_f + 1.0).to_s)', ['call', '<', '?a', ['call', '+', '?b', '1']])
     call('(0.0 < (b.to_f + 1.0))', ['call', '<', '0', ['call', '+', '?b', '1']])
     call('true', ['call', '=', ['call', '+', '?a', '?b'], ['call', '+', '?a', '?b']])
+    call('(1.0 + (a.to_f + b.to_f).abs).to_s', ['call', '+', '1', ['call', 'abs', ['call', '+', '?a', '?b']]])
   end
 
   def test_external_calls

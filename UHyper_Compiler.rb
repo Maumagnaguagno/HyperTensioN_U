@@ -66,7 +66,7 @@ module UHyper_Compiler
       raise "Wrong number of arguments for (#{expression.join(' ')}), expected 2" if expression.size != 3
       ltoken = evaluate(expression[2])
       if ltoken =~ /^-?\d/ then function == 'abs' ? ltoken.sub(/^-/,'') : Math.send(function, ltoken.to_f).to_s
-      elsif function == 'abs' then "#{ltoken}.sub(/^-/,'')"
+      elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".sub(/^-/,'')"
       else "Math.#{function}(#{ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'}).to_s"
       end
     # Comparison
