@@ -52,10 +52,10 @@ module UHyper_Compiler
       ltoken = evaluate(expression[2])
       rtoken = evaluate(expression[3])
       if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
-      else ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
+      else ltoken.chomp!('.to_s') or ltoken << '.to_f'
       end
       if rtoken =~ /^-?\d/ then rtoken = rtoken.to_f
-      else rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
+      else rtoken.chomp!('.to_s') or rtoken << '.to_f'
       end
       function = '**' if function == '^'
       if ltoken.instance_of?(Float) and rtoken.instance_of?(Float) then ltoken.send(function, rtoken).to_s
@@ -67,7 +67,7 @@ module UHyper_Compiler
       ltoken = evaluate(expression[2])
       if ltoken =~ /^-?\d/ then function == 'abs' ? ltoken.sub(/^-/,'') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".sub(/^-/,'')"
-      else "Math.#{function}(#{ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'}).to_s"
+      else "Math.#{function}(#{ltoken.chomp!('.to_s') or ltoken << '.to_f'}).to_s"
       end
     # Comparison
     when '=', '!=', '<', '>', '<=', '>='
@@ -81,9 +81,9 @@ module UHyper_Compiler
         function = '==' if function == '='
         if ltoken.instance_of?(Float)
           return ltoken.send(function, rtoken).to_s if rtoken.instance_of?(Float)
-          rtoken.sub!(/\.to_s$/,'') or rtoken << '.to_f'
+          rtoken.chomp!('.to_s') or rtoken << '.to_f'
         elsif rtoken.instance_of?(Float)
-          ltoken.sub!(/\.to_s$/,'') or ltoken << '.to_f'
+          ltoken.chomp!('.to_s') or ltoken << '.to_f'
         end
         "(#{ltoken} #{function} #{rtoken})"
       end
