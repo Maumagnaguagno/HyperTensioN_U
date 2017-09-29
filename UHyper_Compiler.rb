@@ -111,7 +111,7 @@ module UHyper_Compiler
       else "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
       end
     when String
-      if term.start_with?('?') then term.sub(/^\?/,'')
+      if term.start_with?('?') then term.sub!(/^\?/,'')
       elsif term =~ /^[a-z]/ then "'#{term}'"
       elsif term =~ /^-?\d/ then quotes ? "'#{term.to_f}'" : term.to_f.to_s
       else term
