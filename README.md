@@ -36,6 +36,7 @@ Two files define domain and problem as a planning instance.
 The domain defines the rules that never change, while the problem defines a situation that requires planning.
 Several problems may refer to the same domain, as many situations may happen within the same constraints.
 Differently from JSHOP descriptions the operators may have uncertain effects with known probabilities.
+External function call and semantic attachments are also available.
 
 ### Domain
 ```Lisp
@@ -115,6 +116,23 @@ Differently from JSHOP descriptions the operators may have uncertain effects wit
   )
 )
 ```
+
+### Calls
+Sometimes a function must be called to solve a problem beyond the reach of HTN.
+Certain function are already part of the implementation, they are:
+- Binary math ``+``, ``-``, ``*``, ``/``, ``%``, ``^``
+- Unary math ``abs``, ``sin``, ``cos``, ``tan``
+- Comparison ``=``, ``!=``, ``<``, ``>``, ``<=``, ``>=``
+- List ``member``
+
+Otherwise they are external calls the user must provide through an ``external.rb`` file in the same folder as the domain.
+Functions are expected to return a String object, numbers are expected to be in the Float format (``5.to_f.to_s == "5.0"``).
+The ``generate`` method expect Strings to replace variables, if you only need to forward values through subtasks you can ignore this limitation.
+Calls that only operate on external structures must return any non-false value to avoid failing preconditions.
+An example of calls is available [here](examples/external).
+Note that the state of external structures is not implicitly saved, which may impact search results that try to decompose using other methods or operator effects.
+To avoid this problem one can limit the number of plans to be searched, add more preconditions or explicitly duplicate such structures.
+The most common case is what would happen if a task consumed an element from the queue and later on failed, that element would not be in the queue anymore and a different decomposition would take place.
 
 ## ToDo's
 - Test compiled output
