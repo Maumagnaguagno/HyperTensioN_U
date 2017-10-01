@@ -17,8 +17,8 @@ script:
   # Examples
   - ruby Hype.rb examples/axiom/axiom.ujshop examples/axiom/pb1.ujshop run
   - ruby Hype.rb examples/cookie/cookie.ujshop examples/cookie/pb1.ujshop run
-  - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb1.ujshop run 1
-  - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb2.ujshop run 1
+  - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb1.ujshop run
+  - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb2.ujshop run
   - ruby Hype.rb examples/jumpmaze/jumpmaze.ujshop examples/jumpmaze/pb1.ujshop run
   - ruby Hype.rb examples/external/external.ujshop examples/external/pb1.ujshop run
   - ruby Hype.rb examples/search_angle/search.ujshop examples/search_angle/pb1.ujshop run
