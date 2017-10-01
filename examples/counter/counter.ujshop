@@ -58,7 +58,6 @@
     ; Preconditions
     (
       (at ?goal)
-      (not (at ?goal))
     )
     ; Subtasks
     nil
@@ -67,6 +66,7 @@
     ; Preconditions
     (
       (at ?current)
+      (not (at ?goal))
     )
     ; Subtasks
     (
