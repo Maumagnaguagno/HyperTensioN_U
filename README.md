@@ -118,8 +118,8 @@ External function call and semantic attachments are also available.
 ```
 
 ### Calls
-Sometimes a function must be called to solve a problem beyond the reach of HTN.
-Certain function are already part of the implementation, they are:
+Sometimes functions must be called to solve a problem beyond the reach of HTN.
+Some functions are already implemented:
 - Binary math ``+``, ``-``, ``*``, ``/``, ``%``, ``^``
 - Unary math ``abs``, ``sin``, ``cos``, ``tan``
 - Comparison ``=``, ``!=``, ``<``, ``>``, ``<=``, ``>=``
