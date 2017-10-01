@@ -19,8 +19,8 @@ script:
   - ruby Hype.rb examples/cookie/cookie.ujshop examples/cookie/pb1.ujshop run
   - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb1.ujshop run
   - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb2.ujshop run
-  - ruby Hype.rb examples/jumpmaze/jumpmaze.ujshop examples/jumpmaze/pb1.ujshop run
   - ruby Hype.rb examples/external/external.ujshop examples/external/pb1.ujshop run
+  - ruby Hype.rb examples/jumpmaze/jumpmaze.ujshop examples/jumpmaze/pb1.ujshop run
   - ruby Hype.rb examples/search_angle/search.ujshop examples/search_angle/pb1.ujshop run
   - ruby Hype.rb examples/search_circular/search.ujshop examples/search_circular/pb1.ujshop run 1
   - ruby examples/healthcare/pbhealthcare.ujshop.rb
