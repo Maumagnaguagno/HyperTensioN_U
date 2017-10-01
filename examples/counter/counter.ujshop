@@ -42,7 +42,6 @@
     ; Preconditions
     (
       (at ?current)
-      (not (at ?goal))
     )
     ; Del effects
     (
@@ -59,6 +58,7 @@
     ; Preconditions
     (
       (at ?goal)
+      (not (at ?goal))
     )
     ; Subtasks
     nil
