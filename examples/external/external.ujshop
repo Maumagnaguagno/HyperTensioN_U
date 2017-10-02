@@ -21,7 +21,10 @@
   )
 
   (:operator (!consume ?element)
-    nil
+    (
+      (call print consuming ?element)
+      (call breakpoint)
+    )
     nil
     (
       (consumed ?element)

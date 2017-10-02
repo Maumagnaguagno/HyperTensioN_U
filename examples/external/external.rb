@@ -22,4 +22,14 @@ module External
       }
     }
   end
+
+  def breakpoint
+    STDIN.gets if @debug
+    true
+  end
+
+  def print(*argv)
+    puts argv.join(' ')
+    true
+  end
 end
