@@ -33,37 +33,30 @@ module Hypertension_U
           execute(current_task, decomposition, tasks, level, plan)
         # Operator with multiple outcomes
         when Hash
-          result = false
           task_name = current_task.first
           decomposition.each {|task_prob,probability|
             current_task[0] = task_prob
-            # Consider success when at least one succeed
-            if execute(current_task, probability, tasks, level, plan)
-              return true if @plans.size == @max_plans
-              result = true
-            end
+            execute(current_task, probability, tasks, level, plan)
+            return if @plans.size == @max_plans
           }
           current_task[0] = task_name
-          result
         # Method
         when Array
-          result = false
           # Keep decomposing the hierarchy
           task_name = current_task.shift
+          plans = @plans.size
           level += 1
           decomposition.each {|method|
             puts "#{'  ' * level.pred}#{method}(#{current_task.join(' ')})" if @debug
             # Every unification is tested
             send(method, *current_task) {|subtasks|
-              if planning(subtasks.concat(tasks), level, plan)
-                return true if @plans.size == @max_plans
-                result = true
-              end
+              planning(subtasks.concat(tasks), level, plan)
+              return if @plans.size == @max_plans
             }
-            break if result
+            # Consider success when at least one new plan was found
+            break if @plans.size != plans
           }
           current_task.unshift(task_name)
-          result
         # Error
         else raise "Domain defines no decomposition for #{current_task.first}"
         end
@@ -92,9 +85,8 @@ module Hypertension_U
       new_plan[PROBABILITY] = new_prob
       new_plan[VALUATION] += state_valuation(old_state) * probability
       # Keep decomposing the hierarchy
-      result = planning(tasks, level, new_plan) ? true : false
+      planning(tasks, level, new_plan)
       @state = old_state
-      result
     end
   end
 
