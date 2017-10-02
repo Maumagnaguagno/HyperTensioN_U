@@ -212,8 +212,7 @@ module Hypertension_U
       puts "Plan #{i.succ}".center(50,'-'),
            "Probability: #{plan[PROBABILITY]}",
            "Valuation: #{plan[VALUATION]}"
-      if plan.size == 2
-        puts 'Empty plan'
+      if plan.size == 2 then puts 'Empty plan'
       else print_data(plan.drop(2).delete_if {|op| op.first.start_with?('invisible_')})
       end
     }
