@@ -28,7 +28,6 @@
     ; Preconditions
     (
       (at ?current)
-      (not (at ?goal))
     )
     ; Subtasks
     (
@@ -66,7 +65,6 @@
     ; Preconditions
     (
       (at ?current)
-      (not (at ?goal))
     )
     ; Subtasks
     (

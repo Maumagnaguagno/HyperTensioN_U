@@ -44,7 +44,6 @@
       (at ?pos)
       (tile ?pos ?value)
       (not (visited ?pos))
-      (not (tile ?pos 0))
     )
     ; Subtasks
     (
@@ -60,7 +59,6 @@
       (at ?pos)
       (tile ?pos ?value)
       (not (visited ?pos))
-      (not (tile ?pos 0))
     )
     ; Subtasks
     (
