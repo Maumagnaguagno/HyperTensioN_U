@@ -1,14 +1,18 @@
 module External
   extend self
 
-  @objects = ['a', 'b', 'c']
+  QUEUE = []
 
-  def empty
-    @objects.empty?
+  def push(element)
+    QUEUE << element
   end
 
-  def get_next_element
-    @objects.shift
+  def shift
+    QUEUE.shift
+  end
+
+  def size
+    QUEUE.size.to_f.to_s
   end
 
   def approx(terms)

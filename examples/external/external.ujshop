@@ -1,18 +1,5 @@
 (defdomain external (
 
-  (:operator (!get-next)
-    ; Preconditions
-    (
-      (not (call empty))
-    )
-    ; Del effects
-    nil
-    ; Add effects
-    (
-      (have (call get-next-element))
-    )
-  )
-
   (:operator (!near ?pred)
     ; Preconditions
     (
@@ -24,12 +11,31 @@
     nil
   )
 
-  (:method (get-all)
-    recursion
+  (:operator (!store ?element)
+    (
+      (call <= (call size) 16)
+      (call push ?element)
+    )
+    nil
+    nil
+  )
+
+  (:operator (!consume ?element)
+    nil
     nil
     (
-      (!get-next)
-      (get-all)
+      (consumed ?element)
+    )
+  )
+
+  (:method (consume-all)
+    recursion
+    (
+      (call > (call size) 0)
+    )
+    (
+      (!consume (call shift))
+      (consume-all)
     )
 
     base
