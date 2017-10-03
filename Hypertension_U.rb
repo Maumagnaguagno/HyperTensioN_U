@@ -211,12 +211,12 @@ module Hypertension_U
     t = Time.now.to_f
     planning(tasks)
     puts "Time: #{Time.now.to_f - t}s", "Plans found: #{@plans.size}"
-    @plans.each_with_index {|plan,i|
+    @plans.each_with_index {|(probability,valuation,*plan),i|
       puts "Plan #{i.succ}".center(50,'-'),
-           "Probability: #{plan[PROBABILITY]}",
-           "Valuation: #{plan[VALUATION]}"
-      if plan.size == 2 then puts 'Empty plan'
-      else print_data(plan.drop(2).delete_if {|op| op.first.start_with?('invisible_')})
+           "Probability: #{probability}",
+           "Valuation: #{valuation}"
+      if plan.empty? then puts 'Empty plan'
+      else print_data(plan.delete_if {|op| op.first.start_with?('invisible_')})
       end
     }
     puts 'Planning failed' if @plans.empty?
