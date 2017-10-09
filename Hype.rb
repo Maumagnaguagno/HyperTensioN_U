@@ -18,7 +18,7 @@ module Hype
   HELP = "  Usage:
     Hype domain problem [output] [max plans=-1(all)] [min probability=0]\n
   Output:
-    rb    - generate Ruby files to Hypertension U(default)
+    rb    - generate Ruby files to HyperTensioN U(default)
     run   - same as rb with execution
     debug - same as run with execution log"
 

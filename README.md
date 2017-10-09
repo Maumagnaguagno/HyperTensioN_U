@@ -2,14 +2,14 @@
 **Hierarchical Task Network planning with uncertainty in Ruby**
 
 This is a modified version of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with probabilities and rewards, currently **incompatible** with the original.
-Hype can help you in the conversion process from [UJSHOP](#ujshop "Jump to UJSHOP section") to Ruby, but you can ignore the Hype and use Hypertension U as a standalone library.
+Hype can help you in the conversion process from [UJSHOP](#ujshop "Jump to UJSHOP section") to Ruby, but you can ignore the Hype and use HyperTensioN U as a standalone library.
 
 ```
 Usage:
     Hype domain problem [output] [max plans=-1(all)] [min probability=0]
 
   Output:
-    rb    - generate Ruby files to Hypertension U(default)
+    rb    - generate Ruby files to HyperTensioN U(default)
     run   - same as rb with execution
     debug - same as run with execution log
 ```
