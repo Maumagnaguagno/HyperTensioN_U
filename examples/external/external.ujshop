@@ -22,6 +22,7 @@
 
   (:operator (!consume ?element)
     (
+      (call print-state)
       (call print consuming ?element)
       (call breakpoint)
     )

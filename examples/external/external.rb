@@ -32,4 +32,9 @@ module External
     puts argv.join(' ')
     true
   end
+
+  def print_state
+    puts 'State'.center(20,'-')
+    External.state.each {|k,v| v.each {|i| puts "(#{k} #{i.join(' ')})"}}
+  end
 end
