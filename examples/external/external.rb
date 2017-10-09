@@ -24,7 +24,7 @@ module External
   end
 
   def breakpoint
-    STDIN.gets if @debug
+    STDIN.gets if External.debug
     true
   end
 
