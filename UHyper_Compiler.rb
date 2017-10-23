@@ -172,11 +172,15 @@ module UHyper_Compiler
         # Obtain free variables
         # TODO refactor this block to work with complex expressions
         free_variables = []
+        precond_attachments = []
         unless (precond_expression = dec[1]).empty?
           precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
-          precond_expression.each {|pre|
-            if pre.first != 'not' and pre.first != 'call' and pre.first != 'assign' and not axioms.assoc(pre.first) and not attachments.assoc(pre.first)
+          precond_expression.delete_if {|pre|
+            if attachments.assoc(pre.first)
+              precond_attachments << pre
+            elsif pre.first != 'not' and pre.first != 'call' and pre.first != 'assign' and not axioms.assoc(pre.first)
               free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
+              false
             end
           }
         end
@@ -186,7 +190,6 @@ module UHyper_Compiler
         precond_not = []
         lifted_axioms_calls = []
         ground_axioms_calls = []
-        precond_attachments = []
         dependent_attachments = []
         precond_expression.each {|pre|
           if pre.first != 'not' and pre.first != 'assign'
@@ -194,8 +197,6 @@ module UHyper_Compiler
               ground_axioms_calls << pre
             elsif pre.first == 'call' or axioms.assoc(pre.first) and pre.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t) or free_variables.include?(t)}
               lifted_axioms_calls << pre
-            elsif attachments.assoc(pre.first)
-              precond_attachments << pre
             elsif pre.any? {|t| t.instance_of?(String) and t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
               dependent_attachments << pre
             else precond_pos << pre
