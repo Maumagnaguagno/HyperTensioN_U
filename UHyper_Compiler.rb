@@ -193,21 +193,21 @@ module UHyper_Compiler
         ground_axioms_calls = []
         dependent_attachments = []
         precond_expression.each {|pre|
-          # TODO support lists
           if pre.first != 'not' and pre.first != 'assign'
-            call_axiom = pre.first == 'call' || axioms.assoc(pre.first)
-            if call_axiom and pre.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
+            pre_flat = pre.flatten
+            call_axiom = pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
+            if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
               ground_axioms_calls << pre
-            elsif pre.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_free_variables.include?(t)}
+            elsif pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_free_variables.include?(t)}
               (call_axiom ? lifted_axioms_calls : precond_pos) << pre
             else dependent_attachments << pre
             end
           else
-            pre2 = pre.last
-            call_axiom = pre2.first == 'call' || axioms.assoc(pre2.first)
-            if call_axiom and pre2.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
+            pre_flat = pre.last.flatten
+            call_axiom = pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
+            if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
               ground_axioms_calls << pre
-            elsif pre2.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_free_variables.include?(t)}
+            elsif pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_free_variables.include?(t)}
               (call_axiom ? lifted_axioms_calls : precond_not) << pre
             else dependent_attachments << pre
             end
