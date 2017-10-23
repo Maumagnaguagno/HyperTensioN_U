@@ -124,6 +124,10 @@ Some functions are already implemented:
 - Comparison ``=``, ``!=``, ``<``, ``>``, ``<=``, ``>=``
 - List ``member``
 
+```Lisp
+(call < (call abs (call - (call sin ?var) 0.5)) 1)
+```
+
 Otherwise they are external calls the user must provide through an ``external.rb`` file in the same folder as the domain.
 The ``external.rb`` must define an **External** module with methods that are expected to return String objects, numbers are expected to be in the Float format (``5.to_f.to_s == "5.0"``).
 This is a requirement of the ``generate`` method that expects Strings to replace variables, if you only need to forward values through subtasks you can ignore this limitation.
