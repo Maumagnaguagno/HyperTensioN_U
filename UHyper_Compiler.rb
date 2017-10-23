@@ -185,6 +185,7 @@ module UHyper_Compiler
           }
         end
         free_variables.uniq!
+        ground_free_variables = met[1] + free_variables
         # Filter elements from precondition
         precond_pos = []
         precond_not = []
@@ -192,22 +193,25 @@ module UHyper_Compiler
         ground_axioms_calls = []
         dependent_attachments = []
         precond_expression.each {|pre|
+          # TODO support lists
           if pre.first != 'not' and pre.first != 'assign'
-            if pre.first == 'call' or axioms.assoc(pre.first) and pre.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
+            call_axiom = pre.first == 'call' || axioms.assoc(pre.first)
+            if call_axiom and pre.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
               ground_axioms_calls << pre
-            elsif pre.first == 'call' or axioms.assoc(pre.first) and pre.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t) or free_variables.include?(t)}
+            elsif call_axiom and pre.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_free_variables.include?(t)}
               lifted_axioms_calls << pre
-            elsif pre.any? {|t| t.instance_of?(String) and t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
+            elsif pre.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
               dependent_attachments << pre
             else precond_pos << pre
             end
           else
             pre2 = pre.last
-            if pre2.first == 'call' or axioms.assoc(pre2.first) and pre2.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
+            call_axiom = pre2.first == 'call' || axioms.assoc(pre2.first)
+            if call_axiom and pre2.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
               ground_axioms_calls << pre
-            elsif pre2.first == 'call' or axioms.assoc(pre2.first) and pre2.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t) or free_variables.include?(t)}
+            elsif call_axiom and pre2.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_free_variables.include?(t)}
               lifted_axioms_calls << pre
-            elsif pre2.any? {|t| t.instance_of?(String) and t.start_with?('?') and not met[1].include?(t) and not free_variables.include?(t)}
+            elsif pre2.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
               dependent_attachments << pre
             else precond_not << pre2
             end
