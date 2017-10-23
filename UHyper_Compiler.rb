@@ -198,22 +198,18 @@ module UHyper_Compiler
             call_axiom = pre.first == 'call' || axioms.assoc(pre.first)
             if call_axiom and pre.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
               ground_axioms_calls << pre
-            elsif call_axiom and pre.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_free_variables.include?(t)}
-              lifted_axioms_calls << pre
-            elsif pre.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
-              dependent_attachments << pre
-            else precond_pos << pre
+            elsif pre.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_free_variables.include?(t)}
+              (call_axiom ? lifted_axioms_calls : precond_pos) << pre
+            else dependent_attachments << pre
             end
           else
             pre2 = pre.last
             call_axiom = pre2.first == 'call' || axioms.assoc(pre2.first)
             if call_axiom and pre2.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
               ground_axioms_calls << pre
-            elsif call_axiom and pre2.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_free_variables.include?(t)}
-              lifted_axioms_calls << pre
-            elsif pre2.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
-              dependent_attachments << pre
-            else precond_not << pre2
+            elsif pre2.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_free_variables.include?(t)}
+              (call_axiom ? lifted_axioms_calls : precond_not) << pre
+            else dependent_attachments << pre
             end
           end
         }
