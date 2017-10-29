@@ -244,7 +244,10 @@ module UHyper_Compiler
           define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) {"
           level += 1
         }
-        define_methods << "\n#{'  ' * level}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms) unless dependent_attachments.empty?
+        unless dependent_attachments.empty?
+          raise "Call with free variables in #{met.first} #{dec.first}" if level == 2
+          define_methods << "\n#{'  ' * level}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
+        end
         # Subtasks
         predicates_to_hyper(define_methods, dec[2], '  ' * level, 'yield ')
         level.pred.downto(2) {|l| define_methods << "\n#{'  ' * l}}"}
