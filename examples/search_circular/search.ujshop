@@ -64,13 +64,13 @@
     recursion
     (
       (closest ?circle ?to ?out_circle ?in_dir ?out_dir ?goal)
-      (not (visited ?to))
+      (not (visited ?agent ?to))
     )
     (
       (!move ?agent ?from ?to)
-      (!!visit ?from)
+      (!!visit ?agent ?from)
       (loop ?agent ?to ?out_circle ?out_dir ?goal)
-      (!!unvisit ?from)
+      (!!unvisit ?agent ?from)
     )
   )
 ))
