@@ -25,5 +25,6 @@ script:
   - ruby Hype.rb examples/jumpmaze/jumpmaze.ujshop examples/jumpmaze/pb1.ujshop run
   - ruby Hype.rb examples/search_angle/search.ujshop examples/search_angle/pb1.ujshop run
   - ruby Hype.rb examples/search_circular/search.ujshop examples/search_circular/pb1.ujshop run
+  - ruby Hype.rb examples/search_circular/search.ujshop examples/search_circular/pb2.ujshop run 1
   - ruby examples/healthcare/pbhealthcare.ujshop.rb
   - ruby examples/healthcare/pbhealthcare_test_steps.ujshop.rb

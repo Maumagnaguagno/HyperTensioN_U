@@ -4,6 +4,8 @@ require_relative '../../../Polygonoid/examples/circular/Circular'
 module External
   extend self
   srand(0)
+  CLOCK = 'clock'
+  COUNTER = 'counter'
   CIRCLES = Array.new(100) {Circle.new(50 + rand(1000), 50 + rand(1000), 5 + rand(50))}
 
   @symbol_object = {
@@ -28,5 +30,27 @@ module External
 
   def plan_size
     @plan.size.to_f.to_s
+  end
+
+  def closest(circle, to, out_circle, in_dir, out_dir, goal)
+    visited = Search.state['visited']
+    reachable = []
+    each_bitangent(@symbol_object[circle], in_dir == CLOCK, CIRCLES) {|c,line,out_dir|
+      reachable << [symbol(c), line.to, out_dir ? CLOCK : COUNTER] unless visited.include?(line.to)
+    }
+    g = @symbol_object[goal]
+    reachable.sort_by! {|c| center_distance(@symbol_object[c.first], g)}
+    until reachable.empty?
+      c, t, i = reachable.shift
+      out_circle.replace(c)
+      to.replace(symbol(t))
+      out_dir.replace(i)
+      yield
+    end
+  end
+
+  def visible(point, circle, goal)
+    g = @symbol_object[goal]
+    visible?(Line.new(@symbol_object[point], g), CIRCLES, @symbol_object[circle], g)
   end
 end

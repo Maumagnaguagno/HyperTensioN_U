@@ -1,0 +1,10 @@
+(defproblem pb2 search
+  ; Start
+  (
+    (at robot start)
+  )
+  ; Tasks
+  (
+    (forward-attachments robot goal)
+  )
+)

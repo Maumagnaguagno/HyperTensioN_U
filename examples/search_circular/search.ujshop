@@ -1,9 +1,23 @@
 (defdomain search (
 
+  (:attachments (closest ?circle ?to ?out_circle ?in_dir ?out_dir ?goal))
+
   (:operator (!move ?agent ?from ?to)
     nil
     ((at ?agent ?from))
     ((at ?agent ?to))
+  )
+
+  (:operator (!!visit ?point)
+    nil
+    nil
+    ((visited ?point))
+  )
+
+  (:operator (!!unvisit ?point)
+    nil
+    ((visited ?point))
+    nil
   )
 
   (:method (forward ?agent ?goal)
@@ -29,6 +43,34 @@
     (
       (!move ?agent ?from ?to)
       (apply-plan ?agent ?to (call + ?index 1) ?size)
+    )
+  )
+
+  (:method (forward-attachments ?agent ?goal)
+    clockwise
+    ((at ?agent ?start))
+    ((loop ?agent ?start ?start clock ?goal))
+    
+    counter-clockwise
+    ((at ?agent ?start))
+    ((loop ?agent ?start ?start counter ?goal))
+  )
+
+  (:method (loop ?agent ?from ?circle ?in_dir ?goal)
+    base
+    ((call visible ?from ?circle ?goal))
+    ((!move ?agent ?from ?goal))
+
+    recursion
+    (
+      (closest ?circle ?to ?out_circle ?in_dir ?out_dir ?goal)
+      (not (visited ?to))
+    )
+    (
+      (!move ?agent ?from ?to)
+      (!!visit ?from)
+      (loop ?agent ?to ?out_circle ?out_dir ?goal)
+      (!!unvisit ?from)
     )
   )
 ))
