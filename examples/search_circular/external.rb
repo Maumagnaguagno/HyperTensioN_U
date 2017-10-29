@@ -33,10 +33,9 @@ module External
   end
 
   def closest(circle, to, out_circle, in_dir, out_dir, goal)
-    visited = Search.state['visited']
     reachable = []
     each_bitangent(@symbol_object[circle], in_dir == CLOCK, CIRCLES) {|c,line,out_dir|
-      reachable << [symbol(c), line.to, out_dir ? CLOCK : COUNTER] unless visited.include?(line.to)
+      reachable << [symbol(c), line.to, out_dir ? CLOCK : COUNTER]
     }
     g = @symbol_object[goal]
     reachable.sort_by! {|c| center_distance(@symbol_object[c.first], g)}
