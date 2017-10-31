@@ -34,7 +34,7 @@ module External
 
   def closest(circle, to, out_circle, in_dir, out_dir, goal)
     reachable = []
-    each_bitangent(@symbol_object[circle], in_dir == CLOCK, CIRCLES) {|c,line,out_dir| reachable << [c, line.to, out_dir]}
+    each_bitangent(@symbol_object[circle], in_dir == CLOCK, CIRCLES) {|c,l,d| reachable << [c, l.to, d]}
     g = @symbol_object[goal]
     reachable.sort_by! {|c| center_distance(c.first, g)}.each {|c,t,d|
       out_circle.replace(symbol(c))
