@@ -8,15 +8,15 @@
     ((at ?agent ?to))
   )
 
-  (:operator (!!visit ?point)
+  (:operator (!!visit ?agent ?point)
     nil
     nil
-    ((visited ?point))
+    ((visited ?agent ?point))
   )
 
-  (:operator (!!unvisit ?point)
+  (:operator (!!unvisit ?agent ?point)
     nil
-    ((visited ?point))
+    ((visited ?agent ?point))
     nil
   )
 
