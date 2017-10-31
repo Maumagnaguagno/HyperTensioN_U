@@ -33,7 +33,6 @@ module External
   end
 
   def closest(circle, to, out_circle, in_dir, out_dir, goal)
-    reachable = []
     g = @symbol_object[goal]
     circles_sort = CIRCLES.sort_by {|c| center_distance(c, g)}
     each_bitangent(@symbol_object[circle], in_dir == CLOCK, circles_sort) {|c,l,d|
