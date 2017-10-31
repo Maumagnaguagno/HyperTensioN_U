@@ -38,8 +38,7 @@ module External
       reachable << [c, line.to, out_dir ? CLOCK : COUNTER]
     }
     g = @symbol_object[goal]
-    reachable.sort_by! {|c| center_distance(c.first, g)}
-    reachable.each {|c,t,i|
+    reachable.sort_by! {|c| center_distance(c.first, g)}.each {|c,t,i|
       out_circle.replace(symbol(c))
       to.replace(symbol(t))
       out_dir.replace(i)
