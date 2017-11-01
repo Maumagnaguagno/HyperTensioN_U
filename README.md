@@ -173,7 +173,7 @@ def visible(agent, object)
       yield
     }
   # Both variables are ground
-  elsif MAP[pos].include?(agent)
+  elsif MAP[pos].include?(object)
     yield
   end
 end
