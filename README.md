@@ -1,7 +1,7 @@
 # HyperTensioN U [![Build Status](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U.svg)](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U)
 **Hierarchical Task Network planning with uncertainty in Ruby**
 
-This is a modified version of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with probabilities and rewards, currently **incompatible** with the original.
+This is a modified version of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with probabilities and rewards, calls, assignments and semantic attachments, currently **incompatible** with the original.
 Hype can help you in the conversion process from [UJSHOP](#ujshop "Jump to UJSHOP section") to Ruby, but you can ignore the Hype and use HyperTensioN U as a standalone library.
 
 ```
@@ -133,7 +133,7 @@ The ``external.rb`` must define an **External** module with methods that are exp
 This is a requirement of the ``generate`` method that expects Strings to replace variables, if you only need to forward values through subtasks you can ignore this limitation.
 Calls that only operate on external structures must return any non-false value to avoid failing preconditions.
 Instance variables from HyperTensioN U can be accessed by using the domain namespace, such as ``Mydomain.state``.
-An example of calls is available [here](examples/external).
+An example of calls is available at [examples/external](examples/external).
 Note that the state of external structures is not implicitly saved, which may impact search results that try to decompose using other methods or operator effects.
 To avoid this problem one can limit the number of plans to be searched, add more preconditions or explicitly duplicate such structures.
 The most common case is what would happen if a task consumed an element from the queue and later on failed, that element would not be in the queue anymore and a different decomposition would take place.
@@ -145,6 +145,37 @@ Assignments are expected to be in preconditions.
 
 ```Lisp
 (assign ?newvar (call - ?var 5))
+```
+
+## Semantic Attachments
+Some predicates are too complex for the user to describe with just addition and deletions from the state, like ``(visible ?agent ?object)`` after ``?agent`` is moved.
+These predicates either require external structures or libraries to be fast and easy to maintain.
+Instead of using calls in unusual ways to discover all the objects that are visible for a certain agent, we can exploit geometric libraries and delegate this unification to an external method.
+Such external methods are semantic attachments.
+Their signature must be explicitly defined as such and can be used as regular predicates in preconditions.
+Their definition is part of the ``external.rb``, like external calls, but they ``yield`` unifications instead of return values.
+Since all variables are Strings the user must replace the free variables, empty Strings, before yielding without parameters.
+The same semantic attchment can be used to match different permutations of which variables are ground or free.
+An example of semantic attachments is available at [examples/search_circular](examples/search_circular).
+
+```Lisp
+(:attachments (visible ?agent ?object))
+```
+
+```Ruby
+def visible(agent, object)
+  pos = POSITION[agent]
+  # Agent is ground and object is free
+  if object.empty?
+    MAP[pos].each {|obj|
+      object.replace(obj)
+      yield
+    }
+  # Both variables are ground
+  elsif MAP[pos].include?(agent)
+    yield
+  end
+end
 ```
 
 ## ToDo's
