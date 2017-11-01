@@ -150,17 +150,18 @@ Assignments are expected to be in preconditions.
 ## Semantic Attachments
 Some predicates are too complex for the user to describe with just addition and deletions from the state, like ``(visible ?agent ?object)`` after ``?agent`` is moved.
 These predicates either require external structures or libraries to be fast and easy to maintain.
-Instead of using calls in unusual ways to discover all the objects that are visible for a certain agent, we can exploit geometric libraries and delegate this unification to an external method.
-Such external methods are semantic attachments.
+Instead of using calls in unusual ways to discover all the objects that are visible for a certain agent, we can exploit geometric libraries and delegate this unification to an external procedure.
+Such external methods are semantic attachments, a term coined by Weyhrauch (1980) to describe the attachment of an interpretation to a predicate symbol using an external procedure.
 Their signature must be explicitly defined as such and can be used as regular predicates in preconditions.
-Their definition is part of the ``external.rb``, like external calls, but they ``yield`` unifications instead of return values.
-Since all variables are Strings the user must replace the free variables, empty Strings, before yielding without parameters.
-The same semantic attchment can be used to match different permutations of which variables are ground or free.
-An example of semantic attachments is available at [examples/search_circular](examples/search_circular).
 
 ```Lisp
 (:attachments (visible ?agent ?object))
 ```
+
+Their definition is part of the ``external.rb``, like external calls, but they ``yield`` unifications instead of return values.
+Since all variables are Strings the user must replace the free variables, empty Strings, before yielding without parameters.
+The same semantic attchment can be used to match different permutations of which variables are ground or free.
+An example of semantic attachments is available at [examples/search_circular](examples/search_circular).
 
 ```Ruby
 def visible(agent, object)
