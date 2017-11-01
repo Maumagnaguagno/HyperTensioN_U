@@ -116,7 +116,7 @@ External function call and semantic attachments are also available.
 )
 ```
 
-### Calls
+## Calls
 Sometimes functions must be called to solve a problem beyond the reach of HTN.
 Some functions are already implemented:
 - Binary math ``+``, ``-``, ``*``, ``/``, ``%``, ``^``
