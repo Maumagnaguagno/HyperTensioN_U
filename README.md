@@ -138,7 +138,7 @@ Note that the state of external structures is not implicitly saved, which may im
 To avoid this problem one can limit the number of plans to be searched, add more preconditions or explicitly duplicate such structures.
 The most common case is what would happen if a task consumed an element from the queue and later on failed, that element would not be in the queue anymore and a different decomposition would take place.
 
-## Assignment
+## Assignments
 The result of the same expensive call may be necessary across several terms.
 Instead of repeating the entire call, one can create a new variable and assign the value of such call.
 Assignments are expected to be in preconditions.
