@@ -152,7 +152,7 @@ Some predicates are too complex for the user to describe with just addition and 
 These predicates either require external structures or libraries to be fast and easy to maintain.
 Instead of using calls in unusual ways to discover all the objects that are visible for a certain agent, we can exploit off-the-shelf libraries and delegate this unification to an external procedure.
 Such external methods are semantic attachments, a term coined by [Weyhrauch (1980)](http://www.sciencedirect.com/science/article/pii/0004370280900156 "Prolegomena to a theory of mechanized formal reasoning") to describe the attachment of an interpretation to a predicate symbol using an external procedure.
-Semantic attchments in planning was already explored by [Christian Dornhege (2009)](https://www.aaai.org/ocs/index.php/ICAPS/ICAPS09/paper/viewFile/754/1101 "Semantic Attachments for Domain-Independent Planning Systems").
+Semantic attchments in planning was already explored by [Christian Dornhege et al. (2009)](https://www.aaai.org/ocs/index.php/ICAPS/ICAPS09/paper/viewFile/754/1101 "Semantic Attachments for Domain-Independent Planning Systems").
 Their signature must be explicitly defined as such and can be used as regular predicates in preconditions.
 
 ```Lisp
