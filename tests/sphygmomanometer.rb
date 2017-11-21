@@ -12,12 +12,12 @@ class Sphygmomanometer < Test::Unit::TestCase
     }
   end
 
-  def setup_planner(state)
+  def setup_planner(state, max_plans = -1, min_prob = 0)
     Hypertension_U.state = state
     Hypertension_U.domain = {:operator => 1}
     Hypertension_U.plans = []
-    Hypertension_U.max_plans = -1
-    Hypertension_U.min_prob = 0
+    Hypertension_U.max_plans = max_plans
+    Hypertension_U.min_prob = min_prob
   end
 
   def Hypertension_U.operator(param)
@@ -52,7 +52,7 @@ class Sphygmomanometer < Test::Unit::TestCase
     setup_planner(original_state = simple_state)
     Hypertension_U.planning([[:operator, false]])
     assert_equal([], Hypertension_U.plans)
-    # No state was created
+    # Keep original state
     assert_same(original_state, Hypertension_U.state)
   end
 
@@ -67,15 +67,27 @@ class Sphygmomanometer < Test::Unit::TestCase
   #-----------------------------------------------
 
   def test_execute_probability_failure
-    # TODO
+    setup_planner(original_state = simple_state, -1, 0.5)
+    Hypertension_U.execute([:operator, true], 0, [], 0, [1,0])
+    assert_equal([], Hypertension_U.plans)
+    # No state was created
+    assert_same(original_state, Hypertension_U.state)
   end
 
   def test_execute_send_failure
-    # TODO
+    setup_planner(original_state = simple_state)
+    Hypertension_U.execute([:operator, false], 0, [], 0, [1,0])
+    assert_equal([], Hypertension_U.plans)
+    # No state was created
+    assert_same(original_state, Hypertension_U.state)
   end
 
   def test_execute_success
-    # TODO
+    setup_planner(original_state = simple_state)
+    Hypertension_U.execute([:operator, true], 0.4, [], 0, [0.4,0])
+    assert_equal([[0.4 * 0.4, 0, [:operator, true]]], Hypertension_U.plans)
+    # Keep original state
+    assert_same(original_state, Hypertension_U.state)
   end
 
   #-----------------------------------------------
