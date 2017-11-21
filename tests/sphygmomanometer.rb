@@ -12,6 +12,14 @@ class Sphygmomanometer < Test::Unit::TestCase
     }
   end
 
+  def setup_planner(state)
+    Hypertension_U.state = state
+    Hypertension_U.domain = {:operator => 1}
+    Hypertension_U.plans = []
+    Hypertension_U.max_plans = -1
+    Hypertension_U.min_prob = 0
+  end
+
   def test_attributes
     [:domain, :domain=, :state, :state=, :min_prob, :min_prob=, :max_plans, :max_plans=, :plans, :plans=, :debug, :debug=].each {|att| assert_respond_to(Hypertension_U, att)}
   end
@@ -21,11 +29,7 @@ class Sphygmomanometer < Test::Unit::TestCase
   #-----------------------------------------------
 
   def test_planning_empty
-    Hypertension_U.state = original_state = simple_state
-    Hypertension_U.domain = {}
-    Hypertension_U.plans = []
-    Hypertension_U.max_plans = -1
-    Hypertension_U.min_prob = 0
+    setup_planner(original_state = simple_state)
     Hypertension_U.planning([])
     assert_equal([[1, 0]], Hypertension_U.plans)
     # No state was created
@@ -41,11 +45,7 @@ class Sphygmomanometer < Test::Unit::TestCase
   end
 
   def test_planning_exception
-    Hypertension_U.state = simple_state
-    Hypertension_U.domain = {}
-    Hypertension_U.plans = []
-    Hypertension_U.max_plans = -1
-    Hypertension_U.min_prob = 0
+    setup_planner(original_state = simple_state)
     e = assert_raises(RuntimeError) {Hypertension_U.planning([['exception_rise']])}
     assert_equal('Domain defines no decomposition for exception_rise', e.message)
   end
