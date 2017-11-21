@@ -20,6 +20,10 @@ class Sphygmomanometer < Test::Unit::TestCase
     Hypertension_U.min_prob = 0
   end
 
+  def Hypertension_U.operator(param)
+    param
+  end
+
   def test_attributes
     [:domain, :domain=, :state, :state=, :min_prob, :min_prob=, :max_plans, :max_plans=, :plans, :plans=, :debug, :debug=].each {|att| assert_respond_to(Hypertension_U, att)}
   end
@@ -37,11 +41,19 @@ class Sphygmomanometer < Test::Unit::TestCase
   end
 
   def test_planning_success
-    # TODO
+    setup_planner(original_state = simple_state)
+    Hypertension_U.planning([[:operator, true]])
+    assert_equal([[1, 0, [:operator, true]]], Hypertension_U.plans)
+    # No state was created
+    assert_same(original_state, Hypertension_U.state)
   end
 
   def test_planning_failure
-    # TODO
+    setup_planner(original_state = simple_state)
+    Hypertension_U.planning([[:operator, false]])
+    assert_equal([], Hypertension_U.plans)
+    # No state was created
+    assert_same(original_state, Hypertension_U.state)
   end
 
   def test_planning_exception
