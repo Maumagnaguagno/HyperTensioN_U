@@ -12,6 +12,7 @@ before_script:
   - git clone https://github.com/Maumagnaguagno/Polygonoid.git ../Polygonoid
 script:
   # Tests
+  - ruby tests/sphygmomanometer.rb
   - ruby tests/biscuit.rb
   - ruby tests/postulate.rb
   - ruby tests/path.rb
