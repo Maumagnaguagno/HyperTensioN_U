@@ -44,7 +44,7 @@ module Hypertension_U
         when Array
           # Keep decomposing the hierarchy
           task_name = current_task.shift
-          plans = @plans.size
+          plans_found = @plans.size
           level += 1
           decomposition.each {|method|
             puts "#{'  ' * level.pred}#{method}(#{current_task.join(' ')})" if @debug
@@ -54,7 +54,7 @@ module Hypertension_U
               return if @plans.size == @max_plans
             }
             # Consider success when at least one new plan was found
-            break if @plans.size != plans
+            break if @plans.size != plans_found
           }
           current_task.unshift(task_name)
         # Error
