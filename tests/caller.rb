@@ -191,6 +191,7 @@ class Caller < Test::Unit::TestCase
     call("[['1.0'], ['2.0'], ['3.0']].include?(['1.0'])", ['call', 'member', ['1'], [['1'], ['2'], ['3']]])
     call("['2.0', '3.0', '4.0', '5.0'].include?('4.0')", ['call', 'member', ['call', '*', '2', '2'], ['2', '3', ['call', '+', '1', '3'], '5']])
     call("['1.0', '2.0', '3.0'].include?(a)", ['call', 'member', '?a', ['1', '2', '3']])
+    call("b.include?('1.0')", ['call', 'member', '1', '?b'])
     call('b.include?(a)', ['call', 'member', '?a', '?b'])
   end
 
