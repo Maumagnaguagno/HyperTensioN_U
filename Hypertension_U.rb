@@ -81,7 +81,7 @@ module Hypertension_U
     puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(' ')})" if @debug
     # Minimum probability and applied
     if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and send(*current_task)
-      new_plan = plan.dup << Marshal.load(Marshal.dump(current_task))
+      new_plan = plan.dup << current_task.dup
       new_plan[PROBABILITY] = new_prob
       new_plan[VALUATION] += state_valuation(old_state) * probability
       # Keep decomposing the hierarchy
@@ -105,7 +105,7 @@ module Hypertension_U
 
   def apply(effect_add, effect_del)
     # Create new state with added or deleted predicates
-    @state = Marshal.load(Marshal.dump(@state))
+    @state = @state.each_with_object({}) {|(k,v),state| state[k] = v.dup}
     effect_del.each {|pre,*terms| @state[pre].delete(terms)}
     effect_add.each {|pre,*terms| @state[pre] << terms}
     true
