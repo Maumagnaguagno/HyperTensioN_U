@@ -175,7 +175,7 @@ module UHyper_Compiler
         precond_attachments = []
         unless (precond_expression = dec[1]).empty?
           precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
-          precond_expression.delete_if {|pre|
+          precond_expression.reject! {|pre|
             if attachments.assoc(pre.first)
               precond_attachments << pre
             elsif pre.first != 'not' and pre.first != 'call' and pre.first != 'assign' and not axioms.assoc(pre.first)
