@@ -28,11 +28,9 @@ module Cookie
   def state_valuation(old_state)
     previous_have = old_state['have']
     current_have = @state['have']
-    bob__cookie = ['bob','cookie']
     bob__good_cookie = ['bob','good_cookie']
     bob__bad_cookie = ['bob','bad_cookie']
     value = 0
-    value += 5 if not previous_have.include?(bob__cookie) and current_have.include?(bob__cookie)
     value += 10 if not previous_have.include?(bob__good_cookie) and current_have.include?(bob__good_cookie)
     value -= 10 if not previous_have.include?(bob__bad_cookie) and current_have.include?(bob__bad_cookie)
     value
