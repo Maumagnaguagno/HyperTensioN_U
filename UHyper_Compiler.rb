@@ -19,13 +19,13 @@ module UHyper_Compiler
   # Expression to Hyper
   #-----------------------------------------------
 
-  def expression_to_hyper(precond_expression, axioms)
+  def expression_to_hyper(precond_expression, axioms, state = '@state')
     case precond_expression.first
     when 'and', 'or'
-      if precond_expression.size == 2 then expression_to_hyper(precond_expression[1], axioms)
-      else '(' << precond_expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
+      if precond_expression.size == 2 then expression_to_hyper(precond_expression[1], axioms, state)
+      else '(' << precond_expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms, state)}.join(" #{precond_expression.first} ") << ')'
       end
-    when 'not' then 'not ' << expression_to_hyper(precond_expression[1], axioms)
+    when 'not' then 'not ' << expression_to_hyper(precond_expression[1], axioms, state)
     when 'call' then call(precond_expression)
     when 'assign' then '(' << precond_expression[1].sub(/^\?/,'') << ' = ' << evaluate(precond_expression[2], true) << ')'
     else
@@ -34,7 +34,7 @@ module UHyper_Compiler
       else
         terms = precond_expression.drop(1).map! {|i| evaluate(i, true)}.join(', ')
         if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
-        else "@state['#{precond_expression.first}'].include?([#{terms}])"
+        else "#{state}['#{precond_expression.first}'].include?([#{terms}])"
         end
       end
     end
@@ -259,7 +259,7 @@ module UHyper_Compiler
     # Rewards
     unless rewards.empty?
       domain_str << "  ##{SPACER}\n  # State valuation\n  ##{SPACER}\n\n  def state_valuation(old_state)\n    value = 0\n"
-      rewards.each {|pre,value| domain_str << "    value += #{value} if not old_state['#{pre.first}'].include?(#{pre.drop(1)}) and @state['#{pre.first}'].include?(#{pre.drop(1)})\n"}
+      rewards.each {|pre,value| domain_str << "    value += #{value} if not #{expression_to_hyper(pre, axioms, 'old_state')} and #{expression_to_hyper(pre, axioms)}\n"}
       domain_str << "    value\n  end\n\n"
     end
     # Axioms
