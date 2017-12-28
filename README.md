@@ -44,8 +44,8 @@ External function call and semantic attachments are also available.
 
   ; Reward function
   (:rewards
-    ((pre1 a)  10) ; Obtaining (pre1 a) from one state to another adds 10 to valuation
-    ((pre2 b) -10) ; Any integer can be a reward, even negative values
+    (achieve  (pre1 a)  10) ; Obtaining (pre1 a) from one state to another adds 10 to valuation
+    (maintain (pre2 b) -10) ; Any integer can be a reward, even negative values
   )
 
   (:operator (!op-name1 ?t1 ?t2)
