@@ -1,8 +1,8 @@
 (defdomain cookie (
 
   (:rewards
-    ((have bob good-cookie) 10)
-    ((have bob bad-cookie) -10)
+    (achieve (have bob good-cookie) 10)
+    (achieve (have bob bad-cookie) -10)
   )
 
   (:operator (!goto ?agent ?from ?to)
