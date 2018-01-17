@@ -37,8 +37,8 @@ module UJSHOP_Parser
   #-----------------------------------------------
 
   def define_effects(name, group)
-    raise "Error with #{name} effects" unless group.instance_of?(Array)
-    group.each {|pre| pre.first != NOT ? @predicates[pre.first.freeze] = true : raise("Unexpected not in #{name} effects")}
+    raise "Error with #{name} effect" unless group.instance_of?(Array)
+    group.each {|pre| pre.first != NOT ? @predicates[pre.first.freeze] = true : raise("Unexpected not in #{name} effect")}
   end
 
   #-----------------------------------------------
@@ -85,10 +85,10 @@ module UJSHOP_Parser
     raise "#{name} redefined" if @operators.assoc(name)
     @operators << operator = [name, op.shift, []]
     # Preconditions
-    define_expression("#{name} preconditions", operator[2] = op.shift)
+    define_expression("#{name} precondition", operator[2] = op.shift)
     # Effects
     if op.size < 2
-      raise "Error with #{name} effects"
+      raise "Error with #{name} effect"
     elsif op.size <= 3
       define_effects(name, operator[4] = op.shift)
       define_effects(name, operator[3] = op.shift)
@@ -123,7 +123,7 @@ module UJSHOP_Parser
       else label = "case_#{method.size - 2}"
       end
       # Preconditions
-      define_expression("#{name} preconditions", precond = met.shift)
+      define_expression("#{name} precondition", precond = met.shift)
       # Subtasks
       raise "Error with #{name} subtasks" unless (group = met.shift).instance_of?(Array)
       method << [label, precond, group.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}]
