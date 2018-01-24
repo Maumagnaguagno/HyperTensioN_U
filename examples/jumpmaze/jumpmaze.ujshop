@@ -17,15 +17,15 @@
   )
 
   (:operator (!!visit ?pos)
-    nil
-    nil
+    ()
+    ()
     ((visited ?pos))
   )
 
   (:operator (!!unvisit ?pos)
-    nil
+    ()
     ((visited ?pos))
-    nil
+    ()
   )
 
   (:method (goto)
