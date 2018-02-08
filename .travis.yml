@@ -9,6 +9,7 @@ rvm:
   # JRuby
   - jruby-9000
 before_script:
+  - git clone https://github.com/Maumagnaguagno/HyperTensioN.git ../HyperTensioN
   - git clone https://github.com/Maumagnaguagno/Polygonoid.git ../Polygonoid
 script:
   # Tests

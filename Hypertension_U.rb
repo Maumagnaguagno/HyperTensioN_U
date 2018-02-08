@@ -7,10 +7,13 @@
 # HTN planner
 #-----------------------------------------------
 
+require_relative '../HyperTensioN/Hypertension'
+
 module Hypertension_U
+  extend Hypertension
   extend self
 
-  attr_accessor :domain, :state, :min_prob, :max_plans, :plans, :debug
+  attr_accessor :min_prob, :max_plans, :plans
 
   # Probabilistic plan = [PROBABILITY = 1, VALUATION = 0, op0, ..., opN]
   PROBABILITY = 0
@@ -88,111 +91,6 @@ module Hypertension_U
       planning(tasks, level, new_plan)
       @state = old_state
     end
-  end
-
-  #-----------------------------------------------
-  # Applicable?
-  #-----------------------------------------------
-
-  def applicable?(precond_pos, precond_not)
-    # All positive preconditions and no negative preconditions are found in the state
-    precond_pos.all? {|pre,*terms| @state[pre].include?(terms)} and precond_not.none? {|pre,*terms| @state[pre].include?(terms)}
-  end
-
-  #-----------------------------------------------
-  # Apply
-  #-----------------------------------------------
-
-  def apply(effect_add, effect_del)
-    # Create new state with added or deleted predicates
-    @state = @state.each_with_object({}) {|(k,v),state| state[k] = v.dup}
-    effect_del.each {|pre,*terms| @state[pre].delete(terms)}
-    effect_add.each {|pre,*terms| @state[pre] << terms}
-    true
-  end
-
-  #-----------------------------------------------
-  # Apply operator
-  #-----------------------------------------------
-
-  def apply_operator(precond_pos, precond_not, effect_add, effect_del)
-    # Apply effects if preconditions satisfied
-    apply(effect_add, effect_del) if applicable?(precond_pos, precond_not)
-  end
-
-  #-----------------------------------------------
-  # Generate
-  #-----------------------------------------------
-
-  def generate(precond_pos, precond_not, *free)
-    # Free variable to set of values
-    objects = free.map {|i| [i]}
-    # Unification by positive preconditions
-    match_objects = []
-    precond_pos.each {|pre,*terms|
-      next unless terms.include?('')
-      # Swap free variables with matching set or maintain constant term
-      terms.map! {|p| objects.find {|j| j.first.equal?(p)} || p}
-      # Compare with current state
-      @state[pre].each {|objs|
-        next unless terms.each_with_index {|t,i|
-          # Free variable
-          if t.instance_of?(Array)
-            # Not unified
-            if t.first.empty?
-              match_objects.push(t, i)
-            # No match with previous unification
-            elsif not t.include?(objs[i])
-              match_objects.clear
-              break
-            end
-          # No match with value
-          elsif t != objs[i]
-            match_objects.clear
-            break
-          end
-        }
-        # Add values to sets
-        match_objects.shift << objs[match_objects.shift] until match_objects.empty?
-      }
-      # Unification closed
-      terms.each {|i| i.first.replace('X') if i.instance_of?(Array) and i.first.empty?}
-    }
-    # Remove pointer and duplicates
-    objects.each {|i|
-      i.shift
-      return if i.empty?
-      i.uniq!
-    }
-    # Depth-first search
-    stack = []
-    level = obj = 0
-    while level
-      # Replace pointer value with useful object to affect variables
-      free[level].replace(objects[level][obj])
-      obj += 1
-      if level != free.size.pred
-        # Stack backjump position
-        stack.unshift(level, obj) if obj != objects[level].size
-        level += 1
-        obj = 0
-      else
-        yield if applicable?(precond_pos, precond_not)
-        # Load next object or restore
-        if obj == objects[level].size
-          level = stack.shift
-          obj = stack.shift
-        end
-      end
-    end
-  end
-
-  #-----------------------------------------------
-  # Print data
-  #-----------------------------------------------
-
-  def print_data(data)
-    data.each_with_index {|d,i| puts "#{i}: #{d.first}(#{d.drop(1).join(' ')})"}
   end
 
   #-----------------------------------------------

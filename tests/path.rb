@@ -1,4 +1,4 @@
-require './tests/hypest'
+require '../HyperTensioN/tests/hypest'
 
 class Path < Test::Unit::TestCase
   include Hypest
