@@ -62,13 +62,7 @@ module Healthcare
   # Domain
   #-----------------------------------------------
 
-  if defined?(Hypertension)
-    include Hypertension
-    VISIBLE = true
-    INVISIBLE = false
-    PERFORMIMAGING_OUTCOMES = VISIBLE
-    PERFORMBIOPSY_OUTCOMES = VISIBLE
-  else
+  if defined?(Hypertension_U)
     include Hypertension_U
     VISIBLE = INVISIBLE = 1
     PERFORMIMAGING_OUTCOMES = {
@@ -79,6 +73,11 @@ module Healthcare
       'performBiopsy_success' => 0.6,
       'performBiopsy_failure' => 0.4
     }
+  else
+    include Hypertension
+    VISIBLE = true
+    INVISIBLE = false
+    PERFORMIMAGING_OUTCOMES = PERFORMBIOPSY_OUTCOMES = VISIBLE
   end
   extend self
 
