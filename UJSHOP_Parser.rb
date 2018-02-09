@@ -1,45 +1,13 @@
+require_relative '../HyperTensioN/parsers/JSHOP_Parser'
+
 module UJSHOP_Parser
+  include JSHOP_Parser
   extend self
 
-  attr_reader :domain_name, :problem_name, :operators, :methods, :predicates, :state, :tasks, :axioms, :rewards, :attachments
+  attr_reader :axioms, :rewards, :attachments
 
   AND = 'and'
   OR  = 'or'
-  NOT = 'not'
-
-  #-----------------------------------------------
-  # Scan tokens
-  #-----------------------------------------------
-
-  def scan_tokens(filename)
-    (str = IO.read(filename)).gsub!(/;.*$/,'')
-    str.downcase!
-    stack = []
-    list = []
-    str.scan(/[()]|[^\s()]+/) {|t|
-      case t
-      when '('
-        stack << list
-        list = []
-      when ')'
-        stack.empty? ? raise('Missing open parentheses') : list = stack.pop << list
-      when 'nil' then list << []
-      else list << t
-      end
-    }
-    raise 'Missing close parentheses' unless stack.empty?
-    raise 'Malformed expression' if list.size != 1
-    list.first
-  end
-
-  #-----------------------------------------------
-  # Define effects
-  #-----------------------------------------------
-
-  def define_effects(name, group)
-    raise "Error with #{name} effect" unless group.instance_of?(Array)
-    group.each {|pre| pre.first != NOT ? @predicates[pre.first.freeze] = true : raise("Unexpected not in #{name} effect")}
-  end
 
   #-----------------------------------------------
   # Define expression
