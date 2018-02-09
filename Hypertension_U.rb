@@ -10,7 +10,7 @@
 require_relative '../HyperTensioN/Hypertension'
 
 module Hypertension_U
-  extend Hypertension
+  include Hypertension
   extend self
 
   attr_accessor :min_prob, :max_plans, :plans
