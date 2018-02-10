@@ -158,21 +158,4 @@ module UJSHOP_Parser
     else raise "File #{domain_filename} does not match domain pattern"
     end
   end
-
-  #-----------------------------------------------
-  # Parse problem
-  #-----------------------------------------------
-
-  def parse_problem(problem_filename)
-    if (tokens = scan_tokens(problem_filename)).instance_of?(Array) and tokens.size == 5 and tokens.shift == 'defproblem'
-      @problem_name = tokens.shift
-      raise 'Different domain specified in problem file' if @domain_name != tokens.shift
-      @state = tokens.shift
-      @tasks = tokens.shift
-      # Tasks may be ordered or unordered
-      @tasks.shift unless ordered = (@tasks.first != ':unordered')
-      @tasks.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}.unshift(ordered)
-    else raise "File #{problem_filename} does not match problem pattern"
-    end
-  end
 end
