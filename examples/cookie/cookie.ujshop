@@ -19,6 +19,7 @@
     (
       (at ?agent ?to)
     )
+    ; Probability
     1
   )
 
@@ -34,6 +35,7 @@
     (
       (have ?agent good-cookie)
     )
+    ; Probability
     0.8
     buy_bad_cookie
     ; Del effects
@@ -42,6 +44,7 @@
     (
       (have ?agent bad-cookie)
     )
+    ; Probability
     0.2
   )
 
