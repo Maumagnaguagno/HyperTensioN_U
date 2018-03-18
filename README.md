@@ -34,7 +34,8 @@ The expected input for HyperTensioN U is based on a modified version of the JSHO
 Two files define domain and problem as a planning instance.
 The domain defines the rules that never change, while the problem defines a situation that requires planning.
 Several problems may refer to the same domain, as many situations may happen within the same constraints.
-Differently from JSHOP descriptions the operators may have uncertain effects with known probabilities.
+Differently from JSHOP descriptions the operators may have uncertain effects with known probabilities instead of a cost.
+Rewards are used to better evaluate which plan is better, instead of the total plan cost.
 External function call and semantic attachments are also available.
 
 ### Domain
