@@ -119,7 +119,7 @@ External function call and semantic attachments are also available.
 
 ## Calls
 Sometimes functions must be called to solve a problem beyond the reach of HTN.
-Some functions are already implemented:
+Basic functions are already implemented:
 - Binary math ``+``, ``-``, ``*``, ``/``, ``%``, ``^``
 - Unary math ``abs``, ``sin``, ``cos``, ``tan``
 - Comparison ``=``, ``!=``, ``<``, ``>``, ``<=``, ``>=``
@@ -129,7 +129,7 @@ Some functions are already implemented:
 (call < (call abs (call - (call sin ?var) 0.5)) 1)
 ```
 
-Otherwise they are external calls the user must provide through an ``external.rb`` file in the same folder as the domain.
+Other functions can be used through external calls the user implements in the ``external.rb`` file in the same folder as the domain.
 The ``external.rb`` must define an **External** module with methods that are expected to return String objects, numbers are expected to be in the Float format (``5.to_f.to_s == "5.0"``).
 This is a requirement of the ``generate`` method that expects Strings to replace variables, if you only need to forward values through subtasks you can ignore this limitation.
 Calls that only operate on external structures must return any non-false value to avoid failing preconditions.
@@ -154,13 +154,13 @@ These predicates either require external structures or libraries to be fast and 
 Instead of using calls in unusual ways to discover all the objects that are visible for a certain agent, we can exploit off-the-shelf libraries and delegate this unification to an external procedure.
 Such external methods are semantic attachments, a term coined by [Weyhrauch (1980)](http://www.sciencedirect.com/science/article/pii/0004370280900156 "Prolegomena to a theory of mechanized formal reasoning") to describe the attachment of an interpretation to a predicate symbol using an external procedure.
 Semantic attchments in planning was already explored by [Christian Dornhege et al. (2009)](https://www.aaai.org/ocs/index.php/ICAPS/ICAPS09/paper/viewFile/754/1101 "Semantic attachments for domain-independent planning systems").
-Their signature must be explicitly defined as such and can be used as regular predicates in preconditions.
+A semantic attachment signature must be explicitly defined as such and can be used as regular predicates in preconditions.
 
 ```Lisp
 (:attachments (visible ?agent ?object))
 ```
 
-Their definition is part of the ``external.rb``, like external calls, but they ``yield`` unifications instead of return values.
+A semantic attachment implementation is part of ``external.rb``, like external calls, but implemented to ``yield`` unifications instead of ``return`` values.
 Since all variables are Strings the user must replace the free variables, empty Strings, before yielding without parameters.
 The same semantic attchment can be used to match different permutations of which variables are ground or free.
 An example of semantic attachments is available at [examples/search_circular](examples/search_circular).
