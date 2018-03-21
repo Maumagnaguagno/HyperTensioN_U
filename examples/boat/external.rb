@@ -1,4 +1,4 @@
-require_relative '../../../Polygonoid/examples/search/Search'
+require_relative '../../../Polygonoid/Polygonoid'
 
 module External
   extend self
@@ -14,20 +14,20 @@ module External
     symbol
   end
 
-  def advance(pos, angle, amount, newpos)
-    # TODO add wind, current and error in amount and angle
+  def advance(pos, magnitude, direction, newpos)
+    # TODO add wind, current and error in magnitude and direction
     pos = @symbol_object[pos]
-    angle = angle.to_f
-    amount = amount.to_f
-    x = pos.x + amount * Math.cos(angle)
-    y = pos.y + amount * Math.sin(angle)
+    magnitude = magnitude.to_f
+    direction = direction.to_f
+    x = pos.x + magnitude * Math.cos(direction)
+    y = pos.y + magnitude * Math.sin(direction)
     # Expected path
     newpos.replace(symbol(Point.new(x,y)))
     yield
     # Overshoot error
-    amount += 1
-    x = pos.x + amount * Math.cos(angle)
-    y = pos.y + amount * Math.sin(angle)
+    magnitude += 1
+    x = pos.x + magnitude * Math.cos(direction)
+    y = pos.y + magnitude * Math.sin(direction)
     newpos.replace(symbol(Point.new(x,y)))
     yield
   end
