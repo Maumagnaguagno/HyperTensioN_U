@@ -13,7 +13,7 @@
     ((at ?agent ?newpos))
   )
 
-  (:operator (!turn ?agent direction ?turn)
+  (:operator (!turn ?agent ?direction ?turn)
     ; Preconditions
     ((angle ?agent ?direction))
     ; Del effects
