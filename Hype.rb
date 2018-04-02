@@ -37,7 +37,7 @@ module Hype
   # Compile
   #-----------------------------------------------
 
-  def compile(domain, problem)
+  def compile(domain, problem, type = 'rb')
     compiler = UHyper_Compiler
     args = [
       @parser.domain_name,
@@ -52,9 +52,9 @@ module Hype
       @parser.attachments
     ]
     data = compiler.compile_domain(*args)
-    IO.write("#{domain}.rb", data) if data
+    IO.write("#{domain}.#{type}", data) if data
     data = compiler.compile_problem(*args << File.basename(domain))
-    IO.write("#{problem}.rb", data) if data
+    IO.write("#{problem}.#{type}", data) if data
   end
 end
 
