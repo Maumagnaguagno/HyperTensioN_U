@@ -131,8 +131,8 @@ module UHyper_Compiler
     else
       # Effective if preconditions hold
       define_operators << "return unless #{expression_to_hyper(precond_expression, axioms)}\n    " unless precond_expression.empty?
-      effect_add.reject! {|pre| define_operators << "#{call(pre)}\n    " if pre.first == 'call'}
       # Effective
+      effect_add.reject! {|pre| define_operators << "#{call(pre)}\n    " if pre.first == 'call'}
       predicates_to_hyper(define_operators << "apply(\n      # Add effects", effect_add)
       predicates_to_hyper(define_operators << ",\n      # Del effects", effect_del)
       define_operators << "\n    )\n  end\n"
