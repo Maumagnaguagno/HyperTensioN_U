@@ -124,7 +124,7 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def operator_to_hyper(name, param, precond_expression, effect_add, effect_del, axioms, define_operators)
-    define_operators << "\n  def #{name}#{"(#{param.map {|j| j.sub(/^\?/,'')}.join(', ')})" unless param.empty?}\n"
+    define_operators << "\n  def #{name}#{"(#{param.map {|i| i.sub(/^\?/,'')}.join(', ')})" unless param.empty?}\n"
     if effect_add.empty? and effect_del.empty?
       # Empty or sensing
       define_operators << (precond_expression.empty? ? "    true\n  end\n" : "    #{expression_to_hyper(precond_expression, axioms)}\n  end\n")
@@ -185,7 +185,7 @@ module UHyper_Compiler
             if attachments.assoc(pre.first)
               precond_attachments << pre
             elsif pre.first != 'not' and pre.first != 'call' and pre.first != 'assign' and not axioms.assoc(pre.first)
-              free_variables.concat(pre.select {|i| i.instance_of?(String) and i.start_with?('?') and not met[1].include?(i)})
+              free_variables.concat(pre.select {|j| j.instance_of?(String) and j.start_with?('?') and not met[1].include?(j)})
               false
             end
           }
@@ -223,7 +223,7 @@ module UHyper_Compiler
         }
         if free_variables.empty?
           # Ground predicates, axioms and calls
-          precond_expression = precond_pos.concat(precond_not.map {|i| ['not', i]}).concat(ground_axioms_calls)
+          precond_expression = precond_pos.concat(precond_not.map {|j| ['not', j]}).concat(ground_axioms_calls)
           define_methods << "\n    return unless " << expression_to_hyper(precond_expression.unshift('and'), axioms) unless precond_expression.empty?
           level = 2
         else
