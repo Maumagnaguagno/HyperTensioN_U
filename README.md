@@ -1,7 +1,7 @@
 # HyperTensioN U [![Build Status](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U.svg)](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U)
 **Hierarchical Task Network planning with uncertainty in Ruby**
 
-This is an extension of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with disjunctions, probabilities, rewards, calls, assignments, functions and semantic attachments, currently **incompatible** with the original intermediate representation.
+This is an extension of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with disjunctions, probabilities, rewards, axioms, assignments, calls and semantic attachments, currently **incompatible** with the original intermediate representation.
 Hype can help you in the conversion process from [UJSHOP](#ujshop "Jump to UJSHOP section") to Ruby, but you can ignore the Hype and use HyperTensioN U as a standalone library.
 
 ```
