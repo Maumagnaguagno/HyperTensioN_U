@@ -1,0 +1,83 @@
+(defdomain generator (
+
+  (:attachments (time ?t ?min ?max ?step))
+
+  (:- (minimum-fuel ?g) (call >= (call function (fuelLevel ?g)) 0))
+  (:- (maximum-fuel ?g) (call < (call function (fuelLevel ?g)) (call function (capacity ?g))))
+
+  (:operator (!generate-start ?g ?start ?finish)
+    (
+      (minimum-fuel ?g)
+    )
+    ()
+    (
+      (protect-axiom minimum-fuel ?g)
+    )
+  )
+
+  (:operator (!generate-finish ?g ?start ?finish)
+    (
+      (minimum-fuel ?g)
+    )
+    (
+      (protect-axiom minimum-fuel ?g)
+    )
+    (
+      (generator-ran)
+      (call decrease (fuelLevel ?g) (call * (call - ?finish ?start) 1))
+    )
+  )
+
+  (:operator (!refuel-start ?g ?t ?start ?finish)
+    (
+      (maximum-fuel ?g)
+    )
+    (
+      (available ?t)
+    )
+    (
+      (refueling ?g)
+      (protect-axiom maximum-fuel ?g)
+    )
+  )
+
+  (:operator (!refuel-finish ?g ?t ?start ?finish)
+    (
+      (maximum-fuel ?g)
+    )
+    (
+      (refueling ?g)
+      (protect-axiom minimum-fuel ?g)
+    )
+    (
+      (call increase (fuelLevel ?g) (call * (call - ?finish ?start) 2))
+    )
+  )
+
+  (:method (generate ?g)
+    (
+      (generator ?g)
+      (minimum-fuel ?g)
+      (time ?start)
+    )
+    (
+      (!generate-start  ?g ?start (call + ?start 1000))
+      (!generate-finish ?g ?start (call + ?start 1000))
+    )
+  )
+
+  (:method (refuel ?g ?t)
+    (
+      (generator ?g)
+      (not (refueling ?g))
+      (tank ?t)
+      (available ?t)
+      (maximum-fuel ?g)
+      (time ?start)
+    )
+    (
+      (!refuel-start  ?g ?t ?start (call + ?start 10))
+      (!refuel-finish ?g ?t ?start (call + ?start 10))
+    )
+  )
+))
