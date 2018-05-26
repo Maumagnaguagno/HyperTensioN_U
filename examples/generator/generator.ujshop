@@ -2,8 +2,9 @@
 
   (:attachments (time ?t ?min ?max ?step))
 
-  (:- (minimum-fuel ?g) (call >= (call function (fuelLevel ?g)) 0))
-  (:- (maximum-fuel ?g) (call < (call function (fuelLevel ?g)) (call function (capacity ?g))))
+  (:- (enough-fuel ?g) (call >= (call function (fuelLevel ?g)) 1000))
+  (:- (minimum-fuel ?g) (call > (call function (fuelLevel ?g)) 0))
+  (:- (maximum-fuel ?g) (call <= (call function (fuelLevel ?g)) (call function (capacity ?g))))
 
   (:operator (!generate-start ?g ?start ?finish)
     (
@@ -78,6 +79,33 @@
     (
       (!refuel-start  ?g ?t ?start (call + ?start 10))
       (!refuel-finish ?g ?t ?start (call + ?start 10))
+    )
+  )
+
+  (:method (multiple-refuel ?g ?start)
+    enough-fuel
+    (
+      (enough-fuel ?g)
+    )
+    ()
+    add-fuel
+    (
+      (tank ?t)
+      (available ?t)
+      (assign ?finish (call + ?start 10))
+    )
+    (
+      (!refuel-start  ?g ?t ?start ?finish)
+      (!refuel-finish ?g ?t ?start ?finish)
+      (multiple-refuel ?g ?finish)
+    )
+  )
+
+  (:method (refuel-and-generate ?g)
+    ()
+    (
+      (multiple-refuel ?g 0)
+      (generate ?g)
     )
   )
 ))
