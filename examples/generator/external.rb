@@ -1,10 +1,12 @@
 require_relative '../../../Hypertension/examples/experiments/Protection'
+require_relative '../../../Hypertension/examples/experiments/Function'
 
 module Generator
   prepend Protection
+  include Function
 
   def problem(state, *args)
-    state['function'] = {
+    state[:function] = {
       ['fuellevel', 'gen'] => 1000 - state['available'].size * 20,
       ['capacity', 'gen'] => 1000
     }
@@ -24,36 +26,27 @@ module External
   end
 
   def function(f)
-    Generator.state['function'][f]
+    Generator.function(f)
   end
 
   def assign(f, value)
-    Generator.state['function'][f] = value.to_f
-    axioms_protected?
+    Generator.assign(f, value)
   end
 
   def increase(f, value)
-    Generator.state['function'][f] += value.to_f
-    axioms_protected?
+    Generator.increase(f, value)
   end
 
   def decrease(f, value)
-    Generator.state['function'][f] -= value.to_f
-    axioms_protected?
+    Generator.decrease(f, value)
   end
 
   def scale_up(f, value)
-    Generator.state['function'][f] *= value.to_f
-    axioms_protected?
+    Generator.scale_up(f, value)
   end
 
   def scale_down(f, value)
-    Generator.state['function'][f] /= value.to_f
-    axioms_protected?
-  end
-
-  def axioms_protected?
-    Generator.state['protect_axiom'].all? {|i| Generator.send(*i)}
+    Generator.scale_down(f, value)
   end
 
   def time(t, min = 0, max = Float::INFINITY, epsilon = 1)
