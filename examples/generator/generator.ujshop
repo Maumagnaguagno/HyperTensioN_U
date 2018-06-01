@@ -48,7 +48,7 @@
     )
     (
       (refueling ?g)
-      (protect-axiom minimum-fuel ?g)
+      (protect-axiom maximum-fuel ?g)
     )
     (
       (call increase (fuelLevel ?g) (call * (call - ?finish ?start) 2))
