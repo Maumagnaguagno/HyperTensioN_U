@@ -4,7 +4,7 @@
 
   (:- (enough-fuel ?g ?t) (call >= (call function (fuelLevel ?g) ?t) 1000))
   (:- (minimum-fuel ?g ?t) (call >= (call function (fuelLevel ?g) ?t) 0))
-  (:- (maximum-fuel ?g ?t) (call <= (call function (fuelLevel ?g) ?t) (call function (capacity ?g) ?t)))
+  (:- (maximum-fuel ?g ?t) (call <= (call function (fuelLevel ?g) ?t) (call function (capacity ?g))))
 
   (:operator (!generate-start ?g ?start ?finish)
     (
