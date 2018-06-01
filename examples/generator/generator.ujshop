@@ -2,64 +2,63 @@
 
   (:attachments (time ?t ?min ?max ?step))
 
-  (:- (enough-fuel ?g) (call >= (call function (fuelLevel ?g)) 1000))
-  (:- (minimum-fuel ?g) (call > (call function (fuelLevel ?g)) 0))
-  (:- (maximum-fuel ?g) (call <= (call function (fuelLevel ?g)) (call function (capacity ?g))))
+  (:- (enough-fuel ?g ?t) (call >= (call function (fuelLevel ?g) ?t) 1000))
+  (:- (minimum-fuel ?g ?t) (call > (call function (fuelLevel ?g) ?t) 0))
+  (:- (maximum-fuel ?g ?t) (call <= (call function (fuelLevel ?g) ?t) (call function (capacity ?g) ?t)))
 
   (:operator (!generate-start ?g ?start ?finish)
     (
-      (minimum-fuel ?g)
+      (minimum-fuel ?g ?start)
     )
     ()
     (
-      (protect-axiom minimum-fuel ?g)
+      (protect-axiom minimum-fuel ?g ?finish)
+      (call activate decrease (fuelLevel ?g) identity ?start ?finish)
     )
   )
 
   (:operator (!generate-finish ?g ?start ?finish)
     (
-      (minimum-fuel ?g)
+      (minimum-fuel ?g ?start)
     )
     (
-      (protect-axiom minimum-fuel ?g)
+      (protect-axiom minimum-fuel ?g ?finish)
     )
     (
       (generator-ran)
-      (call decrease (fuelLevel ?g) (call * (call - ?finish ?start) 1))
     )
   )
 
   (:operator (!refuel-start ?g ?t ?start ?finish)
     (
-      (maximum-fuel ?g)
+      (maximum-fuel ?g ?start)
     )
     (
       (available ?t)
     )
     (
       (refueling ?g)
-      (protect-axiom maximum-fuel ?g)
+      (protect-axiom maximum-fuel ?g ?finish)
+      (call activate increase (fuelLevel ?g) double ?start ?finish)
     )
   )
 
   (:operator (!refuel-finish ?g ?t ?start ?finish)
     (
-      (maximum-fuel ?g)
+      (maximum-fuel ?g ?finish)
     )
     (
       (refueling ?g)
-      (protect-axiom maximum-fuel ?g)
+      (protect-axiom maximum-fuel ?g ?finish)
     )
-    (
-      (call increase (fuelLevel ?g) (call * (call - ?finish ?start) 2))
-    )
+    ()
   )
 
   (:method (generate ?g)
     (
       (generator ?g)
-      (minimum-fuel ?g)
       (time ?start)
+      (minimum-fuel ?g ?start)
     )
     (
       (!generate-start  ?g ?start (call + ?start 1000))
@@ -73,8 +72,8 @@
       (not (refueling ?g))
       (tank ?t)
       (available ?t)
-      (maximum-fuel ?g)
       (time ?start)
+      (maximum-fuel ?g ?start)
     )
     (
       (!refuel-start  ?g ?t ?start (call + ?start 10))
@@ -85,7 +84,7 @@
   (:method (multiple-refuel ?g ?start)
     enough-fuel
     (
-      (enough-fuel ?g)
+      (enough-fuel ?g ?start)
     )
     ()
     add-fuel
