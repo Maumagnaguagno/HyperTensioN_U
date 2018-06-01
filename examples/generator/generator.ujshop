@@ -3,7 +3,7 @@
   (:attachments (time ?t ?min ?max ?step))
 
   (:- (enough-fuel ?g ?t) (call >= (call function (fuelLevel ?g) ?t) 1000))
-  (:- (minimum-fuel ?g ?t) (call > (call function (fuelLevel ?g) ?t) 0))
+  (:- (minimum-fuel ?g ?t) (call >= (call function (fuelLevel ?g) ?t) 0))
   (:- (maximum-fuel ?g ?t) (call <= (call function (fuelLevel ?g) ?t) (call function (capacity ?g) ?t)))
 
   (:operator (!generate-start ?g ?start ?finish)
@@ -19,7 +19,7 @@
 
   (:operator (!generate-finish ?g ?start ?finish)
     (
-      (minimum-fuel ?g ?start)
+      (minimum-fuel ?g ?finish)
     )
     (
       (protect-axiom minimum-fuel ?g ?finish)
