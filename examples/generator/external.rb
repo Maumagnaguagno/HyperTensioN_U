@@ -1,6 +1,6 @@
 require 'forwardable'
-require_relative '../../../Hypertension/examples/experiments/Protection'
-require_relative '../../../Hypertension/examples/experiments/Function'
+require_relative '../../../HyperTensioN/examples/experiments/Protection'
+require_relative '../../../HyperTensioN/examples/experiments/Function'
 
 module Generator
   prepend Protection
