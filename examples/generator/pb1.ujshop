@@ -22,7 +22,7 @@
     ;(tank tank19) (available tank19)
   )
   (
-    (generate gen)
     (refuel gen tank1)
+    (generate gen)
   )
 )
