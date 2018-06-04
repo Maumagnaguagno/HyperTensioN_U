@@ -13,7 +13,7 @@
     ()
     (
       (protect-axiom minimum-fuel ?g ?finish)
-      (call activate decrease (fuelLevel ?g) identity ?start ?finish)
+      (call process decrease (fuelLevel ?g) identity ?start ?finish)
     )
   )
 
@@ -39,7 +39,7 @@
     (
       (refueling ?g)
       (protect-axiom maximum-fuel ?g ?finish)
-      (call activate increase (fuelLevel ?g) double ?start ?finish)
+      (call process increase (fuelLevel ?g) double ?start ?finish)
     )
   )
 
