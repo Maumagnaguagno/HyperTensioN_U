@@ -97,9 +97,9 @@ module Hypertension_U
   # Problem
   #-----------------------------------------------
 
-  def problem(start, tasks, debug = false, max_plans = -1, min_prob = 0)
+  def problem(state, tasks, debug = false, max_plans = -1, min_prob = 0)
     @debug = debug
-    @state = start
+    @state = state
     @min_prob = min_prob
     @max_plans = max_plans
     @plans = []

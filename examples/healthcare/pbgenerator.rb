@@ -156,7 +156,7 @@ if jshop
   IO.write(jshop, problem_str)
 else
   # Start
-  START = {
+  STATE = {
     'patient' => PATIENT_SET.map {|i| [i]},
     'physician' => PHYSICIAN_SET.map {|i| [i]},
     'radiologist' => RADIOLOGIST_SET.map {|i| [i]},
@@ -201,8 +201,8 @@ else
   }
   # Select planner
   if defined?(Hypertension)
-    Healthcare.problem(START, TASKS, debug)
+    Healthcare.problem(STATE, TASKS, debug)
   else
-    Healthcare.problem(START, TASKS, debug, max_plans, min_prob)
+    Healthcare.problem(STATE, TASKS, debug, max_plans, min_prob)
   end
 end
