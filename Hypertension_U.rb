@@ -89,8 +89,8 @@ module Hypertension_U
       new_plan[VALUATION] += state_valuation(old_state) * probability
       # Keep decomposing the hierarchy
       planning(tasks, level, new_plan)
-      @state = old_state
     end
+    @state = old_state
   end
 
   #-----------------------------------------------
