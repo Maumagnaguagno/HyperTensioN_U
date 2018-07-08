@@ -124,7 +124,7 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def operator_to_hyper(name, param, precond_expression, effect_add, effect_del, axioms, define_operators)
-    define_operators << "\n  def #{name}#{"(#{param.map {|i| i.sub(/^\?/,'')}.join(', ')})" unless param.empty?}\n"
+    define_operators << "\n  def #{name}#{"(#{param.join(', ').delete!('?')})" unless param.empty?}\n"
     if effect_add.empty? and effect_del.empty?
       # Empty or sensing
       define_operators << (precond_expression.empty? ? "    true\n  end\n" : "    #{expression_to_hyper(precond_expression, axioms)}\n  end\n")
@@ -171,7 +171,7 @@ module UHyper_Compiler
     domain_str << "\n    # Methods"
     methods.each_with_index {|met,mi|
       domain_str << "\n    '#{met.first}' => [\n"
-      variables = met[1].empty? ? '' : "(#{met[1].map {|i| i.sub(/^\?/,'')}.join(', ')})"
+      variables = met[1].empty? ? '' : "(#{met[1].join(', ').delete!('?')})"
       met.drop(2).each_with_index {|dec,i|
         domain_str << "      '#{met.first}_#{dec.first}'#{',' if met.size - 3 != i}\n"
         define_methods << "\n  def #{met.first}_#{dec.first}#{variables}"
@@ -277,7 +277,7 @@ module UHyper_Compiler
     unless axioms.empty?
       domain_str << "  ##{SPACER}\n  # Axioms\n  ##{SPACER}\n\n"
       axioms.each {|name,param,*expressions|
-        domain_str << "  def #{name}(#{param.map {|i| i.sub(/^\?/,'')}.join(', ')})\n"
+        domain_str << "  def #{name}(#{param.join(', ').delete!('?')})\n"
         expressions.each_slice(2) {|label,exp|
           exp = expression_to_hyper(exp, axioms)
           domain_str << (exp == 'false' ? "    # #{label} is always false\n" : "    # #{label}\n    return true if #{exp}\n")
