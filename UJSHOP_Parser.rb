@@ -48,7 +48,7 @@ module UJSHOP_Parser
   def parse_operator(op)
     op.shift
     raise 'Operator without name definition' unless (name = op.first.shift).instance_of?(String)
-    name.sub!(/^!!/,'invisible_') or name.sub!(/^!/,'')
+    name.sub!(/^!!/,'invisible_') or name.delete!('!')
     raise "#{name} have size #{op.size} instead of 4 or more" if op.size < 4
     raise "#{name} redefined" if @operators.assoc(name)
     @operators << operator = [name, op.shift, []]
@@ -94,7 +94,7 @@ module UJSHOP_Parser
       define_expression("#{name} precondition", precond = met.shift)
       # Subtasks
       raise "Error with #{name} subtasks" unless (group = met.shift).instance_of?(Array)
-      method << [label, precond, group.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.sub!(/^!/,'')}]
+      method << [label, precond, group.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.delete!('!')}]
     end
   end
 

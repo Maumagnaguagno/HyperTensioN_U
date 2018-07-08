@@ -99,7 +99,7 @@ class Caller < Test::Unit::TestCase
     call('1.0', ['call', 'abs', '1.0'])
     call('1.0', ['call', 'abs', '-1'])
     call('1.0', ['call', 'abs', '-1.0'])
-    call("a.sub(/^-/,'')", ['call', 'abs', '?a'])
+    call("a.delete('-')", ['call', 'abs', '?a'])
     call('(a.to_f + b.to_f).abs.to_s', ['call', 'abs', ['call', '+', '?a', '?b']])
   end
 

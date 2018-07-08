@@ -27,7 +27,7 @@ module UHyper_Compiler
       end
     when 'not' then 'not ' << expression_to_hyper(precond_expression[1], axioms, state)
     when 'call' then call(precond_expression)
-    when 'assign' then '(' << precond_expression[1].sub(/^\?/,'') << ' = ' << evaluate(precond_expression[2], true) << ')'
+    when 'assign' then '(' << precond_expression[1].delete('?') << ' = ' << evaluate(precond_expression[2], true) << ')'
     else
       # Empty list is false
       if precond_expression.empty? then 'false'
@@ -65,8 +65,8 @@ module UHyper_Compiler
     when 'abs', 'sin', 'cos', 'tan'
       raise "Wrong number of arguments for (#{expression.join(' ')}), expected 2" if expression.size != 3
       ltoken = evaluate(expression[2])
-      if ltoken =~ /^-?\d/ then function == 'abs' ? ltoken.sub(/^-/,'') : Math.send(function, ltoken.to_f).to_s
-      elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".sub(/^-/,'')"
+      if ltoken =~ /^-?\d/ then function == 'abs' ? ltoken.delete('-') : Math.send(function, ltoken.to_f).to_s
+      elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".delete('-')"
       else "Math.#{function}(#{ltoken.chomp!('.to_s') or ltoken << '.to_f'}).to_s"
       end
     # Comparison
@@ -111,7 +111,7 @@ module UHyper_Compiler
       else "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
       end
     when String
-      if term.start_with?('?') then term.sub(/^\?/,'')
+      if term.start_with?('?') then term.delete('?')
       elsif term =~ /^[a-z]/ then "'#{term}'"
       elsif term =~ /^-?\d/ then quotes ? "'#{term.to_f}'" : term.to_f.to_s
       else term
@@ -230,10 +230,10 @@ module UHyper_Compiler
           # Ground axioms and calls
           define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
           # Unify free variables
-          free_variables.each {|free| define_methods << "\n    #{free.sub(/^\?/,'')} = ''"}
+          free_variables.each {|free| define_methods << "\n    #{free.delete('?')} = ''"}
           predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", precond_pos)
           predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not)
-          free_variables.each {|free| define_methods << ', ' << free.sub(/^\?/,'')}
+          free_variables.each {|free| define_methods << ', ' << free.delete('?')}
           define_methods << "\n    ) {"
           define_methods << "\n      next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
           level = 3
@@ -244,7 +244,7 @@ module UHyper_Compiler
           terms.each {|t|
             unless met[1].include?(t) or free_variables.include?(t)
               free_variables << t
-              define_methods << "\n#{indentation}#{t.sub(/^\?/,'')} = ''"
+              define_methods << "\n#{indentation}#{t.delete('?')} = ''"
             end
           }
           define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) {"
