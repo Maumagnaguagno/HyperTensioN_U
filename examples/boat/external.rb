@@ -19,16 +19,15 @@ module External
     pos = @symbol_object[pos]
     magnitude = magnitude.to_f
     direction = direction.to_f
-    x = pos.x + magnitude * Math.cos(direction)
-    y = pos.y + magnitude * Math.sin(direction)
+    cos = Math.cos(direction)
+    sin = Math.sin(direction)
+    x = pos.x + magnitude * cos
+    y = pos.y + magnitude * sin
     # Expected path
-    newpos.replace(symbol(Point.new(x,y)))
+    newpos.replace(symbol(Point.new(x, y)))
     yield
-    # Overshoot error
-    magnitude += 1
-    x = pos.x + magnitude * Math.cos(direction)
-    y = pos.y + magnitude * Math.sin(direction)
-    newpos.replace(symbol(Point.new(x,y)))
+    # Overshoot error (1 magnitude)
+    newpos.replace(symbol(Point.new(x + cos, y + sin)))
     yield
   end
 end
