@@ -242,7 +242,7 @@ module UHyper_Compiler
         precond_attachments.each {|pre,*terms|
           indentation = '  ' * level
           terms.each {|t|
-            unless met[1].include?(t) or free_variables.include?(t)
+            if t.start_with?('?') and not met[1].include?(t) || free_variables.include?(t)
               free_variables << t
               define_methods << "\n#{indentation}#{t.delete('?')} = ''"
             end
