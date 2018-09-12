@@ -29,7 +29,7 @@ module External
   def_delegators Generator, :protect, :unprotect, :function, :assign, :increase, :decrease, :scale_up, :scale_down, :process, :event
 
   def time(t, min = 0, max = Float::INFINITY, epsilon = 1)
-    min.step(max, epsilon) {|i|
+    min.to_f.step(max.to_f, epsilon.to_f) {|i|
       t.replace(i.to_s)
       yield
     }
