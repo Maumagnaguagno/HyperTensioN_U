@@ -124,18 +124,18 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def operator_to_hyper(name, param, precond_expression, effect_add, effect_del, axioms, define_operators)
-    define_operators << "\n  def #{name}#{"(#{param.join(', ').delete!('?')})" unless param.empty?}\n"
+    define_operators << "\n  def #{name}#{"(#{param.join(', ').delete!('?')})" unless param.empty?}"
     if effect_add.empty? and effect_del.empty?
       # Empty or sensing
-      define_operators << (precond_expression.empty? ? "    true\n  end\n" : "    #{expression_to_hyper(precond_expression, axioms)}\n  end\n")
+      define_operators << (precond_expression.empty? ? "\n    true\n  end\n" : "\n    #{expression_to_hyper(precond_expression, axioms)}\n  end\n")
     else
       # Effective if preconditions hold
-      define_operators << "    return unless #{expression_to_hyper(precond_expression, axioms)}\n" unless precond_expression.empty?
+      define_operators << "\n    return unless #{expression_to_hyper(precond_expression, axioms)}" unless precond_expression.empty?
       # Effective
       effect_calls = []
       effect_add.reject! {|pre| effect_calls << call(pre) if pre.first == 'call'}
       unless effect_add.empty? and effect_del.empty?
-        predicates_to_hyper(define_operators << "    apply(\n      # Add effects", effect_add)
+        predicates_to_hyper(define_operators << "\n    apply(\n      # Add effects", effect_add)
         predicates_to_hyper(define_operators << ",\n      # Del effects", effect_del)
         define_operators << "\n    )"
       end
