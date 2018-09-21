@@ -118,7 +118,7 @@ External function call and semantic attachments are also available.
 ```
 
 ## Calls
-Sometimes functions must be called to solve a problem beyond the reach of HTN.
+Sometimes functions must be called to solve a problem beyond the reach of declarative descriptions.
 Basic functions are already implemented:
 - Binary math ``+``, ``-``, ``*``, ``/``, ``%``, ``^``
 - Unary math ``abs``, ``sin``, ``cos``, ``tan``

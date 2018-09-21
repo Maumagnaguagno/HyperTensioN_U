@@ -151,7 +151,7 @@ class Caller < Test::Unit::TestCase
     call("(['a', 'b', 'c'] != ['a', 'b', 'd'])", ['call', '!=', ['a', 'b', 'c'], ['a', 'b', 'd']])
   end
 
-  def test_call_less
+  def test_call_less_than
     call('false', ['call', '<', '1', '1'])
     call('false', ['call', '<', '?a', '?a'])
     call('true', ['call', '<=', '1', '1'])
@@ -164,11 +164,11 @@ class Caller < Test::Unit::TestCase
     call('(1.0 < a.to_f)', ['call', '<', '1', '?a'])
     call('(a.to_f <= 1.0)', ['call', '<=', '?a', '1'])
     call('(1.0 <= a.to_f)', ['call', '<=', '1', '?a'])
-    call('(a < b)', ['call', '<', '?a', '?b'])
-    call('(a <= b)', ['call', '<=', '?a', '?b'])
+    call('(a.to_f < b.to_f)', ['call', '<', '?a', '?b'])
+    call('(a.to_f <= b.to_f)', ['call', '<=', '?a', '?b'])
   end
 
-  def test_call_greater
+  def test_call_greater_than
     call('false', ['call', '>', '1', '1'])
     call('false', ['call', '>', '?a', '?a'])
     call('true', ['call', '>=', '1', '1'])
@@ -181,8 +181,8 @@ class Caller < Test::Unit::TestCase
     call('(1.0 > a.to_f)', ['call', '>', '1', '?a'])
     call('(a.to_f >= 1.0)', ['call', '>=', '?a', '1'])
     call('(1.0 >= a.to_f)', ['call', '>=', '1', '?a'])
-    call('(a > b)', ['call', '>', '?a', '?b'])
-    call('(a >= b)', ['call', '>=', '?a', '?b'])
+    call('(a.to_f > b.to_f)', ['call', '>', '?a', '?b'])
+    call('(a.to_f >= b.to_f)', ['call', '>=', '?a', '?b'])
   end
 
   def test_call_member
@@ -201,14 +201,19 @@ class Caller < Test::Unit::TestCase
     call('true', ['call', '=', '5', ['call', '+', '4', '1']])
     call('true', ['call', '<', '0', ['call', '+', '1', '1']])
     call('(a.to_f < 2.0)', ['call', '<', '?a', ['call', '+', '1', '1']])
-    call('(a < (b.to_f + 1.0).to_s)', ['call', '<', '?a', ['call', '+', '?b', '1']])
+    call('(a.to_f < (b.to_f + 1.0))', ['call', '<', '?a', ['call', '+', '?b', '1']])
     call('(0.0 < (b.to_f + 1.0))', ['call', '<', '0', ['call', '+', '?b', '1']])
     call('true', ['call', '=', ['call', '+', '?a', '?b'], ['call', '+', '?a', '?b']])
     call('(1.0 + (a.to_f + b.to_f).abs).to_s', ['call', '+', '1', ['call', 'abs', ['call', '+', '?a', '?b']]])
   end
 
   def test_external_calls
-    call("External.test('1.0', a)", ['call', 'test', '1', '?a'])
-    call('External.test((1.0 + a.to_f).to_s)', ['call', 'test', ['call', '+', '1', '?a']])
+    call("External.f('1.0', a)", ['call', 'f', '1', '?a'])
+    call('External.f((1.0 + a.to_f).to_s)', ['call', 'f', ['call', '+', '1', '?a']])
+    call("(External.f1(a, 'b') == External.f2(c))", ['call', '=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
+    call("(External.f1(a, 'b').to_f == 1.0)", ['call', '=', ['call', 'f1', '?a', 'b'], '1'])
+    call("(External.f1(a, 'b') == a)", ['call', '=', ['call', 'f1', '?a', 'b'], '?a'])
+    call("(External.f1(a, 'b').to_f <= 1.0)", ['call', '<=', ['call', 'f1', '?a', 'b'], '1'])
+    call("(External.f1(a, 'b').to_f <= External.f2(c).to_f)", ['call', '<=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
   end
 end

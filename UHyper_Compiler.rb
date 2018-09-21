@@ -84,6 +84,9 @@ module UHyper_Compiler
         elsif rtoken =~ /^-?\d/
           rtoken = rtoken.to_f
           ltoken.chomp!('.to_s') or ltoken << '.to_f'
+        elsif function != '==' and function != '!='
+          ltoken.chomp!('.to_s') or ltoken << '.to_f'
+          rtoken.chomp!('.to_s') or rtoken << '.to_f'
         end
         "(#{ltoken} #{function} #{rtoken})"
       end
