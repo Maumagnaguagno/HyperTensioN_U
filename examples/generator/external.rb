@@ -7,8 +7,8 @@ module Generator
 
   def problem(state, *args)
     state[:function] = {
-      ['fuellevel', 'gen'] => 1000 - state['available'].size * 20,
-      ['capacity', 'gen'] => 1000
+      ['fuellevel', 'gen'] => (1000 - state['available'].size * 20).to_f,
+      ['capacity', 'gen'] => 1000.0
     }
     super(state, *args)
   end
