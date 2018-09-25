@@ -215,6 +215,7 @@ module UHyper_Compiler
           else
             pre_flat = pre.last.instance_of?(String) ? [pre.last] : pre.last.flatten
             call_axiom = pre_flat.first == 'call'|| pre.first == 'assign' || axioms.assoc(pre_flat.first)
+            ground_free_variables << pre[1] if pre.first == 'assign'
             if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
               ground_axioms_calls << pre
             elsif pre_flat.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
@@ -245,8 +246,8 @@ module UHyper_Compiler
         precond_attachments.each {|pre,*terms|
           indentation = '  ' * level
           terms.each {|t|
-            if t.instance_of?(String) and t.start_with?('?') and not met[1].include?(t) || free_variables.include?(t)
-              free_variables << t
+            if t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)
+              ground_free_variables << t
               define_methods << "\n#{indentation}#{t.delete('?')} = ''"
             end
           }
