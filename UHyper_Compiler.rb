@@ -281,7 +281,7 @@ module UHyper_Compiler
     unless axioms.empty?
       domain_str << "  ##{SPACER}\n  # Axioms\n  ##{SPACER}\n\n"
       axioms.each {|name,param,*expressions|
-        domain_str << "  def #{name}(#{param.join(', ').delete!('?')})\n"
+        domain_str << "  def #{name}#{param.empty? ? '' : "(#{param.join(', ').delete!('?')})"}\n"
         expressions.each_slice(2) {|label,exp|
           exp = expression_to_hyper(exp, axioms)
           domain_str << (exp == 'false' ? "    # #{label} is always false\n" : "    # #{label}\n    return true if #{exp}\n")
