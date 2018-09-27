@@ -23,8 +23,7 @@ module Generator
 end
 
 module External
-  extend self
-  extend Forwardable
+  extend self, Forwardable
 
   def_delegators Generator, :protect, :unprotect, :function, :assign, :increase, :decrease, :scale_up, :scale_down, :process, :event
 
