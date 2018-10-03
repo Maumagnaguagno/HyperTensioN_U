@@ -1,6 +1,6 @@
 (defdomain generator (
 
-  (:attachments (time ?t ?min ?max ?step))
+  (:attachments (step ?t ?min ?max ?step))
 
   (:- (enough-fuel ?g ?t) (call >= (call function (fuelLevel ?g) ?t) 1000))
   (:- (minimum-fuel ?g ?t) (call >= (call function (fuelLevel ?g) ?t) 0))
@@ -57,7 +57,7 @@
   (:method (generate ?g)
     (
       (generator ?g)
-      (time ?start)
+      (step ?start)
       (minimum-fuel ?g ?start)
     )
     (
@@ -72,7 +72,7 @@
       (not (refueling ?g))
       (tank ?t)
       (available ?t)
-      (time ?start)
+      (step ?start)
       (maximum-fuel ?g ?start)
     )
     (
