@@ -74,7 +74,7 @@
     )
     keep_moving
     (
-      (step ?deadline 1002 1002)
+      (step ?deadline 2 1002)
     )
     (
       (!start_car 0 ?deadline)
