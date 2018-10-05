@@ -5,8 +5,6 @@ require_relative '../../../HyperTensioN/examples/experiments/Function'
 module Car_linear
   prepend Protection, Continuous
 
-  DEBUG = false
-
   def problem(state, *args)
     function = state[:function] = {}
     state['initial'].each {|f,v| function[f] = v.to_f}
@@ -16,21 +14,26 @@ module Car_linear
   # (:process displacement :precondition (engine_running) :effect (increase (d) (* #t (v))) )
   def displacement(t)
     d = function('d').to_f
-    1.upto(t) {|i|
-      d += External.function('v', i).to_f
-      p ['d', i, d] if DEBUG
-    }
+    1.upto(t) {|i| d += External.function('v', i).to_f}
     d
   end
 
   # (:process moving :precondition (engine_running) :effect (increase (v) (* #t (a))) )
   def moving(t)
     v = function('v').to_f
-    1.upto(t) {|i|
-      v += function('a', i).to_f
-      p ['v', i, v] if DEBUG
+    a = function('a').to_f
+    ot = 0
+    @state[:event].each {|type, g, value, start|
+      if g == 'a' and start <= t
+        v += a * (start - ot)
+        ot = start
+        case type
+        when 'increase' then a += value
+        when 'decrease' then a -= value
+        end
+      end
     }
-    v
+    v + a * (t - ot)
   end
 end
 
