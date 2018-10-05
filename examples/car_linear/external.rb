@@ -14,24 +14,24 @@ module Car_linear
 
   # (:process displacement :precondition (engine_running) :effect (increase (d) (* #t (v))) )
   def displacement(t)
-    d = function('d').to_f
-    1.upto(t) {|i| d += External.function('v', i).to_f}
+    d = @state[:function]['d']
+    1.upto(t) {|i| d += function('v', i).to_f}
     d
   end
 
   # (:process moving :precondition (engine_running) :effect (increase (v) (* #t (a))) )
   def moving(t)
-    v = function('v').to_f
-    1.upto(t) {|i| v += External.function('a', i).to_f}
+    v = @state[:function]['v']
+    1.upto(t) {|i| v += function('a', i).to_f}
     v
   end
 
   def moving_custom(t)
-    v = function('v').to_f
-    a = function('a').to_f
+    v = @state[:function]['v']
+    a = @state[:function][f = 'a']
     ot = 0
-    @state[:event].each {|type, g, value, start|
-      if g == 'a' and start <= t
+    @state[:event].each {|type,g,value,start|
+      if f == g and start <= t
         v += a * (start - ot)
         ot = start
         case type
