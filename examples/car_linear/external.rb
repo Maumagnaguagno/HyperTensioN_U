@@ -21,6 +21,12 @@ module Car_linear
   # (:process moving :precondition (engine_running) :effect (increase (v) (* #t (a))) )
   def moving(t)
     v = function('v').to_f
+    1.upto(t) {|i| v += External.function('a', i).to_f}
+    v
+  end
+  
+  def moving_custom(t)
+    v = function('v').to_f
     a = function('a').to_f
     ot = 0
     @state[:event].each {|type, g, value, start|

@@ -18,7 +18,7 @@
     (
       (engine_running)
       (call process increase d displacement ?start ?finish)
-      (call process increase v moving ?start ?finish)
+      (call process increase v moving_custom ?start ?finish)
     )
   )
 
