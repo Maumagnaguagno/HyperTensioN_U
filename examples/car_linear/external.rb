@@ -1,9 +1,10 @@
 require 'forwardable'
 require_relative '../../../HyperTensioN/examples/experiments/Protection'
 require_relative '../../../HyperTensioN/examples/experiments/Function'
+require_relative '../../../HyperTensioN/examples/experiments/Debug'
 
 module Car_linear
-  prepend Protection, Continuous
+  prepend Protection, Continuous, Debug
 
   def problem(state, *args)
     function = state[:function] = {}
@@ -24,7 +25,7 @@ module Car_linear
     1.upto(t) {|i| v += External.function('a', i).to_f}
     v
   end
-  
+
   def moving_custom(t)
     v = function('v').to_f
     a = function('a').to_f
@@ -46,27 +47,12 @@ end
 module External
   extend self, Forwardable
 
-  def_delegators Car_linear, :protect, :unprotect, :function, :assign, :increase, :decrease, :scale_up, :scale_down, :process, :event
+  def_delegators Car_linear, :protect, :unprotect, :function, :process, :event, :print, :print_state, :breakpoint
 
   def step(t, min = 0.0, max = Float::INFINITY, epsilon = 1.0)
     min.to_f.step(max.to_f, epsilon.to_f) {|i|
       t.replace(i.to_s)
       yield
     }
-  end
-
-  def breakpoint
-    STDIN.gets
-    true
-  end
-
-  def print(*argv)
-    puts argv.join(' ')
-    true
-  end
-
-  def print_state
-    puts 'State'.center(20,'-')
-    External.state.each {|k,v| v.each {|i| puts "(#{k} #{i.join(' ')})"}}
   end
 end

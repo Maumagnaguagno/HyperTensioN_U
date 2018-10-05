@@ -3,7 +3,7 @@
 
   (:attachments (step ?t ?min ?max ?step))
 
-  ; Constraint to axiom, protected in start_car effect, unprotected in stop_car effect
+  ; Constraint to axiom, protected since initial state
   ; (:constraint speed_limit :condition (and (>= (v) (* -1.0 (max_speed))) (<= (v) (max_speed))) )
   (:- (speed_limit)
     (and
@@ -56,7 +56,8 @@
 
   (:operator (!!test_destination ?min_destination ?max_destination ?time)
     (
-      ;(call print ?time (call function v ?time) (call function d ?time))
+      ;(call print-state)
+      ;(call breakpoint)
       (engine_stopped)
       (assign ?d (call function d ?time))
       (call >= ?d ?min_destination)
