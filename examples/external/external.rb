@@ -1,10 +1,7 @@
-require 'forwardable'
 require_relative '../../../HyperTensioN/examples/experiments/Debug'
 
 module External
-  extend self, Forwardable
-
-  def_delegators External, :print, :print_state, :breakpoint
+  include Debug
 
   QUEUE = []
 
