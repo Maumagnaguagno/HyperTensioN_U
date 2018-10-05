@@ -1,0 +1,89 @@
+; Based on https://gitlab.com/enricos83/ENHSP-Public/blob/master/ecai2016_benchmarks/car_linear_mt_sc/domain.pddl
+(defdomain car_linear (
+
+  (:attachments (step ?t ?min ?max ?step))
+
+  ; Constraint to axiom, protected in start_car effect, unprotected in stop_car effect
+  ; (:constraint speed_limit :condition (and (>= (v) (* -1.0 (max_speed))) (<= (v) (max_speed))) )
+  (:- (speed_limit)
+    (and
+      (call >= (call function v) (call - 0 (call function max_speed)))
+      (call <= (call function v) (call function max_speed))
+    )
+  )
+
+  (:operator (!start_car ?start ?finish)
+    ((engine_stopped))
+    ((engine_stopped))
+    (
+      (engine_running)
+      (call process increase d displacement ?start ?finish)
+      (call process increase v moving ?start ?finish)
+    )
+  )
+
+  (:operator (!stop_car ?time)
+    (
+      (engine_running)
+      (call > (call function v ?time) -0.1)
+      (call < (call function v ?time)  0.1)
+      (call = (call function a)    0)
+    )
+    ((engine_running))
+    (
+      (engine_stopped)
+      (call event decrease v (call function v ?time) ?time)
+    )
+  )
+
+  (:operator (!accelerate ?time)
+    (
+      (engine_running)
+      (call < (call function a ?time) (call function max_acceleration))
+    )
+    ()
+    ((call event increase a 1 ?time))
+  )
+
+  (:operator (!decelerate ?time)
+    (
+      (engine_running)
+      (call > (call function a ?time) (call function min_acceleration))
+    )
+    ()
+    ((call event decrease a 1 ?time))
+  )
+
+  (:operator (!!test_destination ?min_destination ?max_destination ?time)
+    (
+      ;(call print ?time (call function v ?time) (call function d ?time))
+      (engine_stopped)
+      (assign ?d (call function d ?time))
+      (call >= ?d ?min_destination)
+      (call <= ?d ?max_destination)
+    )
+    ()
+    ()
+  )
+
+  (:method (forward ?min_destination ?max_destination)
+    base
+    ()
+    (
+      (!!test_destination ?min_destination ?max_destination 0)
+    )
+    keep_moving
+    (
+      (step ?deadline 1002 1002)
+    )
+    (
+      (!start_car 0 ?deadline)
+      (!accelerate 1)
+      (!decelerate 2)
+      (!decelerate (call - ?deadline 1))
+      (!accelerate ?deadline)
+      (!stop_car ?deadline)
+      (!!test_destination ?min_destination ?max_destination ?deadline)
+    )
+  )
+))

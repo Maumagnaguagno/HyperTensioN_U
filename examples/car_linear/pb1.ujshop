@@ -1,0 +1,15 @@
+(defproblem car_max_accel_3 car_linear
+  (
+    (engine_stopped)
+    (initial d 0)
+    (initial v 0)
+    (initial a 0)
+    (initial max_acceleration  10)
+    (initial min_acceleration -10)
+    (initial max_speed 10)
+    (protect_axiom speed_limit)
+  )
+  (
+    (forward 999.5 1010.5)
+  )
+)
