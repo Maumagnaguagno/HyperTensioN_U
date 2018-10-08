@@ -8,7 +8,7 @@ module Car_linear
 
   def problem(state, *args)
     function = state[:function] = {}
-    state['initial'].each {|f,v| function[f] = v.to_f}
+    state.delete('function').each {|f,v| function[f] = v.to_f}
     super(state, *args)
   end
 
@@ -47,7 +47,7 @@ end
 module External
   extend self, Forwardable
 
-  def_delegators Car_linear, :protect, :unprotect, :function, :process, :event, :print, :print_state, :breakpoint
+  def_delegators Car_linear, :protect, :unprotect, :function, :process, :event, :print, :print_state, :input
 
   def step(t, min = 0.0, max = Float::INFINITY, epsilon = 1.0)
     min.to_f.step(max.to_f, epsilon.to_f) {|i|
