@@ -1,6 +1,5 @@
 (defproblem car_max_accel_3 car_linear
   (
-    (engine_stopped)
     (function d 0)
     (function v 0)
     (function a 0)

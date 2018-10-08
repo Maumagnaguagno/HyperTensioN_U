@@ -13,8 +13,8 @@
   )
 
   (:operator (!start_car ?start ?finish)
-    ((engine_stopped))
-    ((engine_stopped))
+    ((not (engine_running)))
+    ()
     (
       (engine_running)
       (call process increase d displacement ?start ?finish)
@@ -30,10 +30,7 @@
       (call = (call function a)    0)
     )
     ((engine_running))
-    (
-      (engine_stopped)
-      (call event decrease v (call function v ?time) ?time)
-    )
+    ((call event decrease v (call function v ?time) ?time))
   )
 
   (:operator (!accelerate ?time)
@@ -58,7 +55,6 @@
     (
       ;(call print-state)
       ;(call input)
-      (engine_stopped)
       (assign ?d (call function d ?time))
       (call >= ?d ?min_destination)
       (call <= ?d ?max_destination)
