@@ -57,7 +57,7 @@
   (:operator (!!test_destination ?min_destination ?max_destination ?time)
     (
       ;(call print-state)
-      ;(call breakpoint)
+      ;(call input)
       (engine_stopped)
       (assign ?d (call function d ?time))
       (call >= ?d ?min_destination)
