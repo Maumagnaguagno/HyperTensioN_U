@@ -12,7 +12,7 @@
     )
     ()
     (
-      (protect-axiom minimum-fuel ?g ?finish)
+      (protect-axiom minimum-fuel ?g)
       (call process decrease (fuelLevel ?g) identity ?start ?finish)
     )
   )
@@ -22,7 +22,7 @@
       (minimum-fuel ?g ?finish)
     )
     (
-      (protect-axiom minimum-fuel ?g ?finish)
+      (protect-axiom minimum-fuel ?g)
     )
     (
       (generator-ran)
@@ -38,7 +38,7 @@
     )
     (
       (refueling ?g)
-      (protect-axiom maximum-fuel ?g ?finish)
+      (protect-axiom maximum-fuel ?g)
       (call process increase (fuelLevel ?g) double ?start ?finish)
     )
   )
@@ -49,7 +49,7 @@
     )
     (
       (refueling ?g)
-      (protect-axiom maximum-fuel ?g ?finish)
+      (protect-axiom maximum-fuel ?g)
     )
     ()
   )
