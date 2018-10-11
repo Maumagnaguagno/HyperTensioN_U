@@ -269,10 +269,12 @@ module UHyper_Compiler
     # Rewards
     unless rewards.empty?
       domain_str << "  ##{SPACER}\n  # State valuation\n  ##{SPACER}\n\n  def state_valuation(old_state)\n    value = 0\n"
-      rewards.each {|trigger,pre,value|
+      rewards.each {|trigger,exp,value|
+        exp = expression_to_hyper(exp, axioms)
+        previous = exp.gsub('@','old_')
         case trigger
-        when 'achieve' then domain_str << "    value += #{value} if not #{expression_to_hyper(pre, axioms, 'old_state')} and #{expression_to_hyper(pre, axioms)}\n"
-        when 'maintain' then domain_str << "    value += #{value} if #{expression_to_hyper(pre, axioms, 'old_state')} and #{expression_to_hyper(pre, axioms)}\n"
+        when 'achieve' then domain_str << "    value += #{value} if not #{previous} and #{exp}\n"
+        when 'maintain' then domain_str << "    value += #{value} if #{previous} and #{exp}\n"
         end
       }
       domain_str << "    value\n  end\n\n"
