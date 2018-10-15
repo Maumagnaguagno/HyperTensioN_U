@@ -126,14 +126,14 @@ module UHyper_Compiler
   # Operator to Hyper
   #-----------------------------------------------
 
-  def operator_to_hyper(name, param, precond_expression, effect_add, effect_del, axioms, define_operators)
+  def operator_to_hyper(name, param, precond_expression, effect_add, effect_del, define_operators)
     define_operators << "\n  def #{name}#{"(#{param.join(', ').delete!('?')})" unless param.empty?}"
     if effect_add.empty? and effect_del.empty?
       # Empty or sensing
-      define_operators << (precond_expression.empty? ? "\n    true\n  end\n" : "\n    #{expression_to_hyper(precond_expression, axioms)}\n  end\n")
+      define_operators << (precond_expression.empty? ? "\n    true\n  end\n" : "\n    #{precond_expression}\n  end\n")
     else
       # Effective if preconditions hold
-      define_operators << "\n    return unless #{expression_to_hyper(precond_expression, axioms)}" unless precond_expression.empty?
+      define_operators << "\n    return unless #{precond_expression}" unless precond_expression.empty?
       # Effective
       effect_calls = []
       effect_add.reject! {|pre| effect_calls << call(pre) if pre.first == 'call'}
@@ -156,14 +156,15 @@ module UHyper_Compiler
     # Operators
     define_operators = ''
     operators.each_with_index {|op,i|
-      if op.size == 6
-        domain_str << "\n    '#{op.first}' => #{op[5]}#{',' if operators.size.pred != i or not methods.empty?}"
-        operator_to_hyper(op.first, op[1], op[2], op[3], op[4], axioms, define_operators)
+      opname, param, precond_expression, *effects = op
+      precond_expression = expression_to_hyper(precond_expression, axioms) unless precond_expression.empty?
+      if effects.size == 3
+        operator_to_hyper(opname, param, precond_expression, effects.shift, effects.shift, define_operators)
+        domain_str << "\n    '#{op.first}' => #{effects.shift}#{',' if operators.size.pred != i or not methods.empty?}"
       else
-        domain_str << "\n    '#{op.first}' => {"
-        opname, param, precond_expression, *effects = op
+        domain_str << "\n    '#{opname}' => {"
         until effects.empty?
-          operator_to_hyper(opname = effects.shift, param, precond_expression, effects.shift, effects.shift, axioms, define_operators)
+          operator_to_hyper(opname = effects.shift, param, precond_expression, effects.shift, effects.shift, define_operators)
           domain_str << "\n      '#{opname}' => #{effects.shift}#{',' unless effects.empty?}"
         end
         domain_str << "\n    }#{',' if operators.size.pred != i or not methods.empty?}"
