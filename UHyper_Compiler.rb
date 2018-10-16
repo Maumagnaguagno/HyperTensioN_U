@@ -244,8 +244,8 @@ module UHyper_Compiler
           level = 3
         end
         # Semantic attachments
+        indentation = '  ' * level
         precond_attachments.each {|pre,*terms|
-          indentation = '  ' * level
           terms.each {|t|
             if t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)
               ground_free_variables << t
@@ -253,14 +253,15 @@ module UHyper_Compiler
             end
           }
           define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) {"
+          indentation << '  '
           level += 1
         }
         unless dependent_attachments.empty?
           raise "Call with free variables in #{met.first} #{dec.first}" if level == 2
-          define_methods << "\n#{'  ' * level}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
+          define_methods << "\n#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
         end
         # Subtasks
-        predicates_to_hyper(define_methods, dec[2], '  ' * level, 'yield ')
+        predicates_to_hyper(define_methods, dec[2], indentation, 'yield ')
         level.pred.downto(2) {|l| define_methods << "\n#{'  ' * l}}"}
         define_methods << "\n  end\n"
       }
