@@ -226,11 +226,12 @@ module UHyper_Compiler
             end
           end
         }
+        close_method_str = "\n  end\n"
         if free_variables.empty?
           # Ground predicates, axioms and calls
           precond_pos.concat(precond_not.map {|j| ['not', j]}).concat(ground_axioms_calls)
           define_methods << "\n    return unless " << expression_to_hyper(precond_pos.unshift('and'), axioms) unless precond_pos.empty?
-          level = 2
+          indentation = '    '
         else
           # Ground axioms and calls
           define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
@@ -241,10 +242,10 @@ module UHyper_Compiler
           free_variables.each {|free| define_methods << ', ' << free.delete('?')}
           define_methods << "\n    ) {"
           define_methods << "\n      next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
-          level = 3
+          close_method_str.prepend("\n    }")
+          indentation = '      '
         end
         # Semantic attachments
-        indentation = '  ' * level
         precond_attachments.each {|pre,*terms|
           terms.each {|t|
             if t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)
@@ -253,17 +254,16 @@ module UHyper_Compiler
             end
           }
           define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) {"
+          close_method_str.prepend("\n#{indentation}}")
           indentation << '  '
-          level += 1
         }
         unless dependent_attachments.empty?
-          raise "Call with free variables in #{met.first} #{dec.first}" if level == 2
+          raise "Call with free variables in #{met.first} #{dec.first}" if free_variables.empty? and precond_attachments.empty?
           define_methods << "\n#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
         end
         # Subtasks
         predicates_to_hyper(define_methods, dec[2], indentation, 'yield ')
-        level.pred.downto(2) {|l| define_methods << "\n#{'  ' * l}}"}
-        define_methods << "\n  end\n"
+        define_methods << close_method_str
       }
       domain_str << (methods.size.pred == mi ? '    ]' : '    ],')
     }
