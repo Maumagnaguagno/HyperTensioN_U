@@ -1,9 +1,8 @@
 require 'forwardable'
-require_relative '../../../HyperTensioN/examples/experiments/Protection'
 require_relative '../../../HyperTensioN/examples/experiments/Function'
 
 module Generator
-  prepend Protection, Continuous
+  prepend Continuous
 
   def problem(state, *args)
     state[:function] = {
@@ -25,7 +24,7 @@ end
 module External
   extend self, Forwardable
 
-  def_delegators Generator, :protect, :unprotect, :function, :assign, :increase, :decrease, :scale_up, :scale_down, :process, :event
+  def_delegators Generator, :function, :process
 
   def step(t, min = 0.0, max = Float::INFINITY, epsilon = 1.0)
     min.to_f.step(max.to_f, epsilon.to_f) {|i|
