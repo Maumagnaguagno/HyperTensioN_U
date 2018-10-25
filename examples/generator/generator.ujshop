@@ -1,3 +1,5 @@
+; Based on https://github.com/KCL-Planning/DiNo/blob/master/ex/linear-generator/generator.pddl
+; Linear version of the generator domain first described by Howey and Long in 2003. https://local.cis.strath.ac.uk/research/publications/papers/strath_cis_publication_47.pdf
 (defdomain generator (
 
   (:attachments (step ?t ?min ?max ?step))
