@@ -1,6 +1,6 @@
 (defdomain counter (
 
-  (:operator (!add-one ?current)
+  (:operator (!increment ?current)
     ; Preconditions
     (
       (at ?current)
@@ -15,29 +15,7 @@
     )
   )
 
-  (:method (count ?goal)
-    goal-reached
-    ; Preconditions
-    (
-      (at ?goal)
-    )
-    ; Subtasks
-    nil
-
-    increment
-    ; Preconditions
-    (
-      (at ?current)
-    )
-    ; Subtasks
-    (
-      (!add-one ?current)
-      (count ?goal)
-    )
-  )
-
-
-  (:operator (!add-half ?current)
+  (:operator (!half-increment ?current)
     ; Preconditions
     (
       (at ?current)
@@ -52,7 +30,7 @@
     )
   )
 
-  (:method (count-half ?goal)
+  (:method (count ?goal)
     goal-reached
     ; Preconditions
     (
@@ -61,6 +39,18 @@
     ; Subtasks
     nil
 
+    half-increment
+    ; Preconditions
+    (
+      (at ?current)
+      (call = (call - ?goal ?current) 0.5)
+    )
+    ; Subtasks
+    (
+      (!half-increment ?current)
+      (count ?goal)
+    )
+
     increment
     ; Preconditions
     (
@@ -68,8 +58,8 @@
     )
     ; Subtasks
     (
-      (!add-half ?current)
-      (count-half ?goal)
+      (!increment ?current)
+      (count ?goal)
     )
   )
 ))

@@ -1,10 +1,10 @@
-(defproblem pb1 counter
+(defproblem pb2 counter
   ; Start
   (
     (at 0)
   )
   ; Tasks
   (
-    (count-half 10)
+    (count 9.5)
   )
 )
