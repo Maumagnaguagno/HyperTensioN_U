@@ -1,10 +1,10 @@
-(defproblem pb1 car_linear
+(defproblem pb4 car_linear
   (
     (function d 0)
     (function v 0)
     (function a 0)
-    (function max_acceleration  1)
-    (function min_acceleration -1)
+    (function max_acceleration  4)
+    (function min_acceleration -4)
     (function max_speed 10)
     (protect_axiom speed_limit)
   )
