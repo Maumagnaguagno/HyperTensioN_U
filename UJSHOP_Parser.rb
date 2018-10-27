@@ -64,9 +64,7 @@ module UJSHOP_Parser
     # Preconditions
     define_expression("#{name} precondition", operator[2] = op.shift)
     # Effects
-    if op.size < 2
-      raise "Error with #{name} effect"
-    elsif op.size <= 3
+    if op.size <= 3
       define_effects(name, operator[4] = op.shift)
       define_effects(name, operator[3] = op.shift)
       operator << (op.empty? ? 1 : op.shift.to_f)
