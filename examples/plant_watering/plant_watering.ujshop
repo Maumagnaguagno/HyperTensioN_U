@@ -1,0 +1,101 @@
+; Based on https://gitlab.com/enricos83/ENHSP-Public/blob/master/examples/seq_planning/plant-watering/domain.pddl
+(defdomain plant_watering (
+
+  (:attachments (adjacent ?a ?x ?y ?nx ?ny))
+
+  (:operator (!move ?a ?nx ?ny)
+    ((agent ?a))
+    ()
+    (
+      (call assign (x ?a) ?nx)
+      (call assign (y ?a) ?ny)
+    )
+  )
+
+  (:operator (!load ?a ?t)
+    (
+      (agent ?a) (tap ?t)
+      (call = (call function (x ?a)) (call function (x ?t)))
+      (call = (call function (y ?a)) (call function (y ?t)))
+      (call <= (call + (call function total_loaded) 1) (call function max_int))
+      (call <= (call + (call function carrying) 1) (call function max_int))
+    )
+    ()
+    ((call increase carrying 1) (call increase total_loaded 1))
+  )
+
+  (:operator (!pour ?a ?p)
+    (
+      (agent ?a) (plant ?p)
+      (call = (call function (x ?a)) (call function (x ?p)))
+      (call = (call function (y ?a)) (call function (y ?p)))
+      (call >= (call function carrying) 1)
+      (call <= (call + (call function total_poured) 1) (call function max_int))
+      (call <= (call + (call function poured) 1) (call function max_int))
+    )
+    ()
+    ((call decrease carrying 1) (call increase (poured ?p) 1) (call increase total_poured 1))
+  )
+
+  (:operator (!!visit ?agent ?x ?y)
+    ()
+    ()
+    ((visited ?agent ?x ?y))
+  )
+
+  (:operator (!!unvisit ?agent ?x ?y)
+    ()
+    ((visited ?agent ?x ?y))
+    ()
+  )
+
+  (:method (forward ?a ?x ?y)
+    base
+    (
+      (call = (call function (x ?a)) ?x)
+      (call = (call function (y ?a)) ?y)
+    )
+    ()
+    keep_moving
+    (
+      (assign ?ax (call function (x ?a)))
+      (assign ?ay (call function (y ?a)))
+      (adjacent ?ax ?ay ?nx ?ny)
+      (not (visited ?a ?nx ?ny))
+    )
+    (
+      (!move ?a ?nx ?ny)
+      (!!visit ?a ?ax ?ay)
+      (forward ?a ?x ?y)
+      (!!unvisit ?a ?ax ?ay)
+    )
+  )
+
+  (:method (repeat ?n ?task ?a ?tp)
+    base
+    (call = ?n 0)
+    ()
+    task
+    (call != ?n 0)
+    (
+      (?task ?a ?tp)
+      (repeat (call - ?n 1) ?task ?a ?tp)
+    )
+  )
+
+  (:method (move_to_load_before_move_to_pour ?a ?t ?p ?l)
+    (
+      (agent ?a) (tap ?t) (plant ?p)
+      (assign ?tx (call function (x ?t)))
+      (assign ?ty (call function (y ?t)))
+      (assign ?px (call function (x ?p)))
+      (assign ?py (call function (y ?p)))
+    )
+    (
+      (forward ?a ?tx ?ty)
+      (repeat ?l load ?a ?t)
+      (forward ?a ?px ?py)
+      (repeat ?l pour ?a ?p)
+    )
+  )
+))
