@@ -21,6 +21,7 @@ script:
   - ruby tests/caller.rb
   # Examples
   - ruby Hype.rb examples/axiom/axiom.ujshop examples/axiom/pb1.ujshop run
+  - ruby Hype.rb examples/car_linear/car_linear.ujshop examples/car_linear/pb0.ujshop run 1
   - ruby Hype.rb examples/cookie/cookie.ujshop examples/cookie/pb1.ujshop run
   - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb1.ujshop run
   - ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb2.ujshop run
@@ -29,6 +30,5 @@ script:
   - ruby Hype.rb examples/search_angle/search.ujshop examples/search_angle/pb1.ujshop run
   - ruby Hype.rb examples/search_circular/search.ujshop examples/search_circular/pb1.ujshop run
   - ruby Hype.rb examples/search_circular/search.ujshop examples/search_circular/pb2.ujshop run 1
-  - ruby Hype.rb examples/car_linear/car_linear.ujshop examples/car_linear/pb0.ujshop run 1
   - ruby examples/healthcare/pbhealthcare.ujshop.rb
   - ruby examples/healthcare/pbhealthcare_test_steps.ujshop.rb
