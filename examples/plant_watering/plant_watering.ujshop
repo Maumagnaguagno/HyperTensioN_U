@@ -55,15 +55,15 @@
   )
 
   (:method (repeat ?n ?task ?a ?tp)
-    base
-    (call = ?n 0)
-    ()
     task
     (call != ?n 0)
     (
       (?task ?a ?tp)
       (repeat (call - ?n 1) ?task ?a ?tp)
     )
+    base
+    ()
+    ()
   )
 
   (:method (move_to_load_before_move_to_pour ?a ?t ?p ?l)
