@@ -1,4 +1,4 @@
-(defproblem pb1 plant_watering ; 4_1_1
+(defproblem pb3 plant_watering ; 4_1_3
   (
     (agent agent1)
     (tap tap1)
@@ -12,14 +12,14 @@
     (function total_poured 0)
     (function total_loaded 0)
     (function (poured plant1) 0)
-    (function (x agent1) 1)
-    (function (y agent1) 3)
-    (function (x tap1) 4)
-    (function (y tap1) 4)
+    (function (x agent1) 2)
+    (function (y agent1) 1)
+    (function (x tap1) 3)
+    (function (y tap1) 3)
     (function (x plant1) 2)
     (function (y plant1) 2)
   )
   (
-    (move_to_load_before_move_to_pour agent1 tap1 plant1 4)
+    (move_to_load_before_move_to_pour agent1 tap1 plant1 6)
   )
 )
