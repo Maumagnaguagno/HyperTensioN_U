@@ -1,9 +1,8 @@
 require 'forwardable'
 require_relative '../../../HyperTensioN/examples/experiments/Function'
-require_relative '../../../HyperTensioN/examples/experiments/Debug'
 
 module Plant_watering
-  prepend Function, Debug
+  prepend Function
 
   def problem(state, *args)
     function = state[:function] = {}
@@ -11,25 +10,22 @@ module Plant_watering
     super(state, *args)
   end
 
-  def adjacent(x, y, nx, ny)
-    x = x.to_i
-    y = y.to_i
+  def adjacent(x, y, nx, ny, gx, gy)
+    x = x.to_f
+    y = y.to_f
     f = @state[:function]
-    minx = f['minx']
-    maxx = f['maxx']
-    miny = f['miny']
-    maxy = f['maxy']
-    x.pred.upto(x.succ) {|i|
-      if i.between?(minx,maxx)
-        y.pred.upto(y.succ) {|j|
-          if j.between?(miny,maxy) and i != x || j != y
-            nx.replace(i.to_f.to_s)
-            ny.replace(j.to_f.to_s)
-            yield
-          end
-        }
-      end
-    }
+    raise "position out of bounds" unless x.between?(f['minx'], f['maxx']) and y.between?(f['miny'], f['maxy'])
+    gxf = gx.to_f
+    gyf = gy.to_f
+    if x < gxf then nx.replace((x + 1).to_s)
+    elsif x > gxf then nx.replace((x - 1).to_s)
+    else nx.replace(gx)
+    end
+    if y < gyf then ny.replace((y + 1).to_s)
+    elsif y > gyf then ny.replace((y - 1).to_s)
+    else ny.replace(gy)
+    end
+    yield
   end
 end
 

@@ -1,7 +1,7 @@
 ; Based on https://gitlab.com/enricos83/ENHSP-Public/blob/master/examples/seq_planning/plant-watering/domain.pddl
 (defdomain plant_watering (
 
-  (:attachments (adjacent ?a ?x ?y ?nx ?ny))
+  (:attachments (adjacent ?x ?y ?nx ?ny ?gx ?gy))
 
   (:operator (!move ?a ?nx ?ny)
     ((agent ?a))
@@ -49,24 +49,24 @@
     ()
   )
 
-  (:method (forward ?a ?x ?y)
+  (:method (forward ?a ?gx ?gy)
     base
     (
-      (call = (call function (x ?a)) ?x)
-      (call = (call function (y ?a)) ?y)
+      (call = (call function (x ?a)) ?gx)
+      (call = (call function (y ?a)) ?gy)
     )
     ()
     keep_moving
     (
       (assign ?ax (call function (x ?a)))
       (assign ?ay (call function (y ?a)))
-      (adjacent ?ax ?ay ?nx ?ny)
+      (adjacent ?ax ?ay ?nx ?ny ?gx ?gy)
       (not (visited ?a ?nx ?ny))
     )
     (
       (!move ?a ?nx ?ny)
       (!!visit ?a ?ax ?ay)
-      (forward ?a ?x ?y)
+      (forward ?a ?gx ?gy)
       (!!unvisit ?a ?ax ?ay)
     )
   )
