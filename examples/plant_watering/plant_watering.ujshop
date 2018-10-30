@@ -37,18 +37,6 @@
     ((call decrease carrying 1) (call increase (poured ?p) 1) (call increase total_poured 1))
   )
 
-  (:operator (!!visit ?agent ?x ?y)
-    ()
-    ()
-    ((visited ?agent ?x ?y))
-  )
-
-  (:operator (!!unvisit ?agent ?x ?y)
-    ()
-    ((visited ?agent ?x ?y))
-    ()
-  )
-
   (:method (forward ?a ?gx ?gy)
     base
     (
@@ -58,16 +46,11 @@
     ()
     keep_moving
     (
-      (assign ?ax (call function (x ?a)))
-      (assign ?ay (call function (y ?a)))
-      (adjacent ?ax ?ay ?nx ?ny ?gx ?gy)
-      (not (visited ?a ?nx ?ny))
+      (adjacent (call function (x ?a)) (call function (y ?a)) ?nx ?ny ?gx ?gy)
     )
     (
       (!move ?a ?nx ?ny)
-      (!!visit ?a ?ax ?ay)
       (forward ?a ?gx ?gy)
-      (!!unvisit ?a ?ax ?ay)
     )
   )
 
