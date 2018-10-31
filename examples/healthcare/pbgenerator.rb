@@ -37,7 +37,7 @@ cancers      = 1
 while opt = ARGV.shift
   case opt
   when 'debug' then debug = true
-  when '-jshop' then jshop = ARGV.shift
+  when '-jshop' then jshop = File.expand_path("../#{ARGV.shift}", __FILE__)
   when '-min_prob' then min_prob = ARGV.shift.to_f
   when '-max_plans' then max_plans = ARGV.shift.to_i
   when '-patients' then patients = ARGV.shift.to_i
@@ -152,8 +152,7 @@ if jshop
   # Tasks
   problem_str << "  )\n\n  ;#{SPACER}\n  ; Tasks\n  ;#{SPACER}\n\n  (\n"
   TASKS.each {|task| problem_str << "    (#{task.join(' ')})\n"}
-  problem_str << "  )\n)"
-  IO.write(jshop, problem_str)
+  IO.binwrite(jshop, problem_str << "  )\n)")
 else
   # Start
   STATE = {

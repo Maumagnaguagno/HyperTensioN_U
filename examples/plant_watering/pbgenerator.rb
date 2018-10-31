@@ -56,6 +56,6 @@
   plants.each_with_index {|(x,y,pour),i| problem << "\n    (plant plant#{i})\n    (function (x plant#{i}) #{x})\n    (function (y plant#{i}) #{y})\n    (function (poured plant#{i}) 0)"}
   problem << "\n  )\n  ("
   plants.each_with_index {|(x,y,pour),i| problem << "\n   (move_to_load_before_move_to_pour agent0 tap0 plant#{i} #{pour})"}
-  IO.binwrite("pb#{counter}.ujshop", problem << "\n  )\n)")
+  IO.binwrite(File.expand_path("../pb#{counter}.ujshop", __FILE__), problem << "\n  )\n)")
   counter += 1
 }
