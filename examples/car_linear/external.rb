@@ -5,12 +5,6 @@ require_relative '../../../HyperTensioN/examples/experiments/Debug'
 module Car_linear
   prepend Continuous, Debug
 
-  def problem(state, *args)
-    function = state[:function] = {}
-    state.delete('function').each {|f,v| function[f] = v.to_f}
-    super(state, *args)
-  end
-
   # (:process displacement :precondition (engine_running) :effect (increase (d) (* #t (v))) )
   def displacement(t)
     d = @state[:function]['d']

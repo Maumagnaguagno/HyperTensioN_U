@@ -4,12 +4,6 @@ require_relative '../../../HyperTensioN/examples/experiments/Function'
 module Plant_watering
   prepend Function
 
-  def problem(state, *args)
-    function = state[:function] = {}
-    state.delete('function').each {|f,v| function[f] = v.to_f}
-    super(state, *args)
-  end
-
   def adjacent(x, y, nx, ny, gx, gy)
     x = x.to_f
     y = y.to_f
