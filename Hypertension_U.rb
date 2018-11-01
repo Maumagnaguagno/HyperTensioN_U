@@ -84,7 +84,7 @@ module Hypertension_U
     puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(' ')})" if @debug
     # Minimum probability and applied
     if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and send(*current_task)
-      new_plan = plan.dup << current_task.dup
+      new_plan = plan.dup << current_task.map {|i| i.dup rescue i}
       new_plan[PROBABILITY] = new_prob
       new_plan[VALUATION] += state_valuation(old_state) * probability
       # Keep decomposing the hierarchy
