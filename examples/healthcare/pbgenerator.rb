@@ -199,9 +199,9 @@ else
     'dontknow' => []
   }
   # Select planner
-  if defined?(Hypertension)
-    Healthcare.problem(STATE, TASKS, debug)
-  else
+  if defined?(Hypertension_U)
     Healthcare.problem(STATE, TASKS, debug, max_plans, min_prob)
+  else
+    Healthcare.problem(STATE, TASKS, debug)
   end
 end
