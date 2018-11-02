@@ -2,40 +2,26 @@
 
   (:operator (!increment ?current)
     ; Preconditions
-    (
-      (at ?current)
-    )
+    ((at ?current))
     ; Del effects
-    (
-      (at ?current)
-    )
+    ((at ?current))
     ; Add effects
-    (
-      (at (call + ?current 1))
-    )
+    ((at (call + ?current 1)))
   )
 
   (:operator (!half-increment ?current)
     ; Preconditions
-    (
-      (at ?current)
-    )
+    ((at ?current))
     ; Del effects
-    (
-      (at ?current)
-    )
+    ((at ?current))
     ; Add effects
-    (
-      (at (call + ?current 0.5))
-    )
+    ((at (call + ?current 0.5)))
   )
 
   (:method (count ?goal)
     goal-reached
     ; Preconditions
-    (
-      (at ?goal)
-    )
+    ((at ?goal))
     ; Subtasks
     nil
 
@@ -53,9 +39,7 @@
 
     increment
     ; Preconditions
-    (
-      (at ?current)
-    )
+    ((at ?current))
     ; Subtasks
     (
       (!increment ?current)
