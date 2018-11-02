@@ -24,7 +24,7 @@
     (
       (call print-state)
       (call print consuming ?element)
-      ;(call breakpoint)
+      ;(call input)
     )
     nil
     (
