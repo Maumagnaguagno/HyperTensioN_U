@@ -1,0 +1,83 @@
+(defdomain sokoban (
+
+  (:attachments
+    (adjacent ?from ?to)
+    (pushable ?from ?intermediate ?to)
+  )
+
+  (:operator (!move ?from ?to)
+    (
+      (player ?from)
+      (not (wall ?to))
+      (not (box ?to))
+    )
+    ((player ?from))
+    ((player ?to))
+  )
+
+  (:operator (!push ?from ?intermediate ?to)
+    (
+      (player ?from)
+      (box ?intermediate)
+      (not (wall ?to))
+      (not (box ?to))
+    )
+    (
+      (player ?from)
+      (box ?intermediate)
+    )
+    (
+      (player ?intermediate)
+      (box ?to)
+    )
+  )
+
+  (:operator (!!visit ?pos)
+    ()
+    ()
+    ((visited ?pos))
+  )
+
+  (:operator (!!unvisit ?pos)
+    ()
+    ((visited ?pos))
+    ()
+  )
+
+  (:method (forward ?goal)
+    base
+    ((player ?goal))
+    ()
+    recursion
+    (
+      (player ?from)
+      (adjacent ?from ?intermediate)
+      (not (visited ?intermediate))
+    )
+    (
+      (!move ?from ?intermediate)
+      (!!visit ?from)
+      (forward ?goal)
+      (!!unvisit ?from)
+    )
+  )
+
+  (:method (solve)
+    select_box_to_push
+    (
+      (box ?intermediate)
+      (not (goal ?intermediate)) ; Cannot move box out from goal
+      (pushable ?from ?intermediate ?to)
+      (not (wall ?to))
+      (not (box ?to))
+    )
+    (
+      (forward ?from)
+      (!push ?from ?intermediate ?to)
+      (solve)
+    )
+    no_box_without_goal
+    ((call boxes_stored))
+    ()
+  )
+))
