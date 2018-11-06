@@ -13,13 +13,8 @@
     ; Add effects
     (
       (at ?newpos)
+      (visited ?pos)
     )
-  )
-
-  (:operator (!!visit ?pos)
-    ()
-    ()
-    ((visited ?pos))
   )
 
   (:method (goto)
@@ -42,7 +37,6 @@
     ; Subtasks
     (
       (!jump ?pos ?value (call + ?pos ?value))
-      (!!visit ?pos)
       (goto)
     )
 
@@ -56,7 +50,6 @@
     ; Subtasks
     (
       (!jump ?pos ?value (call - ?pos ?value))
-      (!!visit ?pos)
       (goto)
     )
   )
