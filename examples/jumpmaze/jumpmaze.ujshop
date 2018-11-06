@@ -22,12 +22,6 @@
     ((visited ?pos))
   )
 
-  (:operator (!!unvisit ?pos)
-    ()
-    ((visited ?pos))
-    ()
-  )
-
   (:method (goto)
     zero
     ; Preconditions
@@ -50,7 +44,6 @@
       (!jump ?pos ?value (call + ?pos ?value))
       (!!visit ?pos)
       (goto)
-      (!!unvisit ?pos)
     )
 
     left
@@ -65,7 +58,6 @@
       (!jump ?pos ?value (call - ?pos ?value))
       (!!visit ?pos)
       (goto)
-      (!!unvisit ?pos)
     )
   )
 ))
