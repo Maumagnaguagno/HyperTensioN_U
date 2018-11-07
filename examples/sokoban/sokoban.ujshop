@@ -70,6 +70,7 @@
       (pushable ?from ?intermediate ?to)
       (not (wall ?to))
       (not (box ?to))
+      (call new-state)
     )
     (
       (forward ?from)

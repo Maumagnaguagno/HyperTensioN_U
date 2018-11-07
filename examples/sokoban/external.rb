@@ -1,6 +1,8 @@
 module External
   extend self
 
+  @memory = {}
+
   def adjacent(from, to)
     from =~ /^p(\d+)_(\d+)$/
     x = $1.to_i
@@ -36,5 +38,19 @@ module External
   def boxes_stored
     goal = Sokoban.state['goal']
     Sokoban.state['box'].all? {|p| goal.include?(p)}
+  end
+
+  def new_state
+    hash = 0
+    i = 1
+    Sokoban.state['box'].sort!.each {|b|
+      b.first =~ /^p(\d+_\d+)$/
+      i *= 100
+      hash += $1.to_i * i
+    }
+    Sokoban.state['player'][0][0] =~ /^p(\d+_\d+)$/
+    if @memory.include?(hash += $1.to_i) then false
+    else @memory[hash] = true
+    end
   end
 end
