@@ -13,8 +13,6 @@ require_relative 'UHyper_Compiler'
 module Hype
   extend self
 
-  attr_reader :parser
-
   HELP = "  Usage:
     Hype domain problem [output] [max plans=-1(all)] [min probability=0]\n
   Output:
