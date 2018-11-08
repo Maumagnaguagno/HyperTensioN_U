@@ -1,23 +1,23 @@
 # Levels are stored as strings, see http://www.sokobano.de/wiki/index.php?title=Level_format
 [
-"
+"\
 #####
 #@$.#
 #####",
-"
+"\
 #####
 # $.#
 #@$.#
 # $.#
 #####",
-"
+"\
 ######
 #.# @#
-# #$ #
-#$ . #
+# #  #
+#$ * #
 #   ##
 ######",
-"
+"\
  ######
 ##    #
 #   $ #
@@ -26,7 +26,16 @@
   ##.# @ #
    #.  $ #
    #. ####
-   ####"
+   ####",
+"\
+#######
+#     #
+#     #
+#. #  #
+#. $  #
+#.$   #
+#.#  @#
+#######"
 ].each_with_index {|level,i|
   puts "Level #{i += 1}".center(47,'-'), level
   problem = "(defproblem pb#{i} sokoban\n  ("

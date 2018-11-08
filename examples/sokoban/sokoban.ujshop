@@ -6,22 +6,13 @@
   )
 
   (:operator (!move ?from ?to)
-    (
-      (player ?from)
-      (not (wall ?to))
-      (not (box ?to))
-    )
+    ()
     ((player ?from))
     ((player ?to))
   )
 
   (:operator (!push ?from ?intermediate ?to)
-    (
-      (player ?from)
-      (box ?intermediate)
-      (not (wall ?to))
-      (not (box ?to))
-    )
+    ()
     (
       (player ?from)
       (box ?intermediate)
@@ -44,7 +35,7 @@
     ()
   )
 
-  (:method (forward ?goal)
+  (:method (forward ?from ?goal)
     base
     ((player ?goal))
     ()
@@ -53,32 +44,63 @@
       (player ?from)
       (adjacent ?from ?intermediate)
       (not (visited ?intermediate))
+      (not (wall ?intermediate))
+      (not (box ?intermediate))
     )
     (
       (!move ?from ?intermediate)
       (!!visit ?from)
-      (forward ?goal)
+      (forward ?intermediate ?goal)
       (!!unvisit ?from)
     )
   )
 
-  (:method (solve)
-    select_box_to_push
-    (
-      (box ?intermediate)
-      (not (goal ?intermediate)) ; Cannot move box out from goal
-      (pushable ?from ?intermediate ?to)
-      (not (wall ?to))
-      (not (box ?to))
-      (call new-state)
-    )
-    (
-      (forward ?from)
-      (!push ?from ?intermediate ?to)
-      (solve)
-    )
+  (:method (solve-internal ?current)
     no_box_without_goal
     ((call boxes_stored))
     ()
+    select_box_to_push
+    (
+      (box ?intermediate)
+      (not (goal ?intermediate))
+      (pushable ?from ?intermediate ?to)
+      (not (wall ?from))
+      (not (box ?from))
+      (not (wall ?to))
+      (not (box ?to))
+      (not (deadlock ?to))
+      (call new-state)
+    )
+    (
+      (forward ?current ?from)
+      (!push ?from ?intermediate ?to)
+      (solve-internal ?intermediate)
+    )
+    select_box_to_push2
+    (
+      (box ?intermediate)
+      (goal ?intermediate)
+      (pushable ?from ?intermediate ?to)
+      (not (wall ?from))
+      (not (box ?from))
+      (not (wall ?to))
+      (not (box ?to))
+      (not (deadlock ?to))
+      ;(call new-state)
+    )
+    (
+      (forward ?current ?from)
+      (!push ?from ?intermediate ?to)
+      (solve-internal ?intermediate)
+    )
+  )
+
+  (:method (solve)
+    preprocess
+    (
+      (player ?current)
+      (call find-deadlocks)
+    )
+    ((solve-internal ?current))
   )
 ))
