@@ -27,15 +27,6 @@
    #.  $ #
    #. ####
    ####",
-"\
-#######
-#     #
-#     #
-#. #  #
-#. $  #
-#.$   #
-#.#  @#
-#######"
 ].each_with_index {|level,i|
   puts "Level #{i += 1}".center(47,'-'), level
   problem = "(defproblem pb#{i} sokoban\n  ("
@@ -49,7 +40,6 @@
     when '$' then problem << "\n    (box p#{x}_#{y})"
     when '*' then problem << "\n    (box p#{x}_#{y})\n    (goal p#{x}_#{y})"
     when '.' then problem << "\n    (goal p#{x}_#{y})"
-    #when ' ' then problem << "\n    (free #{x}_#{y})"
     when "\n"
       new_line = true
       x = 0
