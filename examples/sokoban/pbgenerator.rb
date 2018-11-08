@@ -39,7 +39,8 @@
     when '+' then problem << "\n    (player p#{x}_#{y})\n    (goal p#{x}_#{y})"
     when '$' then problem << "\n    (box p#{x}_#{y})"
     when '*' then problem << "\n    (box p#{x}_#{y})\n    (goal p#{x}_#{y})"
-    when '.' then problem << "\n    (goal p#{x}_#{y})"
+    when '.' then problem << "\n    (clear p#{x}_#{y})\n    (goal p#{x}_#{y})"
+    when ' ' then problem << "\n    (clear p#{x}_#{y})"
     when "\n"
       new_line = true
       x = 0

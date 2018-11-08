@@ -7,8 +7,14 @@
 
   (:operator (!move ?from ?to)
     ()
-    ((player ?from))
-    ((player ?to))
+    (
+      (player ?from)
+      (clear ?to)
+    )
+    (
+      (player ?to)
+      (clear ?from)
+    )
   )
 
   (:operator (!push ?from ?intermediate ?to)
@@ -16,91 +22,40 @@
     (
       (player ?from)
       (box ?intermediate)
+      (clear ?to)
     )
     (
       (player ?intermediate)
       (box ?to)
+      (clear ?from)
     )
   )
 
-  (:operator (!!visit ?pos)
-    ()
-    ()
-    ((visited ?pos))
-  )
+  (:operator (!!visit) (call visited) () ())
 
-  (:operator (!!unvisit ?pos)
-    ()
-    ((visited ?pos))
-    ()
-  )
-
-  (:method (forward ?from ?goal)
-    base
-    ((player ?goal))
-    ()
-    recursion
-    (
-      (player ?from)
-      (adjacent ?from ?intermediate)
-      (not (visited ?intermediate))
-      (not (wall ?intermediate))
-      (not (box ?intermediate))
-    )
-    (
-      (!move ?from ?intermediate)
-      (!!visit ?from)
-      (forward ?intermediate ?goal)
-      (!!unvisit ?from)
-    )
-  )
-
-  (:method (solve-internal ?current)
+  (:method (solve)
     no_box_without_goal
     ((call boxes_stored))
     ()
-    select_box_to_push
+    push
     (
-      (box ?intermediate)
-      (not (goal ?intermediate))
-      (pushable ?from ?intermediate ?to)
-      (not (wall ?from))
-      (not (box ?from))
-      (not (wall ?to))
-      (not (box ?to))
-      (not (deadlock ?to))
-      (call new-state)
+      (player ?player)
+      (pushable ?player ?box ?clear)
     )
     (
-      (forward ?current ?from)
-      (!push ?from ?intermediate ?to)
-      (solve-internal ?intermediate)
+      (!push ?player ?box ?clear)
+      (!!visit)
+      (solve)
     )
-    select_box_to_push2
+    move
     (
-      (box ?intermediate)
-      (goal ?intermediate)
-      (pushable ?from ?intermediate ?to)
-      (not (wall ?from))
-      (not (box ?from))
-      (not (wall ?to))
-      (not (box ?to))
-      (not (deadlock ?to))
-      ;(call new-state)
+      (player ?player)
+      (adjacent ?player ?clear)
     )
     (
-      (forward ?current ?from)
-      (!push ?from ?intermediate ?to)
-      (solve-internal ?intermediate)
+      (!move ?player ?clear)
+      (!!visit)
+      (solve)
     )
-  )
-
-  (:method (solve)
-    preprocess
-    (
-      (player ?current)
-      (call find-deadlocks)
-    )
-    ((solve-internal ?current))
   )
 ))
