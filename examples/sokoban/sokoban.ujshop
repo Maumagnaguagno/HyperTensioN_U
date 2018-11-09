@@ -31,31 +31,25 @@
     )
   )
 
-  (:operator (!!visit) (call visited) () ())
+  (:operator (!!visit ?player) (call visited ?player) () ())
 
-  (:method (solve)
+  (:method (solve ?player)
     no_box_without_goal
-    ((call boxes_stored))
+    (call boxes_stored)
     ()
     push
-    (
-      (player ?player)
-      (pushable ?player ?box ?clear)
-    )
+    (pushable ?player ?box ?clear)
     (
       (!push ?player ?box ?clear)
-      (!!visit)
-      (solve)
+      (!!visit ?box)
+      (solve ?box)
     )
     move
-    (
-      (player ?player)
-      (adjacent ?player ?clear)
-    )
+    (adjacent ?player ?clear)
     (
       (!move ?player ?clear)
-      (!!visit)
-      (solve)
+      (!!visit ?clear)
+      (solve ?clear)
     )
   )
 ))

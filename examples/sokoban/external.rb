@@ -38,14 +38,14 @@ module External
     Sokoban.state['box'].all? {|p| goal.include?(p)}
   end
 
-  def visited
+  def visited(player)
     hash = 0
     i = 1
     Sokoban.state['box'].sort!.each {|b|
       b.first =~ /^p(\d+_\d+)$/
       hash += $1.to_i * (i *= 100)
     }
-    Sokoban.state['player'][0][0] =~ /^p(\d+_\d+)$/
+    player =~ /^p(\d+_\d+)$/
     if @visited.include?(hash += $1.to_i) then false
     else @visited[hash] = true
     end
