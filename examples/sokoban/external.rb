@@ -38,6 +38,22 @@ module External
     Sokoban.state['box'].all? {|p| goal.include?(p)}
   end
 
+  def find_deadlocks
+    goal = Sokoban.state['goal']
+    Sokoban.state['deadlock'] = deadlocks = []
+    map = []
+    Sokoban.state['wall'].each {|wall|
+      wall.first =~ /^p(\d+)_(\d+)$/
+      (map[y = $2.to_i] ||= [])[$1.to_i] = true
+    }
+    map.each_with_index {|row,y|
+      row.each_with_index {|cell,x|
+        p = ["p#{x}_#{y}"]
+        deadlocks << p if not goal.include?(p) and not cell and ((map[y-1] and map[y-1][x]) or (map[y+1] and map[y+1][x])) and (map[y][x-1] or map[y][x+1])
+      } if row
+    }
+  end
+
   def visited(player)
     hash = 0
     i = 1
