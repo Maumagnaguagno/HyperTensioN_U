@@ -46,11 +46,12 @@ module External
       wall.first =~ /^p(\d+)_(\d+)$/
       (map[y = $2.to_i] ||= [])[$1.to_i] = true
     }
-    map.each_with_index {|row,y|
+    map[1..-2].each_with_index {|row,y|
+      y += 1
       row.each_with_index {|cell,x|
         p = ["p#{x}_#{y}"]
-        deadlocks << p if not goal.include?(p) and not cell and ((map[y-1] and map[y-1][x]) or (map[y+1] and map[y+1][x])) and (map[y][x-1] or map[y][x+1])
-      } if row
+        deadlocks << p if not cell and not goal.include?(p) and (map[y-1][x] or map[y+1][x]) and (map[y][x-1] or map[y][x+1])
+      }
     }
   end
 
