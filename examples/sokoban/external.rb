@@ -55,7 +55,7 @@ module External
     }
   end
 
-  def visited(player)
+  def new_state(player)
     hash = 0
     i = 1
     Sokoban.state['box'].sort!.each {|b| hash += b.first[/^p(\d+_\d+)$/,1].to_i * (i *= 100)}

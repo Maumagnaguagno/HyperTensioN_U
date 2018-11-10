@@ -31,7 +31,7 @@
     )
   )
 
-  (:operator (!!visit ?player) (call visited ?player) () ())
+  (:operator (!!visit ?player) (call new_state ?player) () ())
 
   (:method (solve2 ?player)
     no_box_without_goal
@@ -58,7 +58,7 @@
 
   (:method (solve ?player)
     preprocess
-    (call find-deadlocks)
+    (call find_deadlocks)
     ((solve2 ?player))
   )
 ))
