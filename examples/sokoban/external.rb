@@ -58,12 +58,8 @@ module External
   def visited(player)
     hash = 0
     i = 1
-    Sokoban.state['box'].sort!.each {|b|
-      b.first =~ /^p(\d+_\d+)$/
-      hash += $1.to_i * (i *= 100)
-    }
-    player =~ /^p(\d+_\d+)$/
-    if @visited.include?(hash += $1.to_i) then false
+    Sokoban.state['box'].sort!.each {|b| hash += b.first[/^p(\d+_\d+)$/,1].to_i * (i *= 100)}
+    if @visited.include?(hash += player[/^p(\d+_\d+)$/,1].to_i) then false
     else @visited[hash] = true
     end
   end
