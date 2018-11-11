@@ -48,9 +48,10 @@ module External
     }
     map[1..-2].each_with_index {|row,y|
       y += 1
-      row.each_with_index {|cell,x|
-        p = ["p#{x}_#{y}"]
-        deadlocks << p if not cell and not goal.include?(p) and (map[y-1][x] or map[y+1][x]) and (map[y][x-1] or map[y][x+1])
+      row[1..-2].each_with_index {|cell,x|
+        if not cell and not goal.include?(p = ["p#{x += 1}_#{y}"]) and (map[y-1][x] or map[y+1][x]) and (map[y][x-1] or map[y][x+1])
+          deadlocks << p
+        end
       }
     }
   end
