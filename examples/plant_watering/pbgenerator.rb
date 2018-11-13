@@ -78,5 +78,4 @@
   problem << "\n  )\n  ("
   plants.each_with_index {|(x,y,pour),i| problem << "\n   (move_to_load_before_move_to_pour plant#{i} #{pour})"}
   IO.binwrite(File.expand_path("../pb#{counter}.ujshop", __FILE__), problem << "\n  )\n)")
-  counter += 1
 }
