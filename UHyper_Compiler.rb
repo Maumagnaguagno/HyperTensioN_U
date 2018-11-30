@@ -130,10 +130,10 @@ module UHyper_Compiler
     define_operators << "\n  def #{name}#{"(#{param.join(', ').delete!('?')})" unless param.empty?}"
     if effect_add.empty? and effect_del.empty?
       # Empty or sensing
-      define_operators << (precond_expression.empty? ? "\n    true\n  end\n" : "\n    #{precond_expression}\n  end\n")
+      define_operators << (precond_expression ? "\n    #{precond_expression}\n  end\n" : "\n    true\n  end\n")
     else
       # Effective if preconditions hold
-      define_operators << "\n    return unless #{precond_expression}" unless precond_expression.empty?
+      define_operators << "\n    return unless #{precond_expression}" if precond_expression
       # Effective
       effect_calls = []
       effect_add.reject! {|pre| effect_calls << call(pre) if pre.first == 'call'}
@@ -157,7 +157,7 @@ module UHyper_Compiler
     define_operators = ''
     operators.each_with_index {|op,i|
       opname, param, precond_expression, *effects = op
-      precond_expression = expression_to_hyper(precond_expression, axioms) unless precond_expression.empty?
+      precond_expression = precond_expression.empty? ? nil : expression_to_hyper(precond_expression, axioms)
       if effects.size == 3
         operator_to_hyper(opname, param, precond_expression, effects.shift, effects.shift, define_operators)
         domain_str << "\n    '#{op.first}' => #{effects.shift}#{',' if operators.size.pred != i or not methods.empty?}"
