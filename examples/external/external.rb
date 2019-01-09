@@ -17,6 +17,10 @@ module External
     QUEUE.size.to_f.to_s
   end
 
+  def shiftl(list)
+    list.shift
+  end
+
   def approx(terms)
     External.state[terms.shift].any? {|terms2|
       terms == terms2 or terms.zip(terms2).all? {|t1,t2|

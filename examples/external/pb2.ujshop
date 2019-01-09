@@ -1,0 +1,9 @@
+(defproblem pb2 external
+  ; Start
+  nil
+  ; Tasks
+  (
+    (consume-list (a b c))
+    (consume-list (a b c))
+  )
+)

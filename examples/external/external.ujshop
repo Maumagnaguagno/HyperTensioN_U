@@ -46,4 +46,20 @@
     nil
     nil
   )
+
+  (:method (consume-list ?l)
+    recursion
+    (
+      (call != ?l ())
+      (assign ?head (call shiftl ?l))
+    )
+    (
+      (!consume ?head)
+      (consume-list ?l)
+    )
+
+    base
+    nil
+    nil
+  )
 ))
