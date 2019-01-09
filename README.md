@@ -44,9 +44,9 @@ External function call and semantic attachments are also available.
 (defdomain domain-name (
 
   ; Reward function
-  (:rewards
-    (achieve  (pre1 a)  10) ; Obtaining (pre1 a) from one state to another adds 10 to valuation
-    (maintain (pre2 b) -10) ; Any integer can be a reward, even negative values
+  (:rewards ; Any numeric can be a reward
+    (achieve  (pre1 a)  10)  ; Obtaining (pre1 a) from one state to another adds 10 to valuation
+    (maintain (pre2 b) -0.5) ; Keeping (pre2 b) from one state to another subtracts 0.5 from valuation
   )
 
   (:operator (!op-name1 ?t1 ?t2)
