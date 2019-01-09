@@ -322,19 +322,19 @@ module UHyper_Compiler
     objects.each {|i|
       if i.instance_of?(String)
         problem_str << "#{i} = '#{i}'\n" if i !~ /^-?\d/
-      else problem_str << "#{i.join('_').tr(from,to)} = #{evaluate(i, true)}\n"
+      else problem_str << "_#{i.join('_').tr(from,to)} = #{evaluate(i, true)}\n"
       end
     }
     problem_str << "\n#{domain_name.capitalize}.problem(\n  # Start\n  {\n"
     # Start
     start_hash.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
-      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o =~ /^-?\d/ ? "'#{o.to_f}'" : o : o.join('_').tr(from,to)}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
+      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o =~ /^-?\d/ ? "'#{o.to_f}'" : o : o.join('_').tr(from,to).prepend('_')}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
       problem_str << (start_hash.size.pred == i ? ']' : "],\n")
     }
     # Tasks
     problem_str << "\n  },\n  # Tasks\n  [" <<
-      tasks.map {|t| "\n    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o.instance_of?(String) ? o =~ /^-?\d/ ? "'#{o.to_f}'" : o : o.join('_').tr(from,to)}.join(', ')}]"}.join(',') <<
+      tasks.map {|t| "\n    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o.instance_of?(String) ? o =~ /^-?\d/ ? "'#{o.to_f}'" : o : o.join('_').tr(from,to).prepend('_')}.join(', ')}]"}.join(',') <<
       "\n  ],\n  # Debug\n  ARGV.first == 'debug',\n  # Maximum plans found\n  ARGV[1] ? ARGV[1].to_i : -1,\n  # Minimum probability for plans\n  ARGV[2] ? ARGV[2].to_f : 0"
     tasks.unshift(ordered) unless tasks.empty?
     problem_str.gsub!(/\b-\b/,'_')
