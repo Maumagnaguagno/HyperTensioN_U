@@ -8,7 +8,7 @@ module Plant_watering
     x = x.to_f
     y = y.to_f
     f = @state[:function]
-    raise "position out of bounds" unless x.between?(f['minx'], f['maxx']) and y.between?(f['miny'], f['maxy'])
+    raise 'Position out of bounds' unless x.between?(f['minx'], f['maxx']) and y.between?(f['miny'], f['maxy'])
     gxf = gx.to_f
     gyf = gy.to_f
     if x < gxf then nx.replace((x + 1).to_s)
