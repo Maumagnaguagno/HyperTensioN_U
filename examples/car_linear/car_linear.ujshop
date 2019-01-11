@@ -71,12 +71,12 @@
     )
     keep_moving
     (
-      (step ?deadline 2)
+      (step ?deadline 1)
     )
     (
       (!start_car 0 ?deadline)
-      (!accelerate 1)
-      (!decelerate 2)
+      (!accelerate 0)
+      (!decelerate 1)
       (!decelerate (call - ?deadline 1))
       (!accelerate ?deadline)
       (!stop_car ?deadline)
