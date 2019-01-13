@@ -110,7 +110,7 @@ module UHyper_Compiler
     when Array
       if term.first == 'call'
         term = call(term)
-        quotes ? evaluate(term, true) : term
+        quotes && term =~ /^-?\d/ ? "'#{term}'" : term
       else "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
       end
     when String

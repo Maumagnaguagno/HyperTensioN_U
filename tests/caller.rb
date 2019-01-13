@@ -215,5 +215,6 @@ class Caller < Test::Unit::TestCase
     call("(External.f1(a, 'b') == a)", ['call', '=', ['call', 'f1', '?a', 'b'], '?a'])
     call("(External.f1(a, 'b').to_f <= 1.0)", ['call', '<=', ['call', 'f1', '?a', 'b'], '1'])
     call("(External.f1(a, 'b').to_f <= External.f2(c).to_f)", ['call', '<=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
+    call("External.f(a.include?('1.0'))", ['call', 'f', ['call', 'member', '1', '?a']])
   end
 end
