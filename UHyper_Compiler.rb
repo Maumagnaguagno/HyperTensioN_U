@@ -215,7 +215,7 @@ module UHyper_Compiler
             end
           else
             pre_flat = pre.last.instance_of?(String) ? [pre.last] : pre.last.flatten
-            call_axiom = pre_flat.first == 'call'|| pre.first == 'assign' || axioms.assoc(pre_flat.first)
+            call_axiom = pre_flat.first == 'call' || pre.first == 'assign' || axioms.assoc(pre_flat.first)
             ground_free_variables << pre[1] if pre.first == 'assign'
             if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
               ground_axioms_calls << pre
