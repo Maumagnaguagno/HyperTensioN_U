@@ -34,7 +34,7 @@
   )
 
   (:method (apply-plan ?agent ?from ?index ?size)
-    index-is-size
+    index-equals-size
     ((call = ?index ?size))
     nil
 
