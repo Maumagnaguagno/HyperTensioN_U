@@ -182,20 +182,24 @@ module UHyper_Compiler
         # Obtain free variables
         # TODO refactor this block to work with complex expressions
         free_variables = []
+        ground_variables = met[1].dup
         precond_attachments = []
         unless (precond_expression = dec[1]).empty?
           precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
           precond_expression.reject! {|pre|
             if attachments.assoc(pre.first)
               precond_attachments << pre
-            elsif pre.first != 'not' and pre.first != 'call' and pre.first != 'assign' and not axioms.assoc(pre.first)
-              free_variables.concat(pre.select {|j| j.instance_of?(String) and j.start_with?('?') and not met[1].include?(j)})
+            elsif pre.first == 'assign'
+              ground_variables << pre[1]
+              false
+            elsif pre.first != 'not' and pre.first != 'call' and not axioms.assoc(pre.first)
+              free_variables.concat(pre.select {|j| j.instance_of?(String) and j.start_with?('?') and not ground_variables.include?(j)})
               false
             end
           }
         end
         free_variables.uniq!
-        ground_free_variables = met[1] + free_variables
+        ground_free_variables = ground_variables + free_variables
         # Filter elements from precondition
         precond_pos = []
         precond_not = []
@@ -206,7 +210,7 @@ module UHyper_Compiler
           if pre.first != 'not' and pre.first != 'assign'
             pre_flat = pre.flatten
             call_axiom = pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
-            if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
+            if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_variables.include?(t)}
               ground_axioms_calls << pre
             elsif pre_flat.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
               dependent_attachments << pre
@@ -217,7 +221,7 @@ module UHyper_Compiler
             pre_flat = pre.last.instance_of?(String) ? [pre.last] : pre.last.flatten
             call_axiom = pre_flat.first == 'call' || pre.first == 'assign' || axioms.assoc(pre_flat.first)
             ground_free_variables << pre[1] if pre.first == 'assign'
-            if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or met[1].include?(t)}
+            if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_variables.include?(t)}
               ground_axioms_calls << pre
             elsif pre_flat.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
               dependent_attachments << pre
