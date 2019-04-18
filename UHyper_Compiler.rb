@@ -207,32 +207,31 @@ module UHyper_Compiler
         ground_axioms_calls = []
         dependent_attachments = []
         precond_expression.each {|pre|
-          if pre.first != 'not' and pre.first != 'assign'
-            pre_flat = pre.flatten
-            call_axiom = pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
-            if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_variables.include?(t)}
-              ground_axioms_calls << pre
-            elsif pre_flat.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
-              dependent_attachments << pre
-            elsif call_axiom then lifted_axioms_calls << pre
-            else precond_pos << pre
-            end
-          else
+          if pre.first == 'assign'
             pre_flat = pre.last.instance_of?(String) ? [pre.last] : pre.last.flatten
-            call_axiom = pre_flat.first == 'call' || pre.first == 'assign' || axioms.assoc(pre_flat.first)
-            if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_variables.include?(t)}
-              ground_axioms_calls << pre
-            elsif pre_flat.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
-              dependent_attachments << pre
-            elsif call_axiom then lifted_axioms_calls << pre
-            else precond_not << pre.last
+            call_axiom = true
+          else
+            if pre.first != 'not'
+              pre_flat = pre.flatten
+              precond = precond_pos
+            else
+              pre_flat = pre.last.instance_of?(String) ? [pre.last] : pre.last.flatten
+              precond = precond_not
             end
+            call_axiom = pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
+          end
+          if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_variables.include?(t)}
+            ground_axioms_calls << pre
+          elsif pre_flat.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
+            dependent_attachments << pre
+          elsif call_axiom then lifted_axioms_calls << pre
+          else precond << pre
           end
         }
         close_method_str = "\n  end\n"
         if free_variables.empty?
           # Ground predicates, axioms and calls
-          precond_pos.concat(precond_not.map! {|j| ['not', j]}).concat(ground_axioms_calls)
+          precond_pos.concat(precond_not).concat(ground_axioms_calls)
           define_methods << "\n    return unless " << expression_to_hyper(precond_pos.unshift('and'), axioms) unless precond_pos.empty?
           indentation = '    '
         else
@@ -241,7 +240,7 @@ module UHyper_Compiler
           # Unify free variables
           free_variables.each {|free| define_methods << "\n    #{free.delete('?')} = ''"}
           predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", precond_pos)
-          predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not)
+          predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not.map! {|j| j.last})
           free_variables.each {|free| define_methods << ', ' << free.delete('?')}
           define_methods << "\n    ) {"
           define_methods << "\n      next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
