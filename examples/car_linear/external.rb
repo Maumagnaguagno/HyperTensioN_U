@@ -8,14 +8,14 @@ module Car_linear
   # (:process displacement :precondition (engine_running) :effect (increase (d) (* #t (v))) )
   def displacement(t)
     d = @state[:function]['d']
-    t.times {|i| d += function('v', i).to_f}
+    t.to_i.times {|i| d += function('v', i).to_f}
     d
   end
 
   # (:process moving :precondition (engine_running) :effect (increase (v) (* #t (a))) )
   def moving(t)
     v = @state[:function]['v']
-    t.times {|i| v += function('a', i).to_f}
+    t.to_i.times {|i| v += function('a', i).to_f}
     v
   end
 
