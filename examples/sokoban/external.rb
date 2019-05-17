@@ -44,7 +44,7 @@ module External
     map = []
     Sokoban.state['wall'].each {|wall|
       wall.first =~ /^p(\d+)_(\d+)$/
-      (map[y = $2.to_i] ||= [])[$1.to_i] = true
+      (map[$2.to_i] ||= [])[$1.to_i] = true
     }
     map[1..-2].each_with_index {|row,y|
       y += 1
