@@ -7,8 +7,9 @@
   ; (:constraint speed_limit :condition (and (>= (v) (* -1.0 (max_speed))) (<= (v) (max_speed))) )
   (:- (speed_limit ?time)
     (and
-      (call >= (call function v ?time) (call - 0 (call function max_speed)))
-      (call <= (call function v ?time) (call function max_speed))
+      (assign ?vt (call function v ?time))
+      (call >= ?vt (call - 0 (call function max_speed)))
+      (call <= ?vt (call function max_speed))
     )
   )
 
