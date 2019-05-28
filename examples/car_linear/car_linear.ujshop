@@ -26,9 +26,10 @@
   (:operator (!stop_car ?time)
     (
       (engine_running)
-      (call > (call function v ?time) -0.1)
-      (call < (call function v ?time)  0.1)
-      (call = (call function a)    0)
+      (assign ?vt (call function v ?time))
+      (call > ?vt -0.1)
+      (call < ?vt  0.1)
+      (call = (call function a ?time) 0)
     )
     ((engine_running))
     ((call event decrease v (call function v ?time) ?time))
