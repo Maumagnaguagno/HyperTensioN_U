@@ -9,11 +9,11 @@
     ; Del effects
     (
       (at ?pos)
+      (tile ?pos ?value)
     )
     ; Add effects
     (
       (at ?newpos)
-      (visited ?pos)
     )
   )
 
@@ -32,7 +32,6 @@
     (
       (at ?pos)
       (tile ?pos ?value)
-      (not (visited ?pos))
     )
     ; Subtasks
     (
@@ -45,7 +44,6 @@
     (
       (at ?pos)
       (tile ?pos ?value)
-      (not (visited ?pos))
     )
     ; Subtasks
     (
