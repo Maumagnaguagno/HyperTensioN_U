@@ -1,6 +1,5 @@
 require 'forwardable'
 require_relative '../../../HyperTensioN/examples/experiments/Function'
-require_relative '../../../HyperTensioN/examples/experiments/Debug'
 
 module Car_linear
   prepend Continuous
