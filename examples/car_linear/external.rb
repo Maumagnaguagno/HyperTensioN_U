@@ -6,18 +6,17 @@ module Car_linear
 
   # (:process displacement :precondition (engine_running) :effect (increase (d) (* #t (v))) )
   def displacement(t)
-    @state[:function]['d'] + function_interval('v', 0, t.to_i - 1, false)
+    function_interval('v', 0, t.to_i - 1, false)
   end
 
   # (:process moving :precondition (engine_running) :effect (increase (v) (* #t (a))) )
   def moving(t)
-    @state[:function]['v'] + function_interval('a', 0, t.to_i - 1, false)
+    function_interval('a', 0, t.to_i - 1, false)
   end
 
   def moving_custom(t)
-    v = @state[:function]['v']
-    a = @state[:function][f = 'a']
-    ot = 0
+    f = 'a'
+    v = a = ot = 0
     @state[:event].each {|type,g,value,start|
       if f == g and start <= t
         v += a * (start - ot)
