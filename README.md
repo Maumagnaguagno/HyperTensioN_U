@@ -143,7 +143,7 @@ Meta calls are possible through ``send`` to use variables as function names, ``(
 ## Assignments
 The result of an expensive call may be necessary across several terms.
 Instead of repeating the entire call, one can create a new variable and assign the value of such call.
-Assignments are expected to be in preconditions.
+Assignments are limited to preconditions.
 
 ```Lisp
 (assign ?newvar (call - ?var 5))
@@ -162,8 +162,10 @@ A semantic attachment signature must be explicitly defined as such and can be us
 ```
 
 A semantic attachment implementation is part of ``external.rb``, like external calls, but implemented to ``yield`` unifications instead of ``return`` values.
-Since all variables are Strings the user must replace the free variables, empty Strings, before yielding without parameters.
-The same semantic attchment can be used to match different permutations of which variables are ground or free.
+Free variables are used as terms and expected to be assigned by the semantic attachment to possible values before resuming control back to the HTN, or return in case of failure.
+Since all variables are Strings the semantic attachment implementation must replace the empty Strings, free variables, with actual values before yielding.
+The same semantic attachment can be repeatedly used to unify different free variables.
+Ground variables are not expected to be replaced, in case all variables are ground the semantic attachment yields if the current values satisfy.
 An example of semantic attachments is available at [examples/search_circular](examples/search_circular).
 
 ```Ruby
