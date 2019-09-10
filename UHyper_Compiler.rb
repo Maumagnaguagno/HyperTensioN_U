@@ -187,12 +187,13 @@ module UHyper_Compiler
         unless (precond_expression = dec[1]).empty?
           precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
           precond_expression.reject! {|pre|
+            pre = pre.last unless pre.first != 'not'
             if attachments.assoc(pre.first)
               precond_attachments << pre
             elsif pre.first == 'assign'
               ground_variables << pre[1]
               false
-            elsif pre.first != 'not' and pre.first != 'call' and not axioms.assoc(pre.first)
+            elsif pre.first != 'call' and not axioms.assoc(pre.first)
               free_variables.concat(pre.select {|j| j.instance_of?(String) and j.start_with?('?') and not ground_variables.include?(j)})
               false
             end
@@ -207,19 +208,14 @@ module UHyper_Compiler
         ground_axioms_calls = []
         dependent_attachments = []
         precond_expression.each {|pre|
-          if pre.first == 'assign'
-            pre_flat = pre.last.instance_of?(String) ? [pre.last] : pre.last.flatten
-            call_axiom = true
+          if pre.first != 'not'
+            pre_flat = pre.flatten
+            precond = precond_pos
           else
-            if pre.first != 'not'
-              pre_flat = pre.flatten
-              precond = precond_pos
-            else
-              pre_flat = pre.last.instance_of?(String) ? [pre.last] : pre.last.flatten
-              precond = precond_not
-            end
-            call_axiom = pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
+            pre_flat = pre.last.instance_of?(String) ? [pre.last] : pre.last.flatten
+            precond = precond_not
           end
+          call_axiom = pre.first == 'assign' || pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
           if call_axiom and pre_flat.all? {|t| t.instance_of?(String) and not t.start_with?('?') or ground_variables.include?(t)}
             ground_axioms_calls << pre
           elsif pre_flat.any? {|t| t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)}
