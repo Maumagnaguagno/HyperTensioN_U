@@ -193,7 +193,7 @@ module UHyper_Compiler
             elsif pre.first == 'assign'
               ground_variables << pre[1]
               false
-            elsif pre.first != 'call' and not axioms.assoc(pre.first)
+            elsif positive and pre.first != 'call' and not axioms.assoc(pre.first)
               free_variables.concat(pre.select {|j| j.instance_of?(String) and j.start_with?('?') and not ground_variables.include?(j)})
               false
             end
