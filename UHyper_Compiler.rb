@@ -187,9 +187,9 @@ module UHyper_Compiler
         unless (precond_expression = dec[1]).empty?
           precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
           precond_expression.reject! {|pre|
-            pre = pre.last unless pre.first != 'not'
+            pre = pre.last unless positive = pre.first != 'not'
             if attachments.assoc(pre.first)
-              precond_attachments << pre
+              precond_attachments << pre.unshift(positive)
             elsif pre.first == 'assign'
               ground_variables << pre[1]
               false
@@ -244,16 +244,20 @@ module UHyper_Compiler
           indentation = '      '
         end
         # Semantic attachments
-        precond_attachments.each {|pre,*terms|
+        precond_attachments.each {|positive,pre,*terms|
           terms.each {|t|
             if t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)
               ground_free_variables << t
               define_methods << "\n#{indentation}#{t.delete('?')} = ''"
             end
           }
-          define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) {"
-          close_method_str.prepend("\n#{indentation}}")
-          indentation << '  '
+          if positive
+            define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) {"
+            close_method_str.prepend("\n#{indentation}}")
+            indentation << '  '
+          else
+            define_methods << "\n#{indentation}next if External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) { break true }"
+          end
         }
         unless dependent_attachments.empty?
           raise "Call with free variables in #{met.first} #{dec.first}" if free_variables.empty? and precond_attachments.empty?
