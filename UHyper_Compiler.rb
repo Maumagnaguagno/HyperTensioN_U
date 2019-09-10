@@ -212,7 +212,7 @@ module UHyper_Compiler
             pre_flat = pre.flatten
             precond = precond_pos
           else
-            pre_flat = pre.last.instance_of?(String) ? [pre.last] : pre.last.flatten
+            pre_flat = pre.last.flatten
             precond = precond_not
           end
           call_axiom = pre_flat.first == 'assign' || pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
