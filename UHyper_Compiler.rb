@@ -25,7 +25,9 @@ module UHyper_Compiler
       if precond_expression.size == 2 then expression_to_hyper(precond_expression[1], axioms)
       else '(' << precond_expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
       end
-    when 'not' then 'not ' << expression_to_hyper(precond_expression[1], axioms)
+    when 'not'
+      term = expression_to_hyper(precond_expression[1], axioms)
+      term.sub!(/^not\s/,'') or 'not ' << term
     when 'call' then call(precond_expression)
     when 'assign' then '(' << precond_expression[1].delete('?') << ' = ' << evaluate(precond_expression[2], true) << ')'
     else
@@ -289,8 +291,11 @@ module UHyper_Compiler
       axioms.each {|name,param,*expressions|
         domain_str << "  def #{name}#{"(#{param.join(', ').delete!('?')})" unless param.empty?}\n"
         expressions.each_slice(2) {|label,exp|
-          exp = expression_to_hyper(exp, axioms)
-          domain_str << (exp == 'false' ? "    # #{label} is always false\n" : "    # #{label}\n    return true if #{exp}\n")
+          domain_str << case exp = expression_to_hyper(exp, axioms)
+          when 'false' then "    # #{label} is always false\n"
+          when 'not false' then "    # #{label}\n    return true\n"
+          else "    # #{label}\n    return true if #{exp}\n"
+          end
         }
         domain_str << "  end\n\n"
       }

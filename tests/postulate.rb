@@ -87,14 +87,14 @@ module Axiom
 
   def empty_axiom(parameter0)
     # negate_empty_list
-    return true if not false
+    return true
   end
 
   def at_axiom(parameter0)
     # numeric_constant
     return true if ((parameter0.to_f == 0.0) and @state['at'].include?(['0.0']))
     # double_negation
-    return true if not not @state['at'].include?([parameter0])
+    return true if @state['at'].include?([parameter0])
   end
 
   #-----------------------------------------------
