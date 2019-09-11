@@ -150,7 +150,7 @@ Assignments are limited to preconditions.
 ```
 
 ## Semantic Attachments
-Some predicates are too complex for the user to describe with just addition and deletions from the state, like ``(visible ?agent ?object)`` after ``?agent`` is moved.
+Some predicates are too complex for the user to describe with addition and deletion effects from the state, like ``(visible ?agent ?object)`` after ``?agent`` is moved.
 These predicates either require external structures or libraries to be fast and easy to maintain.
 Instead of using calls in unusual ways to discover all the objects that are visible for a certain agent, we can exploit off-the-shelf libraries and delegate this unification to an external procedure.
 Such external methods are semantic attachments, a term coined by [Weyhrauch (1980)](http://www.sciencedirect.com/science/article/pii/0004370280900156 "Prolegomena to a theory of mechanized formal reasoning") to describe the attachment of an interpretation to a predicate symbol using an external procedure.
@@ -161,9 +161,9 @@ A semantic attachment signature must be explicitly defined as such and can be us
 (:attachments (visible ?agent ?object))
 ```
 
-A semantic attachment implementation is part of ``external.rb``, like external calls, but implemented to ``yield`` unifications instead of ``return`` values.
-Free variables are used as terms and expected to be assigned by the semantic attachment to possible values before resuming control back to the HTN, or return in case of failure.
-Since all variables are Strings the semantic attachment implementation must replace the empty Strings, free variables, with actual values before yielding.
+Semantic attachment are defined in ``external.rb``, like external calls, but implemented to ``yield`` unifications instead of ``return`` values.
+Free variables are used as terms and expected to be assigned by the semantic attachment to possible values before resuming control back to the HTN, or return in case of failure to unify more values.
+Since all variables are Strings the semantic attachment implementation must replace all empty Strings, free variables, with actual values before yielding.
 The same semantic attachment can be repeatedly used to unify different free variables.
 Ground variables are not expected to be replaced, in case all variables are ground the semantic attachment yields if the current values satisfy.
 An example of semantic attachments is available at [examples/search_circular](examples/search_circular).
