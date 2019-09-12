@@ -24,6 +24,7 @@ script:
   - ruby tests/biscuit.rb
   - ruby tests/postulate.rb
   - ruby tests/path.rb
+  - ruby examples/plant_watering/pbgenerator.rb && ruby tests/gardening.rb
   - ruby tests/caller.rb
   # Examples
   - ruby Hype.rb examples/axiom/axiom.ujshop examples/axiom/pb1.ujshop run
