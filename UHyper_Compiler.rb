@@ -258,7 +258,7 @@ module UHyper_Compiler
             close_method_str.prepend("\n#{indentation}}")
             indentation << '  '
           else
-            define_methods << "\n#{indentation}next if External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) { break true }"
+            define_methods << "\n#{indentation}next if External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) {break true}"
           end
         }
         unless dependent_attachments.empty?
