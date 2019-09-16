@@ -25,9 +25,7 @@ module UHyper_Compiler
       if precond_expression.size == 2 then expression_to_hyper(precond_expression[1], axioms)
       else '(' << precond_expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
       end
-    when 'not'
-      term = expression_to_hyper(precond_expression[1], axioms)
-      term.sub!(/^not\s/,'') or 'not ' << term
+    when 'not' then (term = expression_to_hyper(precond_expression[1], axioms)).sub!(/^not\s/,'') or 'not ' << term
     when 'call' then call(precond_expression)
     when 'assign' then '(' << precond_expression[1].delete('?') << ' = ' << evaluate(precond_expression[2], true) << ')'
     else
