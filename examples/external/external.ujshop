@@ -1,13 +1,8 @@
 (defdomain external (
 
   (:operator (!near ?pred)
-    ; Preconditions
-    (
-      (call approx ?pred)
-    )
-    ; Del effects
+    (call approx ?pred)
     nil
-    ; Add effects
     nil
   )
 
@@ -34,9 +29,7 @@
 
   (:method (consume-all)
     recursion
-    (
-      (call > (call size) 0)
-    )
+    (call > (call size) 0)
     (
       (!consume (call shift))
       (consume-all)
