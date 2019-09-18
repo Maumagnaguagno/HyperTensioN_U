@@ -259,7 +259,7 @@ module UHyper_Compiler
           end
         }
         unless dependent_attachments.empty?
-          raise "Call with free variables in #{met.first} #{dec.first}" if free_variables.empty? and precond_attachments.empty?
+          raise "Call with free variable in #{met.first} #{dec.first}" if dependent_attachments.flatten.any? {|t| t.start_with?('?') and not ground_free_variables.include?(t)}
           define_methods << "\n#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
         end
         # Subtasks
