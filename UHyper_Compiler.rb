@@ -243,18 +243,19 @@ module UHyper_Compiler
         end
         # Semantic attachments
         precond_attachments.each {|positive,pre,*terms|
-          terms.each {|t|
+          terms.map! {|t|
             if t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)
               ground_free_variables << t
               define_methods << "\n#{indentation}#{t.delete('?')} = ''"
             end
+            evaluate(t, true)
           }
           if positive
-            define_methods << "\n#{indentation}External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) {"
+            define_methods << "\n#{indentation}External.#{pre}(#{terms.join(', ')}) {"
             close_method_str.prepend("\n#{indentation}}")
             indentation << '  '
           else
-            define_methods << "\n#{indentation}next if External.#{pre}(#{terms.map! {|t| evaluate(t, true)}.join(', ')}) {break true}"
+            define_methods << "\n#{indentation}next if External.#{pre}(#{terms.join(', ')}) {break true}"
           end
         }
         unless dependent_attachments.empty?
