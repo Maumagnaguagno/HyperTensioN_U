@@ -155,16 +155,16 @@ module UHyper_Compiler
     domain_str = "require_relative 'external' if File.exist?(File.expand_path('../external.rb', __FILE__))\n\nmodule #{domain_name.capitalize}\n  include Hypertension_U\n  extend self\n\n  ##{SPACER}\n  # Domain\n  ##{SPACER}\n\n  @domain = {\n    # Operators"
     # Operators
     define_operators = ''
-    operators.each_with_index {|(opname,param,precond_expression,*effects),i|
+    operators.each_with_index {|(name,param,precond_expression,*effects),i|
       precond_expression = precond_expression.empty? ? nil : expression_to_hyper(precond_expression, axioms)
       if effects.size == 3
-        operator_to_hyper(opname, param, precond_expression, effects.shift, effects.shift, define_operators)
-        domain_str << "\n    '#{opname}' => #{effects.shift}#{',' if operators.size.pred != i or not methods.empty?}"
+        operator_to_hyper(name, param, precond_expression, effects.shift, effects.shift, define_operators)
+        domain_str << "\n    '#{name}' => #{effects.shift}#{',' if operators.size.pred != i or not methods.empty?}"
       else
-        domain_str << "\n    '#{opname}' => {"
+        domain_str << "\n    '#{name}' => {"
         until effects.empty?
-          operator_to_hyper(opname = effects.shift, param, precond_expression, effects.shift, effects.shift, define_operators)
-          domain_str << "\n      '#{opname}' => #{effects.shift}#{',' unless effects.empty?}"
+          operator_to_hyper(name = effects.shift, param, precond_expression, effects.shift, effects.shift, define_operators)
+          domain_str << "\n      '#{name}' => #{effects.shift}#{',' unless effects.empty?}"
         end
         domain_str << "\n    }#{',' if operators.size.pred != i or not methods.empty?}"
       end
@@ -172,16 +172,16 @@ module UHyper_Compiler
     # Methods
     define_methods = ''
     domain_str << "\n    # Methods"
-    methods.each_with_index {|met,mi|
-      domain_str << "\n    '#{met.first}' => [\n"
-      variables = met[1].empty? ? nil : "(#{met[1].join(', ').delete!('?')})"
-      met.drop(2).each_with_index {|dec,i|
-        domain_str << "      '#{met.first}_#{dec.first}'#{',' if met.size - 3 != i}\n"
-        define_methods << "\n  def #{met.first}_#{dec.first}#{variables}"
+    methods.each_with_index {|(name,param,*decompositions),mi|
+      domain_str << "\n    '#{name}' => [\n"
+      variables = param.empty? ? nil : "(#{param.join(', ').delete!('?')})"
+      decompositions.each_with_index {|dec,i|
+        domain_str << "      '#{name}_#{dec.first}'#{',' if decompositions.size - 1 != i}\n"
+        define_methods << "\n  def #{name}_#{dec.first}#{variables}"
         # Obtain free variables
         # TODO refactor this block to work with complex expressions
         free_variables = []
-        ground_variables = met[1].dup
+        ground_variables = param.dup
         precond_attachments = []
         unless (precond_expression = dec[1]).empty?
           precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
@@ -258,7 +258,7 @@ module UHyper_Compiler
           end
         }
         unless dependent_attachments.empty?
-          raise "Call with free variable in #{met.first} #{dec.first}" if dependent_attachments.flatten.any? {|t| t.start_with?('?') and not ground_free_variables.include?(t)}
+          raise "Call with free variable in #{name} #{dec.first}" if dependent_attachments.flatten.any? {|t| t.start_with?('?') and not ground_free_variables.include?(t)}
           define_methods << "\n#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
         end
         # Subtasks
