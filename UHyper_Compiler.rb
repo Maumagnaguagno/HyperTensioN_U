@@ -159,14 +159,14 @@ module UHyper_Compiler
       precond_expression = precond_expression.empty? ? nil : expression_to_hyper(precond_expression, axioms)
       if effects.size == 3
         operator_to_hyper(name, param, precond_expression, effects.shift, effects.shift, define_operators)
-        domain_str << "\n    '#{name}' => #{effects.shift}#{',' if operators.size.pred != i or not methods.empty?}"
+        domain_str << "\n    '#{name}' => #{effects.shift}#{',' unless operators.size.pred == i and methods.empty?}"
       else
         domain_str << "\n    '#{name}' => {"
         until effects.empty?
           operator_to_hyper(name = effects.shift, param, precond_expression, effects.shift, effects.shift, define_operators)
           domain_str << "\n      '#{name}' => #{effects.shift}#{',' unless effects.empty?}"
         end
-        domain_str << "\n    }#{',' if operators.size.pred != i or not methods.empty?}"
+        domain_str << "\n    }#{',' unless operators.size.pred == i and methods.empty?}"
       end
     }
     # Methods
