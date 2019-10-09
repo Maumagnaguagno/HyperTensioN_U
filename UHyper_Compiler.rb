@@ -162,8 +162,8 @@ module UHyper_Compiler
         domain_str << "\n    '#{name}' => #{effects.shift}#{',' unless operators.size.pred == i and methods.empty?}"
       else
         domain_str << "\n    '#{name}' => {"
-        until effects.empty?
-          operator_to_hyper(name = effects.shift, param, precond_expression, effects.shift, effects.shift, define_operators)
+        while name = effects.shift
+          operator_to_hyper(name, param, precond_expression, effects.shift, effects.shift, define_operators)
           domain_str << "\n      '#{name}' => #{effects.shift}#{',' unless effects.empty?}"
         end
         domain_str << "\n    }#{',' unless operators.size.pred == i and methods.empty?}"
