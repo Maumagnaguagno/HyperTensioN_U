@@ -8,11 +8,11 @@ module External
   def adjacent(x1, y1, x2, y2, gx, gy, width, height)
     x1 = x1.to_i
     y1 = y1.to_i
-    gx = gx.to_i
-    gy = gy.to_i
-    width = width.to_i
-    height = height.to_i
     if x2.empty?
+      gx = gx.to_i
+      gy = gy.to_i
+      width = width.to_i
+      height = height.to_i
       list = [
         [x1 - 1, y1 - 1], [x1, y1 - 1], [x1 + 1 , y1 - 1],
         [x1 - 1, y1],                   [x1 + 1, y1],
