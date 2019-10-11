@@ -215,9 +215,9 @@ module UHyper_Compiler
             precond = precond_not
           end
           call_axiom = pre_flat.first == 'assign' || pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
-          local_free_variables = pre_flat.select {|t| t.start_with?('?') and not ground_variables.include?(t)}
-          if call_axiom and local_free_variables.empty? then ground_axioms_calls << pre
-          elsif not local_free_variables.all? {|t| free_variables.include?(t)} then dependent_attachments << pre
+          pre_flat.select! {|t| t.start_with?('?') and not ground_variables.include?(t)}
+          if call_axiom and pre_flat.empty? then ground_axioms_calls << pre
+          elsif not pre_flat.all? {|t| free_variables.include?(t)} then dependent_attachments << pre
           elsif call_axiom then lifted_axioms_calls << pre
           else precond << pre
           end
