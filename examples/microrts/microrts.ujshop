@@ -1,0 +1,85 @@
+(defdomain microrts (
+
+  (:attachments
+    (adjacent ?x1 ?y1 ?x2 ?y2 ?gx ?gy ?width ?height)
+    (in_range ?x ?y ?ax ?ay ?tx ?ty ?range ?width ?height)
+  )
+
+  (:operator (!move ?unit ?x ?y ?nx ?ny)
+    ((at ?unit ?x ?y))
+    ((at ?unit ?x ?y))
+    ((at ?unit ?nx ?ny))
+  )
+
+  (:operator (!attack ?attacker ?ax ?ay ?target ?tx ?ty ?health ?damage)
+    (
+      (at ?attacker ?ax ?ay)
+      (at ?target ?tx ?ty)
+      (health ?target ?health)
+      (damage ?attacker ?damage)
+    )
+    ((health ?target ?health))
+    ((health ?target (call - ?health ?damage)))
+  )
+
+  (:operator (!!visit ?unit ?x ?y)
+    nil
+    nil
+    ((visited ?unit ?x ?y))
+  )
+
+  (:operator (!!unvisit ?unit ?x ?y)
+    nil
+    ((visited ?unit ?x ?y))
+    nil
+  )
+
+  (:method (go-attack ?attacker ?target)
+    in-range
+    (
+      (range ?attacker ?range)
+      (at ?attacker ?ax ?ay)
+      (at ?target ?tx ?ty)
+      (call <= (call hypot_diff ?ax ?ay ?tx ?ty) ?range)
+      ; Same as (call <= (call ^ (call + (call ^ (call - ?ax ?tx) 2) (call ^ (call - ?ay ?ty) 2)) 0.5) ?range)
+    )
+    (
+      (!attack ?attacker ?ax ?ay ?target ?tx ?ty ?health ?damage)
+    )
+
+    not-in-range
+    (
+      (grid ?width ?height)
+      (at ?attacker ?ax ?ay)
+      (at ?target ?tx ?ty)
+      (range ?attacker ?range)
+      (damage ?attacker ?damage)
+      (health ?target ?health)
+      (in_range ?x ?y ?ax ?ay ?tx ?ty ?range ?width ?height)
+      (not (occupied ?x ?y))
+    )
+    (
+      (forward ?attacker ?x ?y ?width ?height)
+      (!attack ?attacker ?x ?y ?target ?tx ?ty ?health ?damage)
+    )
+  )
+
+  (:method (forward ?unit ?gx ?gy ?width ?height)
+    base
+    ((at ?unit ?gx ?gy))
+    nil
+
+    recursion
+    (
+      (at ?unit ?x ?y)
+      (adjacent ?x ?y ?nx ?ny ?gx ?gy ?width ?height)
+      (not (visited ?unit ?nx ?ny))
+    )
+    (
+      (!move ?unit ?x ?y ?nx ?ny)
+      (!!visit ?unit ?x ?y)
+      (forward ?unit ?gx ?gy ?width ?height)
+      (!!unvisit ?unit ?x ?y)
+    )
+  )
+))
