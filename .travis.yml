@@ -35,6 +35,7 @@ script:
   - ruby Hype.rb examples/external/external.ujshop examples/external/pb1.ujshop run
   - ruby Hype.rb examples/external/external.ujshop examples/external/pb2.ujshop run
   - ruby Hype.rb examples/jumpmaze/jumpmaze.ujshop examples/jumpmaze/pb1.ujshop run
+  - ruby Hype.rb examples/microrts/microrts.ujshop examples/microrts/pb1.ujshop run 1
   - ruby Hype.rb examples/search_angle/search.ujshop examples/search_angle/pb1.ujshop run
   - ruby Hype.rb examples/search_circular/search.ujshop examples/search_circular/pb1.ujshop run
   - ruby Hype.rb examples/search_circular/search.ujshop examples/search_circular/pb2.ujshop run 1
