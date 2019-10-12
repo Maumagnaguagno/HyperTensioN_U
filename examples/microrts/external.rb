@@ -13,13 +13,11 @@ module External
       gy = gy.to_i
       width = width.to_i
       height = height.to_i
-      list = [
+      [
         [x1 - 1, y1 - 1], [x1, y1 - 1], [x1 + 1 , y1 - 1],
         [x1 - 1, y1],                   [x1 + 1, y1],
         [x1 - 1, y1 + 1], [x1, y1 + 1], [x1 + 1, y1 + 1],
-      ]
-      list.select! {|i,j| 0 <= i and i < width and 0 <= j and j < height}
-      list.sort_by! {|i,j| Math.hypot(i - gx, j - gy)}.each {|i,j|
+      ].keep_if {|i,j| 0 <= i and i < width and 0 <= j and j < height}.sort_by! {|i,j| Math.hypot(i - gx, j - gy)}.each {|i,j|
         x2.replace(i.to_f.to_s)
         y2.replace(j.to_f.to_s)
         yield
