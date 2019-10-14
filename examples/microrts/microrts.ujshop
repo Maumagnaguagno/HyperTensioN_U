@@ -34,6 +34,12 @@
     nil
   )
 
+  (:operator  (!!remove ?target ?tx ?ty)
+    nil
+    ((unit ?target ?tx ?ty) (occupied ?tx ?ty))
+    nil
+  )
+
   (:method (forward ?unit ?gx ?gy ?width ?height)
     base
     ((at ?unit ?gx ?gy))
@@ -56,7 +62,9 @@
   (:method (destroy ?attacker ?ax ?ay ?target ?tx ?ty ?health ?damage)
     base
     ((call <= ?health 0))
-    nil
+    (
+      (!!remove ?target ?tx ?ty)
+    )
 
     recursion
     ((call > ?health 0))
