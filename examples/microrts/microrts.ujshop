@@ -6,20 +6,38 @@
   )
 
   (:operator (!move ?unit ?x ?y ?nx ?ny)
-    ((at ?unit ?x ?y) (not (occupied ?nx ?ny)))
-    ((at ?unit ?x ?y) (occupied ?x ?y))
-    ((at ?unit ?nx ?ny) (occupied ?nx ?ny))
+    ((unit ?unit ?x ?y) (not (occupied ?nx ?ny)))
+    ((unit ?unit ?x ?y) (occupied ?x ?y))
+    ((unit ?unit ?nx ?ny) (occupied ?nx ?ny))
   )
 
   (:operator (!attack ?attacker ?ax ?ay ?target ?tx ?ty ?health ?damage)
     (
-      (at ?attacker ?ax ?ay)
-      (at ?target ?tx ?ty)
+      (unit ?attacker ?ax ?ay)
+      (unit ?target ?tx ?ty)
       (health ?target ?health)
       (damage ?attacker ?damage)
     )
     ((health ?target ?health))
     ((health ?target (call - ?health ?damage)))
+  )
+
+  (:operator (!harvest ?unit ?x ?y ?resource ?rx ?ry)
+    ((unit ?unit ?x ?y) (source ?resource ?rx ?ry))
+    ()
+    ((carrying ?unit ?resource))
+  )
+
+  (:operator (!return ?unit ?x ?y ?base ?bx ?by ?resource)
+    ((unit ?unit ?x ?y) (base ?base ?bx ?by))
+    ((carrying ?unit ?resource))
+    ((loaded ?base))
+  )
+
+  (:operator (!produce ?base ?x ?y ?unit ?ux ?uy)
+    ((base ?base ?x ?y) (not (occupied ?ux ?uy)))
+    ((loaded ?base))
+    ((unit ?unit ?ux ?uy) (occupied ?ux ?uy))
   )
 
   (:operator (!!visit ?unit ?x ?y)
@@ -42,12 +60,12 @@
 
   (:method (forward ?unit ?gx ?gy ?width ?height)
     base
-    ((at ?unit ?gx ?gy))
+    ((unit ?unit ?gx ?gy))
     nil
 
     recursion
     (
-      (at ?unit ?x ?y)
+      (unit ?unit ?x ?y)
       (adjacent ?x ?y ?nx ?ny ?gx ?gy ?width ?height)
       (not (visited ?unit ?nx ?ny))
     )
@@ -78,8 +96,8 @@
     in-range
     (
       (range ?attacker ?range)
-      (at ?attacker ?ax ?ay)
-      (at ?target ?tx ?ty)
+      (unit ?attacker ?ax ?ay)
+      (unit ?target ?tx ?ty)
       (damage ?attacker ?damage)
       (health ?target ?health)
       (call <= (call hypot_diff ?ax ?ay ?tx ?ty) ?range)
@@ -92,8 +110,8 @@
     not-in-range
     (
       (grid ?width ?height)
-      (at ?attacker ?ax ?ay)
-      (at ?target ?tx ?ty)
+      (unit ?attacker ?ax ?ay)
+      (unit ?target ?tx ?ty)
       (range ?attacker ?range)
       (damage ?attacker ?damage)
       (health ?target ?health)
@@ -103,6 +121,27 @@
     (
       (forward ?attacker ?x ?y ?width ?height)
       (destroy ?attacker ?x ?y ?target ?tx ?ty ?health ?damage)
+    )
+  )
+
+  (:method (build ?new)
+    (
+      (grid ?width ?height)
+      (unit ?unit ?x ?y)
+      (source ?resource ?rx ?ry)
+      (adjacent ?rx ?ry ?arx ?ary ?x ?y ?width ?height)
+      (base ?base ?bx ?by)
+      (adjacent ?bx ?by ?abx ?aby ?arx ?ary ?width ?height)
+      (adjacent ?bx ?by ?nx ?ny ?bx ?by ?width ?height)
+      (call != ?abx ?nx)
+      (call != ?aby ?ny)
+    )
+    (
+      (forward ?unit ?arx ?ary ?width ?height)
+      (!harvest ?unit ?arx ?arx ?resource ?rx ?ry)
+      (forward ?unit ?abx ?aby ?width ?height)
+      (!return ?unit ?abx ?aby ?base ?bx ?by ?resource)
+      (!produce ?base ?bx ?by ?new ?nx ?ny)
     )
   )
 ))

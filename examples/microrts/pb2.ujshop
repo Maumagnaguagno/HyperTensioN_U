@@ -1,0 +1,13 @@
+(defproblem pb2 microrts
+  ; Start
+  (
+    (grid 8 8)
+    (unit red 6 5) (occupied 6 5)
+    (source cristal 0 0) (occupied 0 0)
+    (base decimal 7 7) (occupied 7 7)
+  )
+  ; Tasks
+  (
+    (build blue)
+  )
+)
