@@ -47,7 +47,7 @@ while opt = ARGV.shift
   when '-registrars' then registrars = ARGV.shift.to_i
   when '-hospitals' then hospitals = ARGV.shift.to_i
   when '-cancers' then cancers = ARGV.shift.to_i
-  else raise "Unknown option: #{opt}"
+  else Kernel.abort("Unknown option: #{opt}")
   end
 end
 
