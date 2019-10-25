@@ -1,0 +1,148 @@
+(defdomain turtlebot (
+
+  (:attachments (step ?t ?min ?max ?step))
+
+  ; Constraint to axiom, protected since initial state
+  ; (:constraint speed_limit :condition (and (>= (v) (* -1.0 (max_speed))) (<= (v) (max_speed))) )
+  (:- (speed_limit ?robot ?time)
+    (and
+      (assign ?vt (call function (vx ?robot) ?time))
+      (assign ?max (call function (max_vel_x ?robot)))
+      (call >= ?vt (call - 0 ?max))
+      (call <= ?vt ?max)
+    )
+  )
+
+  (:operator (!increment_velocity_x ?robot ?time)
+    ()
+    ()
+    (
+      (call event_process_effect)
+      (call event increase (vx ?robot) 1 ?time)
+    )
+  )
+
+  (:operator (!decrement_velocity_x ?robot ?time)
+    ()
+    ()
+    (
+      (call event_process_effect)
+      (call event decrease (vx ?robot) 1 ?time)
+    )
+  )
+
+  (:operator (!turn_clockwise ?robot ?angle ?time)
+    ()
+    ()
+    (
+      (call event_process_effect)
+      (call event assign (a ?robot) ?angle ?time)
+    )
+  )
+
+  (:operator (!turn_counter_clockwise ?robot ?angle ?time)
+    ()
+    ()
+    (
+      (call event_process_effect)
+      (call event assign (a ?robot) ?angle ?time)
+    )
+  )
+
+  (:operator (!!visit ?robot ?x ?y)
+    ()
+    ()
+    ((visited ?robot ?x ?y))
+  )
+
+  (:operator (!!unvisit ?robot ?x ?y)
+    ()
+    ((visited ?robot ?x ?y))
+    ()
+  )
+
+  (:operator (!!start_movement ?robot ?start ?finish)
+    ()
+    ()
+    (
+      (call event_process_effect)
+      (call process increase (x ?robot) displacement_x ?start ?finish)
+      (call process increase (y ?robot) displacement_y ?start ?finish)
+    )
+  )
+
+  (:operator (!!test_destination ?robot ?x ?y ?vx ?va ?time)
+    (
+      ; TODO vx, va
+      (assign ?rx (call function (x ?robot) ?time))
+      (assign ?ry (call function (y ?robot) ?time))
+      (call <= (call distance ?x ?y ?rx ?ry) 1)
+    )
+    ()
+    ()
+  )
+
+  (:method (turn ?robot ?start ?finish ?time)
+    same
+    (call = (call radians_to_degree_difference ?start ?finish) 0)
+    ()
+
+    right
+    (call > (call radians_to_degree_difference ?start ?finish) 180)
+    ((!turn_clockwise ?robot ?finish ?time))
+
+    left
+    (
+      (assign ?diff (call radians_to_degree_difference ?start ?finish))
+      (call != ?diff 0)
+      (call <= ?diff 180)
+    )
+    ((!turn_counter_clockwise ?robot ?finish ?time))
+  )
+
+  (:method (goto ?robot ?x ?y ?angle ?vx ?va ?time)
+    base
+    (
+      (assign ?rx (call function (x ?robot) ?time))
+      (assign ?ry (call function (y ?robot) ?time))
+      (assign ?goal_angle (call atan ?rx ?ry ?x ?y))
+    )
+    (
+      (!!test_destination ?robot ?x ?y ?vx ?va ?time)
+      (turn ?robot ?goal_angle ?angle ?time)
+    )
+
+    last-move
+    (
+      (assign ?rx (call function (x ?robot) ?time))
+      (assign ?ry (call function (y ?robot) ?time))
+      (call visible ?rx ?ry ?x ?y)
+      (assign ?current_angle (call function (a ?robot) ?time))
+      (assign ?goal_angle (call atan ?rx ?ry ?x ?y))
+      (step ?deadline (call + ?time 1))
+    )
+    (
+      (turn ?robot ?current_angle ?goal_angle ?time)
+      (!!start_movement ?robot ?time ?deadline)
+      (!increment_velocity_x ?robot ?time)
+      (!decrement_velocity_x ?robot ?deadline)
+      (!!test_destination ?robot ?x ?y ?vx ?va ?deadline)
+      (turn ?robot ?goal_angle ?angle ?deadline)
+    )
+
+    ; TODO add (step ?deadline) support
+    ;recursion
+    ;(
+    ;  (closest ?circle ?to ?out_circle ?in_dir ?out_dir ?goal)
+    ;  (assign ?rx (call function (x ?robot) ?time))
+    ;  (assign ?ry (call function (y ?robot) ?time))
+    ;  (not (visited ?robot ?rx ?ry))
+    ;)
+    ;(
+    ;  (!move ?from ?to) ; TODO turn, increment, decrement
+    ;  (!!visit ?robot ?rx ?ry)
+    ;  (loop ?to ?out_circle ?out_dir ?goal)
+    ;  (!!unvisit ?robot ?rx ?ry)
+    ;)
+  )
+))

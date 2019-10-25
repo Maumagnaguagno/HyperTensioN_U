@@ -1,0 +1,82 @@
+(defproblem turtle_problem turtlebot
+  (
+    ; All [x,y] coordinates are in grid units
+    ; All orientation/angle coordinates are in degrees
+    (function minx 0) (function maxx 48)
+    (function miny 0) (function maxy 60)
+
+    ; Obstacles parameters
+    ; [cx, cy] = obstacle center
+    ; [rcx, rcy] = collision radius x and y (robot must keep away to avoid collision)
+    ; [rex, rey] = energy radius x and y (robot must avoid to keep from turning sensors on)
+    ;(function (cx  o1)  0.5)
+    ;(function (cy  o1) 28.5)
+    ;(function (rcx o1)  4.0)
+    ;(function (rcy o1) 31.5)
+    ;(function (rex o1)  7.0)
+    ;(function (rey o1) 34.5)
+
+    ;(function (cx  o2) 46.5)
+    ;(function (cy  o2) 28.5)
+    ;(function (rcx o2)  4.0)
+    ;(function (rcy o2) 31.5)
+    ;(function (rex o2)  7.0)
+    ;(function (rey o2) 34.5)
+
+    ;(function (cx  o3) 24.0)
+    ;(function (cy  o3)  0.5)
+    ;(function (rcx o3) 26.0)
+    ;(function (rcy o3)  4.0)
+    ;(function (rex o3) 30.0)
+    ;(function (rey o3)  7.0)
+
+    ;(function (cx  o4) 24.0)
+    ;(function (cy  o4) 58.5)
+    ;(function (rcx o4) 26.0)
+    ;(function (rcy o4)  4.0)
+    ;(function (rex o4) 30.0)
+    ;(function (rey o4)  7.0)
+
+    ;(function (cx  o5) 24.5)
+    ;(function (cy  o5) 53.0)
+    ;(function (rcx o5)  8.0)
+    ;(function (rcy o5)  8.5)
+    ;(function (rex o5) 14.0)
+    ;(function (rey o5) 14.5)
+
+    ;(function (cx  o6) 24.5)
+    ;(function (cy  o6) 20.5)
+    ;(function (rcx o6)  7.0)
+    ;(function (rcy o6)  7.0)
+    ;(function (rex o6) 12.0)
+    ;(function (rey o6) 12.0)
+
+    ;(function (cx  o7) 40.5)
+    ;(function (cy  o7)  5.5)
+    ;(function (rcx o7)  7.0)
+    ;(function (rcy o7)  7.0)
+    ;(function (rex o7) 12.0)
+    ;(function (rey o7) 12.0)
+
+    ; Robot parameters
+    ; [x,y,a] = robot pose, [x,y] position and a orientation
+    ; [vx,ax] = robot linear frontal velocity (variable) and acceleration (constant)
+    ; [va] = robot angular velocity (constant)
+    ; [max_vel_x, max_vel_a] = robot velocity limits
+    (function (x turtle) 10)
+    (function (y turtle) 10)
+    (function (a turtle) 0)
+    (function (vx turtle) 1)
+    (function (ax turtle) 1)
+    (function (va turtle) 90)
+    (function (max_vel_x turtle) 3)
+    (function (max_vel_a turtle) 90)
+    (protect_axiom speed_limit turtle)
+  )
+  (
+    ; (goto robot x y a vx va)
+    ;(goto turtle 10 10 0 0 0 0) ; Do nothing
+    ;(goto turtle 11 11 0 0 0 0) ; Easy
+    (goto turtle 37 46 0 0 0 0) ; Hard
+  )
+)
