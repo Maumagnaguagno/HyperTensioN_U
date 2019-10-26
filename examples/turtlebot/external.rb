@@ -54,9 +54,17 @@ end
 module External
   extend self, Forwardable
 
-  CIRCLES = []
   RAD2DEG = 180 / Math::PI
   PI2 = Math::PI * 2
+  CIRCLES = [
+    Circle.new( 0.5, 28.5, 3.5),
+    Circle.new(46.5, 28.5, 3.5),
+    Circle.new(24.0,  0.5, 3.0),
+    Circle.new(24.0, 58.5, 3.0),
+    Circle.new(24.5, 53.0, 8.5),
+    Circle.new(24.5, 20.5, 3.0),
+    Circle.new(40.5,  5.5, 7.0)
+  ]
 
   def_delegators Turtlebot, :function, :process, :event, :event_process_effect
 
