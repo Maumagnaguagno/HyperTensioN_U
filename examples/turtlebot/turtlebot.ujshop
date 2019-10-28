@@ -183,7 +183,7 @@
     (
       (!move ?robot ?from ?to)
       (!!visit ?robot ?from discrete)
-      (loop ?robot ?to ?out_circle ?out_dir ?goal ?time)
+      (loop ?robot ?to ?out_circle ?out_dir ?goal ?x ?y ?angle ?vx ?va ?time)
       (!!unvisit ?robot ?from discrete)
       ;
       ;;(turn ?robot ?current_angle ?goal_angle ?time)

@@ -54,6 +54,8 @@ end
 module External
   extend self, Forwardable
 
+  CLOCK = 'clock'
+  COUNTER = 'counter'
   RAD2DEG = 180 / Math::PI
   PI2 = Math::PI * 2
   CIRCLES = [
@@ -74,6 +76,17 @@ module External
   def symbol(object)
     symbol = @symbol_object.key(object) or @symbol_object[symbol = "pos#{@pos_counter += 1}"] = object
     symbol
+  end
+
+  def closest(circle, to, out_circle, in_dir, out_dir, goal)
+    g = @symbol_object[goal]
+    circles_sort = CIRCLES.sort_by {|c| center_distance(c, g)}
+    each_bitangent(@symbol_object[circle], in_dir == CLOCK, circles_sort) {|c,l,d|
+      out_circle.replace(symbol(c))
+      to.replace(symbol(l.to))
+      out_dir.replace(d ? CLOCK : COUNTER)
+      yield
+    }
   end
 
   def visible(point, circle, goal)
@@ -116,8 +129,6 @@ if $0 == __FILE__
   class Spin < Test::Unit::TestCase
 
     SAME = nil
-    CLOCK = true
-    COUNTER = false
 
     def turn(start, finish)
       diff = (finish - start) % 360
