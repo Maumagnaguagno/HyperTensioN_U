@@ -1,6 +1,9 @@
 (defdomain turtlebot (
 
-  (:attachments (step ?t ?min ?max ?step))
+  (:attachments
+    (step ?t ?min ?max ?step)
+    (closest ?circle ?to ?out_circle ?in_dir ?out_dir ?goal)
+  )
 
   ; Constraint to axiom, protected since initial state
   ; (:constraint speed_limit :condition (and (>= (v) (* -1.0 (max_speed))) (<= (v) (max_speed))) )
@@ -47,6 +50,18 @@
       (call event_process_effect)
       (call event assign (a ?robot) ?angle ?time)
     )
+  )
+
+  (:operator (!!set ?robot ?pos)
+    ()
+    ()
+    ((at ?robot ?pos))
+  )
+
+  (:operator (!move ?agent ?from ?to)
+    ()
+    ((at ?agent ?from))
+    ((at ?agent ?to))
   )
 
   (:operator (!!visit ?robot ?x ?y)
@@ -106,9 +121,9 @@
       (assign ?rx (call function (x ?robot) ?time))
       (assign ?ry (call function (y ?robot) ?time))
       (assign ?goal_angle (call atan ?rx ?ry ?x ?y))
+      (call <= (call distance ?x ?y ?rx ?ry) 1)
     )
     (
-      (!!test_destination ?robot ?x ?y ?vx ?va ?time)
       (turn ?robot ?goal_angle ?angle ?time)
     )
 
@@ -116,7 +131,33 @@
     (
       (assign ?rx (call function (x ?robot) ?time))
       (assign ?ry (call function (y ?robot) ?time))
-      (call visible ?rx ?ry ?x ?y)
+      (call > (call distance ?x ?y ?rx ?ry) 1)
+      (assign ?goal_angle (call atan ?rx ?ry ?x ?y))
+      (assign ?start (call position ?rx ?ry))
+      (assign ?goal (call position ?x ?y))
+    )
+    (
+      (!!set ?robot ?start)
+      (forward-attachments ?robot ?goal ?x ?y ?angle ?vx ?va ?time)
+    )
+  )
+
+  (:method (forward-attachments ?robot ?goal ?x ?y ?angle ?vx ?va ?time)
+    clockwise
+    ((at ?robot ?start))
+    ((loop ?robot ?start ?start clock ?goal ?x ?y ?angle ?vx ?va ?time))
+    
+    counter-clockwise
+    ((at ?robot ?start))
+    ((loop ?robot ?start ?start counter ?goal ?x ?y ?angle ?vx ?va ?time))
+  )
+
+  (:method (loop ?robot ?from ?circle ?in_dir ?goal ?x ?y ?angle ?vx ?va ?time)
+    base
+    (
+      (assign ?rx (call function (x ?robot) ?time))
+      (assign ?ry (call function (y ?robot) ?time))
+      (call visible ?from ?circle ?goal) ;(call visible ?rx ?ry ?x ?y)
       (assign ?current_angle (call function (a ?robot) ?time))
       (assign ?goal_angle (call atan ?rx ?ry ?x ?y))
       (step ?deadline (call + ?time 1))
@@ -130,19 +171,28 @@
       (turn ?robot ?goal_angle ?angle ?deadline)
     )
 
-    ; TODO add (step ?deadline) support
-    ;recursion
-    ;(
-    ;  (closest ?circle ?to ?out_circle ?in_dir ?out_dir ?goal)
-    ;  (assign ?rx (call function (x ?robot) ?time))
-    ;  (assign ?ry (call function (y ?robot) ?time))
-    ;  (not (visited ?robot ?rx ?ry))
-    ;)
-    ;(
-    ;  (!move ?from ?to) ; TODO turn, increment, decrement
-    ;  (!!visit ?robot ?rx ?ry)
-    ;  (loop ?to ?out_circle ?out_dir ?goal)
-    ;  (!!unvisit ?robot ?rx ?ry)
-    ;)
+    recursion
+    (
+      (closest ?circle ?to ?out_circle ?in_dir ?out_dir ?goal)
+      (not (visited ?robot ?to))
+      ;;(step ?deadline (call + ?time 1))
+      ;;(assign ?rx (call function (x ?robot) ?deadline))
+      ;;(assign ?ry (call function (y ?robot) ?deadline))
+      ;;(not (visited ?robot ?to discrete))
+    )
+    (
+      (!move ?robot ?from ?to)
+      (!!visit ?robot ?from discrete)
+      (loop ?robot ?to ?out_circle ?out_dir ?goal ?time)
+      (!!unvisit ?robot ?from discrete)
+      ;
+      ;;(turn ?robot ?current_angle ?goal_angle ?time)
+      ;;(!!start_movement ?robot ?time ?deadline)
+      ;;(!increment_velocity_x ?robot ?time)
+      ;;(!decrement_velocity_x ?robot ?deadline)
+      ;;(!!visit ?robot ?rx ?ry)
+      ;;(loop ?to ?out_circle ?out_dir ?goal)
+      ;;(!!unvisit ?robot ?rx ?ry)
+    )
   )
 ))

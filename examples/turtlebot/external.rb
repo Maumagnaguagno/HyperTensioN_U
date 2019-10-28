@@ -68,6 +68,23 @@ module External
 
   def_delegators Turtlebot, :function, :process, :event, :event_process_effect
 
+  @symbol_object = {}
+  @pos_counter = 0
+
+  def symbol(object)
+    symbol = @symbol_object.key(object) or @symbol_object[symbol = "pos#{@pos_counter += 1}"] = object
+    symbol
+  end
+
+  def visible(point, circle, goal)
+    g = @symbol_object[goal]
+    visible?(Line.new(@symbol_object[point], g), CIRCLES, @symbol_object[circle], g)
+  end
+
+  def position(x, y)
+    symbol(Circle.new(x.to_f, y.to_f, 0))
+  end
+
   def radians_to_degree_difference(start, finish)
     (finish.to_f - start.to_f) * RAD2DEG % 360
   end
@@ -81,12 +98,6 @@ module External
 
   def distance(x, y, dx, dy)
     Math.hypot(x.to_f - dx.to_f, y.to_f - dy.to_f).to_s
-  end
-
-  def visible(x, y, gx, gy)
-    r = Point.new(x.to_f, y.to_f)
-    g = Point.new(gx.to_f, gy.to_f)
-    visible?(Line.new(r, g), CIRCLES, r, g)
   end
 
   # https://stackoverflow.com/questions/21483999/using-atan2-to-find-angle-between-two-vectors
