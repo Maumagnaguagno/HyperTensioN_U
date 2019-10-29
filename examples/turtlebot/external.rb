@@ -118,6 +118,14 @@ module External
     angle = Math.atan2(y2.to_f - y1.to_f, x2.to_f - x1.to_f)
     (angle < 0 ? angle + PI2 : angle).to_s
   end
+
+  def x(position)
+    @symbol_object[position].x.to_f.to_s
+  end
+
+  def y(position)
+    @symbol_object[position].y.to_f.to_s
+  end
 end
 
 #-----------------------------------------------
