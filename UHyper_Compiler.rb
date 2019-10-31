@@ -190,7 +190,7 @@ module UHyper_Compiler
             if attachments.assoc(pre.first)
               precond_attachments << pre.unshift(positive)
             elsif pre.first == 'assign'
-              ground_variables << pre[1]
+              ground_variables << pre[1] if pre[2].flatten.all? {|i| not i.start_with?('?') or ground_variables.include?(i)}
               false
             elsif positive and pre.first != 'call' and not axioms.assoc(pre.first)
               free_variables.concat(pre.select {|j| j.instance_of?(String) and j.start_with?('?') and not ground_variables.include?(j)})
@@ -214,10 +214,12 @@ module UHyper_Compiler
             pre_flat = pre.last.flatten
             precond = precond_not
           end
-          call_axiom = pre_flat.first == 'assign' || pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
+          call_axiom = (assign = pre_flat.first == 'assign') || pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
           pre_flat.select! {|t| t.start_with?('?') and not ground_variables.include?(t)}
           if call_axiom and pre_flat.empty? then ground_axioms_calls << pre
-          elsif not pre_flat.all? {|t| free_variables.include?(t)} then dependent_attachments << pre
+          elsif not pre_flat.all? {|t| free_variables.include?(t)}
+            dependent_attachments << pre
+            ground_free_variables << pre_flat.first if assign
           elsif call_axiom then lifted_axioms_calls << pre
           else precond << pre
           end
