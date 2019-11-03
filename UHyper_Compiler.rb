@@ -190,7 +190,7 @@ module UHyper_Compiler
             if attachments.assoc(pre.first)
               precond_attachments << pre.unshift(positive)
             elsif pre.first == 'assign'
-              ground_variables << pre[1] if pre[2].flatten.all? {|i| not i.start_with?('?') or ground_variables.include?(i)}
+              ground_variables << pre[1] if pre[2].flatten.all? {|j| not j.start_with?('?') or ground_variables.include?(j)}
               false
             elsif positive and pre.first != 'call' and not axioms.assoc(pre.first)
               free_variables.concat(pre.select {|j| j.instance_of?(String) and j.start_with?('?') and not ground_variables.include?(j)})
