@@ -80,9 +80,8 @@
     )
   )
 
-  (:operator (!!test_destination ?robot ?x ?y ?vx ?va ?time)
+  (:operator (!!test_destination ?robot ?x ?y ?time)
     (
-      ; TODO vx, va
       (assign ?rx (call function (x ?robot) ?time))
       (assign ?ry (call function (y ?robot) ?time))
       (call <= (call distance ?x ?y ?rx ?ry) 1)
@@ -151,7 +150,7 @@
     (
       (assign ?rx (call function (x ?robot) ?time))
       (assign ?ry (call function (y ?robot) ?time))
-      (call visible ?from ?circle ?goal) ;(call visible ?rx ?ry ?x ?y)
+      (call visible ?from ?circle ?goal)
       (assign ?current_angle (call function (a ?robot) ?time))
       (assign ?goal_angle (call atan ?rx ?ry ?x ?y))
       (step ?deadline (call + ?time 1))
@@ -161,7 +160,7 @@
       (!!start_movement ?robot ?time ?deadline)
       (!increment_velocity_x ?robot ?time)
       (!decrement_velocity_x ?robot ?deadline)
-      (!!test_destination ?robot ?x ?y ?vx ?va ?deadline)
+      (!!test_destination ?robot ?x ?y ?deadline)
       (turn ?robot ?goal_angle ?angle ?deadline)
     )
 
