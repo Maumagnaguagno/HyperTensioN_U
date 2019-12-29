@@ -38,11 +38,11 @@
     when '#' then problem << "\n    (wall p#{x}_#{y})"
     when '@' then player = "p#{x}_#{y}"
     when '+'
-      problem << "\n    (goal p#{x}_#{y})"
+      problem << "\n    (storage p#{x}_#{y})"
       player = "p#{x}_#{y}"
     when '$' then problem << "\n    (box p#{x}_#{y})"
-    when '*' then problem << "\n    (box p#{x}_#{y})\n    (goal p#{x}_#{y})"
-    when '.' then problem << "\n    (clear p#{x}_#{y})\n    (goal p#{x}_#{y})"
+    when '*' then problem << "\n    (box p#{x}_#{y})\n    (storage p#{x}_#{y})"
+    when '.' then problem << "\n    (clear p#{x}_#{y})\n    (storage p#{x}_#{y})"
     when ' ' then problem << "\n    (clear p#{x}_#{y})"
     when "\n"
       new_line = true

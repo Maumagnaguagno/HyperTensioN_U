@@ -34,12 +34,12 @@ module External
   end
 
   def boxes_stored
-    goal = Sokoban.state['goal']
-    Sokoban.state['box'].all? {|p| goal.include?(p)}
+    storage = Sokoban.state['storage']
+    Sokoban.state['box'].all? {|p| storage.include?(p)}
   end
 
   def find_deadlocks
-    goal = Sokoban.state['goal']
+    storage = Sokoban.state['storage']
     Sokoban.state['deadlock'] = deadlocks = []
     map = []
     Sokoban.state['wall'].each {|wall|
@@ -49,7 +49,7 @@ module External
     map[1..-2].each_with_index {|row,y|
       y += 1
       row[1..-2].each_with_index {|cell,x|
-        if not cell and not goal.include?(p = ["p#{x += 1}_#{y}"]) and (map[y-1][x] or map[y+1][x]) and (map[y][x-1] or map[y][x+1])
+        if not cell and not storage.include?(p = ["p#{x += 1}_#{y}"]) and (map[y-1][x] or map[y+1][x]) and (map[y][x-1] or map[y][x+1])
           deadlocks << p
         end
       }
