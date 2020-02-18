@@ -1,5 +1,5 @@
 tanks = ''
-1.upto(19) {|i|
+1.upto(20) {|i|
   tanks << "\n    (tank tank#{i})  (available tank#{i})"
   IO.binwrite(File.expand_path("../pb#{i}.ujshop", __FILE__), "(defproblem pb#{i} generator
   (
