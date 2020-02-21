@@ -10,7 +10,7 @@ module External
     goal =~ /^p(\d+)_(\d+)$/
     gx = $1.to_i
     gy = $2.to_i
-    clear = Map.state['clear']
+    clear = Maze.state['clear']
     candidates = []
     DIRS.each {|dx,dy|
       if clear.include?([k = "p#{dx += x}_#{dy += y}"])
