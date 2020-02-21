@@ -16,5 +16,9 @@ goal = "p#{(width << 1) - 1}_#{(height << 1) - 1}"
   mapdata.delete("(clear #{start})")
   abort "Problem #{seed} with impossible goal #{goal}" unless mapdata.include?("(clear #{goal})")
   mapdata.concat(Grid.generate(101,101).map! {|a,b| "(adjacent #{a} #{b})"})
-  IO.binwrite("pb#{seed}.ujshop", "(defproblem pb#{seed} maze\n  ; Start\n  (\n    #{mapdata.join("\n    ")}\n  )\n  ; Tasks\n  (\n    (forward agent #{goal})\n  )\n)")
+  IO.binwrite(File.expand_path("../pb#{seed}.ujshop", __FILE__),
+    "(defproblem pb#{seed} maze\n  (
+    #{mapdata.join("\n    ")}\n  )\n  (
+    (forward agent #{goal})\n  )\n)"
+  )
 }
