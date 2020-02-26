@@ -29,7 +29,7 @@ goal = "p#{w - 2}_#{h - 2}"
     #{mapdata.join("\n    ")}\n  )\n  (
     (forward agent #{goal})\n  )\n)"
   )
-  if Image
+  if defined?(Image)
     pixels = ''
     map.flatten.each {|i| pixels << (i.zero? ? back : front)}
     Image.new(w, h).write(0, 0, pixels, pixels.size).save_png(File.expand_path("../pb#{seed}.png", __FILE__))
