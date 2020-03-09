@@ -20,8 +20,7 @@ goal = "p#{w - 2}_#{h - 2}"
   map = Mapgen.wall_to_tile(map)
   mapdata = ["(at agent #{start})"]
   map.each_with_index {|row,y| row.each_with_index {|c,x| mapdata << "(clear p#{x}_#{y})" if c == 0}}
-  abort "Problem #{seed} with impossible start #{start}" unless mapdata.include?("(clear #{start})")
-  mapdata.delete("(clear #{start})")
+  mapdata.delete("(clear #{start})") {abort "Problem #{seed} with impossible start #{start}"}
   abort "Problem #{seed} with impossible goal #{goal}" unless mapdata.include?("(clear #{goal})")
   mapdata.concat(Grid.generate(w,h).map! {|a,b| "(adjacent #{a} #{b})"})
   IO.binwrite(File.expand_path("../pb#{seed}.ujshop", __FILE__),
