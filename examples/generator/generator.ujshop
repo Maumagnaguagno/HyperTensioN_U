@@ -19,7 +19,7 @@
     )
   )
 
-  (:operator (!generate-finish ?g ?start ?finish)
+  (:operator (!generate-finish ?g ?finish)
     (
       (minimum-fuel ?g ?finish)
     )
@@ -45,7 +45,7 @@
     )
   )
 
-  (:operator (!refuel-finish ?g ?t ?start ?finish)
+  (:operator (!refuel-finish ?g ?finish)
     (
       (maximum-fuel ?g ?finish)
     )
@@ -64,7 +64,7 @@
     )
     (
       (!generate-start  ?g ?start (call + ?start 1000))
-      (!generate-finish ?g ?start (call + ?start 1000))
+      (!generate-finish ?g (call + ?start 1000))
     )
   )
 
@@ -79,7 +79,7 @@
     )
     (
       (!refuel-start  ?g ?t ?start (call + ?start 10))
-      (!refuel-finish ?g ?t ?start (call + ?start 10))
+      (!refuel-finish ?g (call + ?start 10))
     )
   )
 
@@ -97,7 +97,7 @@
     )
     (
       (!refuel-start  ?g ?t ?start ?finish)
-      (!refuel-finish ?g ?t ?start ?finish)
+      (!refuel-finish ?g ?finish)
       (multiple-refuel ?g ?finish)
     )
   )
