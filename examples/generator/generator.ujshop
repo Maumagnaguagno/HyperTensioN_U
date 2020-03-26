@@ -72,7 +72,6 @@
     (
       (generator ?g)
       (not (refueling ?g))
-      (tank ?t)
       (available ?t)
       (step ?start)
       (maximum-fuel ?g ?start)
@@ -91,7 +90,6 @@
     ()
     add-fuel
     (
-      (tank ?t)
       (available ?t)
       (assign ?finish (call + ?start 10))
     )
