@@ -103,8 +103,8 @@ module Axiom
 
   def add_one(current)
     return unless (empty_axiom(current) and at_axiom(current))
-    @state = @state.dup
-    (@state['at'] = @state['at'].dup).delete([current])
+    @state = @state.each_with_object({}) {|(k,v),state| state[k] = v.dup}
+    @state['at'].delete([current])
     @state['at'].unshift([(current.to_f + 1.0).to_s])
   end
 

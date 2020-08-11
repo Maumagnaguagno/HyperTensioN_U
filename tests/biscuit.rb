@@ -123,21 +123,21 @@ module Cookie
 
   def goto(agent, from, to)
     return unless (@state['at'].include?([agent, from]) and not @state['at'].include?([agent, to]))
-    @state = @state.dup
-    (@state['at'] = @state['at'].dup).delete([agent, from])
+    @state = @state.each_with_object({}) {|(k,v),state| state[k] = v.dup}
+    @state['at'].delete([agent, from])
     @state['at'].unshift([agent, to])
   end
 
   def buy_good_cookie(agent)
     return unless @state['at'].include?([agent, 'cookie_store'])
-    @state = @state.dup
-    (@state['have'] = @state['have'].dup).unshift([agent, 'good_cookie'])
+    @state = @state.each_with_object({}) {|(k,v),state| state[k] = v.dup}
+    @state['have'].unshift([agent, 'good_cookie'])
   end
 
   def buy_bad_cookie(agent)
     return unless @state['at'].include?([agent, 'cookie_store'])
-    @state = @state.dup
-    (@state['have'] = @state['have'].dup).unshift([agent, 'bad_cookie'])
+    @state = @state.each_with_object({}) {|(k,v),state| state[k] = v.dup}
+    @state['have'].unshift([agent, 'bad_cookie'])
   end
 
   #-----------------------------------------------
