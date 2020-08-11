@@ -103,16 +103,9 @@ module Axiom
 
   def add_one(current)
     return unless (empty_axiom(current) and at_axiom(current))
-    apply(
-      # Add effects
-      [
-        ['at', (current.to_f + 1.0).to_s]
-      ],
-      # Del effects
-      [
-        ['at', current]
-      ]
-    )
+    @state = @state.dup
+    (@state['at'] = @state['at'].dup).delete([current])
+    @state['at'].unshift([(current.to_f + 1.0).to_s])
   end
 
   #-----------------------------------------------

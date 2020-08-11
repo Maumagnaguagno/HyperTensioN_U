@@ -134,38 +134,19 @@ module Search
 
   def move(agent, from, to)
     return unless (@state['at'].include?([agent, from]) and External.visible(from, to))
-    apply(
-      # Add effects
-      [
-        ['at', agent, to]
-      ],
-      # Del effects
-      [
-        ['at', agent, from]
-      ]
-    )
+    @state = @state.dup
+    (@state['at'] = @state['at'].dup).delete([agent, from])
+    @state['at'].unshift([agent, to])
   end
 
   def invisible_visit(agent, pos)
-    apply(
-      # Add effects
-      [
-        ['visited', agent, pos]
-      ],
-      # Del effects
-      []
-    )
+    @state = @state.dup
+    (@state['visited'] = @state['visited'].dup).unshift([agent, pos])
   end
 
   def invisible_unvisit(agent, pos)
-    apply(
-      # Add effects
-      [],
-      # Del effects
-      [
-        ['visited', agent, pos]
-      ]
-    )
+    @state = @state.dup
+    (@state['visited'] = @state['visited'].dup).delete([agent, pos])
   end
 
   #-----------------------------------------------
