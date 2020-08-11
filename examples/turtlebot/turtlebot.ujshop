@@ -20,7 +20,7 @@
     ()
     ()
     (
-      (call event_process_effect)
+      (call event_effect)
       (call event increase (vx ?robot) 1 ?time)
     )
   )
@@ -29,7 +29,7 @@
     ()
     ()
     (
-      (call event_process_effect)
+      (call event_effect)
       (call event decrease (vx ?robot) 1 ?time)
     )
   )
@@ -38,7 +38,7 @@
     ()
     ()
     (
-      (call event_process_effect)
+      (call event_effect)
       (call event assign (a ?robot) ?angle ?time)
     )
   )
@@ -47,7 +47,7 @@
     ()
     ()
     (
-      (call event_process_effect)
+      (call event_effect)
       (call event assign (a ?robot) ?angle ?time)
     )
   )
@@ -74,7 +74,7 @@
     ()
     ()
     (
-      (call event_process_effect)
+      (call process_effect)
       (call process increase (x ?robot) displacement_x ?start ?finish)
       (call process increase (y ?robot) displacement_y ?start ?finish)
     )

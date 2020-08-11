@@ -138,9 +138,9 @@ module UHyper_Compiler
       effect_calls = []
       effect_add.reject! {|pre| effect_calls << call(pre) if pre.first == 'call'}
       unless effect_add.empty? and effect_del.empty?
-        define_operators << "\n    @state = @state.each_with_object({}) {|(k,v),state| state[k] = v.dup}"
-        apply('delete', effect_del, define_operators)
-        apply('unshift', effect_add, define_operators)
+        define_operators << "\n    @state = @state.dup"
+        apply('delete', effect_del, define_operators, duplicated = {})
+        apply('unshift', effect_add, define_operators, duplicated)
       end
       define_operators << "\n    " << effect_calls.join(' and ') unless effect_calls.empty?
       define_operators << "\n  end\n"
@@ -151,8 +151,16 @@ module UHyper_Compiler
   # Apply
   #-----------------------------------------------
 
-  def apply(modifier, effects, define_operators)
-    effects.each {|pre,*terms| define_operators << "\n    @state['#{pre}'].#{modifier}([#{terms.map! {|i| evaluate(i, true)}.join(', ')}])"}
+  def apply(modifier, effects, define_operators, duplicated)
+    effects.each {|pre,*terms|
+      if duplicated.include?(pre)
+        define_operators << "\n    @state['#{pre}']"
+      else
+        define_operators << "\n    (@state['#{pre}'] = @state['#{pre}'].dup)"
+        duplicated[pre] = nil
+      end
+      define_operators << ".#{modifier}([#{terms.map! {|i| evaluate(i, true)}.join(', ')}])"
+    }
   end
 
   #-----------------------------------------------

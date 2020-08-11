@@ -68,7 +68,7 @@ module External
     Circle.new(40.5,  5.5, 7.0)
   ]
 
-  def_delegators Turtlebot, :function, :process, :event, :event_process_effect
+  def_delegators Turtlebot, :function, :process, :event, :event_effect, :process_effect
 
   @symbol_object = {}
   @pos_counter = 0
