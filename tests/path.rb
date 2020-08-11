@@ -210,7 +210,7 @@ robot = 'robot'
 start = 'start'
 goal = 'goal'
 
-Search.problem(
+abort unless Search.problem(
   # Start
   {
     'at' => [

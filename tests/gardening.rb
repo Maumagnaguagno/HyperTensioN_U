@@ -291,7 +291,7 @@ _x_plant0 = ['x', 'plant0']
 _y_plant0 = ['y', 'plant0']
 _poured_plant0 = ['poured', 'plant0']
 
-Plant_watering.problem(
+abort unless Plant_watering.problem(
   # Start
   {
     'agent' => [

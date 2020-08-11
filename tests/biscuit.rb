@@ -160,7 +160,7 @@ bob = 'bob'
 home = 'home'
 cookie_store = 'cookie_store'
 
-Cookie.problem(
+abort unless Cookie.problem(
   # Start
   {
     'at' => [

@@ -36,7 +36,7 @@ The domain defines the rules that never change, while the problem defines a situ
 Several problems may refer to the same domain, as many situations may happen within the same constraints.
 Differently from JSHOP descriptions the operators may have uncertain effects with known probabilities instead of a cost.
 Rewards are used to better evaluate which plan is better, instead of the total plan cost.
-External function call and semantic attachments are also available.
+External function calls and semantic attachments are also available.
 
 ### Domain
 ```Lisp
@@ -117,7 +117,7 @@ External function call and semantic attachments are also available.
 )
 ```
 
-## Calls
+## Function calls
 Sometimes functions must be called to solve a problem beyond the reach of declarative descriptions.
 Basic functions are already implemented:
 - Binary math ``+``, ``-``, ``*``, ``/``, ``%``, ``^``

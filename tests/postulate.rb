@@ -118,7 +118,7 @@ require_relative 'axiom.ujshop'
 
 # Objects
 
-Axiom.problem(
+abort unless Axiom.problem(
   # Start
   {
     'at' => [

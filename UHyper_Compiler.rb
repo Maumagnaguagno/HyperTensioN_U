@@ -346,7 +346,7 @@ module UHyper_Compiler
       else problem_str << "_#{i.join('_').tr(from,to)} = #{evaluate(i, true)}\n"
       end
     }
-    problem_str << "\n#{domain_name.capitalize}.problem(\n  # Start\n  {\n"
+    problem_str << "\nabort unless #{domain_name.capitalize}.problem(\n  # Start\n  {\n"
     # Start
     start_hash.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
