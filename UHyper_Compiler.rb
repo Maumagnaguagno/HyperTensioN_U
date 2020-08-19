@@ -9,9 +9,9 @@ module UHyper_Compiler
 
   def predicates_to_hyper(output, predicates, indentation, yielder = '')
     if predicates.empty?
-      output << "\n#{indentation}#{yielder}[]"
+      output << "#{indentation}#{yielder}[]"
     else
-      output << "\n#{indentation}#{yielder}[\n#{indentation}  [" << predicates.map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],\n#{indentation}  [") << "]\n#{indentation}]"
+      output << "#{indentation}#{yielder}[#{indentation}  [" << predicates.map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]"
     end
   end
 
@@ -245,14 +245,13 @@ module UHyper_Compiler
           # Ground predicates, axioms and calls
           precond_pos.concat(precond_not).concat(ground_axioms_calls)
           define_methods << "\n    return unless " << expression_to_hyper(precond_pos.unshift('and'), axioms) unless precond_pos.empty?
-          indentation = '    '
+          indentation = "\n    "
         else
           # Ground axioms and calls
           define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
           # Unify free variables
           free_variables.each {|free| define_methods << "\n    #{free.delete('?')} = ''"}
-          indentation = '      '
-          predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", precond_pos, indentation)
+          predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", precond_pos, indentation = "\n      ")
           predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not.map!(&:last), indentation)
           define_methods << ', ' << free_variables.join(', ').delete!('?') << "\n    ) {"
           define_methods << "\n      next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
@@ -263,21 +262,21 @@ module UHyper_Compiler
           terms.map! {|t|
             if t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)
               ground_free_variables << t
-              define_methods << "\n#{indentation}#{t.delete('?')} = ''"
+              define_methods << "#{indentation}#{t.delete('?')} = ''"
             end
             evaluate(t, true)
           }
           if positive
-            define_methods << "\n#{indentation}External.#{pre}(#{terms.join(', ')}) {"
-            close_method_str.prepend("\n#{indentation}}")
+            define_methods << "#{indentation}External.#{pre}(#{terms.join(', ')}) {"
+            close_method_str.prepend("#{indentation}}")
             indentation << '  '
           else
-            define_methods << "\n#{indentation}next if External.#{pre}(#{terms.join(', ')}) {break true}"
+            define_methods << "#{indentation}next if External.#{pre}(#{terms.join(', ')}) {break true}"
           end
         }
         unless dependent_attachments.empty?
           raise "Call with free variable in #{name} #{dec.first}" if dependent_attachments.flatten.any? {|t| t.start_with?('?') and not ground_free_variables.include?(t)}
-          define_methods << "\n#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
+          define_methods << "#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
         end
         # Subtasks
         predicates_to_hyper(define_methods, dec[2], indentation, 'yield ')
