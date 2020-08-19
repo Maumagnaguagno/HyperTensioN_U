@@ -7,7 +7,7 @@ module UHyper_Compiler
   # Predicates to Hyper
   #-----------------------------------------------
 
-  def predicates_to_hyper(output, predicates, indentation = '      ', yielder = '')
+  def predicates_to_hyper(output, predicates, indentation, yielder = '')
     if predicates.empty?
       output << "\n#{indentation}#{yielder}[]"
     else
@@ -251,12 +251,12 @@ module UHyper_Compiler
           define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
           # Unify free variables
           free_variables.each {|free| define_methods << "\n    #{free.delete('?')} = ''"}
-          predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", precond_pos)
-          predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not.map! {|j| j.last})
+          indentation = '      '
+          predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", precond_pos, indentation)
+          predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not.map!(&:last), indentation)
           define_methods << ', ' << free_variables.join(', ').delete!('?') << "\n    ) {"
           define_methods << "\n      next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
           close_method_str.prepend("\n    }")
-          indentation = '      '
         end
         # Semantic attachments
         precond_attachments.each {|positive,pre,*terms|
