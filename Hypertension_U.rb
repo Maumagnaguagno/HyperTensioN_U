@@ -38,11 +38,14 @@ module Hypertension_U
         # Operator with multiple outcomes
         when Hash
           task_name = current_task.first
-          decomposition.each {|task_prob,probability|
-            current_task[0] = task_prob
-            execute(current_task, probability, tasks, level, plan)
-            return if @plans.size == @max_plans
-          }
+          begin
+            decomposition.each {|task_prob,probability|
+              current_task[0] = task_prob
+              execute(current_task, probability, tasks, level, plan)
+              return if @plans.size == @max_plans
+            }
+          rescue SystemStackError
+          end
           current_task[0] = task_name
         # Method
         when Array
@@ -50,16 +53,19 @@ module Hypertension_U
           task_name = current_task.shift
           plans_found = @plans.size
           level += 1
-          decomposition.each {|method|
-            puts "#{'  ' * level.pred}#{method}(#{current_task.join(' ')})" if @debug
-            # Every unification is tested
-            send(method, *current_task) {|subtasks|
-              planning(subtasks.concat(tasks), level, plan)
-              return if @plans.size == @max_plans
+          begin
+            decomposition.each {|method|
+              puts "#{'  ' * level.pred}#{method}(#{current_task.join(' ')})" if @debug
+              # Every unification is tested
+              send(method, *current_task) {|subtasks|
+                planning(subtasks.concat(tasks), level, plan)
+                return if @plans.size == @max_plans
+              }
+              # Consider success when at least one new plan was found
+              break if @plans.size != plans_found
             }
-            # Consider success when at least one new plan was found
-            break if @plans.size != plans_found
-          }
+          rescue SystemStackError
+          end
           current_task.unshift(task_name)
         # Error
         else raise "Domain defines no decomposition for #{current_task.first}"
@@ -83,13 +89,16 @@ module Hypertension_U
   def execute(current_task, probability, tasks, level, plan)
     old_state = @state
     puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(' ')})" if @debug
-    # Minimum probability and applied
-    if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and send(*current_task)
-      new_plan = plan.dup << current_task.map {|i| i.dup rescue i}
-      new_plan[PROBABILITY] = new_prob
-      new_plan[VALUATION] += state_valuation(old_state) * probability
-      # Keep decomposing the hierarchy
-      planning(tasks, level, new_plan)
+    begin
+      # Minimum probability and applied
+      if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and send(*current_task)
+        new_plan = plan.dup << current_task.map {|i| i.dup rescue i} # After Ruby 2.4 there is no need to rescue
+        new_plan[PROBABILITY] = new_prob
+        new_plan[VALUATION] += state_valuation(old_state) * probability
+        # Keep decomposing the hierarchy
+        planning(tasks, level, new_plan)
+      end
+    rescue SystemStackError
     end
     @state = old_state
   end
