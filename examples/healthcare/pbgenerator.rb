@@ -154,50 +154,93 @@ if jshop
   TASKS.each {|task| problem_str << "    (#{task.join(' ')})\n"}
   IO.binwrite(jshop, problem_str << "  )\n)")
 else
+  # Predicates
+  PATIENT = 0
+  PHYSICIAN = 1
+  RADIOLOGIST = 2
+  PATHOLOGIST = 3
+  REGISTRAR = 4
+  HOSPITAL = 5
+  PATIENTHASCANCER = 6
+  COMMITMENT = 7
+  GOAL = 8
+  VAR = 9
+  VARG = 10
+  DIAGNOSISREQUESTED = 11
+  IAPPOINTMENTREQUESTED = 12
+  IAPPOINTMENTKEPT = 13
+  IMAGINGSCAN = 14
+  IMAGINGREQUESTED = 15
+  IMAGINGRESULTSREPORTED = 16
+  BAPPOINTMENTREQUESTED = 17
+  BAPPOINTMENTKEPT = 18
+  BIOPSYREPORT = 19
+  BIOPSYREQUESTED = 20
+  RADIOLOGYREQUESTED = 21
+  TREATMENTPLAN = 22
+  DIAGNOSISPROVIDED = 23
+  TISSUEPROVIDED = 24
+  RADPATHRESULTSREPORTED = 25
+  PATHRESULTSREPORTED = 26
+  PATIENTREPORTEDTOREGISTRAR = 27
+  INREGISTRY = 28
+  PATHOLOGYREQUESTED = 29
+  INTEGRATEDREPORT = 30
+  REPORTNEEDSREVIEW = 31
+  CANCELLED = 32
+  RELEASED = 33
+  EXPIRED = 34
+  DROPPED = 35
+  ABORTED = 36
+  PENDING = 37
+  ACTIVATEDG = 38
+  SUSPENDEDG = 39
+  DONTKNOW = 40
+
   # Start
-  STATE = {
-    'patient' => PATIENT_SET.map {|i| [i]},
-    'physician' => PHYSICIAN_SET.map {|i| [i]},
-    'radiologist' => RADIOLOGIST_SET.map {|i| [i]},
-    'pathologist' => PATHOLOGIST_SET.map {|i| [i]},
-    'registrar' => REGISTRAR_SET.map {|i| [i]},
-    'hospital' => HOSPITAL_SET.map {|i| [i]},
-    'patientHasCancer' => PATIENT_SET.first(cancers).map! {|i| [i]},
-    'commitment' => COMMITMENT_SET,
-    'goal' => GOAL_SET,
-    'var' => [],
-    'varG' => [],
-    'diagnosisRequested' => [],
-    'iAppointmentRequested' => [],
-    'iAppointmentKept' => [],
-    'imagingScan' => [],
-    'imagingRequested' => [],
-    'imagingResultsReported' => [],
-    'bAppointmentRequested' => [],
-    'bAppointmentKept' => [],
-    'biopsyReport' => [],
-    'biopsyRequested' => [],
-    'radiologyRequested' => [],
-    'treatmentPlan' => [],
-    'diagnosisProvided' => [],
-    'tissueProvided' => [],
-    'radPathResultsReported' => [],
-    'pathResultsReported' => [],
-    'patientReportedToRegistrar' => [],
-    'inRegistry' => [],
-    'pathologyRequested' => [],
-    'integratedReport' => [],
-    'reportNeedsReview' => [],
-    'cancelled' => [],
-    'released' => [],
-    'expired' => [],
-    'dropped' => [],
-    'aborted' => [],
-    'pending' => [],
-    'activatedG' => [],
-    'suspendedG' => [],
-    'dontknow' => []
-  }
+  STATE = [
+    PATIENT_SET.map {|i| [i]}, # PATIENT
+    PHYSICIAN_SET.map {|i| [i]}, # PHYSICIAN
+    RADIOLOGIST_SET.map {|i| [i]}, # RADIOLOGIST
+    PATHOLOGIST_SET.map {|i| [i]}, # PATHOLOGIST
+    REGISTRAR_SET.map {|i| [i]}, # REGISTRAR
+    HOSPITAL_SET.map {|i| [i]}, # HOSPITAL
+    PATIENT_SET.first(cancers).map! {|i| [i]}, # PATIENTHASCANCER
+    COMMITMENT_SET, # COMMITMENT
+    GOAL_SET, # GOAL
+    [], # VAR
+    [], # VARG
+    [], # DIAGNOSISREQUESTED
+    [], # IAPPOINTMENTREQUESTED
+    [], # IAPPOINTMENTKEPT
+    [], # IMAGINGSCAN
+    [], # IMAGINGREQUESTED
+    [], # IMAGINGRESULTSREPORTED
+    [], # BAPPOINTMENTREQUESTED
+    [], # BAPPOINTMENTKEPT
+    [], # BIOPSYREPORT
+    [], # BIOPSYREQUESTED
+    [], # RADIOLOGYREQUESTED
+    [], # TREATMENTPLAN
+    [], # DIAGNOSISPROVIDED
+    [], # TISSUEPROVIDED
+    [], # RADPATHRESULTSREPORTED
+    [], # PATHRESULTSREPORTED
+    [], # PATIENTREPORTEDTOREGISTRAR
+    [], # INREGISTRY
+    [], # PATHOLOGYREQUESTED
+    [], # INTEGRATEDREPORT
+    [], # REPORTNEEDSREVIEW
+    [], # CANCELLED
+    [], # RELEASED
+    [], # EXPIRED
+    [], # DROPPED
+    [], # ABORTED
+    [], # PENDING
+    [], # ACTIVATEDG
+    [], # SUSPENDEDG
+    [] # DONTKNOW
+  ]
   # Select planner
   if defined?(Hypertension_U)
     Healthcare.problem(STATE, TASKS, debug, max_plans, min_prob)

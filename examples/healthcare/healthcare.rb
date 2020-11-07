@@ -240,10 +240,10 @@ module Healthcare
   #-----------------------------------------------
 
   def state_valuation(old_state)
-    previous_iAppointmentKept = old_state['iAppointmentKept']
-    current_iAppointmentKept = @state['iAppointmentKept']
-    previous_bAppointmentKept = old_state['bAppointmentKept']
-    current_bAppointmentKept = @state['bAppointmentKept']
+    previous_iAppointmentKept = old_state[IAPPOINTMENTKEPT]
+    current_iAppointmentKept = @state[IAPPOINTMENTKEPT]
+    previous_bAppointmentKept = old_state[BAPPOINTMENTKEPT]
+    current_bAppointmentKept = @state[BAPPOINTMENTKEPT]
     value = 0
     value += 10 * (current_iAppointmentKept.size - previous_iAppointmentKept.size)
     value += 10 * (current_bAppointmentKept.size - previous_bAppointmentKept.size)

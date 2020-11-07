@@ -5,7 +5,7 @@
 
 # (:- (nullG ?g ?gi ?gv) (not (varG ?g ?gi ?gv) ))
 def nullG(g, gi, gv)
-  not state('varG', g, gi, gv)
+  not state(VARG, g, gi, gv)
 end
 
 # (:- (inactiveG ?g ?gi ?gv) (and
@@ -22,7 +22,7 @@ def inactiveG(g, gi, gv)
   not f(g, gi, gv) and
   not s(g, gi, gv) and
   not terminalG(g, gi, gv) and
-  not state('suspendedG', g, gi, gv) and
+  not state(SUSPENDEDG, g, gi, gv) and
   not activeG(g, gi, gv)
 end
 
@@ -36,11 +36,11 @@ end
 # ))
 
 def activeG(g, gi, gv)
-  state('activatedG', g, gi, gv) and
+  state(ACTIVATEDG, g, gi, gv) and
   not f(g, gi, gv) and
   not satisfiedG(g, gi, gv) and
   not terminalG(g, gi, gv) and
-  not state('suspendedG', g, gi, gv)
+  not state(SUSPENDEDG, g, gi, gv)
 end
 
 # (:- (satisfiedG ?g ?gi ?gv) (and
@@ -70,12 +70,12 @@ end
 # (:- (terminatedG ?g ?gi ?gv) (and (not (nullG ?g ?gi ?gv)) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv)) ))
 
 def terminatedG(g, gi, gv)
-  not nullG(g, gi, gv) and (state('dropped', g, gi, gv) or state('aborted', g, gi, gv))
+  not nullG(g, gi, gv) and (state(DROPPED, g, gi, gv) or state(ABORTED, g, gi, gv))
 end
 
 # A rule to ensure that once a goal enters a terminal state (e.g. dropped or aborted), it cannot return
 # (:- (terminalG ?g ?gi ?gv) (and (goal ?g ?gi ?a) (or (dropped ?g ?gi ?gv) (aborted ?g ?gi ?gv) ) ))
 
 def terminalG(g, gi, gv)
-  @state['goal'].any? {|terms| terms.size == 3 and terms[0] == g and terms[1] == gi} and (state('dropped', g, gi, gv) or state('aborted', g, gi, gv))
+  @state[GOAL].any? {|terms| terms.size == 3 and terms[0] == g and terms[1] == gi} and (state(DROPPED, g, gi, gv) or state(ABORTED, g, gi, gv))
 end

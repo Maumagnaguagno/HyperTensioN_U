@@ -7,11 +7,11 @@ module UHyper_Compiler
   # Predicates to Hyper
   #-----------------------------------------------
 
-  def predicates_to_hyper(output, predicates, indentation, yielder = '')
+  def predicates_to_hyper(predicates, indentation, yielder = '')
     if predicates.empty?
-      output << "#{indentation}#{yielder}[]"
+      "#{indentation}#{yielder}[]"
     else
-      output << "#{indentation}#{yielder}[#{indentation}  [" << predicates.map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]"
+      "#{indentation}#{yielder}[#{indentation}  [" << predicates.map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]"
     end
   end
 
@@ -251,8 +251,8 @@ module UHyper_Compiler
           define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
           # Unify free variables
           free_variables.each {|free| define_methods << "\n    #{free.delete('?')} = ''"}
-          predicates_to_hyper(define_methods << "\n    generate(\n      # Positive preconditions", precond_pos, indentation = "\n      ")
-          predicates_to_hyper(define_methods << ",\n      # Negative preconditions", precond_not.map!(&:last), indentation)
+          define_methods << "\n    generate(\n      # Positive preconditions" << predicates_to_hyper(precond_pos, indentation = "\n      ")
+          define_methods << ",\n      # Negative preconditions" << predicates_to_hyper(precond_not.map!(&:last), indentation)
           define_methods << ', ' << free_variables.join(', ').delete!('?') << "\n    ) {"
           define_methods << "\n      next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
           close_method_str.prepend("\n    }")
@@ -279,8 +279,7 @@ module UHyper_Compiler
           define_methods << "#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
         end
         # Subtasks
-        predicates_to_hyper(define_methods, dec[2], indentation, 'yield ')
-        define_methods << close_method_str
+        define_methods << predicates_to_hyper(dec[2], indentation, 'yield ') << close_method_str
       }
       domain_str << (methods.size.pred == mi ? '    ]' : '    ],')
     }
@@ -329,12 +328,8 @@ module UHyper_Compiler
     problem_str = "# Objects\n"
     # Extract information
     objects = []
-    start_hash = {}
-    predicates.each_key {|i| start_hash[i] = []}
-    state.each {|pre,*terms|
-      (start_hash[pre] ||= []) << terms
-      objects.concat(terms)
-    }
+    predicates.each_key {|i| state[i] ||= []}
+    state.each {|pre,k| k.each {|terms| objects.concat(terms)}}
     ordered = tasks.shift
     tasks.each {|pre,*terms| objects.concat(terms)}
     # Objects
@@ -347,10 +342,10 @@ module UHyper_Compiler
     }
     problem_str << "\n#{domain_name.capitalize}.problem(\n  # Start\n  {\n"
     # Start
-    start_hash.each_with_index {|(k,v),i|
+    state.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
       problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o =~ /^-?\d/ ? "'#{o.to_f}'" : o : o.join('_').tr(from,to).prepend('_')}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
-      problem_str << (start_hash.size.pred == i ? ']' : "],\n")
+      problem_str << (state.size.pred == i ? ']' : "],\n")
     }
     # Tasks
     problem_str << "\n  },\n  # Tasks\n  [" <<

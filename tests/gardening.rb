@@ -126,26 +126,28 @@ class Gardening < Test::Unit::TestCase
         'plant' => false,
         'tap' => false
       },
-      :state => [
-        ['function', 'max_int', '20'],
-        ['function', 'minx', '1'],
-        ['function', 'maxx', '4'],
-        ['function', 'miny', '1'],
-        ['function', 'maxy', '4'],
-        ['function', 'carrying', '0'],
-        ['function', 'total_poured', '0'],
-        ['function', 'total_loaded', '0'],
-        ['agent', 'agent0'],
-        ['function', ['x', 'agent0'], '1'],
-        ['function', ['y', 'agent0'], '3'],
-        ['tap', 'tap0'],
-        ['function', ['x', 'tap0'], '4'],
-        ['function', ['y', 'tap0'], '4'],
-        ['plant', 'plant0'],
-        ['function', ['x', 'plant0'], '2'],
-        ['function', ['y', 'plant0'], '2'],
-        ['function', ['poured', 'plant0'], '0']
-      ],
+      :state => {
+        'function' => [
+          ['max_int', '20'],
+          ['minx', '1'],
+          ['maxx', '4'],
+          ['miny', '1'],
+          ['maxy', '4'],
+          ['carrying', '0'],
+          ['total_poured', '0'],
+          ['total_loaded', '0'],
+          [['x', 'agent0'], '1'],
+          [['y', 'agent0'], '3'],
+          [['x', 'tap0'], '4'],
+          [['y', 'tap0'], '4'],
+          [['x', 'plant0'], '2'],
+          [['y', 'plant0'], '2'],
+          [['poured', 'plant0'], '0']
+        ],
+        'agent' => [['agent0']],
+        'tap' => [['tap0']],
+        'plant' => [['plant0']],
+      },
       :tasks => [true, ['move_to_load_before_move_to_pour', 'plant0', '4']],
       :axioms => [],
       :rewards => [],
@@ -280,29 +282,20 @@ maxy = 'maxy'
 carrying = 'carrying'
 total_poured = 'total_poured'
 total_loaded = 'total_loaded'
-agent0 = 'agent0'
 _x_agent0 = ['x', 'agent0']
 _y_agent0 = ['y', 'agent0']
-tap0 = 'tap0'
 _x_tap0 = ['x', 'tap0']
 _y_tap0 = ['y', 'tap0']
-plant0 = 'plant0'
 _x_plant0 = ['x', 'plant0']
 _y_plant0 = ['y', 'plant0']
 _poured_plant0 = ['poured', 'plant0']
+agent0 = 'agent0'
+tap0 = 'tap0'
+plant0 = 'plant0'
 
 Plant_watering.problem(
   # Start
   {
-    'agent' => [
-      [agent0]
-    ],
-    'tap' => [
-      [tap0]
-    ],
-    'plant' => [
-      [plant0]
-    ],
     'function' => [
       [max_int, '20.0'],
       [minx, '1.0'],
@@ -319,6 +312,15 @@ Plant_watering.problem(
       [_x_plant0, '2.0'],
       [_y_plant0, '2.0'],
       [_poured_plant0, '0.0']
+    ],
+    'agent' => [
+      [agent0]
+    ],
+    'tap' => [
+      [tap0]
+    ],
+    'plant' => [
+      [plant0]
     ]
   },
   # Tasks

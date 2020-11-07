@@ -8,7 +8,7 @@
 # )
 
 def requestAssessment(patient, physician)
-  apply([['diagnosisRequested', patient, physician]], [])
+  apply([[DIAGNOSISREQUESTED, patient, physician]], [])
 end
 
 # (:operator (!requestImaging ?physician ?patient ?radiologist)
@@ -19,8 +19,8 @@ end
 # )
 
 def requestImaging(physician, patient, radiologist)
-  if state('physician', physician) and state('patient', patient) and state('radiologist', radiologist)
-    apply([['iAppointmentRequested', patient, radiologist], ['imagingRequested', physician, patient]], [])
+  if state(PHYSICIAN, physician) and state(PATIENT, patient) and state(RADIOLOGIST, radiologist)
+    apply([[IAPPOINTMENTREQUESTED, patient, radiologist], [IMAGINGREQUESTED, physician, patient]], [])
   end
 end
 
@@ -32,8 +32,8 @@ end
 # )
 
 def requestBiopsy(physician, patient, radiologist)
-  if state('physician', physician) and state('patient', patient) and state('radiologist', radiologist)
-    apply([['bAppointmentRequested', patient, radiologist], ['biopsyRequested', physician, patient]], [])
+  if state(PHYSICIAN, physician) and state(PATIENT, patient) and state(RADIOLOGIST, radiologist)
+    apply([[BAPPOINTMENTREQUESTED, patient, radiologist], [BIOPSYREQUESTED, physician, patient]], [])
   end
 end
 
@@ -47,14 +47,14 @@ end
 # )
 
 def performImaging_success(radiologist, patient, physician)
-  if state('patient', patient) and state('radiologist', radiologist) and state('physician', physician) and state('iAppointmentRequested', patient, radiologist)
+  if state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician) and state(IAPPOINTMENTREQUESTED, patient, radiologist)
     apply(
       [
-        ['imagingScan', patient, physician],
-        ['iAppointmentKept', patient, radiologist]
+        [IMAGINGSCAN, patient, physician],
+        [IAPPOINTMENTKEPT, patient, radiologist]
       ],
       [
-        ['iAppointmentRequested', patient, radiologist]
+        [IAPPOINTMENTREQUESTED, patient, radiologist]
       ]
     )
   end
@@ -62,7 +62,7 @@ end
 alias :performImaging :performImaging_success
 
 def performImaging_failure(radiologist, patient, physician)
-  state('patient', patient) and state('radiologist', radiologist) and state('physician', physician) and state('iAppointmentRequested', patient, radiologist)
+  state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician) and state(IAPPOINTMENTREQUESTED, patient, radiologist)
 end
 
 # ;; Change this to have the radiologist doing the biopsy
@@ -74,15 +74,15 @@ end
 # )
 
 def performBiopsy_success(radiologist, patient, physician)
-  if state('patient', patient) and state('radiologist', radiologist) and state('physician', physician)
+  if state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician)
     apply(
       [
-        ['biopsyReport', patient, physician],
-        ['bAppointmentKept', patient, radiologist],
-        ['tissueProvided', patient]
+        [BIOPSYREPORT, patient, physician],
+        [BAPPOINTMENTKEPT, patient, radiologist],
+        [TISSUEPROVIDED, patient]
       ],
       [
-        ['bAppointmentRequested', patient, radiologist]
+        [BAPPOINTMENTREQUESTED, patient, radiologist]
       ]
     )
   end
@@ -90,7 +90,7 @@ end
 alias :performBiopsy :performBiopsy_success
 
 def performBiopsy_failure(radiologist, patient, physician)
-  state('patient', patient) and state('radiologist', radiologist) and state('physician', physician)
+  state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician)
 end
 
 # ;; Instead of performDiagnosis, we need:
@@ -104,8 +104,8 @@ end
 # )
 
 def requestPathologyReport(physician, radiologist, pathologist, patient)
-  if state('physician', physician) and state('pathologist', pathologist) and state('radiologist', radiologist) and state('patient', patient) and state('biopsyReport', patient, physician)
-    apply([['pathologyRequested', physician, pathologist, patient]], [])
+  if state(PHYSICIAN, physician) and state(PATHOLOGIST, pathologist) and state(RADIOLOGIST, radiologist) and state(PATIENT, patient) and state(BIOPSYREPORT, patient, physician)
+    apply([[PATHOLOGYREQUESTED, physician, pathologist, patient]], [])
   end
 end
 
@@ -117,8 +117,8 @@ end
 # )
 
 def requestRadiologyReport(physician, radiologist, patient)
-  if state('physician', physician) and state('radiologist', radiologist) and state('patient', patient) and state('imagingScan', patient, physician)
-    apply([['radiologyRequested', physician, radiologist, patient]], [])
+  if state(PHYSICIAN, physician) and state(RADIOLOGIST, radiologist) and state(PATIENT, patient) and state(IMAGINGSCAN, patient, physician)
+    apply([[RADIOLOGYREQUESTED, physician, radiologist, patient]], [])
   end
 end
 
@@ -129,11 +129,11 @@ end
 # )
 
 def sendPathologyReport(radiologist, physician, pathologist, patient)
-  if state('physician', physician) and state('radiologist', radiologist) and state('patient', patient) and state('biopsyReport', patient, physician) and state('pathologyRequested', physician, pathologist, patient)
+  if state(PHYSICIAN, physician) and state(RADIOLOGIST, radiologist) and state(PATIENT, patient) and state(BIOPSYREPORT, patient, physician) and state(PATHOLOGYREQUESTED, physician, pathologist, patient)
     apply(
       [
-        ['radPathResultsReported', radiologist, physician, patient],
-        ['pathResultsReported', radiologist, physician, patient]
+        [RADPATHRESULTSREPORTED, radiologist, physician, patient],
+        [PATHRESULTSREPORTED, radiologist, physician, patient]
       ],
       []
     )
@@ -149,8 +149,8 @@ end
 # )
 
 def sendRadiologyReport(radiologist, physician, patient)
-  if state('physician', physician) and state('radiologist', radiologist) and state('patient', patient) and state('imagingScan', patient, physician) and state('radiologyRequested', physician, radiologist, patient)
-    apply([['imagingResultsReported', radiologist, physician, patient]], [])
+  if state(PHYSICIAN, physician) and state(RADIOLOGIST, radiologist) and state(PATIENT, patient) and state(IMAGINGSCAN, patient, physician) and state(RADIOLOGYREQUESTED, physician, radiologist, patient)
+    apply([[IMAGINGRESULTSREPORTED, radiologist, physician, patient]], [])
   end
 end
 
@@ -166,11 +166,11 @@ end
 # )
 
 def sendIntegratedReport(radiologist, pathologist, patient, physician)
-  if state('radPathResultsReported', radiologist, physician, patient) and state('imagingResultsReported', radiologist, physician, patient) and state('radiologist', radiologist) and state('physician', physician) and state('patient', patient) and state('pathologist', pathologist)
+  if state(RADPATHRESULTSREPORTED, radiologist, physician, patient) and state(IMAGINGRESULTSREPORTED, radiologist, physician, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician) and state(PATIENT, patient) and state(PATHOLOGIST, pathologist)
     apply(
       [
-        ['integratedReport', patient, physician],
-        ['diagnosisProvided', physician, patient]
+        [INTEGRATEDREPORT, patient, physician],
+        [DIAGNOSISPROVIDED, physician, patient]
       ],
       []
     )
@@ -185,11 +185,11 @@ end
 # )
 
 def generateTreatmentPlan(physician, patient)
-  if state('patient', patient) and state('physician', physician) and state('imagingScan', patient, physician)
+  if state(PATIENT, patient) and state(PHYSICIAN, physician) and state(IMAGINGSCAN, patient, physician)
     apply(
       [
-        ['treatmentPlan', physician, patient],
-        ['diagnosisProvided', physician, patient]
+        [TREATMENTPLAN, physician, patient],
+        [DIAGNOSISPROVIDED, physician, patient]
       ],
       []
     )
@@ -204,8 +204,8 @@ end
 # )
 
 def reportPatient(patient, pathologist, registrar)
-  if state('patient', patient) and state('pathologist', pathologist) and state('registrar', registrar) and state('patientHasCancer', patient)
-    apply([['patientReportedToRegistrar', patient, registrar]], [])
+  if state(PATIENT, patient) and state(PATHOLOGIST, pathologist) and state(REGISTRAR, registrar) and state(PATIENTHASCANCER, patient)
+    apply([[PATIENTREPORTEDTOREGISTRAR, patient, registrar]], [])
   end
 end
 
@@ -217,8 +217,8 @@ end
 # )
 
 def addPatientToRegistry(patient, registrar)
-  if state('patient', patient) and state('registrar', registrar) and state('patientReportedToRegistrar', patient, registrar)
-    apply([['inRegistry', patient]], [])
+  if state(PATIENT, patient) and state(REGISTRAR, registrar) and state(PATIENTREPORTEDTOREGISTRAR, patient, registrar)
+    apply([[INREGISTRY, patient]], [])
   end
 end
 
@@ -232,8 +232,8 @@ end
 # )
 
 def escalateFailure(patient, physician, radiologist, hospital)
-  if state('radiologist', radiologist) and state('physician', physician) and state('patient', patient) and state('hospital', hospital) and not state('imagingScan', patient, radiologist)
-    apply([['radiologistReported', patient, physician, radiologist, hospital]], [])
+  if state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician) and state(PATIENT, patient) and state(HOSPITAL, hospital) and not state(IMAGINGSCAN, patient, radiologist)
+    apply([[RADIOLOGISTREPORTED, patient, physician, radiologist, hospital]], [])
   end
 end
 
@@ -276,8 +276,8 @@ end
 # )
 
 def requestPhysicianReportAssessment(patient, physician, hospital)
-  if state('hospital', hospital) and state('patient', patient) and state('physician', physician) and state('integratedReport', patient, physician)
-    apply([['reportNeedsReview', patient, physician]], [])
+  if state(HOSPITAL, hospital) and state(PATIENT, patient) and state(PHYSICIAN, physician) and state(INTEGRATEDREPORT, patient, physician)
+    apply([[REPORTNEEDSREVIEW, patient, physician]], [])
   end
 end
 
@@ -293,8 +293,8 @@ end
 # )
 
 def requestRadiologyReportAssessment(pathologist, radiologist, patient, hospital)
-  if state('hospital', hospital) and state('patient', patient) and state('pathologist', pathologist) and state('radiologist', radiologist) and state('radiologyReport', patient, radiologist)
-    apply([['reportNeedsReview', patient, radiologist]], [])
+  if state(HOSPITAL, hospital) and state(PATIENT, patient) and state(PATHOLOGIST, pathologist) and state(RADIOLOGIST, radiologist) and state(RADIOLOGYREPORT, patient, radiologist)
+    apply([[REPORTNEEDSREVIEW, patient, radiologist]], [])
   end
 end
 
@@ -310,7 +310,7 @@ end
 # )
 
 def requestPathologyReportAssessment(radiologist, pathologist, patient, hospital)
-  if state('hospital', hospital) and state('patient', patient) and state('pathologist', pathologist) and state('radiologist', radiologist) and state('pathologyReport', patient, pathologist)
-    apply([['reportNeedsReview', patient, pathologist]], [])
+  if state(HOSPITAL, hospital) and state(PATIENT, patient) and state(PATHOLOGIST, pathologist) and state(RADIOLOGIST, radiologist) and state(PATHOLOGYREPORT, patient, pathologist)
+    apply([[REPORTNEEDSREVIEW, patient, pathologist]], [])
   end
 end

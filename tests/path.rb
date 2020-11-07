@@ -84,7 +84,7 @@ class Path < Test::Unit::TestCase
         'at' => true,
         'visited' => true
       },
-      :state => [['at', 'robot', 'start']],
+      :state => {'at' => [['robot', 'start']]},
       :tasks => [true, ['forward', 'robot', 'goal']],
       :axioms => [],
       :rewards => [],

@@ -15,8 +15,8 @@ def achieveGoals_workTowardsGoal
   gv = ''
   generate(
     [
-      ['goal', g, gi, a],
-      ['activatedG', g, gi, gv]
+      [GOAL, g, gi, a],
+      [ACTIVATEDG, g, gi, gv]
     ],
     [], g, gi, a, gv
   ) {
@@ -42,8 +42,8 @@ def achieveGoals_activateGoal
   gv = ''
   generate(
     [
-      ['goal', g, gi, a],
-      ['goalPossible', g, gi, gv]
+      [GOAL, g, gi, a],
+      [GOALPOSSIBLE, g, gi, gv]
     ],
     [], g, gi, a, gv
   ) {
@@ -80,12 +80,12 @@ def achieveGoals_multipleCommitments
   ci2 = ''
   generate(
     [
-      ['goal', g1, gi1, a1],
-      ['activatedG', g1, gi1, gv1],
-      ['goal', g2, gi2, a2],
-      ['activatedG', g2, gi2, gv2],
-      ['commitment', c1, ci1, a1, a2],
-      ['commitment', c2, ci2, a2, a1]
+      [GOAL, g1, gi1, a1],
+      [ACTIVATEDG, g1, gi1, gv1],
+      [GOAL, g2, gi2, a2],
+      [ACTIVATEDG, g2, gi2, gv2],
+      [COMMITMENT, c1, ci1, a1, a2],
+      [COMMITMENT, c2, ci2, a2, a1]
     ],
     [], g1, gi1, a1, gv1, g2, gi2, a2, gv2, c1, ci1, c2, ci2
   ) {
@@ -118,9 +118,9 @@ def achieveGoal_genericEnticeToAchieve(g, gi, a, gv)
     gi2 = ''
     generate(
       [
-        ['goal', g, gi, a],
-        ['commitment', c, ci, a, d],
-        ['goal', g2, gi2, a]
+        [GOAL, g, gi, a],
+        [COMMITMENT, c, ci, a, d],
+        [GOAL, g2, gi2, a]
       ],
       [], c, ci, d, g2, gi2
     ) {

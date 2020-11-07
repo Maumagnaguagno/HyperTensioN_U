@@ -22,7 +22,7 @@
 # )
 
 def entice_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and activeG(g, gi, gv) and state('commitment', c, ci, d, a) and null(c, ci, cv) and eqGSCP(g, gv, c, cv)
+  if state(GOAL, g, gi, d) and activeG(g, gi, gv) and state(COMMITMENT, c, ci, d, a) and null(c, ci, cv) and eqGSCP(g, gv, c, cv)
     yield [['create', c, ci, d, a, cv]]
   end
 end
@@ -34,7 +34,7 @@ end
 # )
 
 def suspendOffer_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and state('suspendedG', g, gi, gv) and state('commitment', c, ci, d, a) and active(c, ci, cv)
+  if state(GOAL, g, gi, d) and state(SUSPENDEDG, g, gi, gv) and state(COMMITMENT, c, ci, d, a) and active(c, ci, cv)
     yield [['suspend', c, ci, d, a, cv]]
   end
 end
@@ -46,7 +46,7 @@ end
 # )
 
 def revive_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and activeG(g, gi, gv) and state('commitment', c, ci, d, a) and state('pending', c, ci, cv)
+  if state(GOAL, g, gi, d) and activeG(g, gi, gv) and state(COMMITMENT, c, ci, d, a) and state(PENDING, c, ci, cv)
     yield [['reactivate', c, ci, d, a, cv]]
   end
 end
@@ -58,7 +58,7 @@ end
 # )
 
 def withdrawOffer_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and (failedG(g, gi, gv) or terminatedG(g, gi, gv)) and state('commitment', c, ci, d, a) and active(c, ci, cv)
+  if state(GOAL, g, gi, d) and (failedG(g, gi, gv) or terminatedG(g, gi, gv)) and state(COMMITMENT, c, ci, d, a) and active(c, ci, cv)
     yield [['cancel', c, ci, d, a, cv]]
   end
 end
@@ -70,7 +70,7 @@ end
 # )
 
 def reviveToWithdraw_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and (failedG(g, gi, gv) or terminatedG(g, gi, gv)) and state('commitment', c, ci, d, a) and state('pending', c, ci, cv)
+  if state(GOAL, g, gi, d) and (failedG(g, gi, gv) or terminatedG(g, gi, gv)) and state(COMMITMENT, c, ci, d, a) and state(PENDING, c, ci, cv)
     yield [['reactivate', c, ci, d, a, cv]]
   end
 end
@@ -79,7 +79,7 @@ end
 # (:- (negotiable ?g ?gi ?gv ?c ?ci ?cv) (and (or (activeG ?g ?gi ?gv) (suspendedG ?g ?gi ?gv) ) (or (expired ?c ?ci ?cv) (terminated ?c ?ci ?cv)) ) )
 
 def negotiable(g, gi, gv, c, ci, cv)
-  (activeG(g, gi, gv) or state('suspendedG', g, gi, gv)) and (state('expired', c, ci, cv) or terminated(c, ci, cv))
+  (activeG(g, gi, gv) or state(SUSPENDEDG, g, gi, gv)) and (state(EXPIRED, c, ci, cv) or terminated(c, ci, cv))
 end
 
 # (:method (negotiate ?g ?gi ?gv ?c1 ?ci1 ?cv1 ?c2 ?ci2 ?cv2 ?d ?a1 ?a2)
@@ -89,7 +89,7 @@ end
 # )
 
 def negotiate_case0(g, gi, gv, c1, ci1, cv1, c2, ci2, cv2, d, a1, a2)
-  if state('goal', g, gi, d) and state('commitment', c1, ci1, d, a2) and state('commitment', c2, ci2, d, a2) and null(c2, ci2, cv2) and negotiable(g, gi, gv, c1, ci1, cv2)
+  if state(GOAL, g, gi, d) and state(COMMITMENT, c1, ci1, d, a2) and state(COMMITMENT, c2, ci2, d, a2) and null(c2, ci2, cv2) and negotiable(g, gi, gv, c1, ci1, cv2)
     yield [['create', c2, ci2, d, a2, ci2]]
   end
 end
@@ -101,7 +101,7 @@ end
 # )
 
 def abandonEndGoal_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and (activeG(g, gi, gv) or state('suspendedG', g, gi, gv)) and state('commitment', c, ci, d, a) and (state('expired', c, ci, cv) or terminated(c, ci, cv))
+  if state(GOAL, g, gi, d) and (activeG(g, gi, gv) or state(SUSPENDEDG, g, gi, gv)) and state(COMMITMENT, c, ci, d, a) and (state(EXPIRED, c, ci, cv) or terminated(c, ci, cv))
     yield [['drop', g, gi, d, gv]]
   end
 end
@@ -118,13 +118,13 @@ end
 # )
 
 def deliver_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and inactiveG(g, gi, gv) and state('commitment', c, ci, d, a) and detached(c, ci, cv)
-    yield [['activate', g, gi, d, gv]]
+  if state(GOAL, g, gi, d) and inactiveG(g, gi, gv) and state(COMMITMENT, c, ci, d, a) and detached(c, ci, cv)
+    yield [[ACTIVATE, g, gi, d, gv]]
   end
 end
 
 def deliver_case1(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and nullG(g, gi, gv) and state('commitment', c, ci, d, a)
+  if state(GOAL, g, gi, d) and nullG(g, gi, gv) and state(COMMITMENT, c, ci, d, a)
     yield [
       ['consider', g, gi, d, gv],
       ['activate', g, gi, d, gv]
@@ -143,13 +143,13 @@ end
 # )
 
 def detach_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, a) and inactiveG(g, gi, gv) and state('commitment', c, ci, d, a) and conditional(c, ci, cv)
+  if state(GOAL, g, gi, a) and inactiveG(g, gi, gv) and state(COMMITMENT, c, ci, d, a) and conditional(c, ci, cv)
     yield [['activate', g, gi, a, gv]]
   end
 end
 
 def detach_case1(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, a) and nullG(g, gi, gv) and state('commitment', c, ci, d, a)
+  if state(GOAL, g, gi, a) and nullG(g, gi, gv) and state(COMMITMENT, c, ci, d, a)
     yield [
       ['consider', g, gi, a, gv],
       ['activate', g, gi, a, gv]
@@ -163,7 +163,7 @@ end
 # )
 
 def backBurner_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and activeG(g, gi, gv) and state('commitment', c, ci, d, a) and state('pending', c, ci, cv)
+  if state(GOAL, g, gi, d) and activeG(g, gi, gv) and state(COMMITMENT, c, ci, d, a) and state(PENDING, c, ci, cv)
     yield [['suspendG', g, gi, d, gv]]
   end
 end
@@ -174,7 +174,7 @@ end
 # )
 
 def frontBurner_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and state('suspendedG', g, gi, gv) and state('commitment', c, ci, d, a) and detached(c, ci, cv)
+  if state(GOAL, g, gi, d) and state(SUSPENDEDG, g, gi, gv) and state(COMMITMENT, c, ci, d, a) and detached(c, ci, cv)
     yield [['reactivateG', g, gi, d, gv]]
   end
 end
@@ -186,7 +186,7 @@ end
 # )
 
 def abandonMeansGoal_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and (activeG(g, gi, gv) or state('suspendedG', g, gi, gv)) and state('commitment', c, ci, d, a) and (state('expired', c, ci, cv) or terminated(c, ci, cv))
+  if state(GOAL, g, gi, d) and (activeG(g, gi, gv) or state(SUSPENDEDG, g, gi, gv)) and state(COMMITMENT, c, ci, d, a) and (state(EXPIRED, c, ci, cv) or terminated(c, ci, cv))
     yield [['drop', g, gi, d, gv]]
   end
 end
@@ -197,7 +197,7 @@ end
 # )
 
 def persist_case0(g, gi, gv, c, ci, cv, g2, gi2, gv2, d, a)
-  if state('goal', g, gi, d) and (terminatedG(g, gi, gv) or failedG(g, gi, gv)) and state('commitment', c, ci, d, a) and detached(c, ci, cv) and state('goal', g2, gi2, d) and nullG(g2, gi2, gv2)
+  if state(GOAL, g, gi, d) and (terminatedG(g, gi, gv) or failedG(g, gi, gv)) and state(COMMITMENT, c, ci, d, a) and detached(c, ci, cv) and state(GOAL, g2, gi2, d) and nullG(g2, gi2, gv2)
     yield [
       ['consider', g2, gi2, d, gv2],
       ['activate', g2, gi2, d, gv2]
@@ -211,7 +211,7 @@ end
 # )
 
 def giveUp_case0(g, gi, gv, c, ci, cv, d, a)
-  if state('goal', g, gi, d) and (terminatedG(g, gi, gv) or state('failed', g, gi, gv)) and state('commitment', c, ci, d, a) and detached(c, ci, cv)
+  if state(GOAL, g, gi, d) and (terminatedG(g, gi, gv) or state(FAILED, g, gi, gv)) and state(COMMITMENT, c, ci, d, a) and detached(c, ci, cv)
     yield [['cancel', c, ci, d, a, cv]]
   end
 end

@@ -29,7 +29,7 @@ class Postulate < Test::Unit::TestCase
       ],
       :methods => [],
       :predicates => {'at' => true},
-      :state => [['at', '0']],
+      :state => {'at' => [['0']]},
       :tasks => [true,
         ['add-one', '0'],
         ['add-one', '1'],

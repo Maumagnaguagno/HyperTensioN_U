@@ -1,13 +1,14 @@
 require_relative 'Cookie'
 
+AT = 0
+HAVE = 1
+
 plan = Cookie.problem(
   # Start
-  {
-    'at' => [
-      ['bob','home']
-    ],
-    'have' => []
-  },
+  [
+    [['bob','home']],
+    []
+  ],
   # Tasks
   [
     ['get_cookie', 'bob', 'home', 'cookie_store']

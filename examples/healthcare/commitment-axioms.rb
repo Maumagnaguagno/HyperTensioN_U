@@ -7,7 +7,7 @@
 
 # (:- (null ?c ?ci ?cv) (not (var ?c ?ci ?cv) ))
 def null(c, ci, cv)
-  cv.empty? ? @state['var'].none? {|terms| terms.size == 3 and terms[0] == c and terms[1] == ci and cv.replace(terms[2])} : !state('var', c, ci, cv)
+  cv.empty? ? @state[VAR].none? {|terms| terms.size == 3 and terms[0] == c and terms[1] == ci and cv.replace(terms[2])} : !state(VAR, c, ci, cv)
 end
 
 # (:- (conditional ?c ?ci ?cv) (and (active ?c ?ci ?cv) (not (p ?c ?ci ?cv)) ))
@@ -28,21 +28,21 @@ end
 #   (not (satisfied ?c ?ci ?cv))
 # ))
 def active(c, ci, cv)
-  state('var', c, ci, cv) and
+  state(VAR, c, ci, cv) and
   not terminal(c, ci, cv) and
-  not state('pending', c, ci, cv) and
+  not state(PENDING, c, ci, cv) and
   not satisfied(c, ci, cv)
 end
 
 # (:- (terminated ?c ?ci ?cv) (or (and (not (p ?c ?ci ?cv)) (cancelled ?c ?ci ?cv)) (released ?c ?ci ?cv) ))
 def terminated(c, ci, cv)
-  (not p(c, ci, cv) and state('cancelled', c, ci, cv)) or state('released', c, ci, cv)
+  (not p(c, ci, cv) and state(CANCELLED, c, ci, cv)) or state(RELEASED, c, ci, cv)
 end
 
 # ;(:- (violated ?c ?ci ?cv) (or (and (p ?c ?ci ?cv) (cancelled ?c ?ci ?cv)) (and (not (p ?c ?ci ?cv)) ) ) ) ; Previous formalization with a mistaken disjunction, detected by Pankaj
 # (:- (violated ?c ?ci ?cv) (and (p ?c ?ci ?cv) (cancelled ?c ?ci ?cv) ))
 def violated(c, ci, cv)
-  p(c, ci, cv) and state('cancelled', c, ci, cv)
+  p(c, ci, cv) and state(CANCELLED, c, ci, cv)
 end
 
 # (:- (satisfied ?c ?ci ?cv) (and (not (null ?c ?ci ?cv)) (not (terminal ?c ?ci ?cv)) (q ?c ?ci ?cv) ))
@@ -56,6 +56,6 @@ end
 # (:- (terminal ?c ?ci ?cv) (and (commitment ?c ?ci ?de ?cr) (or (cancelled ?c ?ci ?cv) (released ?c ?ci ?cv) (expired ?c ?ci ?cv)) ))
 def terminal(c, ci, cv)
   # Free variables de and cr requires special comparison
-  @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == c and terms[1] == ci} and
-  (state('cancelled', c, ci, cv) or state('released', c, ci, cv) or state('expired', c, ci, cv))
+  @state[COMMITMENT].any? {|terms| terms.size == 4 and terms[0] == c and terms[1] == ci} and
+  (state(CANCELLED, c, ci, cv) or state(RELEASED, c, ci, cv) or state(EXPIRED, c, ci, cv))
 end

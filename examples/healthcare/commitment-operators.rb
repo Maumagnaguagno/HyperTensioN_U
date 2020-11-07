@@ -10,7 +10,7 @@
 # )
 
 def invisible_testSuccess(c, ci, cv, state)
-  @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == c and terms[1] == ci}
+  @state[COMMITMENT].any? {|terms| terms.size == 4 and terms[0] == c and terms[1] == ci}
 end
 
 # (:operator (!!testFailure ?cg ?cgi ?state)
@@ -35,8 +35,8 @@ end
 # )
 
 def create(c, ci, de, cr, cv)
-  if state('commitment', c, ci, de, cr) and null(c, ci, cv)
-    apply([['var', c, ci, cv]], [])
+  if state(COMMITMENT, c, ci, de, cr) and null(c, ci, cv)
+    apply([[VAR, c, ci, cv]], [])
   end
 end
 
@@ -51,8 +51,8 @@ end
 # )
 
 def suspend(c, ci, de, cr, cv)
-  if state('commitment', c, ci, de, cr) and active(c, ci, cv)
-    apply([['pending', c, ci, cv]], [])
+  if state(COMMITMENT, c, ci, de, cr) and active(c, ci, cv)
+    apply([[PENDING, c, ci, cv]], [])
   end
 end
 
@@ -71,8 +71,8 @@ end
 # )
 
 def reactivate(c, ci, de, cr, cv)
-  if state('commitment', c, ci, de, cr) and state('pending', c, ci, cv)
-    apply([], [['pending', c, ci, cv]])
+  if state(COMMITMENT, c, ci, de, cr) and state(PENDING, c, ci, cv)
+    apply([], [[PENDING, c, ci, cv]])
   end
 end
 
@@ -88,8 +88,8 @@ end
 # )
 
 def expire(c, ci, de, cr, cv)
-  if state('commitment', c, ci, de, cr) and conditional(c, ci, cv) and activetimeout(c, ci, cv)
-    apply([['expired', c, ci, cv]], [])
+  if state(COMMITMENT, c, ci, de, cr) and conditional(c, ci, cv) and activetimeout(c, ci, cv)
+    apply([[EXPIRED, c, ci, cv]], [])
   end
 end
 
@@ -105,8 +105,8 @@ end
 # )
 
 def timeoutviolate(c, ci, de, cr, cv)
-  if state('commitment', c, ci, de, cr) and detached(c, ci, cv) and detachedtimeout(c, ci, cv)
-    apply([['violated', c, ci, cv]], [['detached', c, ci, cv]])
+  if state(COMMITMENT, c, ci, de, cr) and detached(c, ci, cv) and detachedtimeout(c, ci, cv)
+    apply([[VIOLATED, c, ci, cv]], [[DETACHED, c, ci, cv]])
   end
 end
 
@@ -121,8 +121,8 @@ end
 # )
 
 def cancel(c, ci, de, cr, cv)
-  if state('commitment', c, ci, de, cr) and active(c, ci, cv)
-    apply([['cancelled', c, ci, cv]], [])
+  if state(COMMITMENT, c, ci, de, cr) and active(c, ci, cv)
+    apply([[CANCELLED, c, ci, cv]], [])
   end
 end
 
@@ -137,7 +137,7 @@ end
 # )
 
 def release(c, ci, de, cr, cv)
-  if state('commitment', c, ci, de, cr) and active(c, ci, cv)
-    apply([['released', c, ci, cv]], [])
+  if state(COMMITMENT, c, ci, de, cr) and active(c, ci, cv)
+    apply([[RELEASED, c, ci, cv]], [])
   end
 end

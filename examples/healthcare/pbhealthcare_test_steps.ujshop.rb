@@ -4,6 +4,49 @@ debug = ARGV.first == 'debug'
 max_plans = ARGV[1] ? ARGV[1].to_i : -1
 min_prob  = ARGV[2] ? ARGV[2].to_f : 0
 
+# Predicates
+PATIENT = 0
+PHYSICIAN = 1
+RADIOLOGIST = 2
+PATHOLOGIST = 3
+REGISTRAR = 4
+HOSPITAL = 5
+PATIENTHASCANCER = 6
+COMMITMENT = 7
+GOAL = 8
+VAR = 9
+VARG = 10
+DIAGNOSISREQUESTED = 11
+IAPPOINTMENTREQUESTED = 12
+IAPPOINTMENTKEPT = 13
+IMAGINGSCAN = 14
+IMAGINGREQUESTED = 15
+IMAGINGRESULTSREPORTED = 16
+BAPPOINTMENTREQUESTED = 17
+BAPPOINTMENTKEPT = 18
+BIOPSYREPORT = 19
+BIOPSYREQUESTED = 20
+RADIOLOGYREQUESTED = 21
+TREATMENTPLAN = 22
+DIAGNOSISPROVIDED = 23
+TISSUEPROVIDED = 24
+RADPATHRESULTSREPORTED = 25
+PATHRESULTSREPORTED = 26
+PATIENTREPORTEDTOREGISTRAR = 27
+INREGISTRY = 28
+PATHOLOGYREQUESTED = 29
+INTEGRATEDREPORT = 30
+REPORTNEEDSREVIEW = 31
+CANCELLED = 32
+RELEASED = 33
+EXPIRED = 34
+DROPPED = 35
+ABORTED = 36
+PENDING = 37
+ACTIVATEDG = 38
+SUSPENDEDG = 39
+DONTKNOW = 40
+
 # Objects
 alice = 'alice'
 bob = 'bob'
@@ -16,15 +59,15 @@ detached = 'detached'
 
 plans = Healthcare.problem(
   # Start
-  {
-    'patient' => [[alice]],
-    'physician' => [[bob]],
-    'radiologist' => [[clyde]],
-    'pathologist' => [[doug]],
-    'registrar' => [[evelyn]],
-    'hospital' => [[simhospital]],
-    'patientHasCancer' => [[alice]],
-    'commitment' => [
+  [
+    [[alice]], # PATIENT
+    [[bob]], # PHYSICIAN
+    [[clyde]], # RADIOLOGIST
+    [[doug]], # PATHOLOGIST
+    [[evelyn]], # REGISTRAR
+    [[simhospital]], # HOSPITAL
+    [[alice]], # PATIENTHASCANCER
+    [ # COMMITMENT
       [C1, C1, bob, alice],
       [C2, C2, alice, bob],
       [C3, C3, alice, bob],
@@ -33,7 +76,7 @@ plans = Healthcare.problem(
       [C6, C6, doug, clyde],
       [C7, C7, evelyn, doug],
     ],
-    'goal' => [
+    [ # GOAL
       [G1,  G1, bob],
       [G2,  G2, alice],
       [G3,  G3, clyde],
@@ -51,39 +94,39 @@ plans = Healthcare.problem(
       [G18, G18, doug],
       [G19, G19, evelyn],
     ],
-    'var' => [],
-    'varG' => [],
-    'diagnosisRequested' => [],
-    'iAppointmentRequested' => [],
-    'iAppointmentKept' => [],
-    'imagingScan' => [],
-    'imagingRequested' => [],
-    'imagingResultsReported' => [],
-    'bAppointmentRequested' => [],
-    'bAppointmentKept' => [],
-    'biopsyReport' => [],
-    'biopsyRequested' => [],
-    'radiologyRequested' => [],
-    'treatmentPlan' => [],
-    'diagnosisProvided' => [],
-    'tissueProvided' => [],
-    'radPathResultsReported' => [],
-    'pathResultsReported' => [],
-    'patientReportedToRegistrar' => [],
-    'inRegistry' => [],
-    'pathologyRequested' => [],
-    'integratedReport' => [],
-    'reportNeedsReview' => [],
-    'cancelled' => [],
-    'released' => [],
-    'expired' => [],
-    'dropped' => [],
-    'aborted' => [],
-    'pending' => [],
-    'activatedG' => [],
-    'suspendedG' => [],
-    'dontknow' => []
-  },
+    [], # VAR
+    [], # VARG
+    [], # DIAGNOSISREQUESTED
+    [], # IAPPOINTMENTREQUESTED
+    [], # IAPPOINTMENTKEPT
+    [], # IMAGINGSCAN
+    [], # IMAGINGREQUESTED
+    [], # IMAGINGRESULTSREPORTED
+    [], # BAPPOINTMENTREQUESTED
+    [], # BAPPOINTMENTKEPT
+    [], # BIOPSYREPORT
+    [], # BIOPSYREQUESTED
+    [], # RADIOLOGYREQUESTED
+    [], # TREATMENTPLAN
+    [], # DIAGNOSISPROVIDED
+    [], # TISSUEPROVIDED
+    [], # RADPATHRESULTSREPORTED
+    [], # PATHRESULTSREPORTED
+    [], # PATIENTREPORTEDTOREGISTRAR
+    [], # INREGISTRY
+    [], # PATHOLOGYREQUESTED
+    [], # INTEGRATEDREPORT
+    [], # REPORTNEEDSREVIEW
+    [], # CANCELLED
+    [], # RELEASED
+    [], # EXPIRED
+    [], # DROPPED
+    [], # ABORTED
+    [], # PENDING
+    [], # ACTIVATEDG
+    [], # SUSPENDEDG
+    [] # DONTKNOW
+  ],
   # Tasks
   [
     ['step1', alice],

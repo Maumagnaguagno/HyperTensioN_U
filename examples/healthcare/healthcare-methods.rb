@@ -7,7 +7,7 @@
 
 def hospitalScenario_case0
   subtasks = []
-  @state['patient'].each {|terms|
+  @state[PATIENT].each {|terms|
     if terms.size == 1
       patient = terms[0]
       subtasks.push(
@@ -69,14 +69,14 @@ def testCommitments_case0
   a8 = ''
   generate(
     [
-      ['commitment', C1, c1, d1, a1],
-      ['commitment', C2, c2, d2, a2],
-      ['commitment', C3, c3, d3, a3],
-      ['commitment', C4, c4, d4, a4],
-      ['commitment', C5, c5, d5, a5],
-      ['commitment', C6, c6, d6, a6],
-      ['commitment', C7, c7, d7, a7],
-      ['commitment', C8, c8, d8, a8]
+      [COMMITMENT, C1, c1, d1, a1],
+      [COMMITMENT, C2, c2, d2, a2],
+      [COMMITMENT, C3, c3, d3, a3],
+      [COMMITMENT, C4, c4, d4, a4],
+      [COMMITMENT, C5, c5, d5, a5],
+      [COMMITMENT, C6, c6, d6, a6],
+      [COMMITMENT, C7, c7, d7, a7],
+      [COMMITMENT, C8, c8, d8, a8]
     ],
     [], c1, d1, a1, c2, d2, a2, c3, d3, a3, c4, d4, a4, c5, d5, a5, c6, d6, a6, c7, d7, a7, c8, d8, a8
   ) {
@@ -103,9 +103,9 @@ def seekHelp_case0(patient)
   ci1 = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['commitment', C1, ci1, physician, patient]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [COMMITMENT, C1, ci1, physician, patient]
     ],
     [], physician, ci1
   ) {
@@ -126,7 +126,7 @@ end
 # )
 
 def processPatient_process_patient_healthy(patient)
-  if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == C1 and terms[3] == patient and state('patient', patient) and state('physician', terms[2])}
+  if @state[COMMITMENT].any? {|terms| terms.size == 4 and terms[0] == C1 and terms[3] == patient and state(PATIENT, patient) and state(PHYSICIAN, terms[2])}
     yield [
       ['performImagingTests', patient],
       ['performPathologyTests', patient],
@@ -162,13 +162,13 @@ def performImagingTests_imaging(patient)
   ci5 = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['commitment', C1, ci, physician, patient],
-      ['radiologist', radiologist],
-      ['pathologist', pathologist],
-      ['commitment', C2, ci2, patient, physician],
-      ['commitment', C5, ci5, radiologist, physician]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [COMMITMENT, C1, ci, physician, patient],
+      [RADIOLOGIST, radiologist],
+      [PATHOLOGIST, pathologist],
+      [COMMITMENT, C2, ci2, patient, physician],
+      [COMMITMENT, C5, ci5, radiologist, physician]
     ],
     [], physician, ci, radiologist, pathologist, ci2, ci5
   ) {
@@ -188,7 +188,7 @@ end
 # )
 
 def performPathologyTests_biopsy_unnecessary(patient)
-  yield [] if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == C1 and terms[3] == patient and state('patient', patient) and state('physician', terms[2])}
+  yield [] if @state[COMMITMENT].any? {|terms| terms.size == 4 and terms[0] == C1 and terms[3] == patient and state(PATIENT, patient) and state(PHYSICIAN, terms[2])}
 end
 
 # (:method (performPathologyTests ?patient)
@@ -218,12 +218,12 @@ def performPathologyTests_imaging_plus_biopsy(patient)
   ci4 = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['pathologist', pathologist],
-      ['commitment', C3, ci3, patient, physician],
-      ['commitment', C4, ci4, radiologist, physician]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [RADIOLOGIST, radiologist],
+      [PATHOLOGIST, pathologist],
+      [COMMITMENT, C3, ci3, patient, physician],
+      [COMMITMENT, C4, ci4, radiologist, physician]
     ],
     [], physician, radiologist, pathologist, ci, ci3, ci4
   ) {
@@ -250,13 +250,13 @@ def attendTest_attend_imaging(patient)
   radiologist = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['iAppointmentRequested', patient, radiologist]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [RADIOLOGIST, radiologist],
+      [IAPPOINTMENTREQUESTED, patient, radiologist]
     ],
     [
-      ['iAppointmentKept', patient, radiologist]
+      [IAPPOINTMENTKEPT, patient, radiologist]
     ], physician, radiologist
   ) {
     yield [['performImaging', radiologist, patient, physician]]
@@ -268,13 +268,13 @@ def attendTest_attend_biopsy(patient)
   radiologist = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['bAppointmentRequested', patient, radiologist]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [RADIOLOGIST, radiologist],
+      [BAPPOINTMENTREQUESTED, patient, radiologist]
     ],
     [
-      ['bAppointmentKept', patient, radiologist]
+      [BAPPOINTMENTKEPT, patient, radiologist]
     ], physician, radiologist
   ) {
     yield [['performBiopsy', radiologist, patient, physician]]
@@ -291,11 +291,11 @@ end
 # )
 
 def attendTest_no_show_imaging(patient)
-  yield [] if @state['iAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == patient and state('patient', patient) and state('radiologist', terms[1]) and not state('iAppointmentKept', patient, terms[1])}
+  yield [] if @state[IAPPOINTMENTREQUESTED].any? {|terms| terms.size == 2 and terms[0] == patient and state(PATIENT, patient) and state(RADIOLOGIST, terms[1]) and not state(IAPPOINTMENTKEPT, patient, terms[1])}
 end
 
 def attendTest_no_show_biopsy(patient)
-  yield [] if @state['bAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == patient and state('patient', patient) and state('radiologist', terms[1]) and not state('bAppointmentKept', patient, terms[1])}
+  yield [] if @state[BAPPOINTMENTREQUESTED].any? {|terms| terms.size == 2 and terms[0] == patient and state(PATIENT, patient) and state(RADIOLOGIST, terms[1]) and not state(BAPPOINTMENTKEPT, patient, terms[1])}
 end
 
 # (:method (deliverDiagnostics ?patient)
@@ -323,13 +323,13 @@ def deliverDiagnostics_only_imaging(patient)
   radiologist = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['iAppointmentKept', patient, radiologist]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [RADIOLOGIST, radiologist],
+      [IAPPOINTMENTKEPT, patient, radiologist]
     ],
     [
-      ['biopsyRequested', physician, patient]
+      [BIOPSYREQUESTED, physician, patient]
     ], physician, radiologist
   ) {
     yield [
@@ -346,12 +346,12 @@ def deliverDiagnostics_imaging_biopsy_integrated(patient)
   pathologist = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['pathologist', pathologist],
-      ['iAppointmentKept', patient, radiologist],
-      ['bAppointmentKept', patient, radiologist]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [RADIOLOGIST, radiologist],
+      [PATHOLOGIST, pathologist],
+      [IAPPOINTMENTKEPT, patient, radiologist],
+      [BAPPOINTMENTKEPT, patient, radiologist]
     ],
     [], physician, radiologist, pathologist
   ) {

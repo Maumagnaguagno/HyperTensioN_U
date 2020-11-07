@@ -17,19 +17,19 @@
 # (:- (p C7 ?ci (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (patientReportedToRegistrar ?t ?d)) ) )
 
 def p(cn, ci, t)
-  @state['commitment'].any? {|cterms|
+  @state[COMMITMENT].any? {|cterms|
     c = cterms[0]
-    if cterms.size == 4 and cterms[1] == ci and state('var', c, ci, t)
+    if cterms.size == 4 and cterms[1] == ci and state(VAR, c, ci, t)
       d = cterms[2]
       a = cterms[3]
       case cn
-      when C1 then state('diagnosisRequested', a, d) and not violated(c, C2, t) and not violated(c, C3, t)
-      when C2 then @state['iAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when C3 then @state['bAppointmentRequested'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when C4 then @state['imagingRequested'].any? {|terms| terms.size == 2 and terms[0] == a and list(terms[1]) == t and state('iAppointmentKept', terms[1], d)}
-      when C5 then @state['biopsyRequested'].any? {|terms| terms.size == 2 and terms[0] == a and state('bAppointmentKept', terms[1], d)}
-      when C6 then @state['pathologyRequested'].any? {|terms| terms.size == 3 and terms[1] == d and state('tissueProvided', terms[2])}
-      when C7 then @state['patientReportedToRegistrar'].any? {|terms| terms.size == 2 and list(terms[0]) == t and terms[1] == d}
+      when C1 then state(DIAGNOSISREQUESTED, a, d) and not violated(c, C2, t) and not violated(c, C3, t)
+      when C2 then @state[IAPPOINTMENTREQUESTED].any? {|terms| terms.size == 2 and terms[0] == d}
+      when C3 then @state[BAPPOINTMENTREQUESTED].any? {|terms| terms.size == 2 and terms[0] == d}
+      when C4 then @state[IMAGINGREQUESTED].any? {|terms| terms.size == 2 and terms[0] == a and list(terms[1]) == t and state(IAPPOINTMENTKEPT, terms[1], d)}
+      when C5 then @state[BIOPSYREQUESTED].any? {|terms| terms.size == 2 and terms[0] == a and state(BAPPOINTMENTKEPT, terms[1], d)}
+      when C6 then @state[PATHOLOGYREQUESTED].any? {|terms| terms.size == 3 and terms[1] == d and state(TISSUEPROVIDED, terms[2])}
+      when C7 then @state[PATIENTREPORTEDTOREGISTRAR].any? {|terms| terms.size == 2 and list(terms[0]) == t and terms[1] == d}
       end
     end
   }
@@ -44,19 +44,19 @@ end
 # (:- (q C7 ?ci (?t)) (and (commitment ?c ?ci ?d ?a) (var ?c ?ci (?t)) (and (inRegistry ?t)) ) )
 
 def q(cn, ci, t)
-  @state['commitment'].any? {|cterms|
+  @state[COMMITMENT].any? {|cterms|
     c = cterms[0]
-    if cterms.size == 4 and cterms[1] == ci and state('var', c, ci, t)
+    if cterms.size == 4 and cterms[1] == ci and state(VAR, c, ci, t)
       d = cterms[2]
       a = cterms[3]
       case cn
-      when C1 then @state['diagnosisProvided'].any? {|terms| terms.size == 2 and terms[0] == d and terms[1] == a}
-      when C2 then @state['iAppointmentKept'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when C3 then @state['bAppointmentKept'].any? {|terms| terms.size == 2 and terms[0] == d}
-      when C4 then @state['imagingResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a and list(terms[2]) == t}
-      when C5 then @state['radPathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a}
-      when C6 then @state['pathResultsReported'].any? {|terms| terms.size == 3 and terms[0] == a}
-      when C7 then @state['inRegistry'].any? {|terms| terms.size == 1 and list(terms[0]) == t}
+      when C1 then @state[DIAGNOSISPROVIDED].any? {|terms| terms.size == 2 and terms[0] == d and terms[1] == a}
+      when C2 then @state[IAPPOINTMENTKEPT].any? {|terms| terms.size == 2 and terms[0] == d}
+      when C3 then @state[BAPPOINTMENTKEPT].any? {|terms| terms.size == 2 and terms[0] == d}
+      when C4 then @state[IMAGINGRESULTSREPORTED].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a and list(terms[2]) == t}
+      when C5 then @state[RADPATHRESULTSREPORTED].any? {|terms| terms.size == 3 and terms[0] == d and terms[1] == a}
+      when C6 then @state[PATHRESULTSREPORTED].any? {|terms| terms.size == 3 and terms[0] == a}
+      when C7 then @state[INREGISTRY].any? {|terms| terms.size == 1 and list(terms[0]) == t}
       end
     end
   }
@@ -101,7 +101,7 @@ def pg(gn, gi, t)
      gn == G6 or gn == G7 or gn == G8 or gn == G9 or
      gn == G11 or gn == G12 or gn == G13 or gn == G15 or
      gn == G16 or gn == G17 or gn == G18 or gn == G19
-    @state['goal'].any? {|terms| terms.size == 3 and terms[1] == gi}
+    @state[GOAL].any? {|terms| terms.size == 3 and terms[1] == gi}
   end
 end
 
@@ -123,27 +123,27 @@ end
 # (:- (s  G19 ?gi (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (inRegistry ?t)) )
 
 def s(gn, gi, t)
-  @state['goal'].any? {|terms|
+  @state[GOAL].any? {|terms|
     g = terms[0]
-    if terms.size == 3 and terms[1] == gi and state('varG', g, gi, t)
+    if terms.size == 3 and terms[1] == gi and state(VARG, g, gi, t)
       a = terms[2]
       case gn
-      when G1 then @state['diagnosisRequested'].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t and terms2[1] == a}
-      when G2 then @state['diagnosisRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == a}
-      when G3 then @state['imagingRequested'].any? {|terms2| terms2.size == 2 and terms2[1] == t and @state['iAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms3[0] == t and terms3[1] == a}}
-      when G4 then @state['imagingRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == a and list(terms2[1]) == t}
-      when G6 then @state['iAppointmentKept'].any? {|terms2| terms2.size == 2 and terms2[0] == a}
-      when G7 then @state['imagingResultsReported'].any? {|terms2| terms2.size == 3 and terms2[0] == a and list(terms2[2]) == t}
-      when G8 then @state['biopsyRequested'].any? {|terms2| terms2.size == 2 and terms2[1] == t and @state['bAppointmentRequested'].any? {|terms3| terms3.size == 2 and terms3[0] == t}}
-      when G9 then @state['biopsyRequested'].any? {|terms2| terms2.size == 2 and terms2[0] == a and list(terms2[1]) == t and @state['bAppointmentRequested'].any? {|terms3| terms3.size == 2 and list(terms3[0]) == t}}
-      when G11 then @state['bAppointmentKept'].any? {|terms2| terms2.size == 2 and terms2[0] == a}
-      when G12 then @state['pathologyRequested'].any? {|terms2| terms2.size == 3 and terms2[1] == a and terms2[2] == t and state('tissueProvided', t)}
-      when G13 then @state['pathologyRequested'].any? {|terms2| terms2.size == 3 and list(terms2[2]) == t and state('tissueProvided', terms2[2])}
-      when G15 then @state['pathResultsReported'].any? {|terms2| terms2.size == 3 and list(terms2[2]) == t}
-      when G16 then @state['integratedReport'].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t}
-      when G17 then @state['patientReportedToRegistrar'].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t and terms2[1] == a}
-      when G18 then @state['patientReportedToRegistrar'].any? {|terms2| terms2.size == 2 and terms2[0] == t}
-      when G19 then @state['inRegistry'].any? {|terms2| terms2.size == 1 and list(terms2[0]) == t}
+      when G1 then @state[DIAGNOSISREQUESTED].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t and terms2[1] == a}
+      when G2 then @state[DIAGNOSISREQUESTED].any? {|terms2| terms2.size == 2 and terms2[0] == a}
+      when G3 then @state[IMAGINGREQUESTED].any? {|terms2| terms2.size == 2 and terms2[1] == t and @state[IAPPOINTMENTREQUESTED].any? {|terms3| terms3.size == 2 and terms3[0] == t and terms3[1] == a}}
+      when G4 then @state[IMAGINGREQUESTED].any? {|terms2| terms2.size == 2 and terms2[0] == a and list(terms2[1]) == t}
+      when G6 then @state[IAPPOINTMENTKEPT].any? {|terms2| terms2.size == 2 and terms2[0] == a}
+      when G7 then @state[IMAGINGRESULTSREPORTED].any? {|terms2| terms2.size == 3 and terms2[0] == a and list(terms2[2]) == t}
+      when G8 then @state[BIOPSYREQUESTED].any? {|terms2| terms2.size == 2 and terms2[1] == t and @state[BAPPOINTMENTREQUESTED].any? {|terms3| terms3.size == 2 and terms3[0] == t}}
+      when G9 then @state[BIOPSYREQUESTED].any? {|terms2| terms2.size == 2 and terms2[0] == a and list(terms2[1]) == t and @state[BAPPOINTMENTREQUESTED].any? {|terms3| terms3.size == 2 and list(terms3[0]) == t}}
+      when G11 then @state[BAPPOINTMENTKEPT].any? {|terms2| terms2.size == 2 and terms2[0] == a}
+      when G12 then @state[PATHOLOGYREQUESTED].any? {|terms2| terms2.size == 3 and terms2[1] == a and terms2[2] == t and state(TISSUEPROVIDED, t)}
+      when G13 then @state[PATHOLOGYREQUESTED].any? {|terms2| terms2.size == 3 and list(terms2[2]) == t and state(TISSUEPROVIDED, terms2[2])}
+      when G15 then @state[PATHRESULTSREPORTED].any? {|terms2| terms2.size == 3 and list(terms2[2]) == t}
+      when G16 then @state[INTEGRATEDREPORT].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t}
+      when G17 then @state[PATIENTREPORTEDTOREGISTRAR].any? {|terms2| terms2.size == 2 and list(terms2[0]) == t and terms2[1] == a}
+      when G18 then @state[PATIENTREPORTEDTOREGISTRAR].any? {|terms2| terms2.size == 2 and terms2[0] == t}
+      when G19 then @state[INREGISTRY].any? {|terms2| terms2.size == 1 and list(terms2[0]) == t}
       end
     end
   }
@@ -167,13 +167,13 @@ end
 # (:- (f  G19 ?gi (?t)) (and (goal ?g ?gi ?a) (varG ?g ?gi (?t)) (dontknow ?patient) ))
 
 def f(gn, gi, t)
-  @state['goal'].any? {|terms|
-    if terms.size == 3 and terms[1] == gi and state('varG', terms[0], gi, t)
+  @state[GOAL].any? {|terms|
+    if terms.size == 3 and terms[1] == gi and state(VARG, terms[0], gi, t)
       a = terms[2]
       case gn
-      when G1, G2, G6, G9, G11 then @state['dontknow'].any? {|terms2| terms2.size == 1 and terms2[0] == a}
-      when G3, G4, G7, G8, G13, G15, G16, G17, G18, G19 then @state['dontknow'].any? {|terms2| terms2.size == 1}
-      when G12 then @state['dontknow'].any? {|terms2| terms2.size == 1 and terms2[0] == t}
+      when G1, G2, G6, G9, G11 then @state[DONTKNOW].any? {|terms2| terms2.size == 1 and terms2[0] == a}
+      when G3, G4, G7, G8, G13, G15, G16, G17, G18, G19 then @state[DONTKNOW].any? {|terms2| terms2.size == 1}
+      when G12 then @state[DONTKNOW].any? {|terms2| terms2.size == 1 and terms2[0] == t}
       end
     end
   }

@@ -51,18 +51,18 @@
 # )
 
 def testCommitment_case0(c, ci, cv, s)
-  if @state['commitment'].any? {|terms| terms.size == 4 and terms[0] == c and terms[1] == ci}
+  if @state[COMMITMENT].any? {|terms| terms.size == 4 and terms[0] == c and terms[1] == ci}
     if (s == 'null' and null(c, ci, cv)) or
        (s == 'conditional' and conditional(c, ci, cv)) or
        (s == 'active' and active(c, ci, cv)) or
        (s == 'nactive' and not active(c, ci, cv)) or
        (s == 'detached' and detached(c, ci, cv)) or
-       (s == 'expired' and state(s, c, ci, cv)) or
-       (s == 'pending' and state(s, c, ci, cv)) or
+       (s == 'expired' and state(EXPIRED, c, ci, cv)) or
+       (s == 'pending' and state(PENDING, c, ci, cv)) or
        (s == 'terminated' and terminated(c, ci, cv)) or
        (s == 'violated' and violated(c, ci, cv)) or
        (s == 'satisfied' and satisfied(c, ci, cv)) or
-       (s == 'cancelled' and state(s, c, ci, cv)) or
+       (s == 'cancelled' and state(CANCELLED, c, ci, cv)) or
        (s == 'terminal' and terminal(c, ci, cv)) or
        (s == 'p' and p(c, ci, cv)) or
        (s == 'q' and q(c, ci, cv))
@@ -116,16 +116,16 @@ end
 # )
 
 def testGoal_case0(g, gi, gv, s)
-  if @state['goal'].any? {|terms| terms.size == 3 and terms[0] == g and terms[1] == gi}
+  if @state[GOAL].any? {|terms| terms.size == 3 and terms[0] == g and terms[1] == gi}
     if (s == 'null' and nullG(g, gi, gv)) or
        (s == 'inactive' and inactiveG(g, gi, gv)) or
        (s == 'ninactive' and not inactiveG(g, gi, gv)) or
        (s == 'active' and activeG(g, gi, gv)) or
        (s == 'nactive' and not activeG(g, gi, gv)) or
-       (s == 'suspended' and state('suspendedG', g, gi, gv)) or
-       (s == 'nsuspended' and not state('suspendedG', g, gi, gv)) or
+       (s == 'suspended' and state(SUSPENDEDG, g, gi, gv)) or
+       (s == 'nsuspended' and not state(SUSPENDEDG, g, gi, gv)) or
        (s == 'terminated' and terminatedG(g, gi, gv)) or
-       (s == 'failed' and state(s, g, gi, gv)) or
+       (s == 'failed' and state(FAILED, g, gi, gv)) or
        (s == 'satisfied' and satisfiedG(g, gi, gv)) or
        (s == 'nsatisfied' and not satisfiedG(g, gi, gv)) or
        (s == 'terminal' and terminalG(g, gi, gv))
@@ -145,7 +145,7 @@ def testGoalCommitmentRule_case0(rule, g, gi, a, c, ci, de, cr)
   # TODO eqGSCP may have multiple unifications for gv and cv
   gv = ''
   cv = ''
-  if state('goal', g, gi, a) and state('commitment', c, ci, de, cr) and rule == 'eqGSCP' and eqGSCP(g, gv, c, cv)
+  if state(GOAL, g, gi, a) and state(COMMITMENT, c, ci, de, cr) and rule == 'eqGSCP' and eqGSCP(g, gv, c, cv)
     yield [['invisible_testRuleSuccess', rule, list(g, gi, gv, c, ci, cv)]]
   end
 end

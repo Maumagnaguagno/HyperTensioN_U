@@ -26,8 +26,8 @@ module Cookie
   #-----------------------------------------------
 
   def state_valuation(old_state)
-    previous_have = old_state['have']
-    current_have = @state['have']
+    previous_have = old_state[HAVE]
+    current_have = @state[HAVE]
     bob__good_cookie = ['bob','good_cookie']
     bob__bad_cookie = ['bob','bad_cookie']
     value = 0
@@ -44,19 +44,19 @@ module Cookie
     apply_operator(
       # Positive preconditions
       [
-        ['at', agent, from]
+        [AT, agent, from]
       ],
       # Negative preconditions
       [
-        ['at', agent, to]
+        [AT, agent, to]
       ],
       # Add effects
       [
-        ['at', agent, to]
+        [AT, agent, to]
       ],
       # Del effects
       [
-        ['at', agent, from]
+        [AT, agent, from]
       ]
     )
   end
@@ -65,13 +65,13 @@ module Cookie
     apply_operator(
       # Positive preconditions
       [
-        ['at', agent, 'cookie_store']
+        [AT, agent, 'cookie_store']
       ],
       # Negative preconditions
       [],
       # Add effects
       [
-        ['have', agent, 'good_cookie']
+        [HAVE, agent, 'good_cookie']
       ],
       # Del effects
       []
@@ -82,13 +82,13 @@ module Cookie
     apply_operator(
       # Positive preconditions
       [
-        ['at', agent, 'cookie_store']
+        [AT, agent, 'cookie_store']
       ],
       # Negative preconditions
       [],
       # Add effects
       [
-        ['have', agent, 'bad_cookie']
+        [HAVE, agent, 'bad_cookie']
       ],
       # Del effects
       []

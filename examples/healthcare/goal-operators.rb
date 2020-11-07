@@ -10,7 +10,7 @@
 # )
 
 def invisible_testSuccessG(g, gi, gv, state)
-  @state['goal'].any? {|terms| terms.size == 3 and terms[0] == g and terms[1] == gi}
+  @state[GOAL].any? {|terms| terms.size == 3 and terms[0] == g and terms[1] == gi}
 end
 
 # Regular transitions
@@ -26,8 +26,8 @@ end
 # )
 
 def consider(g, gi, a, gv)
-  if state('goal', g, gi, a) and nullG(g, gi, gv) and pg(g, gi, gv)
-    apply([['varG', g, gi, gv]], [])
+  if state(GOAL, g, gi, a) and nullG(g, gi, gv) and pg(g, gi, gv)
+    apply([[VARG, g, gi, gv]], [])
   end
 end
 
@@ -42,8 +42,8 @@ end
 # )
 
 def activate(g, gi, a, gv)
-  if state('goal', g, gi, a) and inactiveG(g, gi, gv)
-    apply([['activatedG', g, gi, gv]], [])
+  if state(GOAL, g, gi, a) and inactiveG(g, gi, gv)
+    apply([[ACTIVATEDG, g, gi, gv]], [])
   end
 end
 
@@ -59,8 +59,8 @@ end
 # )
 
 def suspendG(g, gi, a, gv)
-  if state('goal', g, gi, a) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
-    apply([['suspendedG', g, gi, gv]], [['activatedG', g, gi, gv]])
+  if state(GOAL, g, gi, a) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
+    apply([[SUSPENDEDG, g, gi, gv]], [[ACTIVATEDG, g, gi, gv]])
   end
 end
 
@@ -78,8 +78,8 @@ end
 # )
 
 def reconsider(g, gi, a, gv)
-  if state('goal', g, gi, a) and state('suspendedG', g, gi, gv) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
-    apply([['dropped', g, gi, gv]], [])
+  if state(GOAL, g, gi, a) and state(SUSPENDEDG, g, gi, gv) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
+    apply([[DROPPED, g, gi, gv]], [])
   end
 end
 
@@ -97,8 +97,8 @@ end
 # )
 
 def reactivateG(g, gi, a, gv)
-  if state('goal', g, gi, a) and state('suspendedG', g, gi, gv) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
-    apply([['activatedG', g, gi, gv]], [['suspendedG', g, gi, gv]])
+  if state(GOAL, g, gi, a) and state(SUSPENDEDG, g, gi, gv) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
+    apply([[ACTIVATEDG, g, gi, gv]], [[SUSPENDEDG, g, gi, gv]])
   end
 end
 
@@ -114,8 +114,8 @@ end
 # )
 
 def drop(g, gi, a, gv)
-  if state('goal', g, gi, a) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
-    apply([['dropped', g, gi, gv]], [])
+  if state(GOAL, g, gi, a) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
+    apply([[DROPPED, g, gi, gv]], [])
   end
 end
 
@@ -131,8 +131,8 @@ end
 # )
 
 def abort(g, gi, a, gv)
-  if state('goal', g, gi, a) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
-    apply([['aborted', g, gi, gv]], [])
+  if state(GOAL, g, gi, a) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
+    apply([[ABORTED, g, gi, gv]], [])
   end
 end
 

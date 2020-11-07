@@ -39,14 +39,14 @@ def step1(patient)
   g2i = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['commitment', C1, c1_patient, physician, patient],
-      ['commitment', C2, c2_patient, patient, physician],
-      ['commitment', C3, c3_patient, patient, physician],
-      ['goal', G1, g1i, physician],
-      ['goal', G2, g2i, patient]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [RADIOLOGIST, radiologist],
+      [COMMITMENT, C1, c1_patient, physician, patient],
+      [COMMITMENT, C2, c2_patient, patient, physician],
+      [COMMITMENT, C3, c3_patient, patient, physician],
+      [GOAL, G1, g1i, physician],
+      [GOAL, G2, g2i, patient]
     ],
     [], physician, radiologist, c1_patient, c2_patient, c3_patient, g1i, g2i
   ) {
@@ -117,15 +117,15 @@ def step2(patient)
   g7i = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['commitment', C2, c2_patient, patient, physician],
-      ['commitment', C4, c4_patient, radiologist, physician],
-      ['goal', G3, g3i, radiologist],
-      ['goal', G4, g4i, physician],
-      ['goal', G6, g6i, patient],
-      ['goal', G7, g7i, radiologist]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [RADIOLOGIST, radiologist],
+      [COMMITMENT, C2, c2_patient, patient, physician],
+      [COMMITMENT, C4, c4_patient, radiologist, physician],
+      [GOAL, G3, g3i, radiologist],
+      [GOAL, G4, g4i, physician],
+      [GOAL, G6, g6i, patient],
+      [GOAL, G7, g7i, radiologist]
     ],
     [], physician, radiologist, c2_patient, c4_patient, g3i, g4i, g6i, g7i
   ) {
@@ -194,14 +194,14 @@ def step3(patient)
   g11i = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['commitment', C3, c3_patient, patient, physician],
-      ['commitment', C5, c5_patient, radiologist, physician],
-      ['goal', G8, g8i, radiologist],
-      ['goal', G9, g9i, physician],
-      ['goal', G11, g11i, patient]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [RADIOLOGIST, radiologist],
+      [COMMITMENT, C3, c3_patient, patient, physician],
+      [COMMITMENT, C5, c5_patient, radiologist, physician],
+      [GOAL, G8, g8i, radiologist],
+      [GOAL, G9, g9i, physician],
+      [GOAL, G11, g11i, patient]
     ],
     [], physician, radiologist, c3_patient, c5_patient, g8i, g9i, g11i
   ) {
@@ -276,16 +276,16 @@ def step4(patient)
   g16i = ''
   generate(
     [
-      ['patient', patient],
-      ['physician', physician],
-      ['radiologist', radiologist],
-      ['pathologist', pathologist],
-      ['commitment', C5, c5_patient, radiologist, physician],
-      ['commitment', C6, c6_patient, pathologist, radiologist],
-      ['goal', G12, g12i, pathologist],
-      ['goal', G13, g13i, radiologist],
-      ['goal', G15, g15i, pathologist],
-      ['goal', G16, g16i, radiologist]
+      [PATIENT, patient],
+      [PHYSICIAN, physician],
+      [RADIOLOGIST, radiologist],
+      [PATHOLOGIST, pathologist],
+      [COMMITMENT, C5, c5_patient, radiologist, physician],
+      [COMMITMENT, C6, c6_patient, pathologist, radiologist],
+      [GOAL, G12, g12i, pathologist],
+      [GOAL, G13, g13i, radiologist],
+      [GOAL, G15, g15i, pathologist],
+      [GOAL, G16, g16i, radiologist]
     ],
     [], physician, radiologist, pathologist, c5_patient, c6_patient, g12i, g13i, g15i, g16i
   ) {
@@ -351,13 +351,13 @@ def step5(patient)
   g19i = ''
   generate(
     [
-      ['patient', patient],
-      ['pathologist', pathologist],
-      ['registrar', registrar],
-      ['commitment', C7, c7_patient, registrar, pathologist],
-      ['goal', G17, g17i, registrar],
-      ['goal', G18, g18i, pathologist],
-      ['goal', G19, g19i, registrar]
+      [PATIENT, patient],
+      [PATHOLOGIST, pathologist],
+      [REGISTRAR, registrar],
+      [COMMITMENT, C7, c7_patient, registrar, pathologist],
+      [GOAL, G17, g17i, registrar],
+      [GOAL, G18, g18i, pathologist],
+      [GOAL, G19, g19i, registrar]
     ],
     [], pathologist, registrar, c7_patient, g17i, g18i, g19i
   ) {
