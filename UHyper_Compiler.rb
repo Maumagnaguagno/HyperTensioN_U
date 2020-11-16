@@ -7,11 +7,17 @@ module UHyper_Compiler
   # Predicates to Hyper
   #-----------------------------------------------
 
-  def predicates_to_hyper(predicates, indentation, yielder = '')
-    if predicates.empty?
-      "#{indentation}#{yielder}[]"
-    else
-      "#{indentation}#{yielder}[#{indentation}  [" << predicates.map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]"
+  def predicate_to_hyper(output, pre, terms, predicates)
+    output << "@state[#{evaluate(pre, true)}].include?([#{terms.map! {|t| evaluate(t, true)}.join(', ')}])"
+  end
+
+  #-----------------------------------------------
+  # Subtasks to Hyper
+  #-----------------------------------------------
+
+  def subtasks_to_hyper(tasks, indentation)
+    if tasks.empty? then "#{indentation}yield []"
+    else "#{indentation}yield [#{indentation}  [" << tasks.map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]"
     end
   end
 
@@ -34,7 +40,7 @@ module UHyper_Compiler
       else
         terms = precond_expression.drop(1).map! {|i| evaluate(i, true)}.join(', ')
         if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
-        else "@state['#{precond_expression.first}'].include?([#{terms}])"
+        else "@state[#{evaluate(precond_expression.first, true)}].include?([#{terms}])"
         end
       end
     end
@@ -153,10 +159,11 @@ module UHyper_Compiler
 
   def apply(modifier, effects, define_operators, duplicated)
     effects.each {|pre,*terms|
+      pre_evaluated = evaluate(pre, true)
       if duplicated.include?(pre)
-        define_operators << "\n    @state['#{pre}']"
+        define_operators << "\n    @state[#{pre_evaluated}]"
       else
-        define_operators << "\n    (@state['#{pre}'] = @state['#{pre}'].dup)"
+        define_operators << "\n    (@state[#{pre_evaluated}] = @state[#{pre_evaluated}].dup)"
         duplicated[pre] = nil
       end
       define_operators << ".#{modifier}([#{terms.map! {|i| evaluate(i, true)}.join(', ')}])"
@@ -190,10 +197,10 @@ module UHyper_Compiler
     domain_str << "\n    # Methods"
     methods.each_with_index {|(name,param,*decompositions),mi|
       domain_str << "\n    '#{name}' => [\n"
-      variables = param.empty? ? nil : "(#{param.join(', ').delete!('?')})"
+      paramstr = "(#{param.join(', ').delete!('?')})" unless param.empty?
       decompositions.each_with_index {|dec,i|
         domain_str << "      '#{name}_#{dec.first}'#{',' if decompositions.size - 1 != i}\n"
-        define_methods << "\n  def #{name}_#{dec.first}#{variables}"
+        define_methods << "\n  def #{name}_#{dec.first}#{paramstr}"
         # Obtain free variables
         # TODO refactor this block to work with complex expressions
         free_variables = []
@@ -232,7 +239,7 @@ module UHyper_Compiler
           end
           call_axiom = (assign = pre_flat.first == 'assign') || pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
           pre_flat.select! {|t| t.start_with?('?') and not ground_variables.include?(t)}
-          if call_axiom and pre_flat.empty? then ground_axioms_calls << pre
+          if pre_flat.empty? then ground_axioms_calls << pre
           elsif not pre_flat.all? {|t| free_variables.include?(t)}
             dependent_attachments << pre
             ground_free_variables << pre_flat.first if assign
@@ -241,21 +248,76 @@ module UHyper_Compiler
           end
         }
         close_method_str = "\n  end\n"
+        indentation = "\n    "
         if free_variables.empty?
           # Ground predicates, axioms and calls
           precond_pos.concat(precond_not).concat(ground_axioms_calls)
           define_methods << "\n    return unless " << expression_to_hyper(precond_pos.unshift('and'), axioms) unless precond_pos.empty?
-          indentation = "\n    "
         else
           # Ground axioms and calls
           define_methods << "\n    return unless " << expression_to_hyper(ground_axioms_calls.unshift('and'), axioms) unless ground_axioms_calls.empty?
           # Unify free variables
-          free_variables.each {|free| define_methods << "\n    #{free.delete('?')} = ''"}
-          define_methods << "\n    generate(\n      # Positive preconditions" << predicates_to_hyper(precond_pos, indentation = "\n      ")
-          define_methods << ",\n      # Negative preconditions" << predicates_to_hyper(precond_not.map!(&:last), indentation)
-          define_methods << ', ' << free_variables.join(', ').delete!('?') << "\n    ) {"
-          define_methods << "\n      next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
-          close_method_str.prepend("\n    }")
+          precond_not.map!(&:last)
+          equality = []
+          define_methods_comparison = ''
+          ground = param.dup
+          until precond_pos.empty?
+            pre, *terms = precond_pos.shift
+            equality.clear
+            define_methods_comparison.clear
+            new_grounds = false
+            terms2 = terms.map {|j|
+              if not j.start_with?('?')
+                equality << "_#{j}_ground != '#{j}'"
+                "_#{j}_ground"
+              elsif ground.include?(j)
+                equality << "#{j}_ground != #{j}".delete!('?')
+                evaluate("#{j}_ground", true)
+              else
+                new_grounds = true
+                ground << free_variables.delete(j)
+                evaluate(j, true)
+              end
+            }
+            if new_grounds
+              define_methods << "#{indentation}return" unless predicates[pre] or state.include?(pre)
+              define_methods << "#{indentation}@state[#{evaluate(pre, true)}].each {|#{terms2.join(', ')},|"
+              close_method_str.prepend("#{indentation}}")
+              indentation << '  '
+            elsif pre == '=' then equality << "#{terms2[0]} != #{terms2[1]}"
+            elsif not predicates[pre] and not state.include?(pre) then define_methods << "#{indentation}return"
+            else predicate_to_hyper(define_methods_comparison << "#{indentation}next unless ", pre, terms, predicates)
+            end
+            precond_pos.reject! {|pre,*terms|
+              if (terms & free_variables).empty?
+                if pre == '=' then equality << "#{evaluate(terms[0], true)} != #{evaluate(terms[1], true)}"
+                elsif not predicates[pre] and not state.include?(pre) then define_methods << "#{indentation}return"
+                else predicate_to_hyper(define_methods_comparison << "#{indentation}next unless ", pre, terms, predicates)
+                end
+              end
+            }
+            precond_not.reject! {|pre,*terms|
+              if (terms & free_variables).empty?
+                if pre == '=' then equality << "#{evaluate(terms[0], true)} == #{evaluate(terms[1], true)}"
+                elsif predicates[pre] or state.include?(pre) then predicate_to_hyper(define_methods_comparison << "#{indentation}next if ", pre, terms, predicates)
+                end
+              end
+            }
+            define_methods << "#{indentation}next if #{equality.join(' or ')}" unless equality.empty?
+            define_methods << define_methods_comparison
+          end
+          equality.clear
+          define_methods_comparison.clear
+          precond_not.each {|pre,*terms|
+            if (terms & free_variables).empty?
+              if pre == '=' then equality << "#{evaluate(terms[0], true)} == #{evaluate(terms[1], true)}"
+              elsif predicates[pre] or state.include?(pre) then predicate_to_hyper(define_methods_comparison << "#{indentation}next if ", pre, terms, predicates)
+              end
+            end
+          }
+          define_methods << "#{indentation}next if #{equality.join(' or ')}" unless equality.empty?
+          define_methods << define_methods_comparison
+          define_methods << "#{indentation}next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
         end
         # Semantic attachments
         precond_attachments.each {|positive,pre,*terms|
@@ -270,8 +332,7 @@ module UHyper_Compiler
             define_methods << "#{indentation}External.#{pre}(#{terms.join(', ')}) {"
             close_method_str.prepend("#{indentation}}")
             indentation << '  '
-          else
-            define_methods << "#{indentation}next if External.#{pre}(#{terms.join(', ')}) {break true}"
+          else define_methods << "#{indentation}next if External.#{pre}(#{terms.join(', ')}) {break true}"
           end
         }
         unless dependent_attachments.empty?
@@ -279,7 +340,7 @@ module UHyper_Compiler
           define_methods << "#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
         end
         # Subtasks
-        define_methods << predicates_to_hyper(dec[2], indentation, 'yield ') << close_method_str
+        define_methods << subtasks_to_hyper(dec[2], indentation) << close_method_str
       }
       domain_str << (methods.size.pred == mi ? '    ]' : '    ],')
     }
@@ -329,9 +390,9 @@ module UHyper_Compiler
     # Extract information
     objects = []
     predicates.each_key {|i| state[i] ||= []}
-    state.each {|pre,k| k.each {|terms| objects.concat(terms)}}
+    state.each_value {|k| k.each {|terms| objects.concat(terms)}}
     ordered = tasks.shift
-    tasks.each {|pre,*terms| objects.concat(terms)}
+    tasks.each {|_,*terms| objects.concat(terms)}
     # Objects
     objects.uniq!
     objects.each {|i|

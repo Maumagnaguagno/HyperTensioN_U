@@ -246,26 +246,17 @@ module Plant_watering
   end
 
   def move_to_load_before_move_to_pour_case_0(p, l)
-    return unless ((px = External.function(['x', p])) and (py = External.function(['y', p])))
-    a = ''
-    t = ''
-    generate(
-      # Positive preconditions
-      [
-        ['agent', a],
-        ['tap', t],
-        ['plant', p]
-      ],
-      # Negative preconditions
-      [], a, t
-    ) {
-      next unless ((tx = External.function(['x', t])) and (ty = External.function(['y', t])))
-      yield [
-        ['forward', a, tx, ty],
-        ['repeat', l, 'load', a, t],
-        ['forward', a, px, py],
-        ['repeat', l, 'pour', a, p]
-      ]
+    return unless (@state['plant'].include?([p]) and (px = External.function(['x', p])) and (py = External.function(['y', p])))
+    @state['agent'].each {|a,|
+      @state['tap'].each {|t,|
+        next unless ((tx = External.function(['x', t])) and (ty = External.function(['y', t])))
+        yield [
+          ['forward', a, tx, ty],
+          ['repeat', l, 'load', a, t],
+          ['forward', a, px, py],
+          ['repeat', l, 'pour', a, p]
+        ]
+      }
     }
   end
 end",

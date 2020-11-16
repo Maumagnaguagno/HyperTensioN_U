@@ -159,15 +159,8 @@ module Search
   end
 
   def forward_goal_visible(agent, goal)
-    from = ''
-    generate(
-      # Positive preconditions
-      [
-        ['at', agent, from]
-      ],
-      # Negative preconditions
-      [], from
-    ) {
+    @state['at'].each {|agent_ground, from,|
+      next if agent_ground != agent
       next unless External.visible(from, goal)
       yield [
         ['move', agent, from, goal]
@@ -176,15 +169,8 @@ module Search
   end
 
   def forward_recursion(agent, goal)
-    from = ''
-    generate(
-      # Positive preconditions
-      [
-        ['at', agent, from]
-      ],
-      # Negative preconditions
-      [], from
-    ) {
+    @state['at'].each {|agent_ground, from,|
+      next if agent_ground != agent
       vertex = ''
       External.visible_vertex(from, vertex) {
         place = ''
