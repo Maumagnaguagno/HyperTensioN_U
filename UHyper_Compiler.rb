@@ -309,10 +309,8 @@ module UHyper_Compiler
           equality.clear
           define_methods_comparison.clear
           precond_not.each {|pre,*terms|
-            if (terms & free_variables).empty?
-              if pre == '=' then equality << "#{evaluate(terms[0], true)} == #{evaluate(terms[1], true)}"
-              elsif predicates[pre] or state.include?(pre) then predicate_to_hyper(define_methods_comparison << "#{indentation}next if ", pre, terms, predicates)
-              end
+            if pre == '=' then equality << "#{evaluate(terms[0], true)} == #{evaluate(terms[1], true)}"
+            elsif predicates[pre] or state.include?(pre) then predicate_to_hyper(define_methods_comparison << "#{indentation}next if ", pre, terms, predicates)
             end
           }
           define_methods << "#{indentation}next if #{equality.join(' or ')}" unless equality.empty?
