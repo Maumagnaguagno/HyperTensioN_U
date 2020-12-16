@@ -1,4 +1,4 @@
-# HyperTensioN U [![Build Status](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U.svg)](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U)
+# HyperTensioN U [![Build Status](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U.svg)](https://travis-ci.org/Maumagnaguagno/HyperTensioN_U) [![Actions Status](https://github.com/Maumagnaguagno/HyperTensioN_U/workflows/build/badge.svg)](https://github.com/Maumagnaguagno/HyperTensioN_U/actions)
 **Hierarchical Task Network planning with uncertainty in Ruby**
 
 This is an extension of [HyperTensioN](https://github.com/Maumagnaguagno/HyperTensioN) to work with disjunctions, probabilities, rewards, axioms, assignments, calls and semantic attachments, currently **incompatible** with the original intermediate representation.

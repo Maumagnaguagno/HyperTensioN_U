@@ -1,0 +1,40 @@
+name: build
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      matrix:
+        ruby: [2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, head, jruby-head]
+      fail-fast: false
+    name: Ruby ${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - run: git clone https://github.com/Maumagnaguagno/HyperTensioN.git ../HyperTensioN
+    - run: git clone https://github.com/Maumagnaguagno/Polygonoid.git ../Polygonoid
+    # Tests
+    - run: ruby tests/sphygmomanometer.rb
+    - run: ruby tests/biscuit.rb
+    - run: ruby tests/postulate.rb
+    - run: ruby tests/path.rb
+    - run: ruby examples/plant_watering/pbgenerator.rb && ruby tests/gardening.rb
+    - run: ruby tests/caller.rb
+    # Examples
+    - run: ruby Hype.rb examples/axiom/axiom.ujshop examples/axiom/pb1.ujshop run
+    - run: ruby examples/car_linear/pbgenerator.rb && ruby Hype.rb examples/car_linear/car_linear.ujshop examples/car_linear/pb0.ujshop run 1
+    - run: ruby Hype.rb examples/cookie/cookie.ujshop examples/cookie/pb1.ujshop run
+    - run: ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb1.ujshop run
+    - run: ruby Hype.rb examples/counter/counter.ujshop examples/counter/pb2.ujshop run
+    - run: ruby Hype.rb examples/external/external.ujshop examples/external/pb1.ujshop run
+    - run: ruby Hype.rb examples/external/external.ujshop examples/external/pb2.ujshop run
+    - run: ruby Hype.rb examples/jumpmaze/jumpmaze.ujshop examples/jumpmaze/pb1.ujshop run
+    - run: ruby Hype.rb examples/microrts/microrts.ujshop examples/microrts/pb1.ujshop run 1
+    - run: ruby Hype.rb examples/search_angle/search.ujshop examples/search_angle/pb1.ujshop run
+    - run: ruby Hype.rb examples/search_circular/search.ujshop examples/search_circular/pb1.ujshop run
+    - run: ruby Hype.rb examples/search_circular/search.ujshop examples/search_circular/pb2.ujshop run 1
+    - run: ruby examples/healthcare/pbhealthcare.ujshop.rb
+    - run: ruby examples/healthcare/pbhealthcare_test_steps.ujshop.rb
