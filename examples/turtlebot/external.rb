@@ -1,3 +1,4 @@
+require 'forwardable'
 require_relative '../../../HyperTensioN/examples/experiments/Function'
 require_relative '../../../HyperTensioN/examples/experiments/Debug'
 require_relative '../../../Polygonoid/examples/search/Search'
