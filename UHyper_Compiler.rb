@@ -4,24 +4,6 @@ module UHyper_Compiler
   SPACER = '-' * 47
 
   #-----------------------------------------------
-  # Predicates to Hyper
-  #-----------------------------------------------
-
-  def predicate_to_hyper(output, pre, terms, predicates)
-    output << "@state[#{evaluate(pre, true)}].include?([#{terms.map! {|t| evaluate(t, true)}.join(', ')}])"
-  end
-
-  #-----------------------------------------------
-  # Subtasks to Hyper
-  #-----------------------------------------------
-
-  def subtasks_to_hyper(tasks, indentation)
-    if tasks.empty? then "#{indentation}yield []"
-    else "#{indentation}yield [#{indentation}  [" << tasks.map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]"
-    end
-  end
-
-  #-----------------------------------------------
   # Expression to Hyper
   #-----------------------------------------------
 
@@ -129,6 +111,41 @@ module UHyper_Compiler
   end
 
   #-----------------------------------------------
+  # Applicable
+  #-----------------------------------------------
+
+  def applicable(output, pre, terms, predicates)
+    output << "@state[#{evaluate(pre, true)}].include?([#{terms.map! {|t| evaluate(t, true)}.join(', ')}])"
+  end
+
+  #-----------------------------------------------
+  # Apply
+  #-----------------------------------------------
+
+  def apply(modifier, effects, define_operators, duplicated)
+    effects.each {|pre,*terms|
+      pre_evaluated = evaluate(pre, true)
+      if duplicated.include?(pre)
+        define_operators << "\n    @state[#{pre_evaluated}]"
+      else
+        define_operators << "\n    (@state[#{pre_evaluated}] = @state[#{pre_evaluated}].dup)"
+        duplicated[pre] = nil
+      end
+      define_operators << ".#{modifier}([#{terms.map! {|i| evaluate(i, true)}.join(', ')}])"
+    }
+  end
+
+  #-----------------------------------------------
+  # Subtasks to Hyper
+  #-----------------------------------------------
+
+  def subtasks_to_hyper(tasks, indentation)
+    if tasks.empty? then "#{indentation}yield []"
+    else "#{indentation}yield [#{indentation}  [" << tasks.map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]"
+    end
+  end
+
+  #-----------------------------------------------
   # Operator to Hyper
   #-----------------------------------------------
 
@@ -151,23 +168,6 @@ module UHyper_Compiler
       define_operators << "\n    " << effect_calls.join(' and ') unless effect_calls.empty?
       define_operators << "\n  end\n"
     end
-  end
-
-  #-----------------------------------------------
-  # Apply
-  #-----------------------------------------------
-
-  def apply(modifier, effects, define_operators, duplicated)
-    effects.each {|pre,*terms|
-      pre_evaluated = evaluate(pre, true)
-      if duplicated.include?(pre)
-        define_operators << "\n    @state[#{pre_evaluated}]"
-      else
-        define_operators << "\n    (@state[#{pre_evaluated}] = @state[#{pre_evaluated}].dup)"
-        duplicated[pre] = nil
-      end
-      define_operators << ".#{modifier}([#{terms.map! {|i| evaluate(i, true)}.join(', ')}])"
-    }
   end
 
   #-----------------------------------------------
@@ -286,20 +286,20 @@ module UHyper_Compiler
               indentation << '  '
             elsif pre == '=' then equality << "#{terms2[0]} != #{terms2[1]}"
             elsif not predicates[pre] and not state.include?(pre) then define_methods << "#{indentation}return"
-            else predicate_to_hyper(define_methods_comparison << "#{indentation}next unless ", pre, terms, predicates)
+            else applicable(define_methods_comparison << "#{indentation}next unless ", pre, terms, predicates)
             end
             precond_pos.reject! {|pre,*terms|
               if (terms & free_variables).empty?
                 if pre == '=' then equality << "#{evaluate(terms[0], true)} != #{evaluate(terms[1], true)}"
                 elsif not predicates[pre] and not state.include?(pre) then define_methods << "#{indentation}return"
-                else predicate_to_hyper(define_methods_comparison << "#{indentation}next unless ", pre, terms, predicates)
+                else applicable(define_methods_comparison << "#{indentation}next unless ", pre, terms, predicates)
                 end
               end
             }
             precond_not.reject! {|pre,*terms|
               if (terms & free_variables).empty?
                 if pre == '=' then equality << "#{evaluate(terms[0], true)} == #{evaluate(terms[1], true)}"
-                elsif predicates[pre] or state.include?(pre) then predicate_to_hyper(define_methods_comparison << "#{indentation}next if ", pre, terms, predicates)
+                elsif predicates[pre] or state.include?(pre) then applicable(define_methods_comparison << "#{indentation}next if ", pre, terms, predicates)
                 end
               end
             }
@@ -310,7 +310,7 @@ module UHyper_Compiler
           define_methods_comparison.clear
           precond_not.each {|pre,*terms|
             if pre == '=' then equality << "#{evaluate(terms[0], true)} == #{evaluate(terms[1], true)}"
-            elsif predicates[pre] or state.include?(pre) then predicate_to_hyper(define_methods_comparison << "#{indentation}next if ", pre, terms, predicates)
+            elsif predicates[pre] or state.include?(pre) then applicable(define_methods_comparison << "#{indentation}next if ", pre, terms, predicates)
             end
           }
           define_methods << "#{indentation}next if #{equality.join(' or ')}" unless equality.empty?
