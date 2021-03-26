@@ -14,11 +14,11 @@ module External
     candidates = []
     DIRS.each {|dx,dy|
       if clear.include?([k = "p#{dx += x}_#{dy += y}"])
-        candidates << [dx, dy, k]
+        candidates << [Math.hypot(dx - gx, dy - gy), k]
       end
     }
-    candidates.sort_by! {|i,j,k| Math.hypot(i - gx, j - gy)}.each {|i,j,k|
-      to.replace(k)
+    candidates.sort_by!(&:first).each {|k|
+      to.replace(k.last)
       yield
     }
   end
