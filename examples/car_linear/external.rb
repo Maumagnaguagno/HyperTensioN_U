@@ -31,15 +31,4 @@ module Car_linear
   end
 end
 
-module External
-  extend self, Forwardable
-
-  def_delegators Car_linear, :function, :process, :event, :event_effect, :process_effect
-
-  def step(t, min = 0.0, max = Float::INFINITY, epsilon = 1.0)
-    min.to_f.step(max.to_f, epsilon.to_f) {|i|
-      t.replace(i.to_s)
-      yield
-    }
-  end
-end
+External = Car_linear

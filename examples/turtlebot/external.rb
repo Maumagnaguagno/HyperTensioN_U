@@ -68,7 +68,7 @@ module External
     Circle.new(40.5,  5.5, 7.0)
   ]
 
-  def_delegators Turtlebot, :function, :process, :event, :event_effect, :process_effect
+  def_delegators Turtlebot, :function, :process, :event, :event_effect, :process_effect, :step
 
   @symbol_object = {}
   @pos_counter = 0
@@ -100,13 +100,6 @@ module External
 
   def radians_to_degree_difference(start, finish)
     (finish.to_f - start.to_f) * RAD2DEG % 360
-  end
-
-  def step(t, min = 0.0, max = Float::INFINITY, epsilon = 1.0)
-    min.to_f.step(max.to_f, epsilon.to_f) {|i|
-      t.replace(i.to_s)
-      yield
-    }
   end
 
   def distance(x, y, dx, dy)

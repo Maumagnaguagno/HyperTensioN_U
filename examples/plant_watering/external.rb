@@ -23,8 +23,4 @@ module Plant_watering
   end
 end
 
-module External
-  extend self, Forwardable
-
-  def_delegators Plant_watering, :function, :assign, :increase, :decrease, :adjacent
-end
+External = Plant_watering
