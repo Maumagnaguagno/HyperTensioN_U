@@ -1,4 +1,3 @@
-require 'forwardable'
 require_relative '../../../HyperTensioN/examples/experiments/Function'
 
 module Plant_watering
