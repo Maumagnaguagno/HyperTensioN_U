@@ -28,7 +28,7 @@ module UJSHOP_Parser
       define_expression(name, group.last)
     elsif first == 'call'
       raise "Unexpected list as function name in #{name}" if group[1].instance_of?(Array)
-      group.drop(2).each {|g| define_expression(name, g) if g.instance_of?(Array) and g.first == 'call'}
+      group.drop(2).each {|g| define_expression(name, g) if g.instance_of?(Array) and g.first == first}
     elsif first == 'assign'
       raise "Wrong number of arguments for #{group.join(' ')}, expected 2" if group.size != 3
       raise "Expected a variable to assign, instead of #{group[1]}" unless group[1].start_with?('?')
