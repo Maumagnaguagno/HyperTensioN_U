@@ -44,7 +44,7 @@ module Hypertension_U
               execute(current_task, probability, tasks, level, plan)
               return if @plans.size == @max_plans
             }
-          rescue SystemStackError
+          rescue SystemStackError then @nostack = true
           end
           current_task[0] = task_name
         # Method
@@ -64,7 +64,7 @@ module Hypertension_U
               # Consider success when at least one new plan was found
               break if @plans.size != plans_found
             }
-          rescue SystemStackError
+          rescue SystemStackError then @nostack = true
           end
           current_task.unshift(task_name)
         # Error
@@ -98,7 +98,7 @@ module Hypertension_U
         # Keep decomposing the hierarchy
         planning(tasks, level, new_plan)
       end
-    rescue SystemStackError
+    rescue SystemStackError then @nostack = true
     end
     @state = old_state
   end
@@ -108,6 +108,7 @@ module Hypertension_U
   #-----------------------------------------------
 
   def problem(state, tasks, debug = false, max_plans = -1, min_prob = 0)
+    @nostack = false
     @debug = debug
     @state = state
     @min_prob = min_prob
@@ -127,7 +128,7 @@ module Hypertension_U
       else print_data(plan.delete_if {|op| op.first.start_with?('invisible_')})
       end
     }
-    puts 'Planning failed' if @plans.empty?
+    puts @nostack ? 'Planning failed, try with more stack' : 'Planning failed' if @plans.empty?
     @plans
   rescue Interrupt
     puts 'Interrupted'
