@@ -50,5 +50,5 @@
     x += 1
   }
   problem << "\n  )\n  (\n    (solve #{player})\n  )\n)"
-  IO.binwrite(File.expand_path("../pb#{i}.ujshop", __FILE__), problem)
+  IO.binwrite("#{__dir__}/pb#{i}.ujshop", problem)
 }

@@ -37,7 +37,7 @@ cancers      = 1
 while opt = ARGV.shift
   case opt
   when 'debug' then debug = true
-  when '-jshop' then jshop = File.expand_path("../#{ARGV.shift}", __FILE__)
+  when '-jshop' then jshop = "#{__dir__}/#{ARGV.shift}"
   when '-min_prob' then min_prob = ARGV.shift.to_f
   when '-max_plans' then max_plans = ARGV.shift.to_i
   when '-patients' then patients = ARGV.shift.to_i

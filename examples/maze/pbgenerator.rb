@@ -23,7 +23,7 @@ goal = "p#{w - 2}_#{h - 2}"
   mapdata.delete("(clear #{start})") {abort "Problem #{seed} with impossible start #{start}"}
   abort "Problem #{seed} with impossible goal #{goal}" unless mapdata.include?("(clear #{goal})")
   mapdata.concat(Grid.generate(w,h).map! {|a,b| "(adjacent #{a} #{b})"})
-  IO.binwrite(File.expand_path("../pb#{seed}.ujshop", __FILE__),
+  IO.binwrite("#{path = "#{__dir__}/pb#{seed}"}.ujshop",
     "(defproblem pb#{seed} maze\n  (
     #{mapdata.join("\n    ")}\n  )\n  (
     (forward agent #{goal})\n  )\n)"
@@ -31,7 +31,7 @@ goal = "p#{w - 2}_#{h - 2}"
   if defined?(Image)
     pixels = ''
     map.flatten.each {|i| pixels << (i.zero? ? back : front)}
-    Image.new(w, h).write(0, 0, pixels, pixels.size).save_png(File.expand_path("../pb#{seed}.png", __FILE__))
+    Image.new(w, h).write(0, 0, pixels, pixels.size).save_png("#{path}.png")
   end
   puts seed, map.map! {|row| row.join.tr!('01',' #')}
 }
