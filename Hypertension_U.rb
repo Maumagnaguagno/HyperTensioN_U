@@ -92,7 +92,7 @@ module Hypertension_U
     begin
       # Minimum probability and applied
       if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and send(*current_task)
-        new_plan = plan.dup << current_task.map {|i| i.dup rescue i} # After Ruby 2.4 there is no need to rescue
+        new_plan = plan.dup << current_task.map(&:dup)
         new_plan[PROBABILITY] = new_prob
         new_plan[VALUATION] += state_valuation(old_state) * probability
         # Keep decomposing the hierarchy
