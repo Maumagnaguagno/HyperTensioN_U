@@ -15,7 +15,7 @@ module UHyper_Compiler
       end
     when 'not' then (term = expression_to_hyper(precond_expression[1], axioms)).delete_prefix!('not ') or 'not ' << term
     when 'call' then call(precond_expression)
-    when 'assign' then '(' << precond_expression[1].delete('?') << ' = ' << evaluate(precond_expression[2], true) << ')'
+    when 'assign' then '(' << precond_expression[1].delete_prefix('?') << ' = ' << evaluate(precond_expression[2], true) << ')'
     else
       # Empty list is false
       if precond_expression.empty? then 'false'
@@ -53,8 +53,8 @@ module UHyper_Compiler
     when 'abs', 'sin', 'cos', 'tan'
       raise "Wrong number of arguments for (#{expression.join(' ')}), expected 2" if expression.size != 3
       ltoken = evaluate(expression[2])
-      if ltoken =~ /^-?\d/ then function == 'abs' ? ltoken.delete('-') : Math.send(function, ltoken.to_f).to_s
-      elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".delete('-')"
+      if ltoken =~ /^-?\d/ then function == 'abs' ? ltoken.delete_prefix('-') : Math.send(function, ltoken.to_f).to_s
+      elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".delete_prefix('-')"
       else "Math.#{function}(#{ltoken.chomp!('.to_s') or ltoken << '.to_f'}).to_s"
       end
     # Comparison
@@ -102,7 +102,7 @@ module UHyper_Compiler
       else "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
       end
     when String
-      if term.start_with?('?') then term.delete('?')
+      if term.start_with?('?') then term.delete_prefix('?')
       elsif term =~ /^[a-z]/ then "'#{term}'"
       elsif term =~ /^-?\d/ then quotes ? "'#{term.to_f}'" : term.to_f.to_s
       else term
@@ -322,7 +322,7 @@ module UHyper_Compiler
           terms.map! {|t|
             if t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)
               ground_free_variables << t
-              define_methods << "#{indentation}#{t.delete('?')} = ''"
+              define_methods << "#{indentation}#{t.delete_prefix('?')} = ''"
             end
             evaluate(t, true)
           }
