@@ -30,7 +30,7 @@ goal = "p#{w - 2}_#{h - 2}"
   )
   if defined?(Image)
     pixels = ''
-    map.flatten.each {|i| pixels << (i.zero? ? back : front)}
+    map.flatten(1).each {|i| pixels << (i.zero? ? back : front)}
     Image.new(w, h).write(0, 0, pixels, pixels.size).save_png("#{path}.png")
   end
   puts seed, map.map! {|row| row.join.tr!('01',' #')}
