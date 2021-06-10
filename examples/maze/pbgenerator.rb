@@ -16,8 +16,7 @@ goal = "p#{w - 2}_#{h - 2}"
 
 20.times {|seed|
   srand(seed)
-  map = Mapgen.maze_division(width, height, room_size)
-  map = Mapgen.wall_to_tile(map)
+  map = Mapgen.wall_to_tile(Mapgen.maze_division(width, height, room_size))
   mapdata = ["(at agent #{start})"]
   map.each_with_index {|row,y| row.each_with_index {|c,x| mapdata << "(clear p#{x}_#{y})" if c == 0}}
   mapdata.delete("(clear #{start})") {abort "Problem #{seed} with impossible start #{start}"}
