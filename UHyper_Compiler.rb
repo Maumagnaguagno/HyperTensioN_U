@@ -271,12 +271,11 @@ module UHyper_Compiler
                 equality << "_#{j}_ground != '#{j}'"
                 "_#{j}_ground"
               elsif ground.include?(j)
-                equality << "#{j}_ground != #{j}".delete!('?')
-                evaluate("#{j}_ground", true)
+                equality << "#{j = j.delete_prefix('?')}_ground != #{j}"
+                "#{j}_ground"
               else
-                new_grounds = true
                 ground << free_variables.delete(j)
-                evaluate(j, true)
+                evaluate(j, new_grounds = true)
               end
             }
             if new_grounds
