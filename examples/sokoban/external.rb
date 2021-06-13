@@ -57,10 +57,7 @@ module External
   end
 
   def new_state(player)
-    i = 1
-    hash = player.delete_prefix('p').to_i
-    Sokoban.state['box'].sort!.each {|b,| hash += b.delete_prefix('p').to_i * (i *= 100)}
-    if @visited.include?(hash) then false
+    if @visited.include?(hash = player.hash ^ Sokoban.state['box'].sort!.hash) then false
     else @visited[hash] = true
     end
   end
