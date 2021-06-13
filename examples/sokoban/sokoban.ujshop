@@ -7,25 +7,17 @@
 
   (:operator (!move ?from ?to)
     ()
-    (
-      (player ?from)
-      (clear ?to)
-    )
-    (
-      (player ?to)
-      (clear ?from)
-    )
+    ((clear ?to))
+    ((clear ?from))
   )
 
   (:operator (!push ?from ?intermediate ?to)
     ()
     (
-      (player ?from)
       (box ?intermediate)
       (clear ?to)
     )
     (
-      (player ?intermediate)
       (box ?to)
       (clear ?from)
     )
