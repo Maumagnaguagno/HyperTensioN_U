@@ -6,9 +6,9 @@ module External
   @visited = {}
 
   def adjacent(from, to)
-    from =~ /^p(\d+)_(\d+)$/
-    x = $1.to_i
-    y = $2.to_i
+    x, y = from.delete_prefix('p').split('_')
+    x = x.to_i
+    y = y.to_i
     clear = Sokoban.state['clear']
     DIRS.each {|dx,dy|
       if clear.include?([c = "p#{x+dx}_#{y+dy}"])
@@ -19,9 +19,9 @@ module External
   end
 
   def pushable(from, intermediate, to)
-    from =~ /^p(\d+)_(\d+)$/
-    x = $1.to_i
-    y = $2.to_i
+    x, y = from.delete_prefix('p').split('_')
+    x = x.to_i
+    y = y.to_i
     box = Sokoban.state['box']
     clear = Sokoban.state['clear']
     DIRS.each {|dx,dy|
@@ -42,9 +42,9 @@ module External
     storage = Sokoban.state['storage']
     Sokoban.state['deadlock'] = deadlocks = []
     map = []
-    Sokoban.state['wall'].each {|wall|
-      wall.first =~ /^p(\d+)_(\d+)$/
-      (map[$2.to_i] ||= [])[$1.to_i] = true
+    Sokoban.state['wall'].each {|wall,|
+      x, y = wall.delete_prefix('p').split('_')
+      (map[y.to_i] ||= [])[x.to_i] = true
     }
     map[1..-2].each_with_index {|row,y|
       y += 1
@@ -57,10 +57,10 @@ module External
   end
 
   def new_state(player)
-    hash = 0
     i = 1
-    Sokoban.state['box'].sort!.each {|b| hash += b.first[/^p(\d+_\d+)$/,1].to_i * (i *= 100)}
-    if @visited.include?(hash += player[/^p(\d+_\d+)$/,1].to_i) then false
+    hash = player.delete_prefix('p').to_i
+    Sokoban.state['box'].sort!.each {|b,| hash += b.delete_prefix('p').to_i * (i *= 100)}
+    if @visited.include?(hash) then false
     else @visited[hash] = true
     end
   end
