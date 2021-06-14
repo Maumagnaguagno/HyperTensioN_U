@@ -39,10 +39,10 @@ module UHyper_Compiler
       raise "Wrong number of arguments for (#{expression.join(' ')}), expected 3" if expression.size != 4
       ltoken = evaluate(expression[2])
       rtoken = evaluate(expression[3])
-      if ltoken =~ /^-?\d/ then ltoken = ltoken.to_f
+      if ltoken.match?(/^-?\d/) then ltoken = ltoken.to_f
       else ltoken.chomp!('.to_s') or ltoken << '.to_f'
       end
-      if rtoken =~ /^-?\d/ then rtoken = rtoken.to_f
+      if rtoken.match?(/^-?\d/) then rtoken = rtoken.to_f
       else rtoken.chomp!('.to_s') or rtoken << '.to_f'
       end
       function = '**' if function == '^'
@@ -53,7 +53,7 @@ module UHyper_Compiler
     when 'abs', 'sin', 'cos', 'tan'
       raise "Wrong number of arguments for (#{expression.join(' ')}), expected 2" if expression.size != 3
       ltoken = evaluate(expression[2])
-      if ltoken =~ /^-?\d/ then function == 'abs' ? ltoken.delete_prefix('-') : Math.send(function, ltoken.to_f).to_s
+      if ltoken.match?(/^-?\d/) then function == 'abs' ? ltoken.delete_prefix('-') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".delete_prefix('-')"
       else "Math.#{function}(#{ltoken.chomp!('.to_s') or ltoken << '.to_f'}).to_s"
       end
@@ -65,11 +65,11 @@ module UHyper_Compiler
       if ltoken == rtoken then (function == '=' or function == '<=' or function == '>=').to_s
       else
         function = '==' if function == '='
-        if ltoken =~ /^-?\d/
+        if ltoken.match?(/^-?\d/)
           ltoken = ltoken.to_f
-          return ltoken.send(function, rtoken.to_f).to_s if rtoken =~ /^-?\d/
+          return ltoken.send(function, rtoken.to_f).to_s if rtoken.match?(/^-?\d/)
           rtoken.chomp!('.to_s') or rtoken << '.to_f'
-        elsif rtoken =~ /^-?\d/
+        elsif rtoken.match?(/^-?\d/)
           rtoken = rtoken.to_f
           ltoken.chomp!('.to_s') or ltoken << '.to_f'
         elsif function != '==' and function != '!='
@@ -98,13 +98,13 @@ module UHyper_Compiler
     when Array
       if term.first == 'call'
         term = call(term)
-        quotes && term =~ /^-?\d/ ? "'#{term}'" : term
+        quotes && term.match?(/^-?\d/) ? "'#{term}'" : term
       else "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
       end
     when String
       if term.start_with?('?') then term.delete_prefix('?')
-      elsif term =~ /^[a-z]/ then "'#{term}'"
-      elsif term =~ /^-?\d/ then quotes ? "'#{term.to_f}'" : term.to_f.to_s
+      elsif term.match?(/^[a-z]/) then "'#{term}'"
+      elsif term.match?(/^-?\d/) then quotes ? "'#{term.to_f}'" : term.to_f.to_s
       else term
       end
     end
@@ -394,7 +394,7 @@ module UHyper_Compiler
     objects.uniq!
     objects.each {|i|
       if i.instance_of?(String)
-        problem_str << "#{i} = '#{i}'\n" if i !~ /^-?\d/
+        problem_str << "#{i} = '#{i}'\n" unless i.match?(/^-?\d/)
       else problem_str << "_#{i.join('_').tr(from,to)} = #{evaluate(i, true)}\n"
       end
     }
@@ -402,12 +402,12 @@ module UHyper_Compiler
     # Start
     state.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
-      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o =~ /^-?\d/ ? "'#{o.to_f}'" : o : o.join('_').tr(from,to).prepend('_')}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
+      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : o : o.join('_').tr(from,to).prepend('_')}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
       problem_str << (state.size.pred == i ? ']' : "],\n")
     }
     # Tasks
     problem_str << "\n  },\n  # Tasks\n  [" <<
-      tasks.map! {|t| "\n    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o.instance_of?(String) ? o =~ /^-?\d/ ? "'#{o.to_f}'" : o : o.join('_').tr(from,to).prepend('_')}.join(', ')}]"}.join(',') <<
+      tasks.map! {|t| "\n    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : o : o.join('_').tr(from,to).prepend('_')}.join(', ')}]"}.join(',') <<
       "\n  ],\n  # Debug\n  ARGV.first == 'debug',\n  # Maximum plans found\n  ARGV[1] ? ARGV[1].to_i : -1,\n  # Minimum probability for plans\n  ARGV[2] ? ARGV[2].to_f : 0"
     tasks.unshift(ordered) unless tasks.empty?
     problem_str.gsub!(/\b-\b/,'_')
