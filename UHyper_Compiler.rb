@@ -40,10 +40,10 @@ module UHyper_Compiler
       ltoken = evaluate(expression[2])
       rtoken = evaluate(expression[3])
       if ltoken.match?(/^-?\d/) then ltoken = ltoken.to_f
-      else ltoken.chomp!('.to_s') or ltoken << '.to_f'
+      else ltoken.delete_suffix!('.to_s') or ltoken << '.to_f'
       end
       if rtoken.match?(/^-?\d/) then rtoken = rtoken.to_f
-      else rtoken.chomp!('.to_s') or rtoken << '.to_f'
+      else rtoken.delete_suffix!('.to_s') or rtoken << '.to_f'
       end
       function = '**' if function == '^'
       if ltoken.instance_of?(Float) and rtoken.instance_of?(Float) then ltoken.send(function, rtoken).to_s
@@ -55,7 +55,7 @@ module UHyper_Compiler
       ltoken = evaluate(expression[2])
       if ltoken.match?(/^-?\d/) then function == 'abs' ? ltoken.delete_prefix('-') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".delete_prefix('-')"
-      else "Math.#{function}(#{ltoken.chomp!('.to_s') or ltoken << '.to_f'}).to_s"
+      else "Math.#{function}(#{ltoken.delete_suffix!('.to_s') or ltoken << '.to_f'}).to_s"
       end
     # Comparison
     when '=', '!=', '<', '>', '<=', '>='
@@ -68,13 +68,13 @@ module UHyper_Compiler
         if ltoken.match?(/^-?\d/)
           ltoken = ltoken.to_f
           return ltoken.send(function, rtoken.to_f).to_s if rtoken.match?(/^-?\d/)
-          rtoken.chomp!('.to_s') or rtoken << '.to_f'
+          rtoken.delete_suffix!('.to_s') or rtoken << '.to_f'
         elsif rtoken.match?(/^-?\d/)
           rtoken = rtoken.to_f
-          ltoken.chomp!('.to_s') or ltoken << '.to_f'
+          ltoken.delete_suffix!('.to_s') or ltoken << '.to_f'
         elsif function != '==' and function != '!='
-          ltoken.chomp!('.to_s') or ltoken << '.to_f'
-          rtoken.chomp!('.to_s') or rtoken << '.to_f'
+          ltoken.delete_suffix!('.to_s') or ltoken << '.to_f'
+          rtoken.delete_suffix!('.to_s') or rtoken << '.to_f'
         end
         "(#{ltoken} #{function} #{rtoken})"
       end
