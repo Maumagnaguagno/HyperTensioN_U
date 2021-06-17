@@ -47,7 +47,7 @@ module UJSHOP_Parser
 
   def define_effects(name, group)
     raise "Error with #{name} effect" unless group.instance_of?(Array)
-    group.each {|pre| pre.first != NOT ? @predicates[pre.first.freeze] = true : raise("Unexpected not in #{name} effect") if pre.first != 'call'}
+    group.each {|pre,| pre != NOT ? @predicates[pre.freeze] = true : raise("Unexpected not in #{name} effect") if pre != 'call'}
   end
 
   #-----------------------------------------------
@@ -101,7 +101,7 @@ module UJSHOP_Parser
       define_expression("#{name} precondition", precond = met.shift)
       # Subtasks
       raise "Error with #{name} subtasks" unless (group = met.shift).instance_of?(Array)
-      method << [label, precond, group.each {|pre| pre.first.sub!(/^!!/,'invisible_') or pre.first.delete_prefix!('!')}]
+      method << [label, precond, group.each {|pre,| pre.sub!(/^!!/,'invisible_') or pre.delete_prefix!('!')}]
     end
   end
 

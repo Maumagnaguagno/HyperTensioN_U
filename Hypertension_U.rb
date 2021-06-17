@@ -125,7 +125,7 @@ module Hypertension_U
            "Probability: #{probability}",
            "Valuation: #{valuation}"
       if plan.empty? then puts 'Empty plan'
-      else print_data(plan.delete_if {|op| op.first.start_with?('invisible_')})
+      else print_data(plan.delete_if {|op,| op.start_with?('invisible_')})
       end
     }
     puts @nostack ? 'Planning failed, try with more stack' : 'Planning failed' if @plans.empty?
