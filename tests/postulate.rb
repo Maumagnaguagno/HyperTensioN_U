@@ -137,7 +137,7 @@ Axiom.problem(
   ARGV[1] ? ARGV[1].to_i : -1,
   # Minimum probability for plans
   ARGV[2] ? ARGV[2].to_f : 0
-) or abort"
+)"
     )
   end
 end

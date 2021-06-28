@@ -120,15 +120,16 @@ module Hypertension_U
     t = Time.now.to_f
     planning(tasks)
     puts "Time: #{Time.now.to_f - t}s", "Plans found: #{@plans.size}"
-    @plans.each_with_index {|(probability,valuation,*plan),i|
+    if @plans.each_with_index {|(probability,valuation,*plan),i|
       puts "Plan #{i.succ}".center(50,'-'),
            "Probability: #{probability}",
            "Valuation: #{valuation}"
       if plan.empty? then puts 'Empty plan'
       else print_data(plan.delete_if {|op,| op.start_with?('invisible_')})
       end
-    }
-    puts @nostack ? 'Planning failed, try with more stack' : 'Planning failed' if @plans.empty?
+    }.empty?
+      abort(@nostack ? 'Planning failed, try with more stack' : 'Planning failed')
+    end
     @plans
   rescue Interrupt
     puts 'Interrupted'
