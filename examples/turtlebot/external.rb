@@ -15,7 +15,7 @@ module Turtlebot
   VX = ['vx', ROBOT]
 
   def current_angle
-    @state[:event].reverse_each {|type,f,value,start| return value if f == A}
+    @state[:event].reverse_each {|_,f,value| return value if f == A}
     @state[:function][A]
   end
 
@@ -64,7 +64,7 @@ module External
     Circle.new(24.0,  0.5, 3.0),
     Circle.new(24.0, 58.5, 3.0),
     Circle.new(24.5, 53.0, 8.5),
-    Circle.new(24.5, 20.5, 3.0),
+    Circle.new(24.5, 20.5, 7.0),
     Circle.new(40.5,  5.5, 7.0)
   ]
 
