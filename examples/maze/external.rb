@@ -17,7 +17,7 @@ module External
         candidates << [Math.hypot(dx - gx, dy - gy), k]
       end
     }
-    candidates.sort_by!(&:first).each {|k|
+    candidates.sort!.each {|k|
       to.replace(k.last)
       yield
     }
