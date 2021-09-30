@@ -136,16 +136,6 @@ module UHyper_Compiler
   end
 
   #-----------------------------------------------
-  # Subtasks to Hyper
-  #-----------------------------------------------
-
-  def subtasks_to_hyper(tasks, indentation)
-    if tasks.empty? then "#{indentation}yield []"
-    else "#{indentation}yield [#{indentation}  [" << tasks.map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]"
-    end
-  end
-
-  #-----------------------------------------------
   # Operator to Hyper
   #-----------------------------------------------
 
@@ -337,7 +327,7 @@ module UHyper_Compiler
           define_methods << "#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
         end
         # Subtasks
-        define_methods << subtasks_to_hyper(dec[2], indentation) << close_method_str
+        define_methods << indentation << (dec[2].empty? ? 'yield []' : "yield [#{indentation}  [" << dec[2].map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]") << close_method_str
       }
       domain_str << (methods.size.pred == mi ? '    ]' : '    ],')
     }
