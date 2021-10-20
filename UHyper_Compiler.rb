@@ -194,7 +194,6 @@ module UHyper_Compiler
         # Obtain free variables
         # TODO refactor this block to work with complex expressions
         free_variables = []
-        ground_variables = param.dup
         precond_attachments = []
         precond_pos = []
         precond_not = []
@@ -202,6 +201,7 @@ module UHyper_Compiler
         ground_axioms_calls = []
         dependent_attachments = []
         unless (precond_expression = dec[1]).empty?
+          ground_variables = param.dup
           precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
           precond_expression.reject! {|pre|
             pre = pre.last unless positive = pre.first != 'not'
