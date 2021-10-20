@@ -241,7 +241,7 @@ module UHyper_Compiler
         indentation = "\n    "
         if free_variables.empty?
           # Ground predicates, axioms and calls
-          precond_pos.concat(precond_not).concat(ground_axioms_calls)
+          precond_pos.concat(precond_not, ground_axioms_calls)
           define_methods << "\n    return unless " << expression_to_hyper(precond_pos.unshift('and'), axioms) unless precond_pos.empty?
         else
           # Ground axioms and calls
