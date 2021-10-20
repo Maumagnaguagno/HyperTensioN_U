@@ -376,8 +376,7 @@ module UHyper_Compiler
     problem_str = "# Objects\n"
     # Extract information
     objects = []
-    predicates.each_key {|i| state[i] ||= []}
-    state.each_value {|k| k.each {|terms| objects.concat(terms)}}
+    state.each_value {|v| objects.concat(*v)}
     ordered = tasks.shift
     tasks.each {|_,*terms| objects.concat(terms)}
     # Objects
@@ -390,6 +389,7 @@ module UHyper_Compiler
     }
     problem_str << "\n#{domain_name.capitalize}.problem(\n  # Start\n  {\n"
     # Start
+    predicates.each_key {|i| state[i] ||= []}
     state.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
       problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : o : o.join('_').tr(from,to).prepend('_')}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
