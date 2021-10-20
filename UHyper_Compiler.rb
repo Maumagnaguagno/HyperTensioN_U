@@ -196,6 +196,11 @@ module UHyper_Compiler
         free_variables = []
         ground_variables = param.dup
         precond_attachments = []
+        precond_pos = []
+        precond_not = []
+        lifted_axioms_calls = []
+        ground_axioms_calls = []
+        dependent_attachments = []
         unless (precond_expression = dec[1]).empty?
           precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
           precond_expression.reject! {|pre|
@@ -210,33 +215,28 @@ module UHyper_Compiler
               false
             end
           }
+          free_variables.uniq!
+          ground_free_variables = ground_variables + free_variables
+          # Filter elements from precondition
+          precond_expression.each {|pre|
+            if pre.first != 'not'
+              pre_flat = pre.flatten
+              precond = precond_pos
+            else
+              pre_flat = pre.last.flatten
+              precond = precond_not
+            end
+            call_axiom = (assign = pre_flat.first == 'assign') || pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
+            pre_flat.select! {|t| t.start_with?('?') and not ground_variables.include?(t)}
+            if pre_flat.empty? then ground_axioms_calls << pre
+            elsif not pre_flat.all? {|t| free_variables.include?(t)}
+              dependent_attachments << pre
+              ground_free_variables << pre_flat.first if assign
+            elsif call_axiom then lifted_axioms_calls << pre
+            else precond << pre
+            end
+          }
         end
-        free_variables.uniq!
-        ground_free_variables = ground_variables + free_variables
-        # Filter elements from precondition
-        precond_pos = []
-        precond_not = []
-        lifted_axioms_calls = []
-        ground_axioms_calls = []
-        dependent_attachments = []
-        precond_expression.each {|pre|
-          if pre.first != 'not'
-            pre_flat = pre.flatten
-            precond = precond_pos
-          else
-            pre_flat = pre.last.flatten
-            precond = precond_not
-          end
-          call_axiom = (assign = pre_flat.first == 'assign') || pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
-          pre_flat.select! {|t| t.start_with?('?') and not ground_variables.include?(t)}
-          if pre_flat.empty? then ground_axioms_calls << pre
-          elsif not pre_flat.all? {|t| free_variables.include?(t)}
-            dependent_attachments << pre
-            ground_free_variables << pre_flat.first if assign
-          elsif call_axiom then lifted_axioms_calls << pre
-          else precond << pre
-          end
-        }
         close_method_str = "\n  end\n"
         indentation = "\n    "
         if free_variables.empty?
