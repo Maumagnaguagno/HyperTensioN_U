@@ -3,7 +3,7 @@ module External
 
   DIRS = [[1,0],[-1,0],[0,1],[0,-1]]
 
-  @visited = {}
+  @visited = Hash.new {|h,k| h[k] = false; true}
 
   def adjacent(from, to)
     x, y = from.delete_prefix('p').split('_')
@@ -57,8 +57,6 @@ module External
   end
 
   def new_state(player)
-    if @visited.include?(hash = player.hash ^ Sokoban.state['box'].sort!.hash) then false
-    else @visited[hash] = true
-    end
+    @visited[player.hash ^ Sokoban.state['box'].sort!.hash]
   end
 end
