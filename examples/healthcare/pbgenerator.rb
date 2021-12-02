@@ -199,13 +199,13 @@ else
 
   # Start
   STATE = [
-    PATIENT_SET.map {|i| [i]}, # PATIENT
-    PHYSICIAN_SET.map {|i| [i]}, # PHYSICIAN
-    RADIOLOGIST_SET.map {|i| [i]}, # RADIOLOGIST
-    PATHOLOGIST_SET.map {|i| [i]}, # PATHOLOGIST
-    REGISTRAR_SET.map {|i| [i]}, # REGISTRAR
-    HOSPITAL_SET.map {|i| [i]}, # HOSPITAL
-    PATIENT_SET.first(cancers).map! {|i| [i]}, # PATIENTHASCANCER
+    PATIENT_SET.product, # PATIENT
+    PHYSICIAN_SET.product, # PHYSICIAN
+    RADIOLOGIST_SET.product, # RADIOLOGIST
+    PATHOLOGIST_SET.product, # PATHOLOGIST
+    REGISTRAR_SET.product, # REGISTRAR
+    HOSPITAL_SET.product, # HOSPITAL
+    PATIENT_SET.first(cancers).product, # PATIENTHASCANCER
     COMMITMENT_SET, # COMMITMENT
     GOAL_SET, # GOAL
     [], # VAR
