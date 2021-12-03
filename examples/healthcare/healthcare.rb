@@ -2,10 +2,6 @@
 require_relative '../../Hypertension_U'
 #require_relative '../../../Hypertension/Hypertension'
 
-def list(*terms)
-  "(#{terms.join(' ')})"
-end
-
 require_relative 'equality-axioms'
 require_relative 'commitment-axioms'
 require_relative 'healthcare-axioms'
@@ -18,6 +14,49 @@ require_relative 'test-methods'
 require_relative 'healthcare-methods'
 require_relative 'healthcare-operators'
 require_relative 'steps-methods'
+
+# Predicates
+PATIENT = 0
+PHYSICIAN = 1
+RADIOLOGIST = 2
+PATHOLOGIST = 3
+REGISTRAR = 4
+HOSPITAL = 5
+PATIENTHASCANCER = 6
+COMMITMENT = 7
+GOAL = 8
+VAR = 9
+VARG = 10
+DIAGNOSISREQUESTED = 11
+IAPPOINTMENTREQUESTED = 12
+IAPPOINTMENTKEPT = 13
+IMAGINGSCAN = 14
+IMAGINGREQUESTED = 15
+IMAGINGRESULTSREPORTED = 16
+BAPPOINTMENTREQUESTED = 17
+BAPPOINTMENTKEPT = 18
+BIOPSYREPORT = 19
+BIOPSYREQUESTED = 20
+RADIOLOGYREQUESTED = 21
+TREATMENTPLAN = 22
+DIAGNOSISPROVIDED = 23
+TISSUEPROVIDED = 24
+RADPATHRESULTSREPORTED = 25
+PATHRESULTSREPORTED = 26
+PATIENTREPORTEDTOREGISTRAR = 27
+INREGISTRY = 28
+PATHOLOGYREQUESTED = 29
+INTEGRATEDREPORT = 30
+REPORTNEEDSREVIEW = 31
+CANCELLED = 32
+RELEASED = 33
+EXPIRED = 34
+DROPPED = 35
+ABORTED = 36
+PENDING = 37
+ACTIVATEDG = 38
+SUSPENDEDG = 39
+DONTKNOW = 40
 
 COMMITMENTS = [
   C1 = 'C1',
@@ -55,6 +94,10 @@ GOALS = [
   G18 = 'G18',
   G19 = 'G19'
 ]
+
+def list(*terms)
+  "(#{terms.join(' ')})"
+end
 
 module Healthcare
 
