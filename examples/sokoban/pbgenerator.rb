@@ -34,7 +34,7 @@
   player = valid = nil
   level.each_char {|c|
     case c
-    when '#' 
+    when '#'
       problem << "\n    (wall p#{x}_#{y})"
       valid = true
     when '@' then player = "p#{x}_#{y}"

@@ -40,9 +40,11 @@
       (solve-preprocessed ?box)
     )
     move
-    (adjacent ?player ?clear)
     (
-      (!!visit ?clear)
+      (adjacent ?player ?clear)
+      (call new_state ?clear)
+    )
+    (
       (!move ?player ?clear)
       (solve-preprocessed ?clear)
     )
@@ -50,9 +52,11 @@
 
   (:method (solve ?player)
     preprocess
-    (call find_deadlocks)
     (
-      (!!visit ?player)
+      (call find_deadlocks)
+      (call new_state ?player)
+    )
+    (
       (solve-preprocessed ?player)
     )
   )
