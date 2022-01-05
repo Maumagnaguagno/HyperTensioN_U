@@ -371,8 +371,8 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def compile_problem(domain_name, problem_name, operators, methods, predicates, state, tasks, axioms, rewards, attachments, domain_filename = nil)
-    from = '-+*/%^<>=.'
-    to = 'samdrplgef'
+    from = '-+*/%^<>=!.'
+    to = 'samdrplgenf'
     problem_str = "# Objects\n"
     # Extract information
     objects = []
