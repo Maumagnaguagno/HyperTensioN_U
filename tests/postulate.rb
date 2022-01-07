@@ -85,27 +85,27 @@ module Axiom
   # Axioms
   #-----------------------------------------------
 
-  def empty_axiom(parameter0)
+  def empty_axiom(_parameter0)
     # negate_empty_list
     return true
   end
 
-  def at_axiom(parameter0)
+  def at_axiom(_parameter0)
     # numeric_constant
-    return true if ((parameter0.to_f == 0.0) and @state['at'].include?(['0.0']))
+    return true if ((_parameter0.to_f == 0.0) and @state['at'].include?(['0.0']))
     # double_negation
-    return true if @state['at'].include?([parameter0])
+    return true if @state['at'].include?([_parameter0])
   end
 
   #-----------------------------------------------
   # Operators
   #-----------------------------------------------
 
-  def add_one(current)
-    return unless (empty_axiom(current) and at_axiom(current))
+  def add_one(_current)
+    return unless (empty_axiom(_current) and at_axiom(_current))
     @state = @state.dup
-    (@state['at'] = @state['at'].dup).delete([current])
-    @state['at'].unshift([(current.to_f + 1.0).to_s])
+    (@state['at'] = @state['at'].dup).delete([_current])
+    @state['at'].unshift([(_current.to_f + 1.0).to_s])
   end
 
   #-----------------------------------------------

@@ -132,55 +132,55 @@ module Search
   # Operators
   #-----------------------------------------------
 
-  def move(agent, from, to)
-    return unless (@state['at'].include?([agent, from]) and External.visible(from, to))
+  def move(_agent, _from, _to)
+    return unless (@state['at'].include?([_agent, _from]) and External.visible(_from, _to))
     @state = @state.dup
-    (@state['at'] = @state['at'].dup).delete([agent, from])
-    @state['at'].unshift([agent, to])
+    (@state['at'] = @state['at'].dup).delete([_agent, _from])
+    @state['at'].unshift([_agent, _to])
   end
 
-  def invisible_visit(agent, pos)
+  def invisible_visit(_agent, _pos)
     @state = @state.dup
-    (@state['visited'] = @state['visited'].dup).unshift([agent, pos])
+    (@state['visited'] = @state['visited'].dup).unshift([_agent, _pos])
   end
 
-  def invisible_unvisit(agent, pos)
+  def invisible_unvisit(_agent, _pos)
     @state = @state.dup
-    (@state['visited'] = @state['visited'].dup).delete([agent, pos])
+    (@state['visited'] = @state['visited'].dup).delete([_agent, _pos])
   end
 
   #-----------------------------------------------
   # Methods
   #-----------------------------------------------
 
-  def forward_base(agent, goal)
-    return unless @state['at'].include?([agent, goal])
+  def forward_base(_agent, _goal)
+    return unless @state['at'].include?([_agent, _goal])
     yield []
   end
 
-  def forward_goal_visible(agent, goal)
-    @state['at'].each {|agent_ground, from,|
-      next if agent_ground != agent
-      next unless External.visible(from, goal)
+  def forward_goal_visible(_agent, _goal)
+    @state['at'].each {|_agent_ground, _from,|
+      next if _agent_ground != _agent
+      next unless External.visible(_from, _goal)
       yield [
-        ['move', agent, from, goal]
+        ['move', _agent, _from, _goal]
       ]
     }
   end
 
-  def forward_recursion(agent, goal)
-    @state['at'].each {|agent_ground, from,|
-      next if agent_ground != agent
-      vertex = ''
-      External.visible_vertex(from, vertex) {
-        place = ''
-        External.arc(from, vertex, place) {
-          next unless not @state['visited'].include?([agent, vertex])
+  def forward_recursion(_agent, _goal)
+    @state['at'].each {|_agent_ground, _from,|
+      next if _agent_ground != _agent
+      _vertex = ''
+      External.visible_vertex(_from, _vertex) {
+        _place = ''
+        External.arc(_from, _vertex, _place) {
+          next unless not @state['visited'].include?([_agent, _vertex])
           yield [
-            ['move', agent, from, place],
-            ['invisible_visit', agent, vertex],
-            ['forward', agent, goal],
-            ['invisible_unvisit', agent, vertex]
+            ['move', _agent, _from, _place],
+            ['invisible_visit', _agent, _vertex],
+            ['forward', _agent, _goal],
+            ['invisible_unvisit', _agent, _vertex]
           ]
         }
       }
@@ -192,21 +192,21 @@ end",
 require_relative 'search.ujshop'
 
 # Objects
-robot = 'robot'
-start = 'start'
-goal = 'goal'
+_robot = 'robot'
+_start = 'start'
+_goal = 'goal'
 
 Search.problem(
   # Start
   {
     'at' => [
-      [robot, start]
+      [_robot, _start]
     ],
     'visited' => []
   },
   # Tasks
   [
-    ['forward', robot, goal]
+    ['forward', _robot, _goal]
   ],
   # Debug
   ARGV.first == 'debug',

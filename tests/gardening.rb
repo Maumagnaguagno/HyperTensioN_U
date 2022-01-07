@@ -198,63 +198,63 @@ module Plant_watering
   # Operators
   #-----------------------------------------------
 
-  def move(a, nx, ny)
-    return unless @state['agent'].include?([a])
-    External.assign(['x', a], nx) and External.assign(['y', a], ny)
+  def move(_a, _nx, _ny)
+    return unless @state['agent'].include?([_a])
+    External.assign(['x', _a], _nx) and External.assign(['y', _a], _ny)
   end
 
-  def load(a, t)
-    return unless (@state['agent'].include?([a]) and @state['tap'].include?([t]) and (External.function(['x', a]) == External.function(['x', t])) and (External.function(['y', a]) == External.function(['y', t])) and ((External.function('total_loaded').to_f + 1.0) <= External.function('max_int').to_f) and ((External.function('carrying').to_f + 1.0) <= External.function('max_int').to_f))
+  def load(_a, _t)
+    return unless (@state['agent'].include?([_a]) and @state['tap'].include?([_t]) and (External.function(['x', _a]) == External.function(['x', _t])) and (External.function(['y', _a]) == External.function(['y', _t])) and ((External.function('total_loaded').to_f + 1.0) <= External.function('max_int').to_f) and ((External.function('carrying').to_f + 1.0) <= External.function('max_int').to_f))
     External.increase('carrying', '1.0') and External.increase('total_loaded', '1.0')
   end
 
-  def pour(a, p)
-    return unless (@state['agent'].include?([a]) and @state['plant'].include?([p]) and (External.function(['x', a]) == External.function(['x', p])) and (External.function(['y', a]) == External.function(['y', p])) and (External.function('carrying').to_f >= 1.0) and ((External.function('total_poured').to_f + 1.0) <= External.function('max_int').to_f) and ((External.function('poured').to_f + 1.0) <= External.function('max_int').to_f))
-    External.decrease('carrying', '1.0') and External.increase(['poured', p], '1.0') and External.increase('total_poured', '1.0')
+  def pour(_a, _p)
+    return unless (@state['agent'].include?([_a]) and @state['plant'].include?([_p]) and (External.function(['x', _a]) == External.function(['x', _p])) and (External.function(['y', _a]) == External.function(['y', _p])) and (External.function('carrying').to_f >= 1.0) and ((External.function('total_poured').to_f + 1.0) <= External.function('max_int').to_f) and ((External.function('poured').to_f + 1.0) <= External.function('max_int').to_f))
+    External.decrease('carrying', '1.0') and External.increase(['poured', _p], '1.0') and External.increase('total_poured', '1.0')
   end
 
   #-----------------------------------------------
   # Methods
   #-----------------------------------------------
 
-  def forward_base(a, gx, gy)
-    return unless ((External.function(['x', a]) == gx) and (External.function(['y', a]) == gy))
+  def forward_base(_a, _gx, _gy)
+    return unless ((External.function(['x', _a]) == _gx) and (External.function(['y', _a]) == _gy))
     yield []
   end
 
-  def forward_keep_moving(a, gx, gy)
-    nx = ''
-    ny = ''
-    External.adjacent(External.function(['x', a]), External.function(['y', a]), nx, ny, gx, gy) {
+  def forward_keep_moving(_a, _gx, _gy)
+    _nx = ''
+    _ny = ''
+    External.adjacent(External.function(['x', _a]), External.function(['y', _a]), _nx, _ny, _gx, _gy) {
       yield [
-        ['move', a, nx, ny],
-        ['forward', a, gx, gy]
+        ['move', _a, _nx, _ny],
+        ['forward', _a, _gx, _gy]
       ]
     }
   end
 
-  def repeat_task(n, task, a, tp)
-    return unless (n.to_f != 0.0)
+  def repeat_task(_n, _task, _a, _tp)
+    return unless (_n.to_f != 0.0)
     yield [
-      [task, a, tp],
-      ['repeat', (n.to_f - 1.0).to_s, task, a, tp]
+      [_task, _a, _tp],
+      ['repeat', (_n.to_f - 1.0).to_s, _task, _a, _tp]
     ]
   end
 
-  def repeat_base(n, task, a, tp)
+  def repeat_base(_n, _task, _a, _tp)
     yield []
   end
 
-  def move_to_load_before_move_to_pour_case_0(p, l)
-    return unless (@state['plant'].include?([p]) and (px = External.function(['x', p])) and (py = External.function(['y', p])))
-    @state['agent'].each {|a,|
-      @state['tap'].each {|t,|
-        next unless ((tx = External.function(['x', t])) and (ty = External.function(['y', t])))
+  def move_to_load_before_move_to_pour_case_0(_p, _l)
+    return unless (@state['plant'].include?([_p]) and (_px = External.function(['x', _p])) and (_py = External.function(['y', _p])))
+    @state['agent'].each {|_a,|
+      @state['tap'].each {|_t,|
+        next unless ((_tx = External.function(['x', _t])) and (_ty = External.function(['y', _t])))
         yield [
-          ['forward', a, tx, ty],
-          ['repeat', l, 'load', a, t],
-          ['forward', a, px, py],
-          ['repeat', l, 'pour', a, p]
+          ['forward', _a, _tx, _ty],
+          ['repeat', _l, 'load', _a, _t],
+          ['forward', _a, _px, _py],
+          ['repeat', _l, 'pour', _a, _p]
         ]
       }
     }
@@ -265,14 +265,14 @@ end",
 require_relative 'plant_watering.ujshop'
 
 # Objects
-max_int = 'max_int'
-minx = 'minx'
-maxx = 'maxx'
-miny = 'miny'
-maxy = 'maxy'
-carrying = 'carrying'
-total_poured = 'total_poured'
-total_loaded = 'total_loaded'
+_max_int = 'max_int'
+_minx = 'minx'
+_maxx = 'maxx'
+_miny = 'miny'
+_maxy = 'maxy'
+_carrying = 'carrying'
+_total_poured = 'total_poured'
+_total_loaded = 'total_loaded'
 _x_agent0 = ['x', 'agent0']
 _y_agent0 = ['y', 'agent0']
 _x_tap0 = ['x', 'tap0']
@@ -280,22 +280,22 @@ _y_tap0 = ['y', 'tap0']
 _x_plant0 = ['x', 'plant0']
 _y_plant0 = ['y', 'plant0']
 _poured_plant0 = ['poured', 'plant0']
-agent0 = 'agent0'
-tap0 = 'tap0'
-plant0 = 'plant0'
+_agent0 = 'agent0'
+_tap0 = 'tap0'
+_plant0 = 'plant0'
 
 Plant_watering.problem(
   # Start
   {
     'function' => [
-      [max_int, '20.0'],
-      [minx, '1.0'],
-      [maxx, '4.0'],
-      [miny, '1.0'],
-      [maxy, '4.0'],
-      [carrying, '0.0'],
-      [total_poured, '0.0'],
-      [total_loaded, '0.0'],
+      [_max_int, '20.0'],
+      [_minx, '1.0'],
+      [_maxx, '4.0'],
+      [_miny, '1.0'],
+      [_maxy, '4.0'],
+      [_carrying, '0.0'],
+      [_total_poured, '0.0'],
+      [_total_loaded, '0.0'],
       [_x_agent0, '1.0'],
       [_y_agent0, '3.0'],
       [_x_tap0, '4.0'],
@@ -305,18 +305,18 @@ Plant_watering.problem(
       [_poured_plant0, '0.0']
     ],
     'agent' => [
-      [agent0]
+      [_agent0]
     ],
     'tap' => [
-      [tap0]
+      [_tap0]
     ],
     'plant' => [
-      [plant0]
+      [_plant0]
     ]
   },
   # Tasks
   [
-    ['move_to_load_before_move_to_pour', plant0, '4.0']
+    ['move_to_load_before_move_to_pour', _plant0, '4.0']
   ],
   # Debug
   ARGV.first == 'debug',

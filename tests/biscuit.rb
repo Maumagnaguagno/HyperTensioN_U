@@ -121,33 +121,33 @@ module Cookie
   # Operators
   #-----------------------------------------------
 
-  def goto(agent, from, to)
-    return unless (@state['at'].include?([agent, from]) and not @state['at'].include?([agent, to]))
+  def goto(_agent, _from, _to)
+    return unless (@state['at'].include?([_agent, _from]) and not @state['at'].include?([_agent, _to]))
     @state = @state.dup
-    (@state['at'] = @state['at'].dup).delete([agent, from])
-    @state['at'].unshift([agent, to])
+    (@state['at'] = @state['at'].dup).delete([_agent, _from])
+    @state['at'].unshift([_agent, _to])
   end
 
-  def buy_good_cookie(agent)
-    return unless @state['at'].include?([agent, 'cookie_store'])
+  def buy_good_cookie(_agent)
+    return unless @state['at'].include?([_agent, 'cookie_store'])
     @state = @state.dup
-    (@state['have'] = @state['have'].dup).unshift([agent, 'good_cookie'])
+    (@state['have'] = @state['have'].dup).unshift([_agent, 'good_cookie'])
   end
 
-  def buy_bad_cookie(agent)
-    return unless @state['at'].include?([agent, 'cookie_store'])
+  def buy_bad_cookie(_agent)
+    return unless @state['at'].include?([_agent, 'cookie_store'])
     @state = @state.dup
-    (@state['have'] = @state['have'].dup).unshift([agent, 'bad_cookie'])
+    (@state['have'] = @state['have'].dup).unshift([_agent, 'bad_cookie'])
   end
 
   #-----------------------------------------------
   # Methods
   #-----------------------------------------------
 
-  def get_cookie_goto_and_buy_cookie(agent, from, to)
+  def get_cookie_goto_and_buy_cookie(_agent, _from, _to)
     yield [
-      ['goto', agent, from, to],
-      ['buy_cookie', agent]
+      ['goto', _agent, _from, _to],
+      ['buy_cookie', _agent]
     ]
   end
 end",
@@ -156,21 +156,21 @@ end",
 require_relative 'cookie.ujshop'
 
 # Objects
-bob = 'bob'
-home = 'home'
-cookie_store = 'cookie_store'
+_bob = 'bob'
+_home = 'home'
+_cookie_store = 'cookie_store'
 
 Cookie.problem(
   # Start
   {
     'at' => [
-      [bob, home]
+      [_bob, _home]
     ],
     'have' => []
   },
   # Tasks
   [
-    ['get_cookie', bob, home, cookie_store]
+    ['get_cookie', _bob, _home, _cookie_store]
   ],
   # Debug
   ARGV.first == 'debug',

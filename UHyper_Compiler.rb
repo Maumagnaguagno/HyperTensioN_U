@@ -15,7 +15,7 @@ module UHyper_Compiler
       end
     when 'not' then (term = expression_to_hyper(precond_expression[1], axioms)).delete_prefix!('not ') or 'not ' << term
     when 'call' then call(precond_expression)
-    when 'assign' then '(' << precond_expression[1].delete_prefix('?') << ' = ' << evaluate(precond_expression[2], true) << ')'
+    when 'assign' then '(_' << precond_expression[1].delete_prefix('?') << ' = ' << evaluate(precond_expression[2], true) << ')'
     else
       # Empty list is false
       if precond_expression.empty? then 'false'
@@ -102,7 +102,7 @@ module UHyper_Compiler
       else "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
       end
     when String
-      if term.start_with?('?') then term.delete_prefix('?')
+      if term.start_with?('?') then term.tr('?','_')
       elsif term.match?(/^[a-z]/) then "'#{term}'"
       elsif term.match?(/^-?\d/) then quotes ? "'#{term.to_f}'" : term.to_f.to_s
       else term
@@ -140,7 +140,7 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def operator_to_hyper(name, param, precond_expression, effect_add, effect_del, define_operators)
-    define_operators << "\n  def #{name}#{"(#{param.join(', ').delete!('?')})" unless param.empty?}"
+    define_operators << "\n  def #{name}#{"(#{param.join(', ').tr!('?','_')})" unless param.empty?}"
     if effect_add.empty? and effect_del.empty?
       # Empty or sensing
       define_operators << (precond_expression ? "\n    #{precond_expression}\n  end\n" : "\n    true\n  end\n")
@@ -187,7 +187,7 @@ module UHyper_Compiler
     domain_str << "\n    # Methods"
     methods.each_with_index {|(name,param,*decompositions),mi|
       domain_str << "\n    '#{name}' => [\n"
-      paramstr = "(#{param.join(', ').delete!('?')})" unless param.empty?
+      paramstr = "(#{param.join(', ').tr!('?','_')})" unless param.empty?
       decompositions.each_with_index {|dec,i|
         domain_str << "      '#{name}_#{dec.first}'#{',' if decompositions.size - 1 != i}\n"
         define_methods << "\n  def #{name}_#{dec.first}#{paramstr}"
@@ -261,7 +261,7 @@ module UHyper_Compiler
                 equality << "_#{j}_ground != '#{j}'"
                 "_#{j}_ground"
               elsif ground.include?(j)
-                equality << "#{j = j.delete_prefix('?')}_ground != #{j}"
+                equality << "#{j = j.tr('?','_')}_ground != #{j}"
                 "#{j}_ground"
               else
                 ground << free_variables.delete(j)
@@ -309,11 +309,15 @@ module UHyper_Compiler
         # Semantic attachments
         precond_attachments.each {|positive,pre,*terms|
           terms.map! {|t|
-            if t.instance_of?(String) and t.start_with?('?') and not ground_free_variables.include?(t)
-              ground_free_variables << t
-              define_methods << "#{indentation}#{t.delete_prefix('?')} = ''"
+            if t.instance_of?(String) and t.start_with?('?')
+              td = t.tr('?','_')
+              unless ground_free_variables.include?(t)
+                ground_free_variables << t
+                define_methods << "#{indentation}#{td} = ''"
+              end
+              td
+            else evaluate(t, true)
             end
-            evaluate(t, true)
           }
           if positive
             define_methods << "#{indentation}External.#{pre}(#{terms.join(', ')}) {"
@@ -349,7 +353,7 @@ module UHyper_Compiler
     unless axioms.empty?
       domain_str << "  ##{SPACER}\n  # Axioms\n  ##{SPACER}\n\n"
       axioms.each {|name,param,*expressions|
-        domain_str << "  def #{name}#{"(#{param.join(', ').delete!('?')})" unless param.empty?}\n"
+        domain_str << "  def #{name}#{"(#{param.join(', ').tr!('?','_')})" unless param.empty?}\n"
         expressions.each_slice(2) {|label,exp|
           domain_str << case exp = expression_to_hyper(exp, axioms)
           when 'false' then "    # #{label} is always false\n"
@@ -383,7 +387,7 @@ module UHyper_Compiler
     objects.uniq!
     objects.each {|i|
       if i.instance_of?(String)
-        problem_str << "#{i} = '#{i}'\n" unless i.match?(/^-?\d/)
+        problem_str << "_#{i} = '#{i}'\n" unless i.match?(/^-?\d/)
       else problem_str << "_#{i.join('_').tr(from,to)} = #{evaluate(i, true)}\n"
       end
     }
@@ -392,12 +396,12 @@ module UHyper_Compiler
     predicates.each_key {|i| state[i] ||= []}
     state.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
-      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : o : o.join('_').tr(from,to).prepend('_')}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
+      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : '_' << o : '_' << o.join('_').tr(from,to)}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
       problem_str << (state.size.pred == i ? ']' : "],\n")
     }
     # Tasks
     problem_str << "\n  },\n  # Tasks\n  [" <<
-      tasks.map! {|t| "\n    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : o : o.join('_').tr(from,to).prepend('_')}.join(', ')}]"}.join(',') <<
+      tasks.map! {|t| "\n    ['#{t.first}'#{', ' if t.size > 1}#{t.drop(1).map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : '_' << o : '_' << o.join('_').tr(from,to)}.join(', ')}]"}.join(',') <<
       "\n  ],\n  # Debug\n  ARGV.first == 'debug',\n  # Maximum plans found\n  ARGV[1] ? ARGV[1].to_i : -1,\n  # Minimum probability for plans\n  ARGV[2] ? ARGV[2].to_f : 0"
     tasks.unshift(ordered) unless tasks.empty?
     problem_str.gsub!(/\b-\b/,'_')
