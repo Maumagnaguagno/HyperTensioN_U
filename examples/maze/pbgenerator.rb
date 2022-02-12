@@ -8,8 +8,8 @@ if File.exist?(spriter = File.expand_path('../../../../Spriter/', __FILE__))
 end
 
 width = height = (ARGV.first || 7).to_i # 2 * N + 1
-w = (width  << 1) + 1
-h = (height << 1) + 1
+w = width  << 1 | 1
+h = height << 1 | 1
 room_size = 1
 start = 'p1_1'
 goal = "p#{w - 2}_#{h - 2}"
