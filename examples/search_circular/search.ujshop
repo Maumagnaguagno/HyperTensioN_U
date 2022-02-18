@@ -3,27 +3,27 @@
   (:attachments (closest ?circle ?to ?out_circle ?in_dir ?out_dir ?goal))
 
   (:operator (!move ?agent ?from ?to)
-    nil
+    ()
     ((at ?agent ?from))
     ((at ?agent ?to))
   )
 
   (:operator (!!visit ?agent ?point)
-    nil
-    nil
+    ()
+    ()
     ((visited ?agent ?point))
   )
 
   (:operator (!!unvisit ?agent ?point)
-    nil
+    ()
     ((visited ?agent ?point))
-    nil
+    ()
   )
 
   (:method (forward ?agent ?goal)
     base
     ((at ?agent ?goal))
-    nil
+    ()
 
     search
     (
@@ -36,7 +36,7 @@
   (:method (apply-plan ?agent ?from ?index ?size)
     index-equals-size
     ((call = ?index ?size))
-    nil
+    ()
 
     get-next-action
     ((assign ?to (call plan-position ?index)))

@@ -15,21 +15,21 @@
   )
 
   (:operator (!!visit ?agent ?pos)
-    nil
-    nil
+    ()
+    ()
     ((visited ?agent ?pos))
   )
 
   (:operator (!!unvisit ?agent ?pos)
-    nil
+    ()
     ((visited ?agent ?pos))
-    nil
+    ()
   )
 
   (:method (forward ?agent ?goal)
     base
     ((at ?agent ?goal))
-    nil
+    ()
 
     goal-visible
     (

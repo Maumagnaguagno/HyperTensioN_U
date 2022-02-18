@@ -3,7 +3,7 @@
   (:- (empty_axiom ?var)
     ; Empty list is false
     negate-empty-list
-    (not (and (or ((((((nil)))))))))
+    (not (and (or ((((((())))))))))
   )
 
   (:- (at-axiom 0)

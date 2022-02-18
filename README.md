@@ -53,7 +53,7 @@ External function calls and semantic attachments are also available.
     ; Preconditions
     () ; empty set
     ; Del effects
-    nil ; also empty
+    ()
     ; Add effects
     (
       (pre1 ?t2)

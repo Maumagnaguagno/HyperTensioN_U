@@ -2,8 +2,8 @@
 
   (:operator (!near ?pred)
     (call approx ?pred)
-    nil
-    nil
+    ()
+    ()
   )
 
   (:operator (!store ?element)
@@ -11,8 +11,8 @@
       (call <= (call size) 16)
       (call push ?element)
     )
-    nil
-    nil
+    ()
+    ()
   )
 
   (:operator (!consume ?element)
@@ -21,7 +21,7 @@
       (call print consuming ?element)
       ;(call input)
     )
-    nil
+    ()
     (
       (consumed ?element)
     )
@@ -36,8 +36,8 @@
     )
 
     base
-    nil
-    nil
+    ()
+    ()
   )
 
   (:method (consume-list ?l)
@@ -52,7 +52,7 @@
     )
 
     base
-    nil
-    nil
+    ()
+    ()
   )
 ))

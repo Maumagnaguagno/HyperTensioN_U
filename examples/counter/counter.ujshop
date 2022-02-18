@@ -23,7 +23,7 @@
     ; Preconditions
     ((at ?goal))
     ; Subtasks
-    nil
+    ()
 
     half-increment
     ; Preconditions
