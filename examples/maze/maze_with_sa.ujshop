@@ -6,7 +6,7 @@
   (:operator (!!unvisit ?agent ?from) () ((visited ?agent ?from)) () )
 
   (:operator (!move ?agent ?from ?to)
-    ((at ?agent ?from) (clear ?to))
+    ()
     ((at ?agent ?from) (clear ?to))
     ((at ?agent ?to) (clear ?from))
   )
