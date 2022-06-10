@@ -1,0 +1,31 @@
+(defdomain maze (
+  (:attachments (adjacent_not_visited ?agent ?pos ?near ?goal))
+
+  (:operator (!!visit ?agent ?from) (call visit ?agent ?from) () () )
+
+  (:operator (!!unvisit ?agent ?from) (call unvisit ?agent ?from) () () )
+
+  (:operator (!move ?agent ?from ?to)
+    ()
+    ((at ?agent ?from) (clear ?to))
+    ((at ?agent ?to) (clear ?from))
+  )
+
+  (:method (forward ?agent ?goal)
+    base
+    ((at ?agent ?goal))
+    ()
+
+    recursion
+    (
+      (at ?agent ?from)
+      (adjacent_not_visited ?agent ?from ?place ?goal)
+    )
+    (
+      (!move ?agent ?from ?place)
+      (!!visit ?agent ?from)
+      (forward ?agent ?goal)
+      (!!unvisit ?agent ?from)
+    )
+  )
+))
