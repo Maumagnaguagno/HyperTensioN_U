@@ -94,19 +94,16 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def evaluate(term, quotes = false)
-    case term
-    when Array
-      if term.first == 'call'
-        term = call(term)
-        quotes && term.match?(/^-?\d/) ? "'#{term}'" : term
-      else "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
-      end
-    when String
+    if term.instance_of?(String)
       if term.start_with?('?') then term.tr('?','_')
       elsif term.match?(/^[a-z]/) then "'#{term}'"
       elsif term.match?(/^-?\d/) then quotes ? "'#{term.to_f}'" : term.to_f.to_s
       else term
       end
+    elsif term.first == 'call'
+      term = call(term)
+      quotes && term.match?(/^-?\d/) ? "'#{term}'" : term
+    else "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
     end
   end
 
