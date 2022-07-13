@@ -185,6 +185,5 @@ end
 ```
 
 ## ToDo's
-- Test compiled output
 - Add list variable support
 - Support complex expressions in method preconditions
