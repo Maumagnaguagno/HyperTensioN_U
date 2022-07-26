@@ -16,14 +16,11 @@ module UHyper_Compiler
     when 'not' then (term = expression_to_hyper(precond_expression[1], axioms)).delete_prefix!('not ') or 'not ' << term
     when 'call' then call(precond_expression)
     when 'assign' then '(_' << precond_expression[1].delete_prefix('?') << ' = ' << evaluate(precond_expression[2], true) << ')'
+    when nil then 'false' # Empty list is false
     else
-      # Empty list is false
-      if precond_expression.empty? then 'false'
-      else
-        terms = precond_expression.drop(1).map! {|i| evaluate(i, true)}.join(', ')
-        if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
-        else "@state[#{evaluate(precond_expression.first, true)}].include?([#{terms}])"
-        end
+      terms = precond_expression.drop(1).map! {|i| evaluate(i, true)}.join(', ')
+      if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
+      else "@state[#{evaluate(precond_expression.first, true)}].include?([#{terms}])"
       end
     end
   end
