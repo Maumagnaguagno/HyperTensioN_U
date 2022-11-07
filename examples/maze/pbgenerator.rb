@@ -1,8 +1,8 @@
 require_relative '../../../Map_generator/Mapgen'
 require_relative '../../../HyperTensioN/examples/experiments/Grid'
-if File.exist?(spriter = File.expand_path('../../../../Spriter/', __FILE__))
-  require_relative "#{spriter}/Image.rb"
-  require_relative "#{spriter}/ImageX.rb"
+if File.exist?("#{__dir__}/../../../Spriter")
+  require_relative '../../../Spriter/Image.rb'
+  require_relative '../../../Spriter/ImageX.rb'
   back = [255, 255, 255, 255].pack('C4')
   front = [0, 0, 0, 0].pack('C4')
 end
