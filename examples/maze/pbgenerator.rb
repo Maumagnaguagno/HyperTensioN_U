@@ -19,8 +19,8 @@ goal = "p#{w - 2}_#{h - 2}"
   map = Mapgen.wall_to_tile(Mapgen.maze_division(width, height, room_size))
   mapdata = ["(at agent #{start})"]
   map.each_with_index {|row,y| row.each_with_index {|c,x| mapdata << "(clear p#{x}_#{y})" if c == 0}}
-  mapdata.delete("(clear #{start})") {abort "Problem #{seed} with impossible start #{start}"}
-  abort "Problem #{seed} with impossible goal #{goal}" unless mapdata.include?("(clear #{goal})")
+  mapdata.delete("(clear #{start})") {abort("Problem #{seed} with impossible start #{start}")}
+  abort("Problem #{seed} with impossible goal #{goal}") unless mapdata.include?("(clear #{goal})")
   mapdata.concat(Grid.generate(w,h).map! {|a,b| "(adjacent #{a} #{b})"})
   IO.binwrite("#{path = "#{__dir__}/pb#{seed}"}.ujshop",
     "(defproblem pb#{seed} maze\n  (
