@@ -20,8 +20,7 @@ module External
   end
 
   def search_circular(agent, start, goal)
-    @plan = search(@symbol_object[start], @symbol_object[goal], CIRCLES)
-    @plan.map! {|i| symbol(i)} if @plan
+    @plan = search(@symbol_object[start], @symbol_object[goal], CIRCLES)&.map! {|i| symbol(i)}
   end
 
   def plan_position(index)
