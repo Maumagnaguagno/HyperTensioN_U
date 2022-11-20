@@ -120,7 +120,7 @@ module UJSHOP_Parser
     end
     # Expand constant parameters to equality call
     const_param = []
-    param.each_with_index {|p,i| const_param << ['call', '=', "?parameter#{i}", p] unless p.start_with?('?')}
+    param.zip(axiom[1]) {|p,pi| const_param << ['call', '=', pi, p] unless p.start_with?('?')}
     while exp = ax.shift
       if exp.instance_of?(String)
         label = exp
@@ -130,7 +130,7 @@ module UJSHOP_Parser
       # Add constant parameters to expression if any
       exp.flatten.each {|value|
         if value.start_with?('?') and i = param.index(value)
-          value.replace("?parameter#{i}")
+          value.replace(axiom[1][i])
         end
       }
       exp = [AND, *const_param, exp] unless const_param.empty?
