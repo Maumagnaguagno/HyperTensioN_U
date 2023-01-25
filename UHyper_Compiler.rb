@@ -33,7 +33,7 @@ module UHyper_Compiler
     case function = expression[1]
     # Binary math
     when '+', '-', '*', '/', '%', '^'
-      raise "Wrong number of arguments for (#{expression.join(' ')}), expected 3" if expression.size != 4
+      raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
       ltoken = evaluate(expression[2])
       rtoken = evaluate(expression[3])
       if ltoken.match?(/^-?\d/) then ltoken = ltoken.to_f
@@ -48,7 +48,7 @@ module UHyper_Compiler
       end
     # Unary math
     when 'abs', 'sin', 'cos', 'tan'
-      raise "Wrong number of arguments for (#{expression.join(' ')}), expected 2" if expression.size != 3
+      raise "Expected 2 arguments for (#{expression.join(' ')})" if expression.size != 3
       ltoken = evaluate(expression[2])
       if ltoken.match?(/^-?\d/) then function == 'abs' ? ltoken.delete_prefix('-') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".delete_prefix('-')"
@@ -56,7 +56,7 @@ module UHyper_Compiler
       end
     # Comparison
     when '=', '!=', '<', '>', '<=', '>='
-      raise "Wrong number of arguments for (#{expression.join(' ')}), expected 3" if expression.size != 4
+      raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
       ltoken = evaluate(expression[2])
       rtoken = evaluate(expression[3])
       if ltoken == rtoken then (function == '=' or function == '<=' or function == '>=').to_s
@@ -77,7 +77,7 @@ module UHyper_Compiler
       end
     # List
     when 'member'
-      raise "Wrong number of arguments for (#{expression.join(' ')}), expected 3" if expression.size != 4
+      raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
       ltoken = evaluate(expression[2], true)
       rtoken = evaluate(expression[3], true)
       "#{rtoken}.include?(#{ltoken})"
