@@ -180,10 +180,8 @@ module UHyper_Compiler
     define_methods = ''
     domain_str << "\n    # Methods"
     methods.each_with_index {|(name,param,*decompositions),mi|
-      domain_str << "\n    '#{name}' => [\n"
       paramstr = "(#{param.join(', ').tr!('?','_')})" unless param.empty?
-      decompositions.each_with_index {|dec,i|
-        domain_str << "      '#{name}_#{dec.first}'#{',' if decompositions.size - 1 != i}\n"
+      decompositions.map! {|dec|
         define_methods << "\n  def #{name}_#{dec.first}#{paramstr}"
         # Obtain free variables
         # TODO refactor this block to work with complex expressions
@@ -326,8 +324,9 @@ module UHyper_Compiler
         end
         # Subtasks
         define_methods << indentation << (dec[2].empty? ? 'yield []' : "yield [#{indentation}  [" << dec[2].map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]") << close_method_str
+        "\n      '#{name}_#{dec.first}'"
       }
-      domain_str << (methods.size.pred == mi ? '    ]' : '    ],')
+      domain_str << "\n    '#{name}' => [" << decompositions.join(',') << (methods.size.pred == mi ? "\n    ]" : "\n    ],")
     }
     domain_str << "\n  }\n\n"
     # Rewards
