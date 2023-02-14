@@ -58,11 +58,11 @@ module UJSHOP_Parser
     op.shift
     raise 'Operator without name definition' unless (name = op.first.shift).instance_of?(String)
     name.sub!(/^!!/,'invisible_') or name.delete_prefix!('!')
-    raise "#{name} have size #{op.size} instead of 4 or more" if op.size < 4
     raise "#{name} redefined" if @operators.assoc(name)
-    @operators << operator = [name, op.shift, []]
+    raise "#{name} have size #{op.size} instead of 4 or more" if op.size < 4
+    @operators << operator = [name, op.shift, op.shift]
     # Preconditions
-    define_expression("#{name} precondition", operator[2] = op.shift)
+    define_expression("#{name} precondition", operator[2])
     # Effects
     if op.size <= 3
       define_effects(name, operator[4] = op.shift)
