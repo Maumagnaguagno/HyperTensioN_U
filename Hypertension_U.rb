@@ -57,7 +57,7 @@ module Hypertension_U
             decomposition.each {|method|
               puts "#{'  ' * level.pred}#{method}(#{current_task.join(' ')})" if @debug
               # Every unification is tested
-              send(method, *current_task) {|subtasks|
+              __send__(method, *current_task) {|subtasks|
                 planning(subtasks.concat(tasks), level, plan)
                 return if @plans.size == @max_plans
               }
@@ -91,7 +91,7 @@ module Hypertension_U
     puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(' ')})" if @debug
     begin
       # Minimum probability and applied
-      if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and send(*current_task)
+      if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and __send__(*current_task)
         new_plan = plan.dup << current_task.map(&:dup)
         new_plan[PROBABILITY] = new_prob
         new_plan[VALUATION] += state_valuation(old_state) * probability
