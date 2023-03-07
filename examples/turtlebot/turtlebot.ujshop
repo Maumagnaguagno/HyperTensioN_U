@@ -173,6 +173,7 @@
       (not (visited ?robot ?nx ?ny))
       (assign ?rx (call function (x ?robot) ?time))
       (assign ?ry (call function (y ?robot) ?time))
+      (assign ?current_angle (call function (a ?robot) ?time))
       (assign ?goal_angle (call atan ?rx ?ry ?nx ?ny))
     )
     (
