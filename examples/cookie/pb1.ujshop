@@ -7,8 +7,4 @@
   (
     (get_cookie bob home cookie-store)
   )
-  ; Problem rewards overwrites domain reward function
-  ;(:rewards
-  ;  ((have bob cookie) 5)
-  ;)
 )
