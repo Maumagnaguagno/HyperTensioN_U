@@ -50,9 +50,9 @@ module Hype
       @parser.attachments
     ]
     data = compiler.compile_domain(*args)
-    IO.write("#{domain}.#{type}", data) if data
+    File.write("#{domain}.#{type}", data) if data
     data = compiler.compile_problem(*args << File.basename(domain))
-    IO.write("#{problem}.#{type}", data) if data
+    File.write("#{problem}.#{type}", data) if data
   end
 end
 

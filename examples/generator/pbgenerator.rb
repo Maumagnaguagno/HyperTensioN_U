@@ -1,7 +1,7 @@
 tanks = ''
 1.upto(20) {|i|
   tanks << "\n    (available tank#{i})"
-  IO.binwrite("#{__dir__}/pb#{i}.ujshop",
+  File.binwrite("#{__dir__}/pb#{i}.ujshop",
     "(defproblem pb#{i} generator\n  (
     (generator gen)
     (function (fuellevel gen) #{1000 - i * 20})

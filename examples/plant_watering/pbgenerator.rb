@@ -77,5 +77,5 @@
   plants.each_with_index {|(x,y,pour),i| problem << "\n    (plant plant#{i})\n    (function (x plant#{i}) #{x})\n    (function (y plant#{i}) #{y})\n    (function (poured plant#{i}) 0)"}
   problem << "\n  )\n  ("
   plants.each_with_index {|(x,y,pour),i| problem << "\n   (move_to_load_before_move_to_pour plant#{i} #{pour})"}
-  IO.binwrite("#{__dir__}/pb#{counter}.ujshop", problem << "\n  )\n)")
+  File.binwrite("#{__dir__}/pb#{counter}.ujshop", problem << "\n  )\n)")
 }

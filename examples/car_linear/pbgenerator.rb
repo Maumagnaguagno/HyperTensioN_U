@@ -9,7 +9,7 @@
   [0,0,0,-7,7,10,29.5,30.5],
   [0,0,0,-8,8,10,29.5,30.5],
 ].each_with_index {|(d,v,a,mina,maxa,maxs,minp,maxp),i|
-  IO.binwrite("#{__dir__}/pb#{i}.ujshop",
+  File.binwrite("#{__dir__}/pb#{i}.ujshop",
     "(defproblem pb#{i} car_linear\n  (
     (function d #{d})
     (function v #{v})

@@ -152,7 +152,7 @@ if jshop
   # Tasks
   problem_str << "  )\n\n  ;#{SPACER}\n  ; Tasks\n  ;#{SPACER}\n\n  (\n"
   TASKS.each {|task| problem_str << "    (#{task.join(' ')})\n"}
-  IO.binwrite(jshop, problem_str << "  )\n)")
+  File.binwrite(jshop, problem_str << "  )\n)")
 else
   # Start
   STATE = [
