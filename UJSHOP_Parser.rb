@@ -143,15 +143,15 @@ module UJSHOP_Parser
   #-----------------------------------------------
 
   def parse_domain(domain_filename)
-    if (tokens = scan_tokens(domain_filename)).instance_of?(Array) and tokens.size == 3 and tokens.shift == 'defdomain'
-      @domain_name = tokens.shift
+    if (tokens = scan_tokens(domain_filename)).instance_of?(Array) and tokens.size == 3 and tokens[0] == 'defdomain'
+      @domain_name = tokens[1]
       @operators = []
       @methods = []
       @predicates = {}
       @axioms = []
       @rewards = []
       @attachments = []
-      tokens = tokens.shift
+      tokens = tokens[2]
       while group = tokens.shift
         case group.first
         when ':operator' then parse_operator(group)
