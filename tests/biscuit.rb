@@ -181,4 +181,23 @@ Cookie.problem(
 )"
     )
   end
+
+  def test_cookie_pb1_ujshop_interpreted_execution
+    interpreted_execution_tests(
+      'examples/cookie/cookie.ujshop',
+      'examples/cookie/pb1.ujshop',
+      'Hype.rb',
+      'Plans found: 2
+----------------------Plan 1----------------------
+Probability: 0.8
+Valuation: 8.0
+0: goto(bob home cookie_store)
+1: buy_good_cookie(bob)
+----------------------Plan 2----------------------
+Probability: 0.2
+Valuation: -2.0
+0: goto(bob home cookie_store)
+1: buy_bad_cookie(bob)'
+    )
+  end
 end
