@@ -1,4 +1,3 @@
-require 'forwardable'
 require_relative '../../../HyperTensioN/examples/experiments/Function'
 require_relative '../../../Polygonoid/examples/search/Search'
 require_relative '../../../Polygonoid/examples/circular/Circular'
@@ -12,6 +11,23 @@ module Turtlebot
   A  = ['a', ROBOT]
   AX = ['ax', ROBOT]
   VX = ['vx', ROBOT]
+
+  CLOCK = 'clock'
+  COUNTER = 'counter'
+  RAD2DEG = 180 / Math::PI
+  PI2 = Math::PI * 2
+  CIRCLES = [
+    Circle.new( 0.5, 28.5, 3.5),
+    Circle.new(46.5, 28.5, 3.5),
+    Circle.new(24.0,  0.5, 3.0),
+    Circle.new(24.0, 58.5, 3.0),
+    Circle.new(24.5, 53.0, 8.5),
+    Circle.new(24.5, 20.5, 7.0),
+    Circle.new(40.5,  5.5, 7.0)
+  ]
+
+  @symbol_object = {}
+  @pos_counter = 0
 
   def current_angle
     @state[:event].reverse_each {|_,f,value| return value if f == A}
@@ -48,29 +64,6 @@ module Turtlebot
     }
     v + a * (t - ot)
   end
-end
-
-module External
-  extend self, Forwardable
-
-  CLOCK = 'clock'
-  COUNTER = 'counter'
-  RAD2DEG = 180 / Math::PI
-  PI2 = Math::PI * 2
-  CIRCLES = [
-    Circle.new( 0.5, 28.5, 3.5),
-    Circle.new(46.5, 28.5, 3.5),
-    Circle.new(24.0,  0.5, 3.0),
-    Circle.new(24.0, 58.5, 3.0),
-    Circle.new(24.5, 53.0, 8.5),
-    Circle.new(24.5, 20.5, 7.0),
-    Circle.new(40.5,  5.5, 7.0)
-  ]
-
-  def_delegators Turtlebot, :function, :process, :event, :event_effect, :process_effect, :step
-
-  @symbol_object = {}
-  @pos_counter = 0
 
   def symbol(object)
     symbol = @symbol_object.key(object) or @symbol_object[symbol = "pos#{@pos_counter += 1}"] = object
@@ -119,6 +112,8 @@ module External
     @symbol_object[position].y.to_f.to_s
   end
 end
+
+External = Turtlebot
 
 #-----------------------------------------------
 # Main
