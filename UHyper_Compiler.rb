@@ -15,12 +15,12 @@ module UHyper_Compiler
       end
     when 'not' then (term = expression_to_hyper(precond_expression[1], axioms)).delete_prefix!('not ') or 'not ' << term
     when 'call' then call(precond_expression)
-    when 'assign' then '(_' << precond_expression[1].delete_prefix('?') << ' = ' << evaluate(precond_expression[2], true) << ')'
+    when 'assign' then '(_' << precond_expression[1].delete_prefix('?') << ' = ' << evaluate(precond_expression[2]) << ')'
     when nil then 'false' # Empty list is false
     else
-      terms = precond_expression.drop(1).map! {|i| evaluate(i, true)}.join(', ')
+      terms = precond_expression.drop(1).map! {|i| evaluate(i)}.join(', ')
       if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
-      else "@state[#{evaluate(precond_expression.first, true)}].include?([#{terms}])"
+      else "@state[#{evaluate(precond_expression.first)}].include?([#{terms}])"
       end
     end
   end
@@ -34,8 +34,8 @@ module UHyper_Compiler
     # Binary math
     when '+', '-', '*', '/', '%', '^'
       raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
-      ltoken = evaluate(expression[2])
-      rtoken = evaluate(expression[3])
+      ltoken = evaluate(expression[2], false)
+      rtoken = evaluate(expression[3], false)
       if ltoken.match?(/^-?\d/) then ltoken = ltoken.to_f
       else ltoken.delete_suffix!('.to_s') or ltoken << '.to_f'
       end
@@ -49,7 +49,7 @@ module UHyper_Compiler
     # Unary math
     when 'abs', 'sin', 'cos', 'tan'
       raise "Expected 2 arguments for (#{expression.join(' ')})" if expression.size != 3
-      ltoken = evaluate(expression[2])
+      ltoken = evaluate(expression[2], false)
       if ltoken.match?(/^-?\d/) then function == 'abs' ? ltoken.delete_prefix('-') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".delete_prefix('-')"
       else "Math.#{function}(#{ltoken.delete_suffix!('.to_s') or ltoken << '.to_f'}).to_s"
@@ -57,8 +57,8 @@ module UHyper_Compiler
     # Comparison
     when '=', '!=', '<', '>', '<=', '>='
       raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
-      ltoken = evaluate(expression[2])
-      rtoken = evaluate(expression[3])
+      ltoken = evaluate(expression[2], false)
+      rtoken = evaluate(expression[3], false)
       if ltoken == rtoken then (function == '=' or function == '<=' or function == '>=').to_s
       else
         function = '==' if function == '='
@@ -78,11 +78,11 @@ module UHyper_Compiler
     # List
     when 'member'
       raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
-      ltoken = evaluate(expression[2], true)
-      rtoken = evaluate(expression[3], true)
+      ltoken = evaluate(expression[2])
+      rtoken = evaluate(expression[3])
       "#{rtoken}.include?(#{ltoken})"
     # External
-    else "External.#{function}(#{expression.drop(2).map! {|term| evaluate(term, true)}.join(', ')})"
+    else "External.#{function}(#{expression.drop(2).map! {|term| evaluate(term)}.join(', ')})"
     end
   end
 
@@ -90,7 +90,7 @@ module UHyper_Compiler
   # Evaluate
   #-----------------------------------------------
 
-  def evaluate(term, quotes = false)
+  def evaluate(term, quotes = true)
     if term.instance_of?(String)
       if term.start_with?('?') then term.tr('?','_')
       elsif term.match?(/^[a-z]/) then "'#{term}'"
@@ -109,7 +109,7 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def applicable(output, pre, terms)
-    output << "@state[#{evaluate(pre, true)}].include?([#{terms.map! {|t| evaluate(t, true)}.join(', ')}])"
+    output << "@state[#{evaluate(pre)}].include?([#{terms.map! {|t| evaluate(t)}.join(', ')}])"
   end
 
   #-----------------------------------------------
@@ -118,14 +118,14 @@ module UHyper_Compiler
 
   def apply(modifier, effects, define_operators, duplicated)
     effects.each {|pre,*terms|
-      pre_evaluated = evaluate(pre, true)
+      pre_evaluated = evaluate(pre)
       if duplicated.include?(pre)
         define_operators << "\n    @state[#{pre_evaluated}]"
       else
         define_operators << "\n    (@state[#{pre_evaluated}] = @state[#{pre_evaluated}].dup)"
         duplicated[pre] = nil
       end
-      define_operators << ".#{modifier}([#{terms.map! {|i| evaluate(i, true)}.join(', ')}])"
+      define_operators << ".#{modifier}([#{terms.map! {|i| evaluate(i)}.join(', ')}])"
     }
   end
 
@@ -262,7 +262,7 @@ module UHyper_Compiler
             }
             if new_grounds
               define_methods << "#{indentation}return" unless predicates[pre] or state.include?(pre)
-              define_methods << "#{indentation}@state[#{evaluate(pre, true)}].each {|#{terms2.join(', ')},|"
+              define_methods << "#{indentation}@state[#{evaluate(pre)}].each {|#{terms2.join(', ')},|"
               close_method_str.prepend("#{indentation}}")
               indentation << '  '
             elsif pre == '=' then equality << "#{terms2[0]} != #{terms2[1]}"
@@ -271,7 +271,7 @@ module UHyper_Compiler
             end
             precond_pos.reject! {|pre,*terms|
               if (terms & free_variables).empty?
-                if pre == '=' then equality << "#{evaluate(terms[0], true)} != #{evaluate(terms[1], true)}"
+                if pre == '=' then equality << "#{evaluate(terms[0])} != #{evaluate(terms[1])}"
                 elsif not predicates[pre] and not state.include?(pre) then define_methods << "#{indentation}return"
                 else applicable(define_methods_comparison << "#{indentation}next unless ", pre, terms)
                 end
@@ -279,7 +279,7 @@ module UHyper_Compiler
             }
             precond_not.reject! {|pre,*terms|
               if (terms & free_variables).empty?
-                if pre == '=' then equality << "#{evaluate(terms[0], true)} == #{evaluate(terms[1], true)}"
+                if pre == '=' then equality << "#{evaluate(terms[0])} == #{evaluate(terms[1])}"
                 elsif predicates[pre] or state.include?(pre) then applicable(define_methods_comparison << "#{indentation}next if ", pre, terms)
                 end
               end
@@ -290,7 +290,7 @@ module UHyper_Compiler
           equality.clear
           define_methods_comparison.clear
           precond_not.each {|pre,*terms|
-            if pre == '=' then equality << "#{evaluate(terms[0], true)} == #{evaluate(terms[1], true)}"
+            if pre == '=' then equality << "#{evaluate(terms[0])} == #{evaluate(terms[1])}"
             elsif predicates[pre] or state.include?(pre) then applicable(define_methods_comparison << "#{indentation}next if ", pre, terms)
             end
           }
@@ -308,7 +308,7 @@ module UHyper_Compiler
                 define_methods << "#{indentation}#{td} = ''"
               end
               td
-            else evaluate(t, true)
+            else evaluate(t)
             end
           }
           if positive
@@ -323,7 +323,7 @@ module UHyper_Compiler
           define_methods << "#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
         end
         # Subtasks
-        define_methods << indentation << (dec[2].empty? ? 'yield []' : "yield [#{indentation}  [" << dec[2].map {|g| g.map {|i| evaluate(i, true)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]") << close_method_str
+        define_methods << indentation << (dec[2].empty? ? 'yield []' : "yield [#{indentation}  [" << dec[2].map {|g| g.map {|i| evaluate(i)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]") << close_method_str
         "\n      '#{name}_#{dec.first}'"
       }
       domain_str << "\n    '#{name}' => [" << decompositions.join(',') << (methods.size.pred == mi ? "\n    ]" : "\n    ],")
@@ -381,7 +381,7 @@ module UHyper_Compiler
     objects.each {|i|
       if i.instance_of?(String)
         problem_str << "_#{i} = '#{i}'\n" unless i.match?(/^-?\d/)
-      else problem_str << "_#{i.join('_').tr(from,to)} = #{evaluate(i, true)}\n"
+      else problem_str << "_#{i.join('_').tr(from,to)} = #{evaluate(i)}\n"
       end
     }
     problem_str << "\n#{domain_name.capitalize}.problem(\n  # Start\n  {\n"
