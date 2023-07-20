@@ -19,7 +19,7 @@ module External
   end
 
   def search_circular(agent, start, goal)
-    @plan = search(@symbol_object[start], @symbol_object[goal], CIRCLES)&.map! {|i| symbol(i)}
+    @plan = Circular.search(@symbol_object[start], @symbol_object[goal], CIRCLES)&.map! {|i| symbol(i)}
   end
 
   def plan_position(index)
@@ -32,8 +32,8 @@ module External
 
   def closest(circle, to, out_circle, in_dir, out_dir, goal)
     g = @symbol_object[goal]
-    circles_sort = CIRCLES.sort_by {|c| center_distance(c, g)}
-    each_bitangent(@symbol_object[circle], in_dir == CLOCK, circles_sort) {|c,l,d|
+    circles_sort = CIRCLES.sort_by {|c| Circular.center_distance(c, g)}
+    Circular.each_bitangent(@symbol_object[circle], in_dir == CLOCK, circles_sort) {|c,l,d|
       out_circle.replace(symbol(c))
       to.replace(symbol(l.to))
       out_dir.replace(d ? CLOCK : COUNTER)
@@ -43,6 +43,6 @@ module External
 
   def visible(point, circle, goal)
     g = @symbol_object[goal]
-    visible?(Line.new(@symbol_object[point], g), CIRCLES, @symbol_object[circle], g)
+    Circular.visible?(Line.new(@symbol_object[point], g), CIRCLES, @symbol_object[circle], g)
   end
 end

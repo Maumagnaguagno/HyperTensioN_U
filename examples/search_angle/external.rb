@@ -31,7 +31,7 @@ module External
   end
 
   def arc(from, to, arc_to)
-    line_to_arc(@symbol_object[from], @symbol_object[to], ANGLE, ENVIRONMENT) {|pos|
+    Linear.line_to_arc(@symbol_object[from], @symbol_object[to], ANGLE, ENVIRONMENT) {|pos|
       arc_to.replace(symbol(pos))
       yield
     }
