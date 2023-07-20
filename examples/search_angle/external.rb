@@ -1,4 +1,4 @@
-require_relative '../../../Polygonoid/examples/search/Search'
+require_relative '../../../Polygonoid/examples/search/Linear'
 
 module External
   extend self
