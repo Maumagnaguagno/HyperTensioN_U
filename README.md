@@ -130,10 +130,10 @@ Basic functions are already implemented:
 ```
 
 Other functions can be used through external calls the user implements in the ``external.rb`` file in the same folder as the domain.
-The ``external.rb`` must define an **External** module with methods that are expected to return String objects, numbers are expected to be in the Float format (``5.to_f.to_s == "5.0"``).
+The ``external.rb`` must define a ``Domain_name`` module with methods that are expected to return String objects, numbers are expected to be in the Float format (``5.to_f.to_s == "5.0"``).
 This is a requirement of the ``generate`` method that expects Strings to replace variables, if you only need to forward values through subtasks you can ignore this limitation.
-Calls that only operate on external structures must return any non-false value to avoid failing preconditions.
-Instance variables from HyperTensioN U can be accessed by using the domain namespace, such as ``Mydomain.state``.
+Calls that only operate on external structures must return a truthy value to avoid failing preconditions.
+Instance variables from HyperTensioN U can be accessed directly.
 An example of calls is available at [examples/external](examples/external).
 Note that the state of external structures is not implicitly saved, which may impact search results that try to decompose using other methods or operator effects.
 To avoid this problem one can limit the number of plans to be searched, add more preconditions or explicitly duplicate such structures.

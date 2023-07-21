@@ -1,7 +1,7 @@
 require_relative '../../../Polygonoid/examples/search/Circular'
 
-module External
-  extend self
+module Search
+
   srand(0)
   CLOCK = 'clock'
   COUNTER = 'counter'

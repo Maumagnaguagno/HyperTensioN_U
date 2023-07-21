@@ -29,5 +29,3 @@ module Car_linear
     v + a * (t - ot)
   end
 end
-
-External = Car_linear

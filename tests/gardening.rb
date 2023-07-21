@@ -200,17 +200,17 @@ module Plant_watering
 
   def move(_a, _nx, _ny)
     return unless @state['agent'].include?([_a])
-    External.assign(['x', _a], _nx) and External.assign(['y', _a], _ny)
+    assign(['x', _a], _nx) and assign(['y', _a], _ny)
   end
 
   def load(_a, _t)
-    return unless (@state['agent'].include?([_a]) and @state['tap'].include?([_t]) and (External.function(['x', _a]) == External.function(['x', _t])) and (External.function(['y', _a]) == External.function(['y', _t])) and ((External.function('total_loaded').to_f + 1.0) <= External.function('max_int').to_f) and ((External.function('carrying').to_f + 1.0) <= External.function('max_int').to_f))
-    External.increase('carrying', '1.0') and External.increase('total_loaded', '1.0')
+    return unless (@state['agent'].include?([_a]) and @state['tap'].include?([_t]) and (function(['x', _a]) == function(['x', _t])) and (function(['y', _a]) == function(['y', _t])) and ((function('total_loaded').to_f + 1.0) <= function('max_int').to_f) and ((function('carrying').to_f + 1.0) <= function('max_int').to_f))
+    increase('carrying', '1.0') and increase('total_loaded', '1.0')
   end
 
   def pour(_a, _p)
-    return unless (@state['agent'].include?([_a]) and @state['plant'].include?([_p]) and (External.function(['x', _a]) == External.function(['x', _p])) and (External.function(['y', _a]) == External.function(['y', _p])) and (External.function('carrying').to_f >= 1.0) and ((External.function('total_poured').to_f + 1.0) <= External.function('max_int').to_f) and ((External.function('poured').to_f + 1.0) <= External.function('max_int').to_f))
-    External.decrease('carrying', '1.0') and External.increase(['poured', _p], '1.0') and External.increase('total_poured', '1.0')
+    return unless (@state['agent'].include?([_a]) and @state['plant'].include?([_p]) and (function(['x', _a]) == function(['x', _p])) and (function(['y', _a]) == function(['y', _p])) and (function('carrying').to_f >= 1.0) and ((function('total_poured').to_f + 1.0) <= function('max_int').to_f) and ((function('poured').to_f + 1.0) <= function('max_int').to_f))
+    decrease('carrying', '1.0') and increase(['poured', _p], '1.0') and increase('total_poured', '1.0')
   end
 
   #-----------------------------------------------
@@ -218,14 +218,14 @@ module Plant_watering
   #-----------------------------------------------
 
   def forward_base(_a, _gx, _gy)
-    return unless ((External.function(['x', _a]) == _gx) and (External.function(['y', _a]) == _gy))
+    return unless ((function(['x', _a]) == _gx) and (function(['y', _a]) == _gy))
     yield []
   end
 
   def forward_keep_moving(_a, _gx, _gy)
     _nx = ''
     _ny = ''
-    External.adjacent(External.function(['x', _a]), External.function(['y', _a]), _nx, _ny, _gx, _gy) {
+    adjacent(function(['x', _a]), function(['y', _a]), _nx, _ny, _gx, _gy) {
       yield [
         ['move', _a, _nx, _ny],
         ['forward', _a, _gx, _gy]
@@ -246,10 +246,10 @@ module Plant_watering
   end
 
   def move_to_load_before_move_to_pour_case_0(_p, _l)
-    return unless (@state['plant'].include?([_p]) and (_px = External.function(['x', _p])) and (_py = External.function(['y', _p])))
+    return unless (@state['plant'].include?([_p]) and (_px = function(['x', _p])) and (_py = function(['y', _p])))
     @state['agent'].each {|_a,|
       @state['tap'].each {|_t,|
-        next unless ((_tx = External.function(['x', _t])) and (_ty = External.function(['y', _t])))
+        next unless ((_tx = function(['x', _t])) and (_ty = function(['y', _t])))
         yield [
           ['forward', _a, _tx, _ty],
           ['repeat', _l, 'load', _a, _t],

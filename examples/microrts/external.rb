@@ -1,5 +1,4 @@
-module External
-  extend self
+module Microrts
 
   def hypot_diff(x1, y1, x2, y2)
     Math.hypot(x1.to_i - x2.to_i, y1.to_i - y2.to_i).to_s

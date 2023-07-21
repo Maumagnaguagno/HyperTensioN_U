@@ -1,7 +1,6 @@
 require_relative '../../../Polygonoid/Polygonoid'
 
-module External
-  extend self
+module Boat
 
   attr_reader :pi
 

@@ -22,7 +22,7 @@ module External
   end
 
   def approx(terms)
-    External.state[terms.shift].any? {|terms2|
+    @state[terms.shift].any? {|terms2|
       terms == terms2 or not terms.zip(terms2) {|t1,t2|
         break true unless t1 == t2 or (t1.match?(/^-?\d/) and t2.match?(/^-?\d/) and (diff = ((t1 = t1.to_f) - (t2 = t2.to_f)).abs) <= 0.001 || diff / (t1 > t2 ? t1 : t2).abs <= 0.001)
       }

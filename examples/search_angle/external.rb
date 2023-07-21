@@ -1,7 +1,6 @@
 require_relative '../../../Polygonoid/examples/search/Linear'
 
-module External
-  extend self
+module Search
 
   ENVIRONMENT = [
     Polygon.new(

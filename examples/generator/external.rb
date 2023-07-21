@@ -11,5 +11,3 @@ module Generator
     t * 2
   end
 end
-
-External = Generator

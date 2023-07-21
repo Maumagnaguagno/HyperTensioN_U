@@ -1,5 +1,4 @@
-module External
-  extend self
+module Sokoban
 
   DIRS = [[1,0],[-1,0],[0,1],[0,-1]]
 
@@ -9,7 +8,7 @@ module External
     x, y = from.delete_prefix('p').split('_')
     x = x.to_i
     y = y.to_i
-    clear = Sokoban.state['clear']
+    clear = @state['clear']
     DIRS.each {|dx,dy|
       if clear.include?([c = "p#{x+dx}_#{y+dy}"])
         to.replace(c)
@@ -22,8 +21,8 @@ module External
     x, y = from.delete_prefix('p').split('_')
     x = x.to_i
     y = y.to_i
-    box = Sokoban.state['box']
-    clear = Sokoban.state['clear']
+    box = @state['box']
+    clear = @state['clear']
     DIRS.each {|dx,dy|
       if box.include?([b = "p#{x+dx}_#{y+dy}"]) and clear.include?([c = "p#{x+dx+dx}_#{y+dy+dy}"])
         intermediate.replace(b)
@@ -34,15 +33,15 @@ module External
   end
 
   def boxes_stored
-    storage = Sokoban.state['storage']
-    Sokoban.state['box'].all? {|p| storage.include?(p)}
+    storage = @state['storage']
+    @state['box'].all? {|p| storage.include?(p)}
   end
 
   def find_deadlocks
-    storage = Sokoban.state['storage']
-    Sokoban.state['deadlock'] = deadlocks = []
+    storage = @state['storage']
+    @state['deadlock'] = deadlocks = []
     map = []
-    Sokoban.state['wall'].each {|wall,|
+    @state['wall'].each {|wall,|
       x, y = wall.delete_prefix('p').split('_')
       (map[y.to_i] ||= [])[x.to_i] = true
     }
@@ -57,6 +56,6 @@ module External
   end
 
   def new_state(player)
-    @visited[player.hash ^ Sokoban.state['box'].sort!.hash]
+    @visited[player.hash ^ @state['box'].sort!.hash]
   end
 end

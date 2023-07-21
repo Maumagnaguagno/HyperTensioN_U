@@ -1,5 +1,4 @@
-module External
-  extend self
+module Maze
 
   DIRS = [[1,0],[-1,0],[0,1],[0,-1]]
 
@@ -12,7 +11,7 @@ module External
     goal =~ /^p(\d+)_(\d+)$/
     gx = $1.to_i
     gy = $2.to_i
-    clear = Maze.state['clear']
+    clear = @state['clear']
     candidates = []
     DIRS.each {|dx,dy|
       if clear.include?([k = "p#{dx += x}_#{dy += y}"])
@@ -32,7 +31,7 @@ module External
     goal =~ /^p(\d+)_(\d+)$/
     gx = $1.to_i
     gy = $2.to_i
-    clear = Maze.state['clear']
+    clear = @state['clear']
     candidates = []
     DIRS.each {|dx,dy|
       if clear.include?([k = "p#{dx += x}_#{dy += y}"]) and not @visited.include?([agent, k])

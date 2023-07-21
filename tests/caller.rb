@@ -208,13 +208,13 @@ class Caller < Test::Unit::TestCase
   end
 
   def test_external_calls
-    call("External.f('1.0', _a)", ['call', 'f', '1', '?a'])
-    call('External.f((1.0 + _a.to_f).to_s)', ['call', 'f', ['call', '+', '1', '?a']])
-    call("(External.f1(_a, 'b') == External.f2(_c))", ['call', '=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
-    call("(External.f1(_a, 'b').to_f == 1.0)", ['call', '=', ['call', 'f1', '?a', 'b'], '1'])
-    call("(External.f1(_a, 'b') == _a)", ['call', '=', ['call', 'f1', '?a', 'b'], '?a'])
-    call("(External.f1(_a, 'b').to_f <= 1.0)", ['call', '<=', ['call', 'f1', '?a', 'b'], '1'])
-    call("(External.f1(_a, 'b').to_f <= External.f2(_c).to_f)", ['call', '<=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
-    call("External.f(_a.include?('1.0'))", ['call', 'f', ['call', 'member', '1', '?a']])
+    call("f('1.0', _a)", ['call', 'f', '1', '?a'])
+    call('f((1.0 + _a.to_f).to_s)', ['call', 'f', ['call', '+', '1', '?a']])
+    call("(f1(_a, 'b') == f2(_c))", ['call', '=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
+    call("(f1(_a, 'b').to_f == 1.0)", ['call', '=', ['call', 'f1', '?a', 'b'], '1'])
+    call("(f1(_a, 'b') == _a)", ['call', '=', ['call', 'f1', '?a', 'b'], '?a'])
+    call("(f1(_a, 'b').to_f <= 1.0)", ['call', '<=', ['call', 'f1', '?a', 'b'], '1'])
+    call("(f1(_a, 'b').to_f <= f2(_c).to_f)", ['call', '<=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
+    call("f(_a.include?('1.0'))", ['call', 'f', ['call', 'member', '1', '?a']])
   end
 end

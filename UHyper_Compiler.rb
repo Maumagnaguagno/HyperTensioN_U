@@ -29,13 +29,13 @@ module UHyper_Compiler
   # Call
   #-----------------------------------------------
 
-  def call(expression)
+  def call(expression, namespace = '')
     case function = expression[1]
     # Binary math
     when '+', '-', '*', '/', '%', '^'
       raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
-      ltoken = evaluate(expression[2], false)
-      rtoken = evaluate(expression[3], false)
+      ltoken = evaluate(expression[2], namespace, false)
+      rtoken = evaluate(expression[3], namespace, false)
       if ltoken.match?(/^-?\d/) then ltoken = ltoken.to_f
       else ltoken.delete_suffix!('.to_s') or ltoken << '.to_f'
       end
@@ -49,7 +49,7 @@ module UHyper_Compiler
     # Unary math
     when 'abs', 'sin', 'cos', 'tan'
       raise "Expected 2 arguments for (#{expression.join(' ')})" if expression.size != 3
-      ltoken = evaluate(expression[2], false)
+      ltoken = evaluate(expression[2], namespace, false)
       if ltoken.match?(/^-?\d/) then function == 'abs' ? ltoken.delete_prefix('-') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".delete_prefix('-')"
       else "Math.#{function}(#{ltoken.delete_suffix!('.to_s') or ltoken << '.to_f'}).to_s"
@@ -57,8 +57,8 @@ module UHyper_Compiler
     # Comparison
     when '=', '!=', '<', '>', '<=', '>='
       raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
-      ltoken = evaluate(expression[2], false)
-      rtoken = evaluate(expression[3], false)
+      ltoken = evaluate(expression[2], namespace, false)
+      rtoken = evaluate(expression[3], namespace, false)
       if ltoken == rtoken then (function == '=' or function == '<=' or function == '>=').to_s
       else
         function = '==' if function == '='
@@ -78,11 +78,11 @@ module UHyper_Compiler
     # List
     when 'member'
       raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
-      ltoken = evaluate(expression[2])
-      rtoken = evaluate(expression[3])
+      ltoken = evaluate(expression[2], namespace)
+      rtoken = evaluate(expression[3], namespace)
       "#{rtoken}.include?(#{ltoken})"
     # External
-    else "External.#{function}(#{expression.drop(2).map! {|term| evaluate(term)}.join(', ')})"
+    else "#{namespace}#{function}(#{expression.drop(2).map! {|term| evaluate(term, namespace)}.join(', ')})"
     end
   end
 
@@ -90,7 +90,7 @@ module UHyper_Compiler
   # Evaluate
   #-----------------------------------------------
 
-  def evaluate(term, quotes = true)
+  def evaluate(term, namespace = '', quotes = true)
     if term.instance_of?(String)
       if term.start_with?('?') then term.tr('?','_')
       elsif term.match?(/^[a-z]/) then "'#{term}'"
@@ -98,9 +98,9 @@ module UHyper_Compiler
       else term
       end
     elsif term.first == 'call'
-      term = call(term)
+      term = call(term, namespace)
       quotes && term.match?(/^-?\d/) ? "'#{term}'" : term
-    else "[#{term.map {|i| evaluate(i, quotes)}.join(', ')}]"
+    else "[#{term.map {|i| evaluate(i, namespace, quotes)}.join(', ')}]"
     end
   end
 
@@ -312,10 +312,10 @@ module UHyper_Compiler
             end
           }
           if positive
-            define_methods << "#{indentation}External.#{pre}(#{terms.join(', ')}) {"
+            define_methods << "#{indentation}#{pre}(#{terms.join(', ')}) {"
             close_method_str.prepend("#{indentation}}")
             indentation << '  '
-          else define_methods << "#{indentation}next if External.#{pre}(#{terms.join(', ')}) {break true}"
+          else define_methods << "#{indentation}next if #{pre}(#{terms.join(', ')}) {break true}"
           end
         }
         unless dependent_attachments.empty?
@@ -377,14 +377,15 @@ module UHyper_Compiler
     ordered = tasks.shift
     tasks.each {|_,*terms| objects.concat(terms)}
     # Objects
+    namespace = "#{domain_name.capitalize}."
     objects.uniq!
     objects.each {|i|
       if i.instance_of?(String)
         problem_str << "_#{i} = '#{i}'\n" unless i.match?(/^-?\d/)
-      else problem_str << "_#{i.join('_').tr(from,to)} = #{evaluate(i)}\n"
+      else problem_str << "_#{i.join('_').tr(from,to)} = #{evaluate(i, namespace)}\n"
       end
     }
-    problem_str << "\n#{domain_name.capitalize}.problem(\n  # Start\n  {\n"
+    problem_str << "\n#{namespace}problem(\n  # Start\n  {\n"
     # Start
     predicates.each_key {|i| state[i] ||= []}
     state.each_with_index {|(k,v),i|

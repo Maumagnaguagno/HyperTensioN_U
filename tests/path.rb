@@ -133,7 +133,7 @@ module Search
   #-----------------------------------------------
 
   def move(_agent, _from, _to)
-    return unless (@state['at'].include?([_agent, _from]) and External.visible(_from, _to))
+    return unless (@state['at'].include?([_agent, _from]) and visible(_from, _to))
     @state = @state.dup
     (@state['at'] = @state['at'].dup).delete([_agent, _from])
     @state['at'].unshift([_agent, _to])
@@ -161,7 +161,7 @@ module Search
   def forward_goal_visible(_agent, _goal)
     @state['at'].each {|_agent_ground, _from,|
       next if _agent_ground != _agent
-      next unless External.visible(_from, _goal)
+      next unless visible(_from, _goal)
       yield [
         ['move', _agent, _from, _goal]
       ]
@@ -172,9 +172,9 @@ module Search
     @state['at'].each {|_agent_ground, _from,|
       next if _agent_ground != _agent
       _vertex = ''
-      External.visible_vertex(_from, _vertex) {
+      visible_vertex(_from, _vertex) {
         _place = ''
-        External.arc(_from, _vertex, _place) {
+        arc(_from, _vertex, _place) {
           next unless not @state['visited'].include?([_agent, _vertex])
           yield [
             ['move', _agent, _from, _place],

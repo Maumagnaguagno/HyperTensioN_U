@@ -21,5 +21,3 @@ module Plant_watering
     yield
   end
 end
-
-External = Plant_watering
