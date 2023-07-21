@@ -25,7 +25,7 @@
 
   (:operator (!!visit ?player) (call new_state ?player) () ())
 
-  (:method (solve-preprocessed ?player)
+  (:method (solve ?player)
     no_box_outside_storage
     (call boxes_stored)
     ()
@@ -37,7 +37,7 @@
     (
       (!push ?player ?box ?clear)
       (!!visit ?box)
-      (solve-preprocessed ?box)
+      (solve ?box)
     )
     move
     (
@@ -46,18 +46,7 @@
     )
     (
       (!move ?player ?clear)
-      (solve-preprocessed ?clear)
-    )
-  )
-
-  (:method (solve ?player)
-    preprocess
-    (
-      (call find_deadlocks)
-      (call new_state ?player)
-    )
-    (
-      (solve-preprocessed ?player)
+      (solve ?clear)
     )
   )
 ))
