@@ -37,7 +37,9 @@
     when '#'
       problem << "\n    (wall p#{x}_#{y})"
       valid = true
-    when '@' then player = "p#{x}_#{y}"
+    when '@'
+      problem << "\n    (clear p#{x}_#{y})"
+      player = "p#{x}_#{y}"
     when '+'
       problem << "\n    (storage p#{x}_#{y})"
       player = "p#{x}_#{y}"

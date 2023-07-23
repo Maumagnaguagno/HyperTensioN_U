@@ -5,13 +5,9 @@
     (pushable ?from ?intermediate ?to)
   )
 
-  (:operator (!move ?from ?to)
-    ()
-    ((clear ?to))
-    ((clear ?from))
-  )
+  (:operator (!move ?from ?to) () () ())
 
-  (:operator (!push ?from ?intermediate ?to)
+  (:operator (!push ?intermediate ?to)
     ()
     (
       (box ?intermediate)
@@ -19,7 +15,7 @@
     )
     (
       (box ?to)
-      (clear ?from)
+      (clear ?intermediate)
     )
   )
 
@@ -35,7 +31,7 @@
       (not (deadlock ?clear))
     )
     (
-      (!push ?player ?box ?clear)
+      (!push ?box ?clear)
       (!!visit ?box)
       (solve ?box)
     )
