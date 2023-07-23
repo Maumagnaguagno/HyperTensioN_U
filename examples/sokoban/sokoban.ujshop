@@ -16,10 +16,9 @@
     (
       (box ?to)
       (clear ?intermediate)
+      (call new_state ?intermediate)
     )
   )
-
-  (:operator (!!visit ?player) (call new_state ?player) () ())
 
   (:method (solve ?player)
     no_box_outside_storage
@@ -32,7 +31,6 @@
     )
     (
       (!push ?box ?clear)
-      (!!visit ?box)
       (solve ?box)
     )
     move
