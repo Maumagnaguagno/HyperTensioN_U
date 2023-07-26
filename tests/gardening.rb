@@ -273,13 +273,6 @@ _maxy = 'maxy'
 _carrying = 'carrying'
 _total_poured = 'total_poured'
 _total_loaded = 'total_loaded'
-_x_agent0 = ['x', 'agent0']
-_y_agent0 = ['y', 'agent0']
-_x_tap0 = ['x', 'tap0']
-_y_tap0 = ['y', 'tap0']
-_x_plant0 = ['x', 'plant0']
-_y_plant0 = ['y', 'plant0']
-_poured_plant0 = ['poured', 'plant0']
 _agent0 = 'agent0'
 _tap0 = 'tap0'
 _plant0 = 'plant0'
@@ -296,13 +289,13 @@ Plant_watering.problem(
       [_carrying, '0.0'],
       [_total_poured, '0.0'],
       [_total_loaded, '0.0'],
-      [_x_agent0, '1.0'],
-      [_y_agent0, '3.0'],
-      [_x_tap0, '4.0'],
-      [_y_tap0, '4.0'],
-      [_x_plant0, '2.0'],
-      [_y_plant0, '2.0'],
-      [_poured_plant0, '0.0']
+      [['x', 'agent0'], '1.0'],
+      [['y', 'agent0'], '3.0'],
+      [['x', 'tap0'], '4.0'],
+      [['y', 'tap0'], '4.0'],
+      [['x', 'plant0'], '2.0'],
+      [['y', 'plant0'], '2.0'],
+      [['poured', 'plant0'], '0.0']
     ],
     'agent' => [
       [_agent0]

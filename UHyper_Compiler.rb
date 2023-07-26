@@ -368,8 +368,6 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def compile_problem(domain_name, problem_name, operators, methods, predicates, state, tasks, axioms, rewards, attachments, domain_filename = nil)
-    from = '-+*/%^<>=!.'
-    to = 'samdrplgenf'
     problem_str = "# Objects\n"
     # Extract information
     objects = []
@@ -379,23 +377,18 @@ module UHyper_Compiler
     # Objects
     namespace = "#{domain_name.capitalize}."
     objects.uniq!
-    objects.each {|i|
-      if i.instance_of?(String)
-        problem_str << "_#{i} = '#{i}'\n" unless i.match?(/^-?\d/)
-      else problem_str << "_#{i.join('_').tr(from,to)} = #{evaluate(i, namespace)}\n"
-      end
-    }
+    objects.each {|i| problem_str << "_#{i} = '#{i}'\n" if i.instance_of?(String) and not i.match?(/^-?\d/)}
     problem_str << "\n#{namespace}problem(\n  # Start\n  {\n"
     # Start
     predicates.each_key {|i| state[i] ||= []}
     state.each_with_index {|(k,v),i|
       problem_str << "    '#{k}' => ["
-      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : '_' << o : '_' << o.join('_').tr(from,to)}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
+      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : '_' << o : evaluate(o, namespace)}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
       problem_str << (state.size.pred == i ? ']' : "],\n")
     }
     # Tasks
     problem_str << "\n  },\n  # Tasks\n  [" <<
-      tasks.map! {|task,*terms| "\n    ['#{task}'#{terms.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? ", '#{o.to_f}'" : ', _' << o : ', _' << o.join('_').tr(from,to)}.join}]"}.join(',') <<
+      tasks.map! {|task,*terms| "\n    ['#{task}'#{terms.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? ", '#{o.to_f}'" : ', _' << o : ', ' << evaluate(o, namespace)}.join}]"}.join(',') <<
       "\n  ],\n  # Debug\n  ARGV.first == 'debug',\n  # Maximum plans found\n  ARGV[1] ? ARGV[1].to_i : -1,\n  # Minimum probability for plans\n  ARGV[2] ? ARGV[2].to_f : 0"
     tasks.unshift(ordered) unless tasks.empty?
     problem_str.gsub!(/\b-\b/,'_')
