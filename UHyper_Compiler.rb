@@ -375,10 +375,9 @@ module UHyper_Compiler
     ordered = tasks.shift
     tasks.each {|_,*terms| objects.concat(terms)}
     # Objects
-    namespace = "#{domain_name.capitalize}."
     objects.uniq!
     objects.each {|i| problem_str << "_#{i} = '#{i}'\n" if i.instance_of?(String) and not i.match?(/^-?\d/)}
-    problem_str << "\n#{namespace}problem(\n  # Start\n  {\n"
+    problem_str << "\n#{namespace = "#{domain_name.capitalize}."}problem(\n  # Start\n  {\n"
     # Start
     predicates.each_key {|i| state[i] ||= []}
     state.each_with_index {|(k,v),i|
