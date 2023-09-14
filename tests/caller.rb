@@ -3,8 +3,8 @@ require './UHyper_Compiler'
 
 class Caller < Test::Unit::TestCase
 
-  def call(expected, formula)
-    assert_equal(expected, UHyper_Compiler.call(formula))
+  def call(expected, formula, namespace = '')
+    assert_equal(expected, UHyper_Compiler.call(formula, namespace))
   end
 
   def test_call_add
@@ -211,10 +211,12 @@ class Caller < Test::Unit::TestCase
     call("f('1.0', _a)", ['call', 'f', '1', '?a'])
     call('f((1.0 + _a.to_f).to_s)', ['call', 'f', ['call', '+', '1', '?a']])
     call("(f1(_a, 'b') == f2(_c))", ['call', '=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
+    call("(External.f1(_a, 'b') == External.f2(_c))", ['call', '=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']], 'External.')
     call("(f1(_a, 'b').to_f == 1.0)", ['call', '=', ['call', 'f1', '?a', 'b'], '1'])
     call("(f1(_a, 'b') == _a)", ['call', '=', ['call', 'f1', '?a', 'b'], '?a'])
     call("(f1(_a, 'b').to_f <= 1.0)", ['call', '<=', ['call', 'f1', '?a', 'b'], '1'])
     call("(f1(_a, 'b').to_f <= f2(_c).to_f)", ['call', '<=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
     call("f(_a.include?('1.0'))", ['call', 'f', ['call', 'member', '1', '?a']])
+    call("External.f(_a.include?('1.0'))", ['call', 'f', ['call', 'member', '1', '?a']], 'External.')
   end
 end
