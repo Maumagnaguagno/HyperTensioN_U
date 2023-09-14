@@ -338,6 +338,7 @@ module UHyper_Compiler
         case trigger
         when 'achieve' then domain_str << "    value += #{value} if not #{previous} and #{exp}\n"
         when 'maintain' then domain_str << "    value += #{value} if #{previous} and #{exp}\n"
+        else raise "Unexpected #{trigger} as reward trigger"
         end
       }
       domain_str << "    value\n  end\n\n"
