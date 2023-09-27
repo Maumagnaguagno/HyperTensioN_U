@@ -124,8 +124,8 @@ module Hypertension_U
       puts "Plan #{i.succ}".center(50,'-'),
            "Probability: #{probability}",
            "Valuation: #{valuation}"
-      if plan.empty? then puts 'Empty plan'
-      else print_data(plan.delete_if {|op,| op.start_with?('invisible_')})
+      if plan.delete_if {|op,| op.start_with?('invisible_')}.empty? then puts 'Empty plan'
+      else print_data(plan)
       end
     }.empty?
       abort(@nostack ? 'Planning failed, try with more stack' : 'Planning failed')
