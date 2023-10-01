@@ -107,7 +107,7 @@ module Hypertension_U
   # Problem
   #-----------------------------------------------
 
-  def problem(state, tasks, debug = false, max_plans = -1, min_prob = 0)
+  def problem(state, tasks, debug = false, max_plans = -1, min_prob = 0, ordered = true)
     @nostack = false
     @debug = debug
     @state = state
@@ -118,7 +118,7 @@ module Hypertension_U
     print_data(tasks)
     puts 'Planning'.center(50,'-')
     t = Time.now.to_f
-    planning(tasks)
+    ordered ? planning(tasks) : task_permutations(state, tasks)
     puts "Time: #{Time.now.to_f - t}s", "Plans found: #{@plans.size}"
     if @plans.each_with_index {|(probability,valuation,*plan),i|
       puts "Plan #{i.succ}".center(50,'-'),
@@ -135,5 +135,19 @@ module Hypertension_U
     puts 'Interrupted'
   rescue
     puts $!, $@
+  end
+
+  #-----------------------------------------------
+  # Task permutations
+  #-----------------------------------------------
+
+  def task_permutations(state, tasks)
+    # All permutations are considered
+    tasks.permutation {|task_list|
+      @state = state
+      task_list = Marshal.load(Marshal.dump(task_list))
+      planning(task_list)
+      return if @plans.size == @max_plans
+    }
   end
 end
