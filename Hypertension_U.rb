@@ -144,10 +144,9 @@ module Hypertension_U
   def task_permutations(state, tasks)
     # All permutations are considered
     tasks.permutation {|task_list|
-      @state = state
-      task_list = Marshal.load(Marshal.dump(task_list))
-      planning(task_list)
+      planning(Marshal.load(Marshal.dump(task_list)))
       return if @plans.size == @max_plans
+      @state = state
     }
   end
 end
