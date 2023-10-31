@@ -27,7 +27,7 @@ module UJSHOP_Parser
       raise "Expected single argument for not in #{name}" if group.size != 2
       define_expression(name, group.last)
     elsif first == 'call'
-      raise "Unexpected list as function name in #{name}" if group[1].instance_of?(Array)
+      raise "Expected function name in #{name} call" unless group[1].instance_of?(String)
       group.drop(2).each {|g| define_expression(name, g) if g.instance_of?(Array) and g.first == first}
     elsif first == 'assign'
       raise "Expected 2 arguments for assign in #{name}" if group.size != 3
