@@ -7,7 +7,7 @@ module Sokoban
     storage = state['storage']
     deadlocks = state['deadlock'] = []
     map = []
-    state['wall'].each {|wall,|
+    state.delete('wall').each {|wall,|
       x, y = wall.delete_prefix('p').split('_')
       (map[y.to_i] ||= [])[x.to_i] = true
     }
