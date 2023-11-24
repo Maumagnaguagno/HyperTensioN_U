@@ -19,7 +19,7 @@ module Maze
       end
     }
     candidates.sort!.each {|k|
-      to.replace(k.last)
+      to.replace(k[1])
       yield
     }
   end
@@ -39,7 +39,7 @@ module Maze
       end
     }
     candidates.sort!.each {|k|
-      to.replace(k.last)
+      to.replace(k[1])
       yield
     }
   end

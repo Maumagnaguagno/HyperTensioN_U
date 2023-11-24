@@ -31,13 +31,13 @@ module Hypertension_U
           @plans << plan
         end
       else
-        case decomposition = @domain[(current_task = tasks.shift).first]
+        case decomposition = @domain[(current_task = tasks.shift)[0]]
         # Operator with single outcome
         when Numeric
           execute(current_task, decomposition, tasks, level, plan)
         # Operator with multiple outcomes
         when Hash
-          task_name = current_task.first
+          task_name = current_task[0]
           begin
             decomposition.each {|task_prob,probability|
               current_task[0] = task_prob
@@ -68,7 +68,7 @@ module Hypertension_U
           end
           current_task.unshift(task_name)
         # Error
-        else raise "Domain defines no decomposition for #{current_task.first}"
+        else raise "Domain defines no decomposition for #{current_task[0]}"
         end
       end
     end
@@ -88,7 +88,7 @@ module Hypertension_U
 
   def execute(current_task, probability, tasks, level, plan)
     old_state = @state
-    puts "#{'  ' * level}#{current_task.first}(#{current_task.drop(1).join(' ')})" if @debug
+    puts "#{'  ' * level}#{current_task[0]}(#{current_task.drop(1).join(' ')})" if @debug
     begin
       # Minimum probability and applied
       if (new_prob = plan[PROBABILITY] * probability) >= @min_prob and __send__(*current_task)

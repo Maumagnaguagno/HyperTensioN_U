@@ -173,7 +173,7 @@ Cookie.problem(
     ['get_cookie', _bob, _home, _cookie_store]
   ],
   # Debug
-  ARGV.first == 'debug',
+  ARGV[0] == 'debug',
   # Maximum plans found
   ARGV[1] ? ARGV[1].to_i : -1,
   # Minimum probability for plans

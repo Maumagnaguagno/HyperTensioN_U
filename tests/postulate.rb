@@ -132,7 +132,7 @@ Axiom.problem(
     ['add_one', '2.0']
   ],
   # Debug
-  ARGV.first == 'debug',
+  ARGV[0] == 'debug',
   # Maximum plans found
   ARGV[1] ? ARGV[1].to_i : -1,
   # Minimum probability for plans

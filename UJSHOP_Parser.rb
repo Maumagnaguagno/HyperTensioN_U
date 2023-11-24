@@ -15,24 +15,24 @@ module UJSHOP_Parser
 
   def define_expression(name, group)
     raise "Error with #{name}" unless group.instance_of?(Array)
-    return unless first = group.first
+    return unless first = group[0]
     # Add implicit conjunction to expression
     group.unshift(first = AND) if first.instance_of?(Array)
     if first == AND or first == OR
       if group.size > 2 then group.drop(1).each {|g| define_expression(name, g)}
-      elsif group.size == 2 then define_expression(name, group.replace(group.last))
+      elsif group.size == 2 then define_expression(name, group.replace(group[1]))
       else raise "Unexpected zero arguments for #{first} in #{name}"
       end
     elsif first == NOT
       raise "Expected single argument for not in #{name}" if group.size != 2
-      define_expression(name, group.last)
+      define_expression(name, group[1])
     elsif first == 'call'
       raise "Expected function name in #{name} call" unless group[1].instance_of?(String)
-      group.drop(2).each {|g| define_expression(name, g) if g.instance_of?(Array) and g.first == first}
+      group.drop(2).each {|g| define_expression(name, g) if g.instance_of?(Array) and g[0] == first}
     elsif first == 'assign'
       raise "Expected 2 arguments for assign in #{name}" if group.size != 3
       raise "Unexpected #{group[1]} as variable to assign in #{name}" unless group[1].start_with?('?')
-      define_expression(name, group.last) if group.last.instance_of?(Array) and group.last.first == 'call'
+      define_expression(name, group[2]) if group[2].instance_of?(Array) and group[2][0] == 'call'
     elsif a = @axioms.assoc(first)
       raise "Axiom #{first} defined with arity #{a[1].size}, unexpected arity #{group.size.pred} in #{name}" if a[1].size != group.size.pred
     elsif a = @attachments.assoc(first)
@@ -56,7 +56,7 @@ module UJSHOP_Parser
 
   def parse_operator(op)
     op.shift
-    raise 'Operator without name definition' unless (name = op.first.shift).instance_of?(String)
+    raise 'Operator without name definition' unless (name = op[0].shift).instance_of?(String)
     name.sub!(/^!!/,'invisible_') or name.delete_prefix!('!')
     raise "#{name} redefined" if @operators.assoc(name)
     raise "#{name} have size #{op.size} instead of 4 or more" if op.size < 4
@@ -71,7 +71,7 @@ module UJSHOP_Parser
     else
       i = 0
       until op.empty?
-        operator << (op.first.instance_of?(String) ? op.shift : "#{name}_#{i}")
+        operator << (op[0].instance_of?(String) ? op.shift : "#{name}_#{i}")
         define_effects(name, del = op.shift)
         define_effects(name, add = op.shift)
         operator.push(add, del, op.shift.to_f)
@@ -93,7 +93,7 @@ module UJSHOP_Parser
     end
     until met.empty?
       # Optional label, add index for the unlabeled decompositions
-      if met.first.instance_of?(String)
+      if met[0].instance_of?(String)
         label = met.shift
         raise "#{name} redefined #{label} decomposition" if method.drop(2).assoc(label)
       else label = "case_#{method.size - 2}"
@@ -153,13 +153,13 @@ module UJSHOP_Parser
       @attachments = []
       tokens = tokens[2]
       while group = tokens.shift
-        case group.first
+        case group[0]
         when ':operator' then parse_operator(group)
         when ':method' then parse_method(group)
         when ':-' then parse_axiom(group)
         when ':rewards' then (@rewards = group).shift
         when ':attachments' then (@attachments = group).shift
-        else raise "#{group.first} is not recognized in domain"
+        else raise "#{group[0]} is not recognized in domain"
         end
       end
     else raise "File #{domain_filename} does not match domain pattern"

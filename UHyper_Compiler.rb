@@ -8,10 +8,10 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def expression_to_hyper(precond_expression, axioms)
-    case precond_expression.first
+    case precond_expression[0]
     when 'and', 'or'
       if precond_expression.size == 2 then expression_to_hyper(precond_expression[1], axioms)
-      else '(' << precond_expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression.first} ") << ')'
+      else '(' << precond_expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{precond_expression[0]} ") << ')'
       end
     when 'not' then (term = expression_to_hyper(precond_expression[1], axioms)).delete_prefix!('not ') or 'not ' << term
     when 'call' then call(precond_expression)
@@ -19,8 +19,8 @@ module UHyper_Compiler
     when nil then 'false' # Empty list is false
     else
       terms = precond_expression.drop(1).map! {|i| evaluate(i)}.join(', ')
-      if axioms.assoc(precond_expression.first) then "#{precond_expression.first}(#{terms})"
-      else "@state[#{evaluate(precond_expression.first)}].include?([#{terms}])"
+      if axioms.assoc(precond_expression[0]) then "#{precond_expression[0]}(#{terms})"
+      else "@state[#{evaluate(precond_expression[0])}].include?([#{terms}])"
       end
     end
   end
@@ -97,7 +97,7 @@ module UHyper_Compiler
       elsif term.match?(/^-?\d/) then quotes ? "'#{term.to_f}'" : term.to_f.to_s
       else term
       end
-    elsif term.first == 'call'
+    elsif term[0] == 'call'
       term = call(term, namespace)
       quotes && term.match?(/^-?\d/) ? "'#{term}'" : term
     else "[#{term.map {|i| evaluate(i, namespace, quotes)}.join(', ')}]"
@@ -143,7 +143,7 @@ module UHyper_Compiler
       define_operators << "\n    return unless #{precond_expression}" if precond_expression
       # Effective
       effect_calls = []
-      effect_add.reject! {|pre| effect_calls << call(pre) if pre.first == 'call'}
+      effect_add.reject! {|pre| effect_calls << call(pre) if pre[0] == 'call'}
       unless effect_add.empty? and effect_del.empty?
         define_operators << "\n    @state = @state.dup"
         apply('delete', effect_del, define_operators, duplicated = {})
@@ -182,7 +182,7 @@ module UHyper_Compiler
     methods.each_with_index {|(name,param,*decompositions),mi|
       paramstr = "(#{param.join(', ').tr!('?','_')})" unless param.empty?
       decompositions.map! {|dec|
-        define_methods << "\n  def #{name}_#{dec.first}#{paramstr}"
+        define_methods << "\n  def #{name}_#{dec[0]}#{paramstr}"
         # Obtain free variables
         # TODO refactor this block to work with complex expressions
         free_variables = []
@@ -194,15 +194,15 @@ module UHyper_Compiler
         dependent_attachments = []
         unless (precond_expression = dec[1]).empty?
           ground_variables = param.dup
-          precond_expression = precond_expression.first == 'and' ? precond_expression.drop(1) : [precond_expression]
+          precond_expression = precond_expression[0] == 'and' ? precond_expression.drop(1) : [precond_expression]
           precond_expression.reject! {|pre|
-            pre = pre.last unless positive = pre.first != 'not'
-            if attachments.assoc(pre.first)
+            pre = pre[1] unless positive = pre[0] != 'not'
+            if attachments.assoc(pre[0])
               precond_attachments << pre.unshift(positive)
-            elsif pre.first == 'assign'
+            elsif pre[0] == 'assign'
               ground_variables << pre[1] if pre[2].flatten.all? {|j| not j.start_with?('?') or ground_variables.include?(j)}
               false
-            elsif positive and pre.first != 'call' and not axioms.assoc(pre.first)
+            elsif positive and pre[0] != 'call' and not axioms.assoc(pre[0])
               free_variables.concat(pre.select {|j| j.instance_of?(String) and j.start_with?('?') and not ground_variables.include?(j)})
               false
             end
@@ -211,19 +211,19 @@ module UHyper_Compiler
           ground_free_variables = ground_variables + free_variables
           # Filter elements from precondition
           precond_expression.each {|pre|
-            if pre.first != 'not'
+            if pre[0] != 'not'
               pre_flat = pre.flatten
               precond = precond_pos
             else
-              pre_flat = pre.last.flatten
+              pre_flat = pre[1].flatten
               precond = precond_not
             end
-            call_axiom = (assign = pre_flat.first == 'assign') || pre_flat.first == 'call' || axioms.assoc(pre_flat.first)
+            call_axiom = (assign = pre_flat[0] == 'assign') || pre_flat[0] == 'call' || axioms.assoc(pre_flat[0])
             pre_flat.select! {|t| t.start_with?('?') and not ground_variables.include?(t)}
             if pre_flat.empty? then ground_axioms_calls << pre
             elsif not pre_flat.all? {|t| free_variables.include?(t)}
               dependent_attachments << pre
-              ground_free_variables << pre_flat.first if assign
+              ground_free_variables << pre_flat[0] if assign
             elsif call_axiom then lifted_axioms_calls << pre
             else precond << pre
             end
@@ -319,12 +319,12 @@ module UHyper_Compiler
           end
         }
         unless dependent_attachments.empty?
-          raise "Call with free variable in #{name} #{dec.first}" if dependent_attachments.flatten.any? {|t| t.start_with?('?') and not ground_free_variables.include?(t)}
+          raise "Call with free variable in #{name} #{dec[0]}" if dependent_attachments.flatten.any? {|t| t.start_with?('?') and not ground_free_variables.include?(t)}
           define_methods << "#{indentation}next unless " << expression_to_hyper(dependent_attachments.unshift('and'), axioms)
         end
         # Subtasks
         define_methods << indentation << (dec[2].empty? ? 'yield []' : "yield [#{indentation}  [" << dec[2].map {|g| g.map {|i| evaluate(i)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]") << close_method_str
-        "\n      '#{name}_#{dec.first}'"
+        "\n      '#{name}_#{dec[0]}'"
       }
       domain_str << "\n    '#{name}' => [" << decompositions.join(',') << (methods.size.pred == mi ? "\n    ]" : "\n    ],")
     }
@@ -389,7 +389,7 @@ module UHyper_Compiler
     # Tasks
     problem_str << "\n  },\n  # Tasks\n  [" <<
       tasks.map! {|task,*terms| "\n    ['#{task}'#{terms.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? ", '#{o.to_f}'" : ', _' << o : ', ' << evaluate(o, namespace)}.join}]"}.join(',') <<
-      "\n  ],\n  # Debug\n  ARGV.first == 'debug',\n  # Maximum plans found\n  ARGV[1] ? ARGV[1].to_i : -1,\n  # Minimum probability for plans\n  ARGV[2] ? ARGV[2].to_f : 0#{",\n  # Ordered\n  false" if ordered == false}"
+      "\n  ],\n  # Debug\n  ARGV[0] == 'debug',\n  # Maximum plans found\n  ARGV[1] ? ARGV[1].to_i : -1,\n  # Minimum probability for plans\n  ARGV[2] ? ARGV[2].to_f : 0#{",\n  # Ordered\n  false" if ordered == false}"
     tasks.unshift(ordered) unless tasks.empty?
     problem_str.gsub!(/\b-\b/,'_')
     domain_filename ? "# Generated by Hype\nrequire_relative '#{domain_filename}'\n\n#{problem_str}\n)" : "#{problem_str}\n)"

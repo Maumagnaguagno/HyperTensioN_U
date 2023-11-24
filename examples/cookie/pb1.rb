@@ -14,7 +14,7 @@ plan = Cookie.problem(
     ['get_cookie', 'bob', 'home', 'cookie_store']
   ],
   # Debug
-  ARGV.first == 'debug'
+  ARGV[0] == 'debug'
 )
 
 abort('Problem failed to generate expected plan') if plan != [

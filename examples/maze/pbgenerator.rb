@@ -7,7 +7,7 @@ if File.exist?("#{__dir__}/../../../Spriter")
   front = [0, 0, 0, 0].pack('C4')
 end
 
-width = height = (ARGV.first || 7).to_i # 2 * N + 1
+width = height = (ARGV[0] || 7).to_i # 2 * N + 1
 w = width  << 1 | 1
 h = height << 1 | 1
 room_size = 1

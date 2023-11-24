@@ -61,14 +61,14 @@ end
 #-----------------------------------------------
 if $0 == __FILE__
   begin
-    if ARGV.size < 2 or ARGV.first == '-h'
+    if ARGV.size < 2 or ARGV[0] == '-h'
       puts Hype::HELP
     elsif not File.exist?(domain = ARGV.shift)
       abort("Domain not found: #{domain}")
     elsif not File.exist?(problem = ARGV.shift)
       abort("Problem not found: #{problem}")
     else
-      type = ARGV.first
+      type = ARGV[0]
       t = Time.now.to_f
       Hype.parse(domain, problem)
       Hype.compile(domain, problem)

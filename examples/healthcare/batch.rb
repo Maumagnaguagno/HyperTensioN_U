@@ -1,4 +1,4 @@
-jshop_output = ARGV.first == 'jshop'
+jshop_output = ARGV[0] == 'jshop'
 
 def plan(file, max_plans, min_prob, patients, n)
   File.binwrite(file, `ruby pbgenerator.rb -max_plans #{max_plans} -min_prob #{min_prob} -patients #{patients} -physicians #{n} -radiologists #{n} -pathologists #{n} -registrars #{n} -hospitals #{n} -cancers #{n}`)
