@@ -18,9 +18,10 @@
     ()
     (
       (engine_running)
-      (call process_effect)
-      (call process increase d displacement ?start ?finish)
-      (call process increase v moving_custom ?start ?finish)
+      (call processes (
+        (increase d displacement  ?start ?finish)
+        (increase v moving_custom ?start ?finish)
+      ))
     )
   )
 
@@ -33,10 +34,7 @@
       (call = (call function a ?time) 0)
     )
     ((engine_running))
-    (
-      (call event_effect)
-      (call event assign v 0 ?time)
-    )
+    ((call event assign v 0 ?time))
   )
 
   (:operator (!accelerate ?time)
@@ -45,10 +43,7 @@
       (call < (call function a ?time) (call function max_acceleration))
     )
     ()
-    (
-      (call event_effect)
-      (call event increase a 1 ?time)
-    )
+    ((call event increase a 1 ?time))
   )
 
   (:operator (!decelerate ?time)
@@ -57,10 +52,7 @@
       (call > (call function a ?time) (call function min_acceleration))
     )
     ()
-    (
-      (call event_effect)
-      (call event decrease a 1 ?time)
-    )
+    ((call event decrease a 1 ?time))
   )
 
   (:operator (!!test_destination ?min_destination ?max_destination ?time)

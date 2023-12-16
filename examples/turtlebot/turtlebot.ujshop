@@ -19,37 +19,25 @@
   (:operator (!increment_velocity_x ?robot ?time)
     ()
     ()
-    (
-      (call event_effect)
-      (call event increase (vx ?robot) 1 ?time)
-    )
+    ((call event increase (vx ?robot) 1 ?time))
   )
 
   (:operator (!decrement_velocity_x ?robot ?time)
     ()
     ()
-    (
-      (call event_effect)
-      (call event decrease (vx ?robot) 1 ?time)
-    )
+    ((call event decrease (vx ?robot) 1 ?time))
   )
 
   (:operator (!turn_clockwise ?robot ?angle ?time)
     ()
     ()
-    (
-      (call event_effect)
-      (call event assign (a ?robot) ?angle ?time)
-    )
+    ((call event assign (a ?robot) ?angle ?time))
   )
 
   (:operator (!turn_counter_clockwise ?robot ?angle ?time)
     ()
     ()
-    (
-      (call event_effect)
-      (call event assign (a ?robot) ?angle ?time)
-    )
+    ((call event assign (a ?robot) ?angle ?time))
   )
 
   (:operator (!!set ?robot ?pos)
@@ -74,9 +62,10 @@
     ()
     ()
     (
-      (call process_effect)
-      (call process increase (x ?robot) displacement_x ?start ?finish)
-      (call process increase (y ?robot) displacement_y ?start ?finish)
+      (call processes (
+        (increase (x ?robot) displacement_x ?start ?finish)
+        (increase (y ?robot) displacement_y ?start ?finish)
+      ))
     )
   )
 
