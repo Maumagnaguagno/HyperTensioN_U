@@ -133,8 +133,10 @@ module Hypertension_U
     @plans
   rescue Interrupt
     puts 'Interrupted'
+    exit(130)
   rescue
     puts $!, $@
+    exit(2)
   end
 
   #-----------------------------------------------
