@@ -100,7 +100,7 @@ plans = Healthcare.problem(
   min_prob
 )
 
-Kernel.abort('Problem failed to generate expected plans') if plans != [
+abort('Problem failed to generate expected plans') if plans != [
   [0.252, 19,
     ['consider', G1, G1, bob, list(alice)],
     ['activate', G1, G1, bob, list(alice)],

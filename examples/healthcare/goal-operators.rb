@@ -130,7 +130,7 @@ end
 #   1
 # )
 
-def abort(g, gi, a, gv)
+def abort_(g, gi, a, gv)
   if state(GOAL, g, gi, a) and not terminalG(g, gi, gv) and not nullG(g, gi, gv)
     apply([[ABORTED, g, gi, gv]], [])
   end

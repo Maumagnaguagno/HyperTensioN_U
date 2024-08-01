@@ -145,7 +145,7 @@ module Healthcare
     'reconsider' => VISIBLE,
     'reactivateG' => VISIBLE,
     'drop' => VISIBLE,
-    'abort' => VISIBLE,
+    'abort_' => VISIBLE,
 
     'requestAssessment' => VISIBLE,
     'requestImaging' => VISIBLE,
