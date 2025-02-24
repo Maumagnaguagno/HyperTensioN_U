@@ -118,7 +118,7 @@ module Hypertension_U
     print_data(tasks)
     puts 'Planning'.center(50,'-')
     t = Time.now.to_f
-    ordered ? planning(tasks) : task_permutations(state, tasks)
+    ordered ? planning(tasks) : task_permutations(state, tasks, (tasks.pop if tasks[-1]&.[](0) == 'invisible_goal'))
     puts "Time: #{Time.now.to_f - t}s", "Plans found: #{@plans.size}"
     if @plans.each_with_index {|(probability,valuation,*plan),i|
       puts "Plan #{i.succ}".center(50,'-'),
@@ -143,10 +143,12 @@ module Hypertension_U
   # Task permutations
   #-----------------------------------------------
 
-  def task_permutations(state, tasks)
+  def task_permutations(state, tasks, goal_task = nil)
     # All permutations are considered
     tasks.permutation {|task_list|
-      planning(Marshal.load(Marshal.dump(task_list)))
+      task_list = Marshal.load(Marshal.dump(task_list))
+      task_list << goal_task if goal_task
+      planning(task_list)
       return if @plans.size == @max_plans
       @state = state
     }
