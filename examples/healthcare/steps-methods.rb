@@ -351,7 +351,6 @@ end
 def step5(patient)
   generate(
     [
-      physician = '',
       pathologist = '',
       registrar = '',
       c7_patient = '',
