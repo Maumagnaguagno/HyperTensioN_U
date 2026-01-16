@@ -30,14 +30,16 @@
 # )
 
 def step1(patient)
-  physician = ''
-  radiologist = ''
-  c1_patient = ''
-  c2_patient = ''
-  c3_patient = ''
-  g1i = ''
-  g2i = ''
   generate(
+    [
+      physician = '',
+      radiologist = '',
+      c1_patient = '',
+      c2_patient = '',
+      c3_patient = '',
+      g1i = '',
+      g2i = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
@@ -48,7 +50,7 @@ def step1(patient)
       [GOAL, G1, g1i, physician],
       [GOAL, G2, g2i, patient]
     ],
-    [], physician, radiologist, c1_patient, c2_patient, c3_patient, g1i, g2i
+    []
   ) {
     yield [
       ['consider', G1, g1i, physician, list(patient)],
@@ -107,15 +109,17 @@ end
 # )
 
 def step2(patient)
-  physician = ''
-  radiologist = ''
-  c2_patient = ''
-  c4_patient = ''
-  g3i = ''
-  g4i = ''
-  g6i = ''
-  g7i = ''
   generate(
+    [
+      physician = '',
+      radiologist = '',
+      c2_patient = '',
+      c4_patient = '',
+      g3i = '',
+      g4i = '',
+      g6i = '',
+      g7i = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
@@ -127,7 +131,7 @@ def step2(patient)
       [GOAL, G6, g6i, patient],
       [GOAL, G7, g7i, radiologist]
     ],
-    [], physician, radiologist, c2_patient, c4_patient, g3i, g4i, g6i, g7i
+    []
   ) {
     yield [
       ['consider', G3, g3i, radiologist, list(patient)],
@@ -185,14 +189,16 @@ end
 # )
 
 def step3(patient)
-  physician = ''
-  radiologist = ''
-  c3_patient = ''
-  c5_patient = ''
-  g8i = ''
-  g9i = ''
-  g11i = ''
   generate(
+    [
+      physician = '',
+      radiologist = '',
+      c3_patient = '',
+      c5_patient = '',
+      g8i = '',
+      g9i = '',
+      g11i = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
@@ -203,7 +209,7 @@ def step3(patient)
       [GOAL, G9, g9i, physician],
       [GOAL, G11, g11i, patient]
     ],
-    [], physician, radiologist, c3_patient, c5_patient, g8i, g9i, g11i
+    []
   ) {
     yield [
       ['consider', G8, g8i, radiologist, list(patient)],
@@ -221,7 +227,6 @@ def step3(patient)
     ]
   }
 end
-
 
 # (:method (step4 ?patient)
 #   (
@@ -265,16 +270,18 @@ end
 # )
 
 def step4(patient)
-  physician = ''
-  radiologist = ''
-  pathologist = ''
-  c5_patient = ''
-  c6_patient = ''
-  g12i = ''
-  g13i = ''
-  g15i = ''
-  g16i = ''
   generate(
+    [
+      physician = '',
+      radiologist = '',
+      pathologist = '',
+      c5_patient = '',
+      c6_patient = '',
+      g12i = '',
+      g13i = '',
+      g15i = '',
+      g16i = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
@@ -287,7 +294,7 @@ def step4(patient)
       [GOAL, G15, g15i, pathologist],
       [GOAL, G16, g16i, radiologist]
     ],
-    [], physician, radiologist, pathologist, c5_patient, c6_patient, g12i, g13i, g15i, g16i
+    []
   ) {
     yield [
       ['consider', G12, g12i, pathologist, list(patient)],
@@ -342,14 +349,16 @@ end
 # )
 
 def step5(patient)
-  physician = ''
-  pathologist = ''
-  registrar = ''
-  c7_patient = ''
-  g17i = ''
-  g18i = ''
-  g19i = ''
   generate(
+    [
+      physician = '',
+      pathologist = '',
+      registrar = '',
+      c7_patient = '',
+      g17i = '',
+      g18i = '',
+      g19i = ''
+    ],
     [
       [PATIENT, patient],
       [PATHOLOGIST, pathologist],
@@ -359,7 +368,7 @@ def step5(patient)
       [GOAL, G18, g18i, pathologist],
       [GOAL, G19, g19i, registrar]
     ],
-    [], pathologist, registrar, c7_patient, g17i, g18i, g19i
+    []
   ) {
     yield [
       ['consider', G17, g17i, registrar, list(patient)],

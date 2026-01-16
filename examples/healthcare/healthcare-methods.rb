@@ -43,31 +43,33 @@ end
 # )
 
 def testCommitments_case0
-  c1 = ''
-  d1 = ''
-  a1 = ''
-  c2 = ''
-  d2 = ''
-  a2 = ''
-  c3 = ''
-  d3 = ''
-  a3 = ''
-  c4 = ''
-  d4 = ''
-  a4 = ''
-  c5 = ''
-  d5 = ''
-  a5 = ''
-  c6 = ''
-  d6 = ''
-  a6 = ''
-  c7 = ''
-  d7 = ''
-  a7 = ''
-  c8 = ''
-  d8 = ''
-  a8 = ''
   generate(
+    [
+      c1 = '',
+      d1 = '',
+      a1 = '',
+      c2 = '',
+      d2 = '',
+      a2 = '',
+      c3 = '',
+      d3 = '',
+      a3 = '',
+      c4 = '',
+      d4 = '',
+      a4 = '',
+      c5 = '',
+      d5 = '',
+      a5 = '',
+      c6 = '',
+      d6 = '',
+      a6 = '',
+      c7 = '',
+      d7 = '',
+      a7 = '',
+      c8 = '',
+      d8 = '',
+      a8 = ''
+    ],
     [
       [COMMITMENT, C1, c1, d1, a1],
       [COMMITMENT, C2, c2, d2, a2],
@@ -78,7 +80,7 @@ def testCommitments_case0
       [COMMITMENT, C7, c7, d7, a7],
       [COMMITMENT, C8, c8, d8, a8]
     ],
-    [], c1, d1, a1, c2, d2, a2, c3, d3, a3, c4, d4, a4, c5, d5, a5, c6, d6, a6, c7, d7, a7, c8, d8, a8
+    []
   ) {
     yield [
       ['testCommitment', C1, c1, '', 'satisfied'],
@@ -99,15 +101,17 @@ end
 # )
 
 def seekHelp_case0(patient)
-  physician = ''
-  ci1 = ''
   generate(
+    [
+      physician = '',
+      ci1 = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
       [COMMITMENT, C1, ci1, physician, patient]
     ],
-    [], physician, ci1
+    []
   ) {
     yield [
       ['create', C1, ci1, physician, patient, list(patient)],
@@ -154,13 +158,15 @@ end
 # )
 
 def performImagingTests_imaging(patient)
-  physician = ''
-  ci = ''
-  radiologist = ''
-  pathologist = ''
-  ci2 = ''
-  ci5 = ''
   generate(
+    [
+      physician = '',
+      ci = '',
+      radiologist = '',
+      pathologist = '',
+      ci2 = '',
+      ci5 = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
@@ -170,7 +176,7 @@ def performImagingTests_imaging(patient)
       [COMMITMENT, C2, ci2, patient, physician],
       [COMMITMENT, C5, ci5, radiologist, physician]
     ],
-    [], physician, ci, radiologist, pathologist, ci2, ci5
+    []
   ) {
     yield [
       ['create', C2, ci2, patient, physician, list(radiologist)],
@@ -210,13 +216,15 @@ end
 # )
 
 def performPathologyTests_imaging_plus_biopsy(patient)
-  physician = ''
-  radiologist = ''
-  pathologist = ''
-  ci = ''
-  ci3 = ''
-  ci4 = ''
   generate(
+    [
+      physician = '',
+      radiologist = '',
+      pathologist = '',
+      ci = '',
+      ci3 = '',
+      ci4 = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
@@ -225,7 +233,7 @@ def performPathologyTests_imaging_plus_biopsy(patient)
       [COMMITMENT, C3, ci3, patient, physician],
       [COMMITMENT, C4, ci4, radiologist, physician]
     ],
-    [], physician, radiologist, pathologist, ci, ci3, ci4
+    []
   ) {
     yield [
       ['create', C3, ci3, patient, physician, list(radiologist)],
@@ -246,9 +254,11 @@ end
 # )
 
 def attendTest_attend_imaging(patient)
-  physician = ''
-  radiologist = ''
   generate(
+    [
+      physician = '',
+      radiologist = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
@@ -257,16 +267,18 @@ def attendTest_attend_imaging(patient)
     ],
     [
       [IAPPOINTMENTKEPT, patient, radiologist]
-    ], physician, radiologist
+    ]
   ) {
     yield [['performImaging', radiologist, patient, physician]]
   }
 end
 
 def attendTest_attend_biopsy(patient)
-  physician = ''
-  radiologist = ''
   generate(
+    [
+      physician = '',
+      radiologist = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
@@ -275,7 +287,7 @@ def attendTest_attend_biopsy(patient)
     ],
     [
       [BAPPOINTMENTKEPT, patient, radiologist]
-    ], physician, radiologist
+    ]
   ) {
     yield [['performBiopsy', radiologist, patient, physician]]
   }
@@ -319,9 +331,11 @@ end
 # )
 
 def deliverDiagnostics_only_imaging(patient)
-  physician = ''
-  radiologist = ''
   generate(
+    [
+      physician = '',
+      radiologist = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
@@ -330,7 +344,7 @@ def deliverDiagnostics_only_imaging(patient)
     ],
     [
       [BIOPSYREQUESTED, physician, patient]
-    ], physician, radiologist
+    ]
   ) {
     yield [
       ['requestRadiologyReport', physician, radiologist, patient],
@@ -341,10 +355,12 @@ def deliverDiagnostics_only_imaging(patient)
 end
 
 def deliverDiagnostics_imaging_biopsy_integrated(patient)
-  physician = ''
-  radiologist = ''
-  pathologist = ''
   generate(
+    [
+      physician = '',
+      radiologist = '',
+      pathologist = ''
+    ],
     [
       [PATIENT, patient],
       [PHYSICIAN, physician],
@@ -353,7 +369,7 @@ def deliverDiagnostics_imaging_biopsy_integrated(patient)
       [IAPPOINTMENTKEPT, patient, radiologist],
       [BAPPOINTMENTKEPT, patient, radiologist]
     ],
-    [], physician, radiologist, pathologist
+    []
   ) {
     yield [
       ['requestRadiologyReport', physician, radiologist, patient],

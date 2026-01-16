@@ -9,16 +9,18 @@
 # )
 
 def achieveGoals_workTowardsGoal
-  g = ''
-  gi = ''
-  a = ''
-  gv = ''
   generate(
+    [
+      g = '',
+      gi = '',
+      a = '',
+      gv = ''
+    ],
     [
       [GOAL, g, gi, a],
       [ACTIVATEDG, g, gi, gv]
     ],
-    [], g, gi, a, gv
+    []
   ) {
     if activeG(g, gi, gv)
       yield [['achieveGoal', g, gi, a, gv]]
@@ -36,16 +38,18 @@ end
 # )
 
 def achieveGoals_activateGoal
-  g = ''
-  gi = ''
-  a = ''
-  gv = ''
   generate(
+    [
+      g = '',
+      gi = '',
+      a = '',
+      gv = ''
+    ],
     [
       [GOAL, g, gi, a],
       [GOALPOSSIBLE, g, gi, gv]
     ],
-    [], g, gi, a, gv
+    []
   ) {
     yield [
       ['consider', g, gi, a, gv],
@@ -66,19 +70,21 @@ end
 # )
 
 def achieveGoals_multipleCommitments
-  g1 = ''
-  gi1 = ''
-  a1 = ''
-  gv1 = ''
-  g2 = ''
-  gi2 = ''
-  a2 = ''
-  gv2 = ''
-  c1 = ''
-  ci1 = ''
-  c2 = ''
-  ci2 = ''
   generate(
+    [
+      g1 = '',
+      gi1 = '',
+      a1 = '',
+      gv1 = '',
+      g2 = '',
+      gi2 = '',
+      a2 = '',
+      gv2 = '',
+      c1 = '',
+      ci1 = '',
+      c2 = '',
+      ci2 = ''
+    ],
     [
       [GOAL, g1, gi1, a1],
       [ACTIVATEDG, g1, gi1, gv1],
@@ -87,7 +93,7 @@ def achieveGoals_multipleCommitments
       [COMMITMENT, c1, ci1, a1, a2],
       [COMMITMENT, c2, ci2, a2, a1]
     ],
-    [], g1, gi1, a1, gv1, g2, gi2, a2, gv2, c1, ci1, c2, ci2
+    []
   ) {
     # TODO eqGSCP may have multiple unifications for cv1 and cv2
     cv1 = ''
@@ -111,18 +117,20 @@ end
 
 def achieveGoal_genericEnticeToAchieve(g, gi, a, gv)
   if activeG(g, gi, gv)
-    c = ''
-    ci = ''
-    d = ''
-    g2 = ''
-    gi2 = ''
     generate(
+      [
+        c = '',
+        ci = '',
+        d = '',
+        g2 = '',
+        gi2 = ''
+      ],
       [
         [GOAL, g, gi, a],
         [COMMITMENT, c, ci, a, d],
         [GOAL, g2, gi2, a]
       ],
-      [], c, ci, d, g2, gi2
+      []
     ) {
       gv2 = cv = gv
       if g != g2 and eqGSCP(g, gv, c, cv) and eqGSCQ(g2, gv2, c, cv)
