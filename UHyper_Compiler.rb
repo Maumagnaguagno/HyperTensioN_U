@@ -270,7 +270,7 @@ module UHyper_Compiler
             else applicable(define_methods_comparison << "#{indentation}next unless ", pre, terms)
             end
             precond_pos.reject! {|pre,*terms|
-              if (terms & free_variables).empty?
+              unless terms.intersect?(free_variables)
                 if pre == '=' then equality << "#{evaluate(terms[0])} != #{evaluate(terms[1])}"
                 elsif not predicates[pre] and not state.include?(pre) then define_methods << "#{indentation}return"
                 else applicable(define_methods_comparison << "#{indentation}next unless ", pre, terms)
@@ -278,7 +278,7 @@ module UHyper_Compiler
               end
             }
             precond_not.reject! {|pre,*terms|
-              if (terms & free_variables).empty?
+              unless terms.intersect?(free_variables)
                 if pre == '=' then equality << "#{evaluate(terms[0])} == #{evaluate(terms[1])}"
                 elsif predicates[pre] or state.include?(pre) then applicable(define_methods_comparison << "#{indentation}next if ", pre, terms)
                 end
