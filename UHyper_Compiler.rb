@@ -30,21 +30,40 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def call(expression, namespace = '')
+    # N-ary math
     case function = expression[1]
-    # Binary math
-    when '+', '-', '*', '/', '%', '^'
-      raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
-      ltoken = evaluate(expression[2], namespace, false)
-      rtoken = evaluate(expression[3], namespace, false)
-      if ltoken.match?(/^-?\d/) then ltoken = ltoken.to_f
-      else ltoken.delete_suffix!('.to_s') or ltoken << '.to_f'
+    when '+', '-'
+      raise "Expected at least 2 arguments for (#{expression.join(' ')})" if expression.size < 3
+      floats = true
+      tokens = expression.drop(2).map! {|token|
+        token = evaluate(token, namespace, false)
+        if token.match?(/^-?\d/) then token = token.to_f
+        else
+          floats = false
+          token.delete_suffix!('.to_s') or token << '.to_f'
+        end
+      }
+      if tokens.size == 1
+        if floats then (function == '-' ? -tokens[0] : tokens[0]).to_s
+        else "(#{function}#{tokens[0]}).to_s"
+        end
+      elsif floats then tokens.inject(function).to_s
+      else "(#{tokens.join(" #{function} ")}).to_s"
       end
-      if rtoken.match?(/^-?\d/) then rtoken = rtoken.to_f
-      else rtoken.delete_suffix!('.to_s') or rtoken << '.to_f'
-      end
+    when  '*', '/', '%', '^'
+      raise "Expected at least 3 arguments for (#{expression.join(' ')})" if expression.size < 4
+      floats = true
+      tokens = expression.drop(2).map! {|token|
+        token = evaluate(token, namespace, false)
+        if token.match?(/^-?\d/) then token = token.to_f
+        else
+          floats = false
+          token.delete_suffix!('.to_s') or token << '.to_f'
+        end
+      }
       function = '**' if function == '^'
-      if ltoken.instance_of?(Float) and rtoken.instance_of?(Float) then ltoken.send(function, rtoken).to_s
-      else "(#{ltoken} #{function} #{rtoken}).to_s"
+      if floats then tokens.inject(function).to_s
+      else "(#{tokens.join(" #{function} ")}).to_s"
       end
     # Unary math
     when 'abs', 'sin', 'cos', 'tan'

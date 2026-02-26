@@ -8,6 +8,7 @@ class Caller < Test::Unit::TestCase
   end
 
   def test_call_add
+    call('1.0', ['call', '+', '1'])
     call('3.0', ['call', '+', '1', '2'])
     call('3.0', ['call', '+', '1', '2.0'])
     call('3.0', ['call', '+', '1.0', '2'])
@@ -15,6 +16,8 @@ class Caller < Test::Unit::TestCase
     call('0.0', ['call', '+', '-1', '1.0'])
     call('0.0', ['call', '+', '1', '-1.0'])
     call('-2.0', ['call', '+', '-1', '-1.0'])
+    call('6.0', ['call', '+', '1', '2', '3'])
+    call('(+_a.to_f).to_s', ['call', '+', '?a'])
     call('(1.0 + _a.to_f).to_s', ['call', '+', '1', '?a'])
     call('(_a.to_f + 1.0).to_s', ['call', '+', '?a', '1'])
     call('(_a.to_f + _b.to_f).to_s', ['call', '+', '?a', '?b'])
@@ -23,6 +26,7 @@ class Caller < Test::Unit::TestCase
   end
 
   def test_call_sub
+    call('-1.0', ['call', '-', '1'])
     call('-1.0', ['call', '-', '1', '2'])
     call('-1.0', ['call', '-', '1', '2.0'])
     call('-1.0', ['call', '-', '1.0', '2'])
@@ -30,6 +34,8 @@ class Caller < Test::Unit::TestCase
     call('-2.0', ['call', '-', '-1', '1.0'])
     call('2.0', ['call', '-', '1', '-1.0'])
     call('0.0', ['call', '-', '-1', '-1.0'])
+    call('-4.0', ['call', '-', '1', '2', '3'])
+    call('(-_a.to_f).to_s', ['call', '-', '?a'])
     call('(1.0 - _a.to_f).to_s', ['call', '-', '1', '?a'])
     call('(_a.to_f - 1.0).to_s', ['call', '-', '?a', '1'])
     call('(_a.to_f - _b.to_f).to_s', ['call', '-', '?a', '?b'])
@@ -45,6 +51,7 @@ class Caller < Test::Unit::TestCase
     call('-1.0', ['call', '*', '-1', '1.0'])
     call('-1.0', ['call', '*', '1', '-1.0'])
     call('1.0', ['call', '*', '-1', '-1.0'])
+    call('6.0', ['call', '*', '1', '2', '3'])
     # TODO optimize multiplications by 0, 1 and -1
     call('(1.0 * _a.to_f).to_s', ['call', '*', '1', '?a'])
     call('(_a.to_f * 1.0).to_s', ['call', '*', '?a', '1'])
@@ -59,6 +66,7 @@ class Caller < Test::Unit::TestCase
     call('-1.0', ['call', '/', '-1', '1.0'])
     call('-1.0', ['call', '/', '1', '-1.0'])
     call('1.0', ['call', '/', '-1', '-1.0'])
+    call('25.0', ['call', '/', '100', '2', '2'])
     # TODO optimize divisions by 1 and -1, raise exception by 0
     call('(1.0 / _a.to_f).to_s', ['call', '/', '1', '?a'])
     call('(_a.to_f / 1.0).to_s', ['call', '/', '?a', '1'])
@@ -73,6 +81,7 @@ class Caller < Test::Unit::TestCase
     call('-0.0', ['call', '%', '-1', '1.0'])
     call('0.0', ['call', '%', '1', '-1.0'])
     call('-0.0', ['call', '%', '-1', '-1.0'])
+    call('2.0', ['call', '%', '20', '15', '3'])
     call('(1.0 % _a.to_f).to_s', ['call', '%', '1', '?a'])
     call('(_a.to_f % 1.0).to_s', ['call', '%', '?a', '1'])
     call('(_a.to_f % _b.to_f).to_s', ['call', '%', '?a', '?b'])
@@ -86,6 +95,7 @@ class Caller < Test::Unit::TestCase
     call('-1.0', ['call', '^', '-1', '1.0'])
     call('1.0', ['call', '^', '1', '-1.0'])
     call('-1.0', ['call', '^', '-1', '-1.0'])
+    call('16.0', ['call', '^', '2', '2', '2'])
     # TODO optimize pow by 0 and 1
     call('(0.0 ** _a.to_f).to_s', ['call', '^', '0', '?a'])
     call('(1.0 ** _a.to_f).to_s', ['call', '^', '1', '?a'])
