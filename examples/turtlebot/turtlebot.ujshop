@@ -11,7 +11,7 @@
     (and
       (assign ?vt (call function (vx ?robot) ?time))
       (assign ?max (call function (max_vel_x ?robot)))
-      (call >= ?vt (call - 0 ?max))
+      (call >= ?vt (call - ?max))
       (call <= ?vt ?max)
     )
   )

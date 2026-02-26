@@ -8,7 +8,7 @@
   (:- (speed_limit ?time)
     (and
       (assign ?vt (call function v ?time))
-      (call >= ?vt (call - 0 (call function max_speed)))
+      (call >= ?vt (call - (call function max_speed)))
       (call <= ?vt (call function max_speed))
     )
   )
