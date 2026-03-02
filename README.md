@@ -120,7 +120,7 @@ External function calls and semantic attachments are also available.
 ## Function calls
 Sometimes functions must be called to solve a problem beyond the reach of declarative descriptions.
 Basic functions are already implemented:
-- Binary math ``+``, ``-``, ``*``, ``/``, ``%``, ``^``
+- N-ary math ``+``, ``-``, ``*``, ``/``, ``%``, ``^``
 - Unary math ``abs``, ``sin``, ``cos``, ``tan``
 - Comparison ``=``, ``!=``, ``<``, ``>``, ``<=``, ``>=``
 - List ``member``

@@ -30,8 +30,8 @@ module UHyper_Compiler
   #-----------------------------------------------
 
   def call(expression, namespace = '')
-    # N-ary math
     case function = expression[1]
+    # N-ary math
     when '+', '-'
       raise "Expected at least 2 arguments for (#{expression.join(' ')})" if expression.size < 3
       floats = true

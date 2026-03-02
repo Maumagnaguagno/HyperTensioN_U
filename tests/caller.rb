@@ -21,7 +21,6 @@ class Caller < Test::Unit::TestCase
     call('(1.0 + _a.to_f).to_s', ['call', '+', '1', '?a'])
     call('(_a.to_f + 1.0).to_s', ['call', '+', '?a', '1'])
     call('(_a.to_f + _b.to_f).to_s', ['call', '+', '?a', '?b'])
-    # TODO optimize variable plus 0
     call('(_a.to_f + 0.0).to_s', ['call', '+', '?a', '0'])
   end
 
@@ -39,7 +38,6 @@ class Caller < Test::Unit::TestCase
     call('(1.0 - _a.to_f).to_s', ['call', '-', '1', '?a'])
     call('(_a.to_f - 1.0).to_s', ['call', '-', '?a', '1'])
     call('(_a.to_f - _b.to_f).to_s', ['call', '-', '?a', '?b'])
-    # TODO optimize variable minus itself
     call('(_a.to_f - _a.to_f).to_s', ['call', '-', '?a', '?a'])
   end
 
@@ -52,7 +50,6 @@ class Caller < Test::Unit::TestCase
     call('-1.0', ['call', '*', '1', '-1.0'])
     call('1.0', ['call', '*', '-1', '-1.0'])
     call('6.0', ['call', '*', '1', '2', '3'])
-    # TODO optimize multiplications by 0, 1 and -1
     call('(1.0 * _a.to_f).to_s', ['call', '*', '1', '?a'])
     call('(_a.to_f * 1.0).to_s', ['call', '*', '?a', '1'])
     call('(_a.to_f * _b.to_f).to_s', ['call', '*', '?a', '?b'])
@@ -67,7 +64,6 @@ class Caller < Test::Unit::TestCase
     call('-1.0', ['call', '/', '1', '-1.0'])
     call('1.0', ['call', '/', '-1', '-1.0'])
     call('25.0', ['call', '/', '100', '2', '2'])
-    # TODO optimize divisions by 1 and -1, raise exception by 0
     call('(1.0 / _a.to_f).to_s', ['call', '/', '1', '?a'])
     call('(_a.to_f / 1.0).to_s', ['call', '/', '?a', '1'])
     call('(_a.to_f / _b.to_f).to_s', ['call', '/', '?a', '?b'])
@@ -96,7 +92,6 @@ class Caller < Test::Unit::TestCase
     call('1.0', ['call', '^', '1', '-1.0'])
     call('-1.0', ['call', '^', '-1', '-1.0'])
     call('16.0', ['call', '^', '2', '2', '2'])
-    # TODO optimize pow by 0 and 1
     call('(0.0 ** _a.to_f).to_s', ['call', '^', '0', '?a'])
     call('(1.0 ** _a.to_f).to_s', ['call', '^', '1', '?a'])
     call('(_a.to_f ** 0.0).to_s', ['call', '^', '?a', '0'])
@@ -196,7 +191,6 @@ class Caller < Test::Unit::TestCase
   end
 
   def test_call_member
-    # TODO optimize literal terms
     call("['1.0', '2.0', '3.0'].include?('1.0')", ['call', 'member', '1', ['1', '2', '3']])
     call("[['1.0'], ['2.0'], ['3.0']].include?(['1.0'])", ['call', 'member', ['1'], [['1'], ['2'], ['3']]])
     call("['2.0', '3.0', '4.0', '5.0'].include?('4.0')", ['call', 'member', ['call', '*', '2', '2'], ['2', '3', ['call', '+', '1', '3'], '5']])
