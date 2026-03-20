@@ -238,7 +238,7 @@ class Caller < Test::Unit::TestCase
     e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call', 'member', '1'])}
     assert_equal('Expected 3 arguments for (call member 1)', e.message)
     e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call', '*', ['call', '+', '1', '2']])}
-    assert_equal('Expected at least 3 arguments for (call * call + 1 2)', e.message)
+    assert_equal('Expected at least 3 arguments for (call * (call + 1 2))', e.message)
     e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call'])}
     assert_equal('Expected function name for (call)', e.message)
     e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call', '1'])}

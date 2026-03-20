@@ -26,6 +26,14 @@ module UHyper_Compiler
   end
 
   #-----------------------------------------------
+  # Expression to string
+  #-----------------------------------------------
+
+  def expression_to_str(expression)
+    expression.instance_of?(Array) ? "(#{expression.map {|e| expression_to_str(e)}.join(' ')})" : expression
+  end
+
+  #-----------------------------------------------
   # Call
   #-----------------------------------------------
 
@@ -33,7 +41,7 @@ module UHyper_Compiler
     case function = expression[1]
     # N-ary math
     when '+', '-'
-      raise "Expected at least 2 arguments for (#{expression.join(' ')})" if expression.size < 3
+      raise "Expected at least 2 arguments for #{expression_to_str(expression)}" if expression.size < 3
       floats = true
       tokens = expression.drop(2).map! {|token|
         token = evaluate(token, namespace, false)
@@ -51,7 +59,7 @@ module UHyper_Compiler
       else "(#{tokens.join(" #{function} ")}).to_s"
       end
     when  '*', '/', '%', '^'
-      raise "Expected at least 3 arguments for (#{expression.join(' ')})" if expression.size < 4
+      raise "Expected at least 3 arguments for #{expression_to_str(expression)}" if expression.size < 4
       floats = true
       tokens = expression.drop(2).map! {|token|
         token = evaluate(token, namespace, false)
@@ -67,7 +75,7 @@ module UHyper_Compiler
       end
     # Unary math
     when 'abs', 'sin', 'cos', 'tan'
-      raise "Expected 2 arguments for (#{expression.join(' ')})" if expression.size != 3
+      raise "Expected 2 arguments for #{expression_to_str(expression)}" if expression.size != 3
       ltoken = evaluate(expression[2], namespace, false)
       if ltoken.match?(/^-?\d/) then function == 'abs' ? ltoken.delete_prefix('-') : Math.send(function, ltoken.to_f).to_s
       elsif function == 'abs' then ltoken.sub!(/\.to_s$/,'.abs.to_s') or ltoken << ".delete_prefix('-')"
@@ -75,7 +83,7 @@ module UHyper_Compiler
       end
     # Comparison
     when '=', '!=', '<', '>', '<=', '>='
-      raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
+      raise "Expected 3 arguments for #{expression_to_str(expression)}" if expression.size != 4
       ltoken = evaluate(expression[2], namespace, false)
       rtoken = evaluate(expression[3], namespace, false)
       if ltoken == rtoken then (function == '=' or function == '<=' or function == '>=').to_s
@@ -96,14 +104,14 @@ module UHyper_Compiler
       end
     # List
     when 'member'
-      raise "Expected 3 arguments for (#{expression.join(' ')})" if expression.size != 4
+      raise "Expected 3 arguments for #{expression_to_str(expression)}" if expression.size != 4
       ltoken = evaluate(expression[2], namespace)
       rtoken = evaluate(expression[3], namespace)
       "#{rtoken}.include?(#{ltoken})"
     # External
     when /^[a-z_]/
       "#{namespace}#{function}(#{expression.drop(2).map! {|term| evaluate(term, namespace)}.join(', ')})"
-    else raise "Expected function name for (#{expression.join(' ')})"
+    else raise "Expected function name for #{expression_to_str(expression)}"
     end
   end
 
