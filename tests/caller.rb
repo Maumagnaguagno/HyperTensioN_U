@@ -212,6 +212,7 @@ class Caller < Test::Unit::TestCase
   end
 
   def test_external_calls
+    call('f()', ['call', 'f'])
     call("f('1.0', _a)", ['call', 'f', '1', '?a'])
     call('f((1.0 + _a.to_f).to_s)', ['call', 'f', ['call', '+', '1', '?a']])
     call("(f1(_a, 'b') == f2(_c))", ['call', '=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
@@ -221,6 +222,26 @@ class Caller < Test::Unit::TestCase
     call("(f1(_a, 'b').to_f <= 1.0)", ['call', '<=', ['call', 'f1', '?a', 'b'], '1'])
     call("(f1(_a, 'b').to_f <= f2(_c).to_f)", ['call', '<=', ['call', 'f1', '?a', 'b'], ['call', 'f2', '?c']])
     call("f(_a.include?('1.0'))", ['call', 'f', ['call', 'member', '1', '?a']])
+    call('External.f()', ['call', 'f'], 'External.')
     call("External.f(_a.include?('1.0'))", ['call', 'f', ['call', 'member', '1', '?a']], 'External.')
+  end
+
+  def test_call_exception
+    e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call', '+'])}
+    assert_equal('Expected at least 2 arguments for (call +)', e.message)
+    e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call', '*', '1'])}
+    assert_equal('Expected at least 3 arguments for (call * 1)', e.message)
+    e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call', 'abs'])}
+    assert_equal('Expected 2 arguments for (call abs)', e.message)
+    e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call', '=', '1'])}
+    assert_equal('Expected 3 arguments for (call = 1)', e.message)
+    e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call', 'member', '1'])}
+    assert_equal('Expected 3 arguments for (call member 1)', e.message)
+    e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call', '*', ['call', '+', '1', '2']])}
+    assert_equal('Expected at least 3 arguments for (call * call + 1 2)', e.message)
+    e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call'])}
+    assert_equal('Expected function name for (call)', e.message)
+    e = assert_raises(RuntimeError) {UHyper_Compiler.call(['call', '1'])}
+    assert_equal('Expected function name for (call 1)', e.message)
   end
 end
