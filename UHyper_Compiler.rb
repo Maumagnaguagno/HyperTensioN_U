@@ -101,7 +101,9 @@ module UHyper_Compiler
       rtoken = evaluate(expression[3], namespace)
       "#{rtoken}.include?(#{ltoken})"
     # External
-    else "#{namespace}#{function}(#{expression.drop(2).map! {|term| evaluate(term, namespace)}.join(', ')})"
+    when /^[a-z_]/
+      "#{namespace}#{function}(#{expression.drop(2).map! {|term| evaluate(term, namespace)}.join(', ')})"
+    else raise "Expected function name for (#{expression.join(' ')})"
     end
   end
 
