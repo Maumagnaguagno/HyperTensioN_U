@@ -11,9 +11,9 @@ class Biscuit < Test::Unit::TestCase
       # Parser and extensions
       UJSHOP_Parser, [],
       # Attributes
-      :domain_name => 'cookie',
-      :problem_name => 'pb1',
-      :operators => [
+      domain_name: 'cookie',
+      problem_name: 'pb1',
+      operators: [
         ['goto', ['?agent', '?from', '?to'],
           # Preconditions
           ['and',
@@ -45,7 +45,7 @@ class Biscuit < Test::Unit::TestCase
           0.2
         ]
       ],
-      :methods => [
+      methods: [
         ['get_cookie', ['?agent', '?from', '?to'],
           ['goto_and_buy_cookie',
             # Preconditions
@@ -58,18 +58,18 @@ class Biscuit < Test::Unit::TestCase
           ]
         ]
       ],
-      :predicates => {
+      predicates: {
         'at' => true,
         'have' => true
       },
-      :state => {'at' => [['bob', 'home']]},
-      :tasks => [true, ['get_cookie', 'bob', 'home', 'cookie-store']],
-      :axioms => [],
-      :rewards => [
+      state: {'at' => [['bob', 'home']]},
+      tasks: [true, ['get_cookie', 'bob', 'home', 'cookie-store']],
+      axioms: [],
+      rewards: [
         ['achieve', ['have', 'bob', 'good-cookie'], '10'],
         ['achieve', ['have', 'bob', 'bad-cookie'], '-10']
       ],
-      :attachments => []
+      attachments: []
     )
   end
 

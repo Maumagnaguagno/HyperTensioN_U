@@ -11,9 +11,9 @@ class Gardening < Test::Unit::TestCase
       # Parser and extensions
       UJSHOP_Parser, [],
       # Attributes
-      :domain_name => 'plant_watering',
-      :problem_name => 'pb1',
-      :operators => [
+      domain_name: 'plant_watering',
+      problem_name: 'pb1',
+      operators: [
         ['move', ['?a', '?nx', '?ny'],
           # Preconditions
           ['agent', '?a'],
@@ -67,7 +67,7 @@ class Gardening < Test::Unit::TestCase
           1
         ]
       ],
-      :methods => [
+      methods: [
         ['forward', ['?a', '?gx', '?gy'],
           ['base',
             # Preconditions
@@ -121,12 +121,12 @@ class Gardening < Test::Unit::TestCase
           ]
         ]
       ],
-      :predicates => {
+      predicates: {
         'agent' => false,
         'plant' => false,
         'tap' => false
       },
-      :state => {
+      state: {
         'function' => [
           ['max_int', '20'],
           ['minx', '1'],
@@ -148,10 +148,10 @@ class Gardening < Test::Unit::TestCase
         'tap' => [['tap0']],
         'plant' => [['plant0']],
       },
-      :tasks => [true, ['move_to_load_before_move_to_pour', 'plant0', '4']],
-      :axioms => [],
-      :rewards => [],
-      :attachments => [['adjacent', '?x', '?y', '?nx', '?ny', '?gx', '?gy']]
+      tasks: [true, ['move_to_load_before_move_to_pour', 'plant0', '4']],
+      axioms: [],
+      rewards: [],
+      attachments: [['adjacent', '?x', '?y', '?nx', '?ny', '?gx', '?gy']]
     )
   end
 

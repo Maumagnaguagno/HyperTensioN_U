@@ -11,9 +11,9 @@ class Postulate < Test::Unit::TestCase
       # Parser and extensions
       UJSHOP_Parser, [],
       # Attributes
-      :domain_name => 'axiom',
-      :problem_name => 'pb1',
-      :operators => [
+      domain_name: 'axiom',
+      problem_name: 'pb1',
+      operators: [
         ['add-one', ['?current'],
           # Preconditions
           ['and',
@@ -27,15 +27,15 @@ class Postulate < Test::Unit::TestCase
           1
         ]
       ],
-      :methods => [],
-      :predicates => {'at' => true},
-      :state => {'at' => [['0']]},
-      :tasks => [true,
+      methods: [],
+      predicates: {'at' => true},
+      state: {'at' => [['0']]},
+      tasks: [true,
         ['add-one', '0'],
         ['add-one', '1'],
         ['add-one', '2']
       ],
-      :axioms => [
+      axioms: [
         ['empty_axiom', ['?parameter0'],
           'negate-empty-list',
           ['not', []]
@@ -50,8 +50,8 @@ class Postulate < Test::Unit::TestCase
           ['not', ['not', ['at', '?parameter0']]]
         ]
       ],
-      :rewards => [],
-      :attachments => []
+      rewards: [],
+      attachments: []
     )
   end
 

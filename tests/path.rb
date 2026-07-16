@@ -11,9 +11,9 @@ class Path < Test::Unit::TestCase
       # Parser and extensions
       UJSHOP_Parser, [],
       # Attributes
-      :domain_name => 'search',
-      :problem_name => 'pb1',
-      :operators => [
+      domain_name: 'search',
+      problem_name: 'pb1',
+      operators: [
         ['move', ['?agent', '?from', '?to'],
           # Preconditions
           ['and',
@@ -45,7 +45,7 @@ class Path < Test::Unit::TestCase
           1
         ]
       ],
-      :methods => [
+      methods: [
         ['forward', ['?agent', '?goal'],
           ['base',
             # Preconditions
@@ -80,15 +80,15 @@ class Path < Test::Unit::TestCase
           ]
         ]
       ],
-      :predicates => {
+      predicates: {
         'at' => true,
         'visited' => true
       },
-      :state => {'at' => [['robot', 'start']]},
-      :tasks => [true, ['forward', 'robot', 'goal']],
-      :axioms => [],
-      :rewards => [],
-      :attachments => [
+      state: {'at' => [['robot', 'start']]},
+      tasks: [true, ['forward', 'robot', 'goal']],
+      axioms: [],
+      rewards: [],
+      attachments: [
         ['arc', '?from', '?to', '?arc_to'],
         ['visible-vertex', '?from', '?vertex']
       ]
