@@ -14,7 +14,7 @@ class Sphygmomanometer < Test::Unit::TestCase
 
   def setup_planner(state, max_plans = -1, min_prob = 0)
     Hypertension_U.state = state
-    Hypertension_U.domain = {:operator => 1}
+    Hypertension_U.domain = {operator: 1}
     Hypertension_U.plans = []
     Hypertension_U.max_plans = max_plans
     Hypertension_U.min_prob = min_prob
