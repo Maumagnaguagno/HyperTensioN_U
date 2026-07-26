@@ -52,7 +52,7 @@
     ()
   )
 
-  (:operator  (!!remove ?target ?tx ?ty)
+  (:operator (!!remove ?target ?tx ?ty)
     ()
     ((unit ?target ?tx ?ty) (occupied ?tx ?ty))
     ()
