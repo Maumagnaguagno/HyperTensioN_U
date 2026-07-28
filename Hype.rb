@@ -35,7 +35,8 @@ module Hype
   # Compile
   #-----------------------------------------------
 
-  def compile(domain, problem, type = nil)
+  def compile(domain, problem, type)
+    raise "Unknown type #{type}" if type != 'rb'
     args = [
       @parser.domain_name,
       @parser.problem_name,
@@ -52,6 +53,27 @@ module Hype
     File.write("#{domain}.rb", data) if data
     data = UHyper_Compiler.compile_problem(*args << File.basename(domain))
     File.write("#{problem}.rb", data) if data
+  end
+
+  #-----------------------------------------------
+  # Execute
+  #-----------------------------------------------
+
+  def execute(domain)
+    args = [
+      @parser.domain_name,
+      @parser.problem_name,
+      @parser.operators,
+      @parser.methods,
+      @parser.predicates,
+      @parser.state,
+      @parser.tasks,
+      @parser.axioms,
+      @parser.rewards,
+      @parser.attachments
+    ]
+    eval(UHyper_Compiler.compile_domain(*args), TOPLEVEL_BINDING, domain)
+    eval(UHyper_Compiler.compile_problem(*args))
   end
 end
 
@@ -70,8 +92,11 @@ if $0 == __FILE__
       type = ARGV[0]
       t = Time.now.to_f
       Hype.parse(domain, problem)
-      Hype.compile(domain, problem)
-      require File.expand_path(problem) if type == 'run' or type == 'debug'
+      if type == 'run' or type == 'debug'
+        Hype.execute(domain)
+      else
+        Hype.compile(domain, problem, type)
+      end
       puts "Total time: #{Time.now.to_f - t}s"
     end
   rescue
