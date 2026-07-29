@@ -49,10 +49,8 @@ module Hype
       @parser.rewards,
       @parser.attachments
     ]
-    data = UHyper_Compiler.compile_domain(*args)
-    File.write("#{domain}.rb", data) if data
-    data = UHyper_Compiler.compile_problem(*args << File.basename(domain))
-    File.write("#{problem}.rb", data) if data
+    File.write("#{domain}.rb", UHyper_Compiler.compile_domain(*args))
+    File.write("#{problem}.rb", UHyper_Compiler.compile_problem(*args << File.basename(domain)))
   end
 
   #-----------------------------------------------
