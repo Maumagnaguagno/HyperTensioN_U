@@ -15,18 +15,15 @@ module Turtlebot
   COUNTER = 'counter'
   RAD2DEG = 180 / Math::PI
   PI2 = Math::PI * 2
-  CIRCLES = [
-    Circle.new( 0.5, 28.5, 3.5),
-    Circle.new(46.5, 28.5, 3.5),
-    Circle.new(24.0,  0.5, 3.0),
-    Circle.new(24.0, 58.5, 3.0),
-    Circle.new(24.5, 53.0, 8.5),
-    Circle.new(24.5, 20.5, 7.0),
-    Circle.new(40.5,  5.5, 7.0)
-  ]
 
+  @obstacles = nil
   @symbol_object = {}
   @pos_counter = 0
+
+  def problem(state, tasks, *args)
+    @obstacles = state.delete('obstacle')&.map! {|cx,cy,radius| Circle.new(cx.to_f, cy.to_f, radius.to_f)} || []
+    super
+  end
 
   def current_angle
     @state[:event].reverse_each {|_,f,value| return value if f == A}
@@ -71,7 +68,7 @@ module Turtlebot
 
   def closest(circle, to, out_circle, in_dir, out_dir, goal)
     g = @symbol_object[goal]
-    circles_sort = CIRCLES.sort_by {|c| Circular.center_distance(c, g)}
+    circles_sort = @obstacles.sort_by {|c| Circular.center_distance(c, g)}
     Circular.each_bitangent(@symbol_object[circle], in_dir == CLOCK, circles_sort) {|c,l,d|
       out_circle.replace(symbol(c))
       to.replace(symbol(l.to))
@@ -82,7 +79,7 @@ module Turtlebot
 
   def visible(point, circle, goal)
     g = @symbol_object[goal]
-    Circular.visible?(Line.new(@symbol_object[point], g), CIRCLES, @symbol_object[circle], g)
+    Circular.visible?(Line.new(@symbol_object[point], g), @obstacles, @symbol_object[circle], g)
   end
 
   def position(x, y)

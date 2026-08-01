@@ -6,57 +6,14 @@
     (function miny 0) (function maxy 60)
 
     ; Obstacles parameters
-    ; [cx, cy] = obstacle center
-    ; [rcx, rcy] = collision radius x and y (robot must keep away to avoid collision)
-    ; [rex, rey] = energy radius x and y (robot must avoid to keep from turning sensors on)
-    ;(function (cx  o1)  0.5)
-    ;(function (cy  o1) 28.5)
-    ;(function (rcx o1)  4.0)
-    ;(function (rcy o1) 31.5)
-    ;(function (rex o1)  7.0)
-    ;(function (rey o1) 34.5)
-
-    ;(function (cx  o2) 46.5)
-    ;(function (cy  o2) 28.5)
-    ;(function (rcx o2)  4.0)
-    ;(function (rcy o2) 31.5)
-    ;(function (rex o2)  7.0)
-    ;(function (rey o2) 34.5)
-
-    ;(function (cx  o3) 24.0)
-    ;(function (cy  o3)  0.5)
-    ;(function (rcx o3) 26.0)
-    ;(function (rcy o3)  4.0)
-    ;(function (rex o3) 30.0)
-    ;(function (rey o3)  7.0)
-
-    ;(function (cx  o4) 24.0)
-    ;(function (cy  o4) 58.5)
-    ;(function (rcx o4) 26.0)
-    ;(function (rcy o4)  4.0)
-    ;(function (rex o4) 30.0)
-    ;(function (rey o4)  7.0)
-
-    ;(function (cx  o5) 24.5)
-    ;(function (cy  o5) 53.0)
-    ;(function (rcx o5)  8.0)
-    ;(function (rcy o5)  8.5)
-    ;(function (rex o5) 14.0)
-    ;(function (rey o5) 14.5)
-
-    ;(function (cx  o6) 24.5)
-    ;(function (cy  o6) 20.5)
-    ;(function (rcx o6)  7.0)
-    ;(function (rcy o6)  7.0)
-    ;(function (rex o6) 12.0)
-    ;(function (rey o6) 12.0)
-
-    ;(function (cx  o7) 40.5)
-    ;(function (cy  o7)  5.5)
-    ;(function (rcx o7)  7.0)
-    ;(function (rcy o7)  7.0)
-    ;(function (rex o7) 12.0)
-    ;(function (rey o7) 12.0)
+    ; [cx, cy, radius] = obstacle center and radius
+    (obstacle  0.5 28.5 3.5)
+    (obstacle 46.5 28.5 3.5)
+    (obstacle 24.0  0.5 3.0)
+    (obstacle 24.0 58.5 3.0)
+    (obstacle 24.5 53.0 8.5)
+    (obstacle 24.5 20.5 7.0)
+    (obstacle 40.5  5.5 7.0)
 
     ; Robot parameters
     ; [x,y,a] = robot pose, [x,y] position and a orientation
