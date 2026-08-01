@@ -5,6 +5,16 @@
     (function minx 0) (function maxx 48)
     (function miny 0) (function maxy 60)
 
+    ; Obstacles parameters
+    ; [cx,cy,radius] = obstacle center and radius
+    (obstacle  0.5 28.5 3.5)
+    (obstacle 46.5 28.5 3.5)
+    (obstacle 24.0  0.5 3.0)
+    (obstacle 24.0 58.5 3.0)
+    (obstacle 24.5 53.0 8.5)
+    (obstacle 24.5 20.5 7.0)
+    (obstacle 40.5  5.5 7.0)
+
     ; Robot parameters
     ; [x,y,a] = robot pose, [x,y] position and a orientation
     ; [vx,ax] = robot linear frontal velocity (variable) and acceleration (constant)
