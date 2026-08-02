@@ -20,7 +20,7 @@ module Turtlebot
   @symbol_object = {}
   @pos_counter = 0
 
-  def problem(state, tasks, *args)
+  def problem(state, *args)
     @obstacles = state.delete('obstacle')&.map! {|cx,cy,radius| Circle.new(cx.to_f, cy.to_f, radius.to_f)} || []
     super
   end
