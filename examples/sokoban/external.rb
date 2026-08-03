@@ -2,7 +2,7 @@ module Sokoban
 
   DIRS = [[1,0],[-1,0],[0,1],[0,-1]]
 
-  def problem(state, tasks, *args)
+  def problem(state, tasks, *)
     # Find deadlocks
     storage = state['storage']
     deadlocks = state['deadlock'] = []
