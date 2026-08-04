@@ -1,6 +1,6 @@
 # Both planners can execute this domain
 require_relative '../../Hypertension_U'
-#require_relative '../../../Hypertension/Hypertension'
+#require_relative '../../../HyperTensioN/Hypertension'
 
 require_relative 'equality-axioms'
 require_relative 'commitment-axioms'

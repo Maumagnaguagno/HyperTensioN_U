@@ -46,23 +46,33 @@ end
 #   1 ; Cost
 # )
 
-def performImaging_success(radiologist, patient, physician)
-  if state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician) and state(IAPPOINTMENTREQUESTED, patient, radiologist)
-    apply(
-      [
-        [IMAGINGSCAN, patient, physician],
-        [IAPPOINTMENTKEPT, patient, radiologist]
-      ],
-      [
-        [IAPPOINTMENTREQUESTED, patient, radiologist]
-      ]
-    )
+
+if defined?(Hypertension_U)
+  def performImaging(radiologist, patient, physician)
+    state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician) and state(IAPPOINTMENTREQUESTED, patient, radiologist)
+  end
+else
+  def performImaging(radiologist, patient, physician)
+    if state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician) and state(IAPPOINTMENTREQUESTED, patient, radiologist)
+      performImaging_success(radiologist, patient, physician)
+    end
   end
 end
-alias :performImaging :performImaging_success
+
+def performImaging_success(radiologist, patient, physician)
+  apply(
+    [
+      [IMAGINGSCAN, patient, physician],
+      [IAPPOINTMENTKEPT, patient, radiologist]
+    ],
+    [
+      [IAPPOINTMENTREQUESTED, patient, radiologist]
+    ]
+  )
+end
 
 def performImaging_failure(radiologist, patient, physician)
-  state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician) and state(IAPPOINTMENTREQUESTED, patient, radiologist)
+  true
 end
 
 # ;; Change this to have the radiologist doing the biopsy
@@ -73,24 +83,33 @@ end
 #   1 ; Cost
 # )
 
-def performBiopsy_success(radiologist, patient, physician)
-  if state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician)
-    apply(
-      [
-        [BIOPSYREPORT, patient, physician],
-        [BAPPOINTMENTKEPT, patient, radiologist],
-        [TISSUEPROVIDED, patient]
-      ],
-      [
-        [BAPPOINTMENTREQUESTED, patient, radiologist]
-      ]
-    )
+if defined?(Hypertension_U)
+  def performBiopsy(radiologist, patient, physician)
+    state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician)
+  end
+else
+  def performBiopsy(radiologist, patient, physician)
+    if state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician)
+      performBiopsy_success(radiologist, patient, physician)
+    end
   end
 end
-alias :performBiopsy :performBiopsy_success
+
+def performBiopsy_success(radiologist, patient, physician)
+  apply(
+    [
+      [BIOPSYREPORT, patient, physician],
+      [BAPPOINTMENTKEPT, patient, radiologist],
+      [TISSUEPROVIDED, patient]
+    ],
+    [
+      [BAPPOINTMENTREQUESTED, patient, radiologist]
+    ]
+  )
+end
 
 def performBiopsy_failure(radiologist, patient, physician)
-  state(PATIENT, patient) and state(RADIOLOGIST, radiologist) and state(PHYSICIAN, physician)
+  true
 end
 
 # ;; Instead of performDiagnosis, we need:
