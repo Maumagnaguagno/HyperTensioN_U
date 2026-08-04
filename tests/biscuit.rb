@@ -128,14 +128,16 @@ module Cookie
     @state['at'].unshift([_agent, _to])
   end
 
+  def buy_cookie(_agent)
+    @state['at'].include?([_agent, 'cookie_store'])
+  end
+
   def buy_good_cookie(_agent)
-    return unless @state['at'].include?([_agent, 'cookie_store'])
     @state = @state.dup
     (@state['have'] = @state['have'].dup).unshift([_agent, 'good_cookie'])
   end
 
   def buy_bad_cookie(_agent)
-    return unless @state['at'].include?([_agent, 'cookie_store'])
     @state = @state.dup
     (@state['have'] = @state['have'].dup).unshift([_agent, 'bad_cookie'])
   end
