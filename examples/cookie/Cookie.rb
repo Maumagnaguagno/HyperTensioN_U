@@ -61,14 +61,19 @@ module Cookie
     )
   end
 
-  def buy_good_cookie(agent)
-    apply_operator(
+  def buy_cookie(agent)
+    applicable?(
       # Positive preconditions
       [
         [AT, agent, 'cookie_store']
       ],
       # Negative preconditions
-      [],
+      []
+    )
+  end
+
+  def buy_good_cookie(agent)
+    apply(
       # Add effects
       [
         [HAVE, agent, 'good_cookie']
@@ -79,13 +84,7 @@ module Cookie
   end
 
   def buy_bad_cookie(agent)
-    apply_operator(
-      # Positive preconditions
-      [
-        [AT, agent, 'cookie_store']
-      ],
-      # Negative preconditions
-      [],
+    apply(
       # Add effects
       [
         [HAVE, agent, 'bad_cookie']
