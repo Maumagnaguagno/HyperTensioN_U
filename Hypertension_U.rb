@@ -41,14 +41,11 @@ module Hypertension_U
           puts "#{'  ' * level}#{task_name}(#{current_task.drop(1).join(' ')})" if @debug
           if __send__(*current_task)
             level += 1
-            begin
-              decomposition.each {|task_prob,probability|
-                current_task[0] = task_prob
-                execute(current_task, probability, tasks, level, plan)
-                return if @plans.size == @max_plans
-              }
-            rescue SystemStackError then @nostack = true
-            end
+            decomposition.each {|task_prob,probability|
+              current_task[0] = task_prob
+              execute(current_task, probability, tasks, level, plan)
+              return if @plans.size == @max_plans
+            }
             current_task[0] = task_name
           end
         # Method
