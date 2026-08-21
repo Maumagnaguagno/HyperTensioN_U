@@ -11,11 +11,11 @@ module UHyper_Compiler
     case expression[0]
     when 'and', 'or'
       if expression.size == 2 then expression_to_hyper(expression[1], axioms)
-      else '(' << expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{expression[0]} ") << ')'
+      else "(#{expression.drop(1).map! {|exp| expression_to_hyper(exp, axioms)}.join(" #{expression[0]} ")})"
       end
     when 'not' then (term = expression_to_hyper(expression[1], axioms)).delete_prefix!('not ') or 'not ' << term
     when 'call' then call(expression)
-    when 'assign' then '(_' << expression[1].delete_prefix('?') << ' = ' << evaluate(expression[2]) << ')'
+    when 'assign' then "(_#{expression[1].delete_prefix('?')} = #{evaluate(expression[2])})"
     when nil then 'false' # Empty list is false
     else
       terms = expression.drop(1).map! {|i| evaluate(i)}.join(', ')
