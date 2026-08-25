@@ -57,7 +57,7 @@ module Hype
   # Execute
   #-----------------------------------------------
 
-  def execute(domain)
+  def execute(domain, problem)
     args = [
       @parser.domain_name,
       @parser.problem_name,
@@ -71,7 +71,7 @@ module Hype
       @parser.attachments
     ]
     eval(UHyper_Compiler.compile_domain(*args), TOPLEVEL_BINDING, domain)
-    eval(UHyper_Compiler.compile_problem(*args))
+    eval(UHyper_Compiler.compile_problem(*args), TOPLEVEL_BINDING, problem)
   end
 end
 
@@ -91,7 +91,7 @@ if $0 == __FILE__
       t = Time.now.to_f
       Hype.parse(domain, problem)
       if type == 'run' or type == 'debug'
-        Hype.execute(domain)
+        Hype.execute(domain, problem)
       else
         Hype.compile(domain, problem, type)
       end
