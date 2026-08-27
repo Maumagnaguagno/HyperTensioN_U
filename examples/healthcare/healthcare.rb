@@ -121,6 +121,9 @@ module Healthcare
     VISIBLE = true
     INVISIBLE = false
     PERFORMIMAGING_OUTCOMES = PERFORMBIOPSY_OUTCOMES = VISIBLE
+    def problem(state, tasks, debug = false, *)
+      super(state, tasks, debug)
+    end
   end
   extend self
 
@@ -276,7 +279,6 @@ module Healthcare
       'step5'
     ],
   }
-
 
   #-----------------------------------------------
   # State valuation

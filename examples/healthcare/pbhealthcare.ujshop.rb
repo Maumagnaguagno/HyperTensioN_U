@@ -80,24 +80,40 @@ plan = Healthcare.problem(
   min_prob
 )
 
-abort('Problem failed to generate expected plan') if plan != [
-  [0.7, 7,
+if defined?(Hypertension_U)
+  expected_plan = [
+    [0.7, 7,
+      ['create', C1, C1, bob, alice, list(alice)],
+      ['requestAssessment', alice, bob],
+      ['create', C2, C2, alice, bob, list(clyde)],
+      ['create', C5, C5, clyde, bob, list(doug)],
+      ['requestImaging', bob, alice, clyde],
+      ['performImaging_success', clyde, alice, bob],
+      ['requestRadiologyReport', bob, clyde, alice],
+      ['sendRadiologyReport', clyde, bob, alice],
+      ['generateTreatmentPlan', bob, alice],
+      ['invisible_testSuccess', C1, C1, list(alice), satisfied],
+      ['invisible_testSuccess', C2, C2, list(clyde), satisfied],
+      ['invisible_testFailure', C3, C3, satisfied],
+      ['invisible_testFailure', C4, C4, satisfied],
+      ['invisible_testFailure', C5, C5, satisfied],
+      ['invisible_testFailure', C6, C6, satisfied],
+      ['invisible_testFailure', C7, C7, satisfied],
+      ['invisible_testFailure', C8, C8, satisfied]
+    ]
+  ]
+else
+  expected_plan = [
     ['create', C1, C1, bob, alice, list(alice)],
     ['requestAssessment', alice, bob],
     ['create', C2, C2, alice, bob, list(clyde)],
     ['create', C5, C5, clyde, bob, list(doug)],
     ['requestImaging', bob, alice, clyde],
-    ['performImaging_success', clyde, alice, bob],
+    ['performImaging', clyde, alice, bob],
     ['requestRadiologyReport', bob, clyde, alice],
     ['sendRadiologyReport', clyde, bob, alice],
-    ['generateTreatmentPlan', bob, alice],
-    ['invisible_testSuccess', C1, C1, list(alice), satisfied],
-    ['invisible_testSuccess', C2, C2, list(clyde), satisfied],
-    ['invisible_testFailure', C3, C3, satisfied],
-    ['invisible_testFailure', C4, C4, satisfied],
-    ['invisible_testFailure', C5, C5, satisfied],
-    ['invisible_testFailure', C6, C6, satisfied],
-    ['invisible_testFailure', C7, C7, satisfied],
-    ['invisible_testFailure', C8, C8, satisfied]
+    ['generateTreatmentPlan', bob, alice]
   ]
-]
+end
+
+abort('Problem failed to generate expected plan') if plan != expected_plan
