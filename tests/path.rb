@@ -202,7 +202,7 @@ Search.problem(
     'at' => [
       [_robot, _start]
     ],
-    'visited' => []
+    'visited' => [],
   },
   # Tasks
   [

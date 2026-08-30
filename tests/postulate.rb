@@ -123,7 +123,7 @@ Axiom.problem(
   {
     'at' => [
       ['0.0']
-    ]
+    ],
   },
   # Tasks
   [

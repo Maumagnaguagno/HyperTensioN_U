@@ -168,7 +168,7 @@ Cookie.problem(
     'at' => [
       [_bob, _home]
     ],
-    'have' => []
+    'have' => [],
   },
   # Tasks
   [

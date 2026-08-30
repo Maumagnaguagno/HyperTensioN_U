@@ -410,15 +410,15 @@ module UHyper_Compiler
     objects.each {|i| problem_str << "_#{i} = '#{i}'\n" if i.instance_of?(String) and not i.match?(/^-?\d/)}
     problem_str << "\n#{namespace = "#{domain_name.capitalize}."}problem(\n  # Start\n  {"
     # Start
-    predicates.each_key {|i| state[i] ||= []}
     state.each_with_index {|(k,v),i|
       problem_str << "\n    '#{k}' => ["
-      problem_str << "\n      [" << v.map! {|obj| obj.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : '_' << o : evaluate(o, namespace)}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
-      problem_str << (state.size.pred == i ? ']' : '],')
+      problem_str << "\n      [" << v.map {|obj| obj.map {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : '_' << o : evaluate(o, namespace)}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
+      problem_str << '],'
     }
+    predicates.each_key {|k| problem_str << "\n    '#{k}' => []," unless state.include?(k)}
     # Tasks
     problem_str << "\n  },\n  # Tasks\n  [" <<
-      tasks.map! {|task,*terms| "\n    ['#{task}'#{terms.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? ", '#{o.to_f}'" : ', _' << o : ', ' << evaluate(o, namespace)}.join}]"}.join(',') <<
+      tasks.map {|task,*terms| "\n    ['#{task}'#{terms.map! {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? ", '#{o.to_f}'" : ', _' << o : ', ' << evaluate(o, namespace)}.join}]"}.join(',') <<
       "\n  ],\n  # Debug\n  ARGV[0] == 'debug',\n  # Maximum plans found\n  ARGV[1] ? ARGV[1].to_i : -1,\n  # Minimum probability for plans\n  ARGV[2] ? ARGV[2].to_f : 0#{",\n  # Ordered\n  false" if ordered == false}"
     tasks.unshift(ordered) unless tasks.empty?
     problem_str.gsub!(/\b-\b/,'_')

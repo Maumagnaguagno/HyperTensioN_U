@@ -305,7 +305,7 @@ Plant_watering.problem(
     ],
     'plant' => [
       [_plant0]
-    ]
+    ],
   },
   # Tasks
   [
