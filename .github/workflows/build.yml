@@ -23,6 +23,7 @@ jobs:
     - run: ruby tests/path.rb
     - run: ruby examples/plant_watering/pbgenerator.rb && ruby tests/gardening.rb
     - run: ruby tests/caller.rb
+    - run: ruby tests/recompiler.rb
     # Examples
     - run: ruby Hype.rb examples/axiom/axiom.ujshop examples/axiom/pb1.ujshop run
     - run: ruby examples/car_linear/pbgenerator.rb && ruby Hype.rb examples/car_linear/car_linear.ujshop examples/car_linear/pb0.ujshop run 1
