@@ -172,7 +172,7 @@ module UHyper_Compiler
       define_operators << "\n    return unless #{precond_expression}" if precond_expression
       # Effective
       effect_calls = []
-      effect_add.reject! {|pre| effect_calls << call(pre) if pre[0] == 'call'}
+      effect_add = effect_add.reject {|pre| effect_calls << call(pre) if pre[0] == 'call'}
       unless effect_add.empty? and effect_del.empty?
         define_operators << "\n    @state = @state.dup"
         apply('delete', effect_del, define_operators, duplicated = {})
@@ -329,7 +329,9 @@ module UHyper_Compiler
           define_methods << "#{indentation}next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
         end
         # Semantic attachments
-        precond_attachments.each {|positive,pre,*terms|
+        precond_attachments.each {|att|
+          positive = att.shift
+          pre, *terms = att
           terms.map! {|t|
             if t.instance_of?(String) and t.start_with?('?')
               td = t.tr('?','_')
