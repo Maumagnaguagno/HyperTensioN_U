@@ -103,7 +103,7 @@ module Cookie
     # Methods
     'get_cookie' => [
       'get_cookie_goto_and_buy_cookie'
-    ]
+    ],
   }
 
   #-----------------------------------------------

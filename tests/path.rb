@@ -125,7 +125,7 @@ module Search
       'forward_base',
       'forward_goal_visible',
       'forward_recursion'
-    ]
+    ],
   }
 
   #-----------------------------------------------

@@ -191,7 +191,7 @@ module Plant_watering
     ],
     'move_to_load_before_move_to_pour' => [
       'move_to_load_before_move_to_pour_case_0'
-    ]
+    ],
   }
 
   #-----------------------------------------------

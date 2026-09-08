@@ -209,7 +209,7 @@ module UHyper_Compiler
     # Methods
     define_methods = ''
     domain_str << "\n    # Methods"
-    methods.each_with_index {|(name,param,*decompositions),mi|
+    methods.each {|name,param,*decompositions|
       paramstr = "(#{param.join(', ').tr!('?','_')})" unless param.empty?
       decompositions.map! {|dec|
         define_methods << "\n  def #{name}_#{dec[0]}#{paramstr}"
@@ -358,7 +358,7 @@ module UHyper_Compiler
         define_methods << indentation << (dec[2].empty? ? 'yield []' : "yield [#{indentation}  [" << dec[2].map {|g| g.map {|i| evaluate(i)}.join(', ')}.join("],#{indentation}  [") << "]#{indentation}]") << close_method_str
         "\n      '#{name}_#{dec[0]}'"
       }
-      domain_str << "\n    '#{name}' => [" << decompositions.join(',') << (methods.size.pred == mi ? "\n    ]" : "\n    ],")
+      domain_str << "\n    '#{name}' => [" << decompositions.join(',') << "\n    ],"
     }
     domain_str << "\n  }\n\n"
     # Rewards
