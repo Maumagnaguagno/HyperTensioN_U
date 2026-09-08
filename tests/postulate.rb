@@ -77,7 +77,7 @@ module Axiom
 
   @domain = {
     # Operators
-    'add_one' => 1
+    'add_one' => 1,
     # Methods
   }
 

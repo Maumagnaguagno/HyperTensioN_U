@@ -191,19 +191,19 @@ module UHyper_Compiler
     domain_str = "require_relative 'external' if File.exist?(\"\#{__dir__}/external.rb\")\n\nmodule #{domain_name.capitalize}\n  include Hypertension_U\n  extend self\n\n  ##{SPACER}\n  # Domain\n  ##{SPACER}\n\n  @domain = {\n    # Operators"
     # Operators
     define_operators = ''
-    operators.each_with_index {|(name,param,precond_expression,*effects),i|
+    operators.each {|name,param,precond_expression,*effects|
       precond_expression = precond_expression.empty? ? nil : expression_to_hyper(precond_expression, axioms)
       if effects.size == 3
         operator_to_hyper(name, param, precond_expression, effects.shift, effects.shift, define_operators)
-        domain_str << "\n    '#{name}' => #{effects.shift}#{',' unless operators.size.pred == i and methods.empty?}"
+        domain_str << "\n    '#{name}' => #{effects.shift},"
       else
         operator_to_hyper(name, param, precond_expression, [], [], define_operators)
         domain_str << "\n    '#{name}' => {"
         while name = effects.shift
           operator_to_hyper(name, param, nil, effects.shift, effects.shift, define_operators)
-          domain_str << "\n      '#{name}' => #{effects.shift}#{',' unless effects.empty?}"
+          domain_str << "\n      '#{name}' => #{effects.shift},"
         end
-        domain_str << "\n    }#{',' unless operators.size.pred == i and methods.empty?}"
+        domain_str << "\n    },"
       end
     }
     # Methods

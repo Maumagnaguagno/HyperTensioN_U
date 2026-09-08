@@ -98,7 +98,7 @@ module Cookie
     'goto' => 1.0,
     'buy_cookie' => {
       'buy_good_cookie' => 0.8,
-      'buy_bad_cookie' => 0.2
+      'buy_bad_cookie' => 0.2,
     },
     # Methods
     'get_cookie' => [
