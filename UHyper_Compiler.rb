@@ -412,7 +412,7 @@ module UHyper_Compiler
     objects.each {|i| problem_str << "_#{i} = '#{i}'\n" if i.instance_of?(String) and not i.match?(/^-?\d/)}
     problem_str << "\n#{namespace = "#{domain_name.capitalize}."}problem(\n  # Start\n  {"
     # Start
-    state.each_with_index {|(k,v),i|
+    state.each {|k,v|
       problem_str << "\n    '#{k}' => ["
       problem_str << "\n      [" << v.map {|obj| obj.map {|o| o.instance_of?(String) ? o.match?(/^-?\d/) ? "'#{o.to_f}'" : '_' << o : evaluate(o, namespace)}.join(', ')}.join("],\n      [") << "]\n    " unless v.empty?
       problem_str << '],'
