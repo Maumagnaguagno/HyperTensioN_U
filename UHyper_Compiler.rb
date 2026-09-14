@@ -275,7 +275,6 @@ module UHyper_Compiler
           ground = param.dup
           until precond_pos.empty?
             pre, *terms = precond_pos.shift
-            equality.clear
             define_methods_comparison.clear
             new_grounds = false
             terms2 = terms.map {|j|
@@ -314,10 +313,12 @@ module UHyper_Compiler
                 end
               end
             }
-            define_methods << "#{indentation}next if #{equality.join(' or ')}" unless equality.empty?
+            unless equality.empty?
+              define_methods << "#{indentation}next if #{equality.join(' or ')}"
+              equality.clear
+            end
             define_methods << define_methods_comparison
           end
-          equality.clear
           define_methods_comparison.clear
           precond_not.each {|pre,*terms|
             if pre == '=' then equality << "#{evaluate(terms[0])} == #{evaluate(terms[1])}"
