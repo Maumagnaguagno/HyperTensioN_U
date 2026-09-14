@@ -294,23 +294,19 @@ module UHyper_Compiler
               define_methods << "#{indentation}@state[#{evaluate(pre)}].each {|#{terms2.join(', ')},|"
               close_method_str.prepend("#{indentation}}")
               indentation << '  '
-            elsif pre == '=' then equality << "#{terms2[0]} != #{terms2[1]}"
             elsif not predicates[pre] and not state.include?(pre) then define_methods << "#{indentation}return"
             else applicable(define_methods_comparison << "#{indentation}next unless ", pre, terms)
             end
             precond_pos.reject! {|pre,*terms|
               unless terms.intersect?(free_variables)
-                if pre == '=' then equality << "#{evaluate(terms[0])} != #{evaluate(terms[1])}"
-                elsif not predicates[pre] and not state.include?(pre) then define_methods << "#{indentation}return"
+                if not predicates[pre] and not state.include?(pre) then define_methods << "#{indentation}return"
                 else applicable(define_methods_comparison << "#{indentation}next unless ", pre, terms)
                 end
               end
             }
             precond_not.reject! {|pre,*terms|
-              unless terms.intersect?(free_variables)
-                if pre == '=' then equality << "#{evaluate(terms[0])} == #{evaluate(terms[1])}"
-                elsif predicates[pre] or state.include?(pre) then applicable(define_methods_comparison << "#{indentation}next if ", pre, terms)
-                end
+              if predicates[pre] or state.include?(pre) and not terms.intersect?(free_variables)
+                applicable(define_methods_comparison << "#{indentation}next if ", pre, terms)
               end
             }
             unless equality.empty?
@@ -319,14 +315,8 @@ module UHyper_Compiler
             end
             define_methods << define_methods_comparison
           end
-          define_methods_comparison.clear
-          precond_not.each {|pre,*terms|
-            if pre == '=' then equality << "#{evaluate(terms[0])} == #{evaluate(terms[1])}"
-            elsif predicates[pre] or state.include?(pre) then applicable(define_methods_comparison << "#{indentation}next if ", pre, terms)
-            end
-          }
           define_methods << "#{indentation}next if #{equality.join(' or ')}" unless equality.empty?
-          define_methods << define_methods_comparison
+          precond_not.each {|pre,*terms| applicable(define_methods << "#{indentation}next if ", pre, terms) if predicates[pre] or state.include?(pre)}
           define_methods << "#{indentation}next unless " << expression_to_hyper(lifted_axioms_calls.unshift('and'), axioms) unless lifted_axioms_calls.empty?
         end
         # Semantic attachments
