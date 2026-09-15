@@ -289,12 +289,11 @@ module UHyper_Compiler
                 evaluate(j, new_grounds = true)
               end
             }
+            define_methods << "#{indentation}return" unless predicates[pre] or state.include?(pre)
             if new_grounds
-              define_methods << "#{indentation}return" unless predicates[pre] or state.include?(pre)
               define_methods << "#{indentation}@state[#{evaluate(pre)}].each {|#{terms2.join(', ')},|"
               close_method_str.prepend("#{indentation}}")
               indentation << '  '
-            elsif not predicates[pre] and not state.include?(pre) then define_methods << "#{indentation}return"
             else applicable(define_methods_comparison << "#{indentation}next unless ", pre, terms)
             end
             precond_pos.reject! {|pre,*terms|
